@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_admin"
+            android:icon="@drawable/baseline_settings_applications_black_24dp"
+            android:title="@string/title_admin" />
+
+        <item
+            android:id="@+id/nav_timesheet_list"
+            android:icon="@drawable/baseline_settings_applications_black_24dp"
+            android:title="@string/title_timesheet" />
+
+        <item
+            android:id="@+id/nav_timesheet_register_work"
+            android:icon="@drawable/baseline_settings_applications_black_24dp"
+            android:title="@string/title_register_work" />
+
+        <item
+            android:id="@+id/nav_invoice_list"
+            android:icon="@drawable/baseline_settings_applications_black_24dp"
+            android:title="@string/title_invoice_overview" />
+
+        <item
+            android:id="@+id/nav_invoice"
+            android:icon="@drawable/baseline_settings_applications_black_24dp"
+            android:title="@string/title_invoice" />
+
+    </group>
+
+</menu>

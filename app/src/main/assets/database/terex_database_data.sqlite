@@ -1,0 +1,10 @@
+INSERT INTO timesheet (id, name, client_name, project_name, from_date, to_date, break_in_min, hourly_rate, status, comment)
+VALUES
+    (1, "client_name", "Technogarden"),
+    (2, "project_name", "Mastercard - Java Developer"),
+    (3, "from_date", 0),
+    (4, "to_date", 0),
+    (5, "break_in_min", 30),
+    (6, "hourly_rate", 1075),
+    (7, "status", 'Open'),
+    (8, "comment", "no comments");

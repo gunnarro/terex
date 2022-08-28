@@ -1,0 +1,57 @@
+<resources>
+    <string name="app_name">TeRex</string>
+    <string name="title_admin">Administration</string>
+    <string name="title_timesheet">TimeSheet</string>
+    <string name="title_register_work">Register Work</string>
+    <string name="title_invoice_overview">Invoice Overview</string>
+    <string name="title_invoice">Invoice</string>
+    <string name="title_credential">Credential Store</string>
+    <string name="title_credential_register">Credential Store</string>
+    <string name="lbl_timesheet">Timesheet</string>
+    <string name="lbl_invoice">Invoice</string>
+    <string name="lbl_client">Client</string>
+    <string name="lbl_project">Project</string>
+    <string name="lbl_hourly_rate">Hourly rate</string>
+    <string name="lbl_from_date_time">From</string>
+    <string name="lbl_to_date_time">To</string>
+    <string name="lbl_break">Break</string>
+    <string name="lbl_worked_hours">Worked hours</string>
+    <string name="lbl_status">Status</string>
+    <string name="lbl_comment">Comment</string>
+    <string name="lbl_system">System</string>
+    <string name="lbl_username">Username</string>
+    <string name="lbl_password">Password</string>
+    <string name="lbl_url">Url</string>
+    <string name="btn_save">Save</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_add">Add</string>
+    <string name="btn_create">Create</string>
+
+    <!-- invoice -->
+    <string name="lbl_company_name">Firma</string>
+    <string name="lbl_business_address">Forretningsadresse</string>
+    <string name="lbl_organization_number">Organisasjonsnummer</string>
+    <string name="lbl_bank_account_number">Bankonto</string>
+    <string name="lbl_invoice_reference">Fakturareferanse</string>
+    <string name="lbl_invoice_number">Fakturanummer</string>
+
+    <string name="lbl_client_name">Kunde</string>
+    <string name="lbl_client_address">Adresse</string>
+    <string name="lbl_client_phone_number">Telefon</string>
+    <string name="lbl_client_organization_number">Organisasjonsnummer</string>
+    <string name="lbl_invoice_project_code">Prosjektkode</string>
+    <string name="lbl_client_contact_person">Kontaktperson</string>
+
+    <string name="txt_colon">:</string>
+    <string name="txt_empty"></string>
+    <string name="lbl_workday_date">Workday date</string>
+    <string name="lbl_to_time">To time</string>
+    <string name="lbl_from_time">From time</string>
+    <string name="hh_mm">HH:mm</string>
+    <string name="dd_mm_yyyy">dd-MM-yyyy</string>
+    <string name="btn_delete">Delete</string>
+    <string name="title_activity_item_detail_host">ItemDetailHostActivity</string>
+    <string name="title_item_list">Items</string>
+    <string name="title_item_detail">Item Detail</string>
+
+</resources>

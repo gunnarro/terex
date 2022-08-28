@@ -1,0 +1,18 @@
+-- CREATE TABLE IF NOT EXISTS timesheet (
+--    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+--    fooName TEXT NOT NULL,
+--    nullableBooleanField INTEGER
+--);
+
+-- CREATE INDEX IF NOT EXISTS index_bar_table_parentFooId ON bar_table (parentFooId);
+
+CREATE TABLE IF NOT EXISTS timesheet (
+    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    name TEXT,
+    client_name TEXT,
+    project_name TEXT,
+    from_date INTEGER,
+    to_date INTEGER,
+    break_in_min INTEGER,
+    hourly_rate INTEGER,
+    status TEXT, `comment` TEXT)
