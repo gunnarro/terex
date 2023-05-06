@@ -111,7 +111,7 @@ public class InvoiceFragment extends Fragment {
         document.close();
     }
 
-    private void addInvoiceLnes(View view) {
+    private void addInvoiceLines(View view) {
         TableLayout tableLayout = view.findViewById(R.id.invoice_lines_tbl);
         //tableLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
        // tableLayout.getChildAt(0).setBackgroundColor(getResources().getColor(R.color.colorNumbers));

@@ -73,31 +73,29 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     // Android
-    implementation "android.arch.navigation:navigation-fragment:1.0.0"
-    implementation "android.arch.navigation:navigation-ui:1.0.0"
+    implementation "android.arch.navigation:navigation-fragment:$android_arch_navigation"
+    implementation "android.arch.navigation:navigation-ui:$android_arch_navigation"
     // androidx
-    implementation 'androidx.appcompat:appcompat:1.5.0'
-    implementation 'androidx.core:core-ktx:1.8.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.drawerlayout:drawerlayout:1.1.1'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.5.0'
-    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation "androidx.core:core-ktx:1.8.0"
+    implementation "androidx.constraintlayout:constraintlayout:2.1.4"
+    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
+    implementation "androidx.drawerlayout:drawerlayout:1.1.1"
+    implementation "androidx.legacy:legacy-support-v4:$androidx_legacy_support_v4"
+    implementation "androidx.appcompat:appcompat:$androidx_appcompat"
+    implementation "androidx.recyclerview:recyclerview:$androidx_recyclerview"
     implementation "androidx.preference:preference-ktx:1.2.0"
+    implementation "androidx.annotation:annotation:$androidx_annotation"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$androidx_lifecycle_livedata_ktx"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$androidx_lifecycle_viewmodel_ktx"
+    implementation "androidx.navigation:navigation-fragment:$androidx_navigation_fragment"
+    implementation "androidx.navigation:navigation-ui:$androidx_navigation_ui"
 
     // google
     implementation 'com.google.android.material:material:1.6.1'
     implementation 'com.google.dagger:hilt-android:2.43.2'
-    implementation 'androidx.annotation:annotation:1.4.0'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
+
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3'
-    implementation 'androidx.navigation:navigation-fragment:2.5.1'
-    implementation 'androidx.navigation:navigation-ui:2.5.1'
-
 //    implementation 'com.codingrodent:jackson-json-crypto:2.2.0'
 //    kapt 'com.google.dagger:hilt-android-compiler:2.31.2-alpha'
     // for lombok

@@ -39,8 +39,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public static final int PERMISSION_REQUEST = 1;
 
-    private DrawerLayout drawer;
-
     @Inject
     AdminFragment adminFragment;
 
@@ -56,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Inject
     InvoiceFragment invoiceFragment;
 
+    private DrawerLayout drawer;
 
     public MainActivity() {
         this.adminFragment = new AdminFragment();

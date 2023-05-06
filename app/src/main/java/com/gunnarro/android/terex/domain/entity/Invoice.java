@@ -6,7 +6,6 @@ import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
-import com.gunnarro.android.terex.domain.converter.LocalDateTimeConverter;
 
 import java.time.LocalDate;
 import java.util.Objects;
