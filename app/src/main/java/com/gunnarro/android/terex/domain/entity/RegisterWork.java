@@ -7,6 +7,19 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
 public class RegisterWork {
 
     public static final Integer DEFAULT_DAILY_BREAK_IN_MINUTES = 30;
@@ -34,6 +47,7 @@ public class RegisterWork {
     private String status;
 
     private String comment;
+
 
     public String getClientName() {
         return clientName;
@@ -83,7 +97,7 @@ public class RegisterWork {
         this.toTime = toTime;
     }
 
-    public Double getWorkedHours() {
+    public double getWorkedHours() {
         return workedHours;
     }
 
@@ -128,23 +142,5 @@ public class RegisterWork {
         w.setBreakInMin(DEFAULT_DAILY_BREAK_IN_MINUTES);
         w.setHourlyRate(DEFAULT_HOURLY_RATE);
         return w;
-    }
-
-    @NonNull
-    @Override
-    public String toString() {
-        final StringBuffer sb = new StringBuffer("RegisterWork{");
-        sb.append("clientName='").append(clientName).append('\'');
-        sb.append(", projectName='").append(projectName).append('\'');
-        sb.append(", hourlyRate=").append(hourlyRate);
-        sb.append(", workdayDate=").append(workdayDate);
-        sb.append(", fromTime=").append(fromTime);
-        sb.append(", toTime=").append(toTime);
-        sb.append(", workedHours=").append(workedHours);
-        sb.append(", breakInMin=").append(breakInMin);
-        sb.append(", status='").append(status).append('\'');
-        sb.append(", comment='").append(comment).append('\'');
-        sb.append('}');
-        return sb.toString();
     }
 }

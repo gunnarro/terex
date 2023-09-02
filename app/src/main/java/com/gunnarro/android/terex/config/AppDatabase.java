@@ -11,8 +11,10 @@ import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.gunnarro.android.terex.domain.dbview.TimesheetView;
+import com.gunnarro.android.terex.domain.entity.Company;
 import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.InvoiceSummary;
+import com.gunnarro.android.terex.domain.entity.RecruitmentCompany;
 import com.gunnarro.android.terex.domain.entity.RegisterWork;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.repository.InvoiceDao;
@@ -58,6 +60,9 @@ public abstract class AppDatabase extends RoomDatabase {
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
             Log.d("RoomDatabase.Callback", "start init database");
+            // Create recuritment compnies
+            RecruitmentCompany b = new RecruitmentCompany();
+
             // this method is called when database is created
             // and below line is to populate our data.
            // new PopulateDbAsyncTask(INSTANCE).execute();

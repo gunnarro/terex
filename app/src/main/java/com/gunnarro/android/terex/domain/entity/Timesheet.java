@@ -13,6 +13,18 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+//@Builder
+// default constructor, Room accepts only one
+@NoArgsConstructor
+//@AllArgsConstructor
+@Getter
+@Setter
 @TypeConverters({LocalDateConverter.class, LocalTimeConverter.class})
 @Entity(tableName = "timesheet")
 public class Timesheet {
@@ -56,17 +68,11 @@ public class Timesheet {
     @ColumnInfo(name = "comment")
     private String comment;
 
-    /**
-     * default constructor, Room accepts only one
-     */
-    public Timesheet() {
-    }
-
     public Long getId() {
         return id;
     }
 
-    public void setId(@NonNull Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -119,7 +125,7 @@ public class Timesheet {
         return workedMinutes;
     }
 
-    public void setWorkedMinutes(@NonNull Integer workedMinutes) {
+    public void setWorkedMinutes(Integer workedMinutes) {
         this.workedMinutes = workedMinutes;
     }
 
@@ -127,7 +133,7 @@ public class Timesheet {
         return breakInMin;
     }
 
-    public void setBreakInMin(@NonNull Integer breakInMin) {
+    public void setBreakInMin(Integer breakInMin) {
         this.breakInMin = breakInMin;
     }
 
@@ -135,7 +141,7 @@ public class Timesheet {
         return hourlyRate;
     }
 
-    public void setHourlyRate(@NonNull Integer hourlyRate) {
+    public void setHourlyRate(Integer hourlyRate) {
         this.hourlyRate = hourlyRate;
     }
 

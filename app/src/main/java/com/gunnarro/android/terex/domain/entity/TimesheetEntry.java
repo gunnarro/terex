@@ -6,9 +6,12 @@ import androidx.room.PrimaryKey;
 
 import java.util.Date;
 
+import lombok.Getter;
+
 /**
  * not in use
  */
+@Getter
 @Entity(tableName = "timesheet_entry")
 public class TimesheetEntry {
     @PrimaryKey(autoGenerate = true)

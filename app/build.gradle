@@ -1,24 +1,27 @@
 plugins {
     id 'com.android.application'
-//    id 'kotlin-android'
-//    id 'kotlin-kapt'
-//    id 'dagger.hilt.android.plugin'
+    id 'jacoco'
+}
 
+sonarqube {
+    properties {
+        property "sonar.projectKey", "gunnarro_terex"
+        property "sonar.organization", "gunnarro"
+        property "sonar.host.url", "https://sonarcloud.io"
+    }
 }
 
 android {
-    compileSdkVersion 32
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.gunnarro.android.terex"
-        minSdkVersion 26
-        targetSdkVersion 32
+        minSdk 29
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
-       // testInstrumentationRunner "androidx.test.ext.junit.runners.AndroidJUnit4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments = ["room.schemaLocation":
@@ -27,108 +30,124 @@ android {
         }
     }
 
+    dataBinding {
+        enabled = true
+    }
+
+    productFlavors {
+    }
+
     buildTypes {
-        debug {
-            testCoverageEnabled true
-        }
-
         release {
-            testCoverageEnabled true
-            // Enables code shrinking, obfuscation, and optimization for only
-            // your project's release build type.
             minifyEnabled false
-
-            // Enables resource shrinking, which is performed by the
-            // Android Gradle plugin.
-            shrinkResources false
-
-            // Includes the default ProGuard rules files that are packaged with the Android Gradle plugin.
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            debuggable true
+            // proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
-    }
-
-    testOptions {
-        animationsDisabled true
-        unitTests {
-            includeAndroidResources = true
-            unitTests.returnDefaultValues = true
-        }
+        sourceCompatibility JavaVersion.VERSION_19
+        targetCompatibility JavaVersion.VERSION_19
     }
 
     buildFeatures {
         viewBinding true
     }
     namespace 'com.gunnarro.android.terex'
+
     lint {
         abortOnError false
+        warning 'InvalidPackage'
     }
+
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    // quickfix for kotlin duplicate class error message
+    //  implementation "org.jetbrains.kotlin:kotlin-bom:1.8.0"
+    //  runtimeOnly 'org.jetbrains.kotlin:kotlin-bom:1.8.10'
+    implementation(platform('org.jetbrains.kotlin:kotlin-bom:1.9.10'))
+
     // Android
     implementation "android.arch.navigation:navigation-fragment:$android_arch_navigation"
     implementation "android.arch.navigation:navigation-ui:$android_arch_navigation"
     // androidx
-    implementation "androidx.core:core-ktx:1.8.0"
-    implementation "androidx.constraintlayout:constraintlayout:2.1.4"
-    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
-    implementation "androidx.drawerlayout:drawerlayout:1.1.1"
-    implementation "androidx.legacy:legacy-support-v4:$androidx_legacy_support_v4"
+    //noinspection GradleDependency
     implementation "androidx.appcompat:appcompat:$androidx_appcompat"
+    //noinspection GradleDependency
+    implementation "androidx.core:core-ktx:$androidx_core_ktx"
+    implementation "androidx.constraintlayout:constraintlayout:$androidx_constraint_layout"
+    implementation "androidx.lifecycle:lifecycle-extensions:$androidx_lifecycle_extensions"
+    implementation "androidx.legacy:legacy-support-v4:$androidx_legacy_support_v4"
+    //noinspection GradleDependency
+    implementation "androidx.drawerlayout:drawerlayout:$androidx_drawerlayout"
+
+    //noinspection GradleDependency
     implementation "androidx.recyclerview:recyclerview:$androidx_recyclerview"
-    implementation "androidx.preference:preference-ktx:1.2.0"
-    implementation "androidx.annotation:annotation:$androidx_annotation"
+    implementation "androidx.preference:preference:$androidx_preference"
+    //noinspection GradleDependency
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$androidx_lifecycle_livedata_ktx"
+    //noinspection GradleDependency
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$androidx_lifecycle_viewmodel_ktx"
+    //noinspection GradleDependency
+    implementation "androidx.annotation:annotation:$androidx_annotation"
+    //noinspection GradleDependency
     implementation "androidx.navigation:navigation-fragment:$androidx_navigation_fragment"
+    //noinspection GradleDependency
     implementation "androidx.navigation:navigation-ui:$androidx_navigation_ui"
-
     // google
-    implementation 'com.google.android.material:material:1.6.1'
-    implementation 'com.google.dagger:hilt-android:2.43.2'
+    //noinspection GradleDependency
+    implementation "com.google.android.material:material:$google_android_material"
+    //noinspection GradleDependency
+    implementation "com.google.dagger:hilt-android:$google_dagger_hilt_android"
+    // xml
+    implementation "com.google.code.gson:gson:$google_gson"
+    //noinspection GradleDependency
+    //  implementation "com.fasterxml.jackson.core:jackson-databind:$jackson_databind"
+    //noinspection GradleDependency
+    //  implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jackson_datatype_jsr310"
+    // for password hashing
+    implementation "de.mkammerer:argon2-jvm:$mkammerer_argon2_jvm"
+    implementation "org.jasypt:jasypt:$jasypt"
 
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
-    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3'
-//    implementation 'com.codingrodent:jackson-json-crypto:2.2.0'
-//    kapt 'com.google.dagger:hilt-android-compiler:2.31.2-alpha'
-    // for lombok
-    //kapt 'org.projectlombok:lombok:1.18.18'
+    compileOnly 'org.projectlombok:lombok:1.18.28'
+    annotationProcessor 'org.projectlombok:lombok:1.18.28'
 
-    // for custom exception handling
-    // implementation 'com.github.RohitSurwase.UCE-Handler:uce_handler:1.4'
 
-    // Required for unit tests
-    testImplementation "junit:junit:$junitVersion"
-    //  testImplementation 'org.mockito:mockito-core:1.10.19'
-    testImplementation('org.mockito:mockito-inline:4.7.0')
-    testImplementation 'androidx.test:core:1.4.0'
-    testImplementation 'androidx.test.ext:junit:1.1.3'
-    // Required for instrumented tests
-    androidTestImplementation "androidx.test:core:1.4.0"
-    androidTestImplementation "androidx.test:runner:$androidxJunitVersion"
-    androidTestImplementation "androidx.test:rules:1.4.0"
-    //androidTestImplementation "junit:junit:$junitVersion"
-    androidTestImplementation 'org.hamcrest:hamcrest-library:2.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-    androidTestImplementation 'com.android.support:support-annotations:28.0.0'
+    implementation 'com.fasterxml.jackson:jackson-bom:2.14.3'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.14.3'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.3'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.14.3'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.3'
+
+
     // Room components
     //noinspection GradleDependency
-    implementation "androidx.room:room-runtime:$rootProject.roomVersion"
-    annotationProcessor "androidx.room:room-compiler:$rootProject.roomVersion"
-   // annotationProcessor 'com.google.dagger:hilt-compiler:2.41'
-    //kapt "androidx.room:room-compiler:$rootProject.roomVersion"
-    //  kapt "android.arch.persistence.room:compiler:1.1.1"
-    //  kapt "androidx.room:room-compiler:$rootProject.roomVersion"
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+    // encrypt/decrypt database
+    implementation 'net.zetetic:android-database-sqlcipher:4.5.4'
+    implementation "androidx.security:security-crypto:1.1.0-alpha06"
+    // For Identity Credential APIs
+    implementation "androidx.security:security-identity-credential:$androidx_security_identity_credential"
+    // For App Authentication APIs
+    implementation "androidx.security:security-app-authenticator:$androidx_security_app_authenticator"
+    // for fingerprint login
+    implementation "androidx.biometric:biometric:$rootProject.biometric_version"
+    // for unit tests
+    testImplementation "org.junit.vintage:junit-vintage-engine:$junit_vintage_engine"
+    testImplementation "org.junit.jupiter:junit-jupiter:$junit_jupiter"
     //noinspection GradleDependency
-    androidTestImplementation "androidx.room:room-testing:$rootProject.roomVersion"
-    debugImplementation "androidx.fragment:fragment-testing:1.5.2"
+    testImplementation "org.mockito:mockito-inline:$mockito_inline"
+    // for android instrumentation tests
+    //noinspection GradleDependency
+    androidTestImplementation "androidx.test.ext:junit:$androidx_junit"
+    //noinspection GradleDependency
+    androidTestImplementation "androidx.test.espresso:espresso-core:$androidx_espresso_core"
+    //noinspection GradleDependency
+    androidTestImplementation "androidx.room:room-testing:$rootProject.room_version"
+
+    //noinspection GradleDependency
+    debugImplementation "androidx.fragment:fragment-testing:$androidx_fragment_testing"
 }
+
 

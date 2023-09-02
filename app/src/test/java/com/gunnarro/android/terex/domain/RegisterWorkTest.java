@@ -7,11 +7,6 @@ import static org.junit.Assert.assertNull;
 import com.gunnarro.android.terex.domain.entity.RegisterWork;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import java.time.Duration;
-import java.time.ZoneOffset;
-import java.util.concurrent.TimeUnit;
 public class RegisterWorkTest {
 
     @Test
@@ -20,7 +15,7 @@ public class RegisterWorkTest {
         assertEquals("30", work.getBreakInMin().toString());
         assertEquals("1075", work.getHourlyRate().toString());
         assertEquals("Open", work.getStatus());
-        assertEquals("7.5", work.getWorkedHours().toString());
+        assertEquals("7.5", work.getWorkedHours());
         assertNotNull(work.getFromTime());
         assertNotNull(work.getToTime());
         assertNull(work.getComment());
