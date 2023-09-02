@@ -1,0 +1,16 @@
+
+i
+java:S3008 "SRename this field "INSTANCE" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(½ßõÊ
+m
+java:S3077 "WUse a thread-safe type; adding "volatile" is not enough to make this field thread-safe.(½ßõÊ
+K
+java:S1854@"5Remove this useless assignment to local variable "b".(’…œó
+<
+java:S1481@"&Remove this unused "b" local variable.(’…œó
+Q	java:S125D"<This block of commented-out lines of code should be removed.(»Ó°
+R
+java:S3985T"7Remove this unused private "PopulateDbAsyncTask" class.(õ¾­îýÿÿÿÿ
+L
+java:S1874T"1Remove this use of "AsyncTask"; it is deprecated.(õ¾­îýÿÿÿÿ
+K
+java:S1068:"0Remove this unused "roomCallback" private field.(²€§ìúÿÿÿÿ
