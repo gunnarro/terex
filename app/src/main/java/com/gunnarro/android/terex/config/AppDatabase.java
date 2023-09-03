@@ -11,6 +11,7 @@ import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.gunnarro.android.terex.domain.dbview.TimesheetView;
+import com.gunnarro.android.terex.domain.entity.Address;
 import com.gunnarro.android.terex.domain.entity.Company;
 import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.InvoiceSummary;
@@ -26,12 +27,12 @@ import java.util.concurrent.Executors;
 /**
  * Thread safe database instance.
  */
-@Database(entities = {Timesheet.class, Invoice.class, InvoiceSummary.class}, version = 16, views = {TimesheetView.class})
+@Database(entities = {Timesheet.class, Invoice.class, InvoiceSummary.class}, version = 17, views = {TimesheetView.class})
 public abstract class AppDatabase extends RoomDatabase {
     // marking the instance as volatile to ensure atomic access to the variable
     private static volatile AppDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
-    public static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
+    public static final ExecutorService databaseExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
     public static AppDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
@@ -60,8 +61,17 @@ public abstract class AppDatabase extends RoomDatabase {
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
             Log.d("RoomDatabase.Callback", "start init database");
-            // Create recuritment compnies
-            RecruitmentCompany b = new RecruitmentCompany();
+            // Create recruitment companies
+            RecruitmentCompany recruitmentCompany = new RecruitmentCompany();
+            Company company = new Company();
+            company.setName("Norway Consulting AS");
+            company.setOrganizationNumber("");
+           /* Address address = new Address();
+            address.setStreetName("Grensen");
+            address.setStreetNumber("16");
+            address.setPostCode("0159");
+            address.setCountry("Norway");
+*/
 
             // this method is called when database is created
             // and below line is to populate our data.

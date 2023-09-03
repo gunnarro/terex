@@ -14,14 +14,13 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.gunnarro.android.terex.R;
+import com.gunnarro.android.terex.domain.entity.InvoiceSummary;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
-import com.gunnarro.android.terex.repository.TimesheetRepository;
 import com.gunnarro.android.terex.service.InvoiceService;
 import com.gunnarro.android.terex.utility.Utility;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.time.Month;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -31,7 +30,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class AdminFragment extends Fragment {
 
-   // @Inject
+    // @Inject
     InvoiceService invoiceService = new InvoiceService();
 
     @Inject
@@ -51,7 +50,7 @@ public class AdminFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_admin, container, false);
         view.findViewById(R.id.btn_admin_generate_timesheet).setOnClickListener(v -> {
             try {
-              generateTimesheet();
+                generateTimesheet();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -82,15 +81,16 @@ public class AdminFragment extends Fragment {
     }
 
     private void generateTimesheet() {
-        int month = ((Spinner)requireView().findViewById(R.id.admin_invoice_month_spinner)).getSelectedItemPosition();
-        List<Timesheet> timesheets = invoiceService.generateTimesheet(2022, month+1);
+        int month = ((Spinner) requireView().findViewById(R.id.admin_invoice_month_spinner)).getSelectedItemPosition();
+        List<Timesheet> timesheets = invoiceService.generateTimesheet(2023, month + 1);
         timesheets.forEach(t -> Log.i("generateTimesheet", t.toString()));
         Toast.makeText(requireContext(), "Generate timesheet for " + month, Toast.LENGTH_SHORT).show();
     }
 
     private void createInvoice() {
-       int month = ((Spinner)requireView().findViewById(R.id.admin_invoice_month_spinner)).getSelectedItemPosition();
-       Toast.makeText(requireContext(), "Create invoice for " + month, Toast.LENGTH_SHORT).show();
-        invoiceService.buildInvoiceSummaryByWeek(2022, month);
+        int month = ((Spinner) requireView().findViewById(R.id.admin_invoice_month_spinner)).getSelectedItemPosition();
+        Toast.makeText(requireContext(), "Create invoice for " + month, Toast.LENGTH_SHORT).show();
+        List<InvoiceSummary> invoiceSummaries = invoiceService.buildInvoiceSummaryByWeek(2022, month);
+        invoiceSummaries.forEach( i -> Log.i("generateInvoiceSummary", i.toString()));
     }
 }

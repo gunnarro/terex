@@ -1,7 +1,6 @@
 package com.gunnarro.android.terex.ui.fragment;
 
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.pdf.PdfDocument;
 import android.os.AsyncTask;
@@ -13,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -71,11 +69,11 @@ public class InvoiceFragment extends Fragment {
     @Override
     public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-       // updateInvoiceView(requireView());
-       // new LoadDataTask().execute(0);
+        // updateInvoiceView(requireView());
+        // new LoadDataTask().execute(0);
         updateInvoiceView(view);
-      //  addInvoiceLnes(view);
-     //   getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        addInvoiceLines(view);
+        //   getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     }
 
     @Override
@@ -84,16 +82,16 @@ public class InvoiceFragment extends Fragment {
     }
 
     private void updateInvoiceView(View view) {
-        ((TextView)view.findViewById(R.id.invoice_company_name)).setText("gunnarro as");
-        ((TextView)view.findViewById(R.id.invoice_company_business_address)).setText("Stavangergata 35, 0467 OSLO");
-        ((TextView)view.findViewById(R.id.invoice_company_organization_number)).setText("828 707 922");
-        ((TextView)view.findViewById(R.id.invoice_company_bank_account_number)).setText("9230 26 98831");
-        ((TextView)view.findViewById(R.id.invoice_client_name)).setText("Technogarden AS");
-        ((TextView)view.findViewById(R.id.invoice_client_address)).setText("Vestfjordgaten 4, 1338 Sandvika");
-        ((TextView)view.findViewById(R.id.invoice_client_phone_number   )).setText("67 57 10 00");
-        ((TextView)view.findViewById(R.id.invoice_client_organization_number)).setText("986 076 905");
-        ((TextView)view.findViewById(R.id.invoice_client_project_code)).setText("20-2-8879 - Javautvikler i Mastercard - 103366");
-        ((TextView)view.findViewById(R.id.invoice_client_contact_person)).setText("Marcus Andersen");
+        ((TextView) view.findViewById(R.id.invoice_company_name)).setText("gunnarro as");
+        ((TextView) view.findViewById(R.id.invoice_company_business_address)).setText("Stavangergata 35, 0467 OSLO");
+        ((TextView) view.findViewById(R.id.invoice_company_organization_number)).setText("828 707 922");
+        ((TextView) view.findViewById(R.id.invoice_company_bank_account_number)).setText("9230 26 98831");
+        ((TextView) view.findViewById(R.id.invoice_client_name)).setText("Technogarden AS");
+        ((TextView) view.findViewById(R.id.invoice_client_address)).setText("Vestfjordgaten 4, 1338 Sandvika");
+        ((TextView) view.findViewById(R.id.invoice_client_phone_number)).setText("67 57 10 00");
+        ((TextView) view.findViewById(R.id.invoice_client_organization_number)).setText("986 076 905");
+        ((TextView) view.findViewById(R.id.invoice_client_project_code)).setText("20-2-8879 - Javautvikler i Mastercard - 103366");
+        ((TextView) view.findViewById(R.id.invoice_client_contact_person)).setText("Marcus Andersen");
         Log.d(Utility.buildTag(getClass(), "saveRegisterWork"), String.format("updated %s ", ""));
     }
 
@@ -114,19 +112,19 @@ public class InvoiceFragment extends Fragment {
     private void addInvoiceLines(View view) {
         TableLayout tableLayout = view.findViewById(R.id.invoice_lines_tbl);
         //tableLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-       // tableLayout.getChildAt(0).setBackgroundColor(getResources().getColor(R.color.colorNumbers));
+        // tableLayout.getChildAt(0).setBackgroundColor(getResources().getColor(R.color.colorNumbers));
 
         tableLayout.addView(createTableRow(tableLayout.getContext(), "5", "01.03 - 31.03.2022", "29.00", "34567,00"));//,new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
         tableLayout.addView(createTableRow(tableLayout.getContext(), "6", "01.03 - 31.03.2022", "37.50", "40000,00"));//, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
 
-        tableLayout.requestLayout();
+       // tableLayout.requestLayout();
         Log.d(Utility.buildTag(getClass(), "addInvoiceLnes"), "updated invoice table, children: " + tableLayout.getChildCount());
     }
 
     private TableRow createTableRow(Context context, String week, String date, String hours, String amount) {
         TableRow row = new TableRow(context);
-       // TableRow.LayoutParams rowParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT);
-       // row.setLayoutParams(rowParams);
+        TableRow.LayoutParams rowParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT);
+        row.setLayoutParams(rowParams);
 
         row.addView(createTextView(context, week));
         row.addView(createTextView(context, date));
@@ -134,15 +132,17 @@ public class InvoiceFragment extends Fragment {
         row.addView(createTextView(context, amount));
         return row;
     }
+
     /**
-     *  android:layout_width="0dp"
-     *     android:layout_height="wrap_content"
-     *     android:layout_weight=".60"
-     *     android:gravity="center"
-     *     android:padding="1dip"
-     *     android:maxLength="3"
-     *     android:inputType="number"
-     *     android:text="5"/>
+     * android:layout_width="0dp"
+     * android:layout_height="wrap_content"
+     * android:layout_weight=".60"
+     * android:gravity="center"
+     * android:padding="1dip"
+     * android:maxLength="3"
+     * android:inputType="number"
+     * android:text="5"/>
+     *
      * @param text
      * @return
      */
@@ -150,7 +150,7 @@ public class InvoiceFragment extends Fragment {
         TextView textView = new TextView(context);
         textView.setLayoutParams(new TableLayout.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1f));
         textView.setGravity(Gravity.CENTER);
-        textView.setPadding(1,1,1,1);
+        textView.setPadding(1, 1, 1, 1);
         textView.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         textView.setTextColor(Color.BLACK);
         textView.setText(text);
@@ -168,13 +168,16 @@ public class InvoiceFragment extends Fragment {
             }
             return "Task Completed.";
         }
+
         @Override
         protected void onPostExecute(String result) {
-          //addInvoiceLnes();
+            //addInvoiceLnes();
         }
+
         @Override
         protected void onPreExecute() {
         }
+
         @Override
         protected void onProgressUpdate(Integer... values) {
         }

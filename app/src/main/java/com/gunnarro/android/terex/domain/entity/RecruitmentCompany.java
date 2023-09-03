@@ -1,11 +1,12 @@
 package com.gunnarro.android.terex.domain.entity;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import dagger.Component;
-import lombok.Builder;
+import java.util.List;
+
 import lombok.NoArgsConstructor;
 
 //@Builder
@@ -17,5 +18,8 @@ public class RecruitmentCompany {
     private int id;
     @Embedded
     private Company company;
+
+    @ColumnInfo(name = "projects")
+    private List<Project> projects;
 
 }

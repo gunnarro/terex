@@ -2,17 +2,29 @@
   "formatVersion": 1,
   "database": {
     "version": 16,
-    "identityHash": "4cc848ff324047bdc2ed416928d393c1",
+    "identityHash": "e4ccc0daa3fc01b76f5358661d5f68cb",
     "entities": [
       {
         "tableName": "timesheet",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `client_name` TEXT NOT NULL, `project_name` TEXT NOT NULL, `workday_date` INTEGER NOT NULL, `from_time` INTEGER NOT NULL, `to_time` INTEGER NOT NULL, `worked_in_min` INTEGER, `break_in_min` INTEGER, `hourly_rate` INTEGER, `status` TEXT NOT NULL DEFAULT 'Open', `comment` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `created_date` INTEGER NOT NULL, `last_modified_date` INTEGER NOT NULL, `client_name` TEXT NOT NULL, `project_name` TEXT NOT NULL, `workday_date` INTEGER NOT NULL, `from_time` INTEGER NOT NULL, `to_time` INTEGER NOT NULL, `worked_in_min` INTEGER, `break_in_min` INTEGER, `hourly_rate` INTEGER, `status` TEXT NOT NULL DEFAULT 'Open', `comment` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
             "affinity": "INTEGER",
             "notNull": false
+          },
+          {
+            "fieldPath": "createdDate",
+            "columnName": "created_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastModifiedDate",
+            "columnName": "last_modified_date",
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "clientName",
@@ -77,10 +89,10 @@
           }
         ],
         "primaryKey": {
+          "autoGenerate": true,
           "columnNames": [
             "id"
-          ],
-          "autoGenerate": true
+          ]
         },
         "indices": [
           {
@@ -152,10 +164,10 @@
           }
         ],
         "primaryKey": {
+          "autoGenerate": true,
           "columnNames": [
             "id"
-          ],
-          "autoGenerate": true
+          ]
         },
         "indices": [],
         "foreignKeys": []
@@ -220,10 +232,10 @@
           }
         ],
         "primaryKey": {
+          "autoGenerate": true,
           "columnNames": [
             "id"
-          ],
-          "autoGenerate": true
+          ]
         },
         "indices": [],
         "foreignKeys": []
@@ -237,7 +249,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4cc848ff324047bdc2ed416928d393c1')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e4ccc0daa3fc01b76f5358661d5f68cb')"
     ]
   }
 }

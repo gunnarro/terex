@@ -3,20 +3,18 @@ package com.gunnarro.android.terex.repository
 import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.gunnarro.android.terex.config.AppDatabase
 import com.gunnarro.android.terex.domain.entity.Invoice
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import java.time.LocalDate
 
 /**
  * instrumental test, requires application context
  */
-@RunWith(AndroidJUnit4::class)
+
 class InvoiceDaoTest {
     private var invoiceDao: InvoiceDao? = null
     private var db: AppDatabase? = null

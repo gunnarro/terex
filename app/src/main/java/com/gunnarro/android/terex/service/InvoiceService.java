@@ -44,11 +44,11 @@ public class InvoiceService {
     }
 
     public RegisterWork getRegisterWork(Integer id) {
-        RegisterWork w = null;
+        RegisterWork registerWork = null;
         if (id == null) {
-            w = new RegisterWork();
+            registerWork = new RegisterWork();
         }
-        return w;
+        return registerWork;
     }
 
     /**
@@ -115,15 +115,9 @@ public class InvoiceService {
     }
 
     private Timesheet createTimesheet(LocalDate day) {
-        Timesheet timesheet = new Timesheet();
+        Timesheet timesheet = Timesheet.createDefault(null, null, DEFAULT_STATUS, DEFAULT_DAILY_BREAK_IN_MINUTES, day, DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES, DEFAULT_HOURLY_RATE);
         // start ar am 08:00
         timesheet.setWorkdayDate(day);
-        timesheet.setFromTime(LocalTime.of(8,0));
-        timesheet.setToTime(timesheet.getFromTime().plusMinutes(DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES));
-        timesheet.setWorkedMinutes((new Long(ChronoUnit.MINUTES.between(timesheet.getFromTime(), timesheet.getToTime())).intValue()));
-        timesheet.setHourlyRate(DEFAULT_HOURLY_RATE);
-        timesheet.setBreakInMin(DEFAULT_DAILY_BREAK_IN_MINUTES);
-        timesheet.setStatus("Open");
         return timesheet;
     }
 

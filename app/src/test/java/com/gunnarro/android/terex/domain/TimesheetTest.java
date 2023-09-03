@@ -2,6 +2,7 @@ package com.gunnarro.android.terex.domain;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,6 +14,7 @@ import com.gunnarro.android.terex.service.InvoiceService;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class TimesheetTest {
@@ -43,6 +45,36 @@ public class TimesheetTest {
             e.printStackTrace();
         }
         assertNotNull(jsonStr);
+    }
+
+    @Test
+    void timesheetAreEqual() {
+        Timesheet timesheet1 = new Timesheet();
+        timesheet1.setClientName("Recruitment AS");
+        timesheet1.setProjectName("refactor monolith");
+        timesheet1.setWorkdayDate(LocalDate.of(2023, 9, 9));
+
+        Timesheet timesheet2 = new Timesheet();
+        timesheet2.setClientName("Recruitment AS");
+        timesheet2.setProjectName("refactor monolith");
+        timesheet2.setWorkdayDate(LocalDate.of(2023, 9, 9));
+
+        assertTrue(timesheet1.equals(timesheet2));
+    }
+
+    @Test
+    void timesheetNotEqual() {
+        Timesheet timesheet1 = new Timesheet();
+        timesheet1.setClientName("Recruitment AS");
+        timesheet1.setProjectName("refactor monolith");
+        timesheet1.setWorkdayDate(LocalDate.of(2023, 9, 9));
+
+        Timesheet timesheet2 = new Timesheet();
+        timesheet2.setClientName("Recruitment AS");
+        timesheet2.setProjectName("refactor monolith");
+        timesheet2.setWorkdayDate(LocalDate.of(2023, 9, 10));
+
+        assertTrue(timesheet1.equals(timesheet2));
     }
 
     @Test

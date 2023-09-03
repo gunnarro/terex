@@ -120,6 +120,10 @@ dependencies {
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.3'
 
 
+    // custom calendar library
+   // implementation 'com.kizitonwose.calendar:view:2.3.0'
+   // implementation 'com.kizitonwose.calendar:compose:2.3.0'
+
     // Room components
     //noinspection GradleDependency
     implementation "androidx.room:room-runtime:$room_version"

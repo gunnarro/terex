@@ -7,14 +7,16 @@ import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
+import com.gunnarro.android.terex.domain.converter.LocalDateTimeConverter;
 import com.gunnarro.android.terex.domain.converter.LocalTimeConverter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,12 +27,20 @@ import lombok.Setter;
 //@AllArgsConstructor
 @Getter
 @Setter
-@TypeConverters({LocalDateConverter.class, LocalTimeConverter.class})
+@TypeConverters({LocalDateConverter.class, LocalTimeConverter.class, LocalDateTimeConverter.class})
 @Entity(tableName = "timesheet")
 public class Timesheet {
 
     @PrimaryKey(autoGenerate = true)
     private Long id;
+
+    @NonNull
+    @ColumnInfo(name = "created_date")
+    private LocalDateTime createdDate;
+
+    @NonNull
+    @ColumnInfo(name = "last_modified_date")
+    private LocalDateTime lastModifiedDate;
 
     @NonNull
     @ColumnInfo(name = "client_name", index = true)
@@ -162,6 +172,40 @@ public class Timesheet {
         this.comment = comment;
     }
 
+
+    @NonNull
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(@NonNull LocalDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    @NonNull
+    public LocalDateTime getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(@NonNull LocalDateTime lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
+    public static Timesheet createDefault(String client, String project, String status, Integer dailyBreakMin, LocalDate workDayDate, Long workingHoursMin, Integer hourlyRate) {
+        Timesheet timesheet = new Timesheet();
+        timesheet.setClientName(client);
+        timesheet.setProjectName(project);
+        timesheet.setStatus(status);
+        timesheet.setWorkdayDate(workDayDate);
+        timesheet.setFromTime(LocalTime.now(ZoneId.systemDefault()).withHour(8).withMinute(0).withSecond(0).withSecond(0).withNano(0));
+        // add 7,5 hours
+        timesheet.setToTime(timesheet.getFromTime().plusMinutes(workingHoursMin));
+        timesheet.setWorkedMinutes(Long.valueOf(ChronoUnit.MINUTES.between(timesheet.getFromTime(), timesheet.getToTime())).intValue());
+        timesheet.setBreakInMin(dailyBreakMin);
+        timesheet.setHourlyRate(hourlyRate);
+        return timesheet;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -175,16 +219,23 @@ public class Timesheet {
         return Objects.hash(clientName, projectName, workdayDate);
     }
 
+    @NonNull
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("Timesheet{");
         sb.append("id=").append(id);
+        sb.append(", createdDate=").append(createdDate);
+        sb.append(", lastModifiedDate=").append(lastModifiedDate);
         sb.append(", clientName='").append(clientName).append('\'');
         sb.append(", projectName='").append(projectName).append('\'');
         sb.append(", workdayDate=").append(workdayDate);
         sb.append(", fromTime=").append(fromTime);
         sb.append(", toTime=").append(toTime);
-        sb.append(", status=").append(status);
+        sb.append(", workedMinutes=").append(workedMinutes);
+        sb.append(", breakInMin=").append(breakInMin);
+        sb.append(", hourlyRate=").append(hourlyRate);
+        sb.append(", status='").append(status).append('\'');
+        sb.append(", comment='").append(comment).append('\'');
         sb.append('}');
         return sb.toString();
     }

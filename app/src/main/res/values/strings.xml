@@ -53,5 +53,17 @@
     <string name="title_activity_item_detail_host">ItemDetailHostActivity</string>
     <string name="title_item_list">Items</string>
     <string name="title_item_detail">Item Detail</string>
+    <string name="title_select_from_time">Select from time</string>
+    <string name="title_select_to_time">Select to time</string>
+    <string name="title_select_workday_date">Select workday date</string>
+
+    <string name="prompt_created_date">Created date</string>
+    <string name="prompt_last_modified_date">Last modified date</string>
+    <string name="prompt_client">Client</string>
+    <string name="prompt_project">Project</string>
+
+    <string name="info_timesheet_list_added_entry">Added new entry to timesheet</string>
+    <string name="info_timesheet_list_updated_entry">Updated timesheet entry</string>
+    <string name="info_timesheet_list_deleted_entry">Deleted entry from timesheet</string>
 
 </resources>

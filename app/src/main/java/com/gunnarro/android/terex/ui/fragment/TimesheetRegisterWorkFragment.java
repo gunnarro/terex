@@ -20,9 +20,6 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.android.material.navigation.NavigationView;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.RegisterWork;
@@ -134,7 +131,7 @@ public class TimesheetRegisterWorkFragment extends Fragment implements View.OnCl
 
         Spinner clientSpinner = view.findViewById(R.id.timesheet_client_spinner);
         String[] clients = new String[]{"Technogarden", "IT-Verket"};
-        ArrayAdapter clientAdapter = new ArrayAdapter(this.getContext(), android.R.layout.simple_spinner_item, clients);
+        ArrayAdapter<String> clientAdapter = new ArrayAdapter<>(this.getContext(), android.R.layout.simple_spinner_item, clients);
         clientAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         clientSpinner.setAdapter(clientAdapter);
 
@@ -234,8 +231,8 @@ public class TimesheetRegisterWorkFragment extends Fragment implements View.OnCl
     private String getTimesheetAsJson() {
         Timesheet timesheet = new Timesheet();
 
-        TextView id = requireView().findViewById(R.id.timesheet_entity_id);
-        timesheet.setId( !id.getText().toString().isEmpty() ? Long.parseLong(id.getText().toString()) : null);
+        TextView idView = requireView().findViewById(R.id.timesheet_entity_id);
+        timesheet.setId(Utility.isInteger(idView.getText().toString()) ? Long.parseLong(idView.getText().toString()) : null);
 
         Spinner clientSpinner = requireView().findViewById(R.id.timesheet_client_spinner);
         timesheet.setClientName(clientSpinner.getSelectedItem().toString());
@@ -268,8 +265,8 @@ public class TimesheetRegisterWorkFragment extends Fragment implements View.OnCl
         timesheet.setComment(commentView.getText().toString());
 
         try {
-            return Utility.getJsonMapper().writerWithDefaultPrettyPrinter().writeValueAsString(timesheet);
-        } catch (JsonProcessingException e) {
+            return Utility.gsonMapper().toJson(timesheet);
+        } catch (Exception e) {
             Log.e("getTimesheetAsJson", e.toString());
             throw new RuntimeException("unable to parse object to json! " + e);
         }

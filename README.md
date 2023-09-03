@@ -2,3 +2,6 @@
 # TeRex
 Android time tracking app.
 This is a simple application for time registration for consultants.
+
+## Resources
+- [calendar](https://github.com/kizitonwose/Calendar)

@@ -43,8 +43,8 @@ public class TimesheetListAdapter extends ListAdapter<Timesheet, TimesheetViewHo
 
     private String toJson(Timesheet timesheet) {
         try {
-            return Utility.getJsonMapper().writerWithDefaultPrettyPrinter().writeValueAsString(timesheet);
-        } catch (JsonProcessingException e) {
+            return Utility.gsonMapper().toJson(timesheet);
+        } catch (Exception e) {
             Log.e("getTimesheetAsJson", e.toString());
             throw new RuntimeException("unable to parse object to json! " + e);
         }

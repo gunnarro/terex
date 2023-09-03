@@ -16,8 +16,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 public class Contact {
-    @ColumnInfo(name = "mobile_number")
-    String mobileNumber;
+    @ColumnInfo(name = "private_mobile_number")
+    String privateMobileNumber;
+    @ColumnInfo(name = "work_mobile_number")
+    String workMobileNumber;
     @ColumnInfo(name = "email_address")
     String emailAddress;
 }

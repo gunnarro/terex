@@ -7,9 +7,16 @@ import androidx.lifecycle.LiveData;
 
 import com.gunnarro.android.terex.config.AppDatabase;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
+import com.gunnarro.android.terex.exception.TerexApplicationException;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CompletionService;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 public class TimesheetRepository {
@@ -24,8 +31,8 @@ public class TimesheetRepository {
     public TimesheetRepository(Application application) {
         timesheetDao = AppDatabase.getDatabase(application).timesheetDao();
         timesheetList = timesheetDao.getAll();
-      //  Calendar cal = Calendar.getInstance();
-       // allTimesheets.getValue().stream().filter(t -> cal.setTime(t.getFromDate()) == cal.get(Calendar.WEEK_OF_YEAR))
+        //  Calendar cal = Calendar.getInstance();
+        // allTimesheets.getValue().stream().filter(t -> cal.setTime(t.getFromDate()) == cal.get(Calendar.WEEK_OF_YEAR))
 
     }
 
@@ -40,31 +47,56 @@ public class TimesheetRepository {
         return Objects.requireNonNull(timesheetList.getValue()).stream().filter(t -> t.getProjectName().equals(projectName) && t.getWorkdayDate().getMonthValue() == month).collect(Collectors.toList());
     }
 
-    public void insert(Timesheet timesheet) {
-        AppDatabase.databaseWriteExecutor.execute(() -> timesheetDao.insert(timesheet));
+    // You must call this on a non-UI thread or your app will throw an exception. Room ensures
+    // that you're not doing any long running operations on the main thread, blocking the UI.
+    public Long save(final Timesheet timesheet) {
+        try {
+            Timesheet timesheetExisting = getTimesheet(timesheet.getClientName(), timesheet.getProjectName(), timesheet.getWorkdayDate());
+            Log.d("TimesheetRepository.save", String.format("%s", timesheetExisting));
+            Long id;
+            if (timesheetExisting == null) {
+                timesheet.setCreatedDate(LocalDateTime.now());
+                timesheet.setLastModifiedDate(LocalDateTime.now());
+                id = insertTimesheet(timesheet);
+            } else {
+                timesheet.setLastModifiedDate(LocalDateTime.now());
+                Integer i = updateTimesheet(timesheet);
+                id = Long.valueOf(i);
+            }
+            return id;
+        } catch (InterruptedException | ExecutionException e) {
+            // Something crashed, therefore restore interrupted state before leaving.
+            Thread.currentThread().interrupt();
+            e.printStackTrace();
+            throw new TerexApplicationException("Error saving credential!", e.getMessage(), e.getCause());
+        }
+    }
+
+    private Timesheet getTimesheet(String clientName, String projectName, LocalDate workDayDate) throws InterruptedException, ExecutionException {
+        CompletionService<Timesheet> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
+        service.submit(() -> timesheetDao.getTimesheet(clientName, projectName, workDayDate));
+        Future<Timesheet> future = service.take();
+        return future.get();
+    }
+
+    private Long insertTimesheet(Timesheet timesheet) throws InterruptedException, ExecutionException {
+        CompletionService<Long> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
+        service.submit(() -> timesheetDao.insert(timesheet));
+        Future<Long> future = service.take();
+        return future.get();
+    }
+
+    private Integer updateTimesheet(Timesheet timesheet) throws InterruptedException, ExecutionException {
+        CompletionService<Integer> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
+        service.submit(() -> timesheetDao.update(timesheet));
+        Future<Integer> future = service.take();
+        return future.get();
     }
 
     public void delete(Timesheet timesheet) {
-        AppDatabase.databaseWriteExecutor.execute(() -> {
+        AppDatabase.databaseExecutor.execute(() -> {
             timesheetDao.delete(timesheet);
             Log.d("TimesheetRepository.save", "deleted, id=" + timesheet.getId());
-        });
-    }
-
-    // You must call this on a non-UI thread or your app will throw an exception. Room ensures
-    // that you're not doing any long running operations on the main thread, blocking the UI.
-    public void save(Timesheet timesheet) {
-        AppDatabase.databaseWriteExecutor.execute(() -> {
-            Timesheet timesheetExisting = timesheetDao.getTimesheet(timesheet.getClientName(), timesheet.getProjectName(), timesheet.getWorkdayDate());
-            if (timesheetExisting == null) {
-                Long id = timesheetDao.insert(timesheet);
-                Log.d("TimesheetRepository.save", "inserted (new), id=" + timesheetDao.getById(id));
-            } else {
-                timesheet.setId(timesheetExisting.getId()); // FIXME hack
-                Log.d("TimesheetRepository.save", "update: " + timesheet);
-                int rows = timesheetDao.update(timesheet);
-                Log.d("TimesheetRepository.save", "updated: " + timesheetDao.getTimesheet(timesheet.getClientName(), timesheet.getProjectName(), timesheet.getWorkdayDate()));
-            }
         });
     }
 }

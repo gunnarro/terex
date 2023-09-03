@@ -4,6 +4,10 @@ import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -16,6 +20,7 @@ import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Utility {
@@ -29,17 +34,37 @@ public class Utility {
 
     private static String currentUUID;
 
-    private static final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
+    private static final Gson gson = new GsonBuilder()
+            //   .registerTypeAdapter(Id.class, new IdTypeAdapter())
+            // .setDateFormat(DateFormat.LONG)
+            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeTypeAdapter())
+            .registerTypeAdapter(LocalDate.class, new LocalDateTypeAdapter())
+            .registerTypeAdapter(LocalTime.class, new LocalTimeTypeAdapter())
+            .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
+            .setPrettyPrinting()
+            // .setVersion(1.0)
+            .create();
 
+
+    public static Gson gsonMapper() {
+        return gson;
+    }
+
+    public static DateTimeFormatter getDateTimeFormatter() {
+        return dateTimeFormatter;
+    }
+
+    // private static final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
+/*
     public static ObjectMapper getJsonMapper() {
         return mapper;
     }
-
+*/
     private Utility() {
         genNewUUID();
     }
 
-    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_TIME_PATTERN,Locale.getDefault());
+    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_TIME_PATTERN, Locale.getDefault());
 
     static {
         dateFormatter = new SimpleDateFormat(DATE_TIME_PATTERN, Locale.getDefault());
@@ -74,28 +99,38 @@ public class Utility {
     }
 
     public static String formatDateTime(LocalDateTime localDateTime) {
-        return localDateTime.format(dateTimeFormatter);
+        if (localDateTime != null) {
+            return localDateTime.format(dateTimeFormatter);
+        }
+        return null;
     }
 
-    public static DateTimeFormatter dateTimeFormatter() {
-        return DateTimeFormatter.ofPattern(DATE_PATTERN,Locale.getDefault());
+    public static DateTimeFormatter getDateFormatter() {
+        return DateTimeFormatter.ofPattern(DATE_PATTERN, Locale.getDefault());
+    }
+
+    public static DateTimeFormatter getTimeFormatter() {
+        return DateTimeFormatter.ofPattern(TIME_PATTERN, Locale.getDefault());
     }
 
     public static LocalDate toLocalDate(String dateStr) {
         Log.d("Utility", "toLocalDate: " + dateStr);
-        return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern(DATE_PATTERN,Locale.getDefault()));
+        return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern(DATE_PATTERN, Locale.getDefault()));
     }
 
     public static LocalTime toLocalTime(String timeStr) {
-        return LocalTime.parse(timeStr, DateTimeFormatter.ofPattern(TIME_PATTERN,Locale.getDefault()));
+        return LocalTime.parse(timeStr, DateTimeFormatter.ofPattern(TIME_PATTERN, Locale.getDefault()));
     }
 
     public static String formatTime(LocalTime localTime) {
-        return localTime != null ? localTime.format(DateTimeFormatter.ofPattern(TIME_PATTERN,Locale.getDefault())) : null;
+        return localTime != null ? localTime.format(DateTimeFormatter.ofPattern(TIME_PATTERN, Locale.getDefault())) : null;
     }
 
     public static String formatDate(LocalDate localDate) {
-        return localDate.format(DateTimeFormatter.ofPattern(DATE_PATTERN));
+        if (localDate != null) {
+            return localDate.format(DateTimeFormatter.ofPattern(DATE_PATTERN));
+        }
+        return null;
     }
 
     public static String getDateDiffInHours(LocalTime d1, LocalTime d2) {
@@ -117,7 +152,9 @@ public class Utility {
             mm = String.format("0%s", minute);
         }
         return String.format("%s:%s", hh, mm);
-    };
+    }
+
+    ;
 
     public static String formatToDDMMYYYY(int year, int month, int day) {
         String dd = String.format("%s", day);
@@ -129,7 +166,9 @@ public class Utility {
             mm = String.format("0%s", month);
         }
         return String.format("%s-%s-%s", dd, mm, year);
-    };
+    }
+
+    ;
 
     /**
      * @param map the map of words to be sorted
@@ -141,5 +180,23 @@ public class Utility {
                 .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
                 .limit(10)
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+    }
+
+
+    private static final Pattern POSITIVE_INTEGER_PATTERN = Pattern.compile("\\d+");
+
+    public static boolean isInteger(String value) {
+        if (value == null) {
+            return false;
+        }
+        return POSITIVE_INTEGER_PATTERN.matcher(value).matches();
+    }
+
+    public static LocalDateTime toLocalDateTime(String dateTimeStr) {
+        Log.d("Utility", "toLocalDateTime: " + dateTimeStr);
+        if (dateTimeStr == null || dateTimeStr.length() != DATE_TIME_PATTERN.length()) {
+            return null;
+        }
+        return LocalDateTime.parse(dateTimeStr, dateTimeFormatter);
     }
 }

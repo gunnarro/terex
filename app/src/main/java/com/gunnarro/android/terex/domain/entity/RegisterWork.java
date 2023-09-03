@@ -1,7 +1,5 @@
 package com.gunnarro.android.terex.domain.entity;
 
-import androidx.annotation.NonNull;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
