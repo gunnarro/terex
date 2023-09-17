@@ -25,15 +25,11 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
-import com.gunnarro.android.terex.service.RecruitmentService;
 import com.gunnarro.android.terex.utility.Utility;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 
 import javax.inject.Inject;
 
@@ -41,17 +37,20 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 
 @AndroidEntryPoint
-public class TimesheetAddFragment extends Fragment implements View.OnClickListener {
+public class RecruitmentCompanyRegistrerFragment extends Fragment implements View.OnClickListener {
 
     // Match a not-empty string. A string with only spaces or no characters is an empty-string.
     public static final String HAS_TEXT_REGEX = "\\w.*+";
     // match one or more withe space
     public static final String EMPTY_TEXT_REGEX = "\\s+";
+    // private final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
-    RecruitmentService recruitmentService = new RecruitmentService();
+    String[] clients = new String[]{"Norway Consulting", "Technogarden", "IT-Verket"};
+    String[] projects = new String[]{"CatalystOne Solution AS", "MasterCard"};
 
     @Inject
-    public TimesheetAddFragment() {
+    public RecruitmentCompanyRegistrerFragment() {
+        // Needed by dagger framework
     }
 
     @Override
@@ -63,23 +62,18 @@ public class TimesheetAddFragment extends Fragment implements View.OnClickListen
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         requireActivity().setTitle(R.string.title_register_work);
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_timesheet_add_grid, container, false);
-
-        String[] clients = recruitmentService.getRecruitmentNames();
-        String[] projects = recruitmentService.getProjectNames();
+        View view = inflater.inflate(R.layout.fragment_recruitment_company_registrer, container, false);
         Timesheet timesheet = Timesheet.createDefault(clients[0], projects[0], Utility.DEFAULT_STATUS, Utility.DEFAULT_DAILY_BREAK_IN_MINUTES, LocalDate.now(), Utility.DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES, Utility.DEFAULT_HOURLY_RATE);
         // check if this is an existing or a new timesheet
         String timesheetJson = getArguments() != null ? getArguments().getString(TimesheetListFragment.TIMESHEET_JSON_INTENT_KEY) : null;
-        if (timesheetJson != null && !timesheetJson.isEmpty()) {
+        if (timesheetJson != null) {
             try {
                 timesheet = Utility.gsonMapper().fromJson(timesheetJson, Timesheet.class);
-                Log.d(Utility.buildTag(getClass(), "onFragmentResult"), String.format("json: %s, timesheet: %s", timesheetJson, timesheet));
+                Log.d(Utility.buildTag(getClass(), "onFragmentResult"), String.format("action: %s, timesheet: %s", timesheetJson, timesheet));
             } catch (Exception e) {
                 Log.e("", e.toString());
                 throw new TerexApplicationException("Application Error!", "5000", e);
             }
-        } else {
-            Log.d(Utility.buildTag(getClass(), "onFragmentResult"), String.format("default timesheet not found! use timesheet: %s", timesheet));
         }
 
         // create client spinner
@@ -180,16 +174,9 @@ public class TimesheetAddFragment extends Fragment implements View.OnClickListen
             returnToTimesheetList();
         });
 
-        if (timesheet != null) {
-            updateTimesheetAddView(view, timesheet);
-        }
-        Log.d(Utility.buildTag(getClass(), "onCreateView"), String.format("%s", timesheet));
+        updateTimesheetAddView(view, timesheet);
+        Log.d(Utility.buildTag(getClass(), "onCreateView"), timesheet.toString());
         return view;
-    }
-
-
-    private void setupEventHandlers() {
-
     }
 
     private void returnToTimesheetList() {
@@ -200,7 +187,7 @@ public class TimesheetAddFragment extends Fragment implements View.OnClickListen
                 .commit();
     }
 
-    private void updateTimesheetAddView(View view, @NotNull Timesheet timesheet) {
+    private void updateTimesheetAddView(View view, Timesheet timesheet) {
         TextView id = view.findViewById(R.id.timesheet_entity_id);
         id.setText(String.valueOf(timesheet.getId()));
 
@@ -316,8 +303,7 @@ public class TimesheetAddFragment extends Fragment implements View.OnClickListen
 
         TextView commentView = requireView().findViewById(R.id.timesheet_comment);
         timesheet.setComment(commentView.getText().toString());
-        // determine and set worked minutes
-        timesheet.setWorkedMinutes(Long.valueOf(ChronoUnit.MINUTES.between(timesheet.getFromTime(), timesheet.getToTime())).intValue());
+
         try {
             return Utility.gsonMapper().toJson(timesheet);
         } catch (Exception e) {

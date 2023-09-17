@@ -59,6 +59,14 @@ android {
         warning 'InvalidPackage'
     }
 
+    packagingOptions {
+        exclude("META-INF/LICENSE-LGPL-3.txt")
+        exclude("META-INF/LICENSE-GPL-3.txt")
+        exclude("META-INF/LICENSE-W3C-TEST")
+        exclude("META-INF/LICENSE-LGPL-2.1.txt")
+        exclude("META-INF/LICENSE-GPL-2.txt")
+    }
+
 }
 
 dependencies {
@@ -137,6 +145,17 @@ dependencies {
     implementation "androidx.security:security-app-authenticator:$androidx_security_app_authenticator"
     // for fingerprint login
     implementation "androidx.biometric:biometric:$rootProject.biometric_version"
+    // for pdf
+    implementation 'org.jsoup:jsoup:1.16.1'
+    implementation 'org.xhtmlrenderer:flying-saucer-pdf-openpdf:9.2.2'
+    implementation 'org.xhtmlrenderer:flying-saucer-core:9.2.2'
+
+
+
+
+    // html template engine
+    implementation 'com.github.spullara.mustache.java:compiler:0.9.4'
+
     // for unit tests
     testImplementation "org.junit.vintage:junit-vintage-engine:$junit_vintage_engine"
     testImplementation "org.junit.jupiter:junit-jupiter:$junit_jupiter"

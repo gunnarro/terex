@@ -11,7 +11,6 @@ import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.gunnarro.android.terex.domain.dbview.TimesheetView;
-import com.gunnarro.android.terex.domain.entity.Address;
 import com.gunnarro.android.terex.domain.entity.Company;
 import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.InvoiceSummary;
@@ -27,7 +26,7 @@ import java.util.concurrent.Executors;
 /**
  * Thread safe database instance.
  */
-@Database(entities = {Timesheet.class, Invoice.class, InvoiceSummary.class}, version = 17, views = {TimesheetView.class})
+@Database(entities = {Timesheet.class, Invoice.class, InvoiceSummary.class}, version = 21, views = {TimesheetView.class})
 public abstract class AppDatabase extends RoomDatabase {
     // marking the instance as volatile to ensure atomic access to the variable
     private static volatile AppDatabase INSTANCE;
@@ -40,10 +39,10 @@ public abstract class AppDatabase extends RoomDatabase {
             synchronized (AppDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            AppDatabase.class, "terex_database")
+                                    AppDatabase.class, "terex_database")
                             .fallbackToDestructiveMigration()
-                          //  .createFromAsset("database/terex_database_data.sqlite")
-                          //  .addCallback(roomCallback)
+                            //  .createFromAsset("database/terex_database_data.sqlite")
+                            //  .addCallback(roomCallback)
                             .build();
                 }
             }
@@ -54,6 +53,8 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract TimesheetDao timesheetDao();
 
     public abstract InvoiceDao invoiceDao();
+
+    //public abstract RecruitmentDao recruitmentDao();
 
     // Called when the database is created for the first time. This is called after all the tables are created.
     private static final RoomDatabase.Callback roomCallback = new RoomDatabase.Callback() {
@@ -75,12 +76,12 @@ public abstract class AppDatabase extends RoomDatabase {
 
             // this method is called when database is created
             // and below line is to populate our data.
-           // new PopulateDbAsyncTask(INSTANCE).execute();
+            // new PopulateDbAsyncTask(INSTANCE).execute();
             RegisterWork work = RegisterWork.buildDefault("MasterCard");
             Timesheet timesheet = new Timesheet();
             timesheet.setStatus(work.getStatus());
             timesheet.setClientName(work.getClientName());
-            timesheet.setProjectName(work.getProjectName());
+            timesheet.setProjectCode(work.getProjectName());
             timesheet.setHourlyRate(work.getHourlyRate());
             timesheet.setBreakInMin(work.getBreakInMin());
             timesheet.setWorkdayDate(work.getWorkdayDate());
@@ -97,7 +98,7 @@ public abstract class AppDatabase extends RoomDatabase {
             Timesheet timesheet = new Timesheet();
             timesheet.setStatus(work.getStatus());
             timesheet.setClientName(work.getClientName());
-            timesheet.setProjectName(work.getProjectName());
+            timesheet.setProjectCode(work.getProjectName());
             timesheet.setHourlyRate(work.getHourlyRate());
             timesheet.setBreakInMin(work.getBreakInMin());
             timesheet.setWorkdayDate(work.getWorkdayDate());
@@ -105,6 +106,7 @@ public abstract class AppDatabase extends RoomDatabase {
             timesheet.setToTime(work.getToTime());
             instance.timesheetDao().insert(timesheet);
         }
+
         @Override
         protected Void doInBackground(Void... voids) {
             return null;

@@ -6,11 +6,8 @@ import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
-import com.gunnarro.android.terex.domain.converter.LocalDateTimeConverter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Objects;
 
 @TypeConverters(LocalDateConverter.class)
 @Entity(tableName = "invoice_summary")

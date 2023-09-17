@@ -7,6 +7,7 @@
     <string name="title_invoice">Invoice</string>
     <string name="title_credential">Credential Store</string>
     <string name="title_credential_register">Credential Store</string>
+    <string name="title_timesheet_calendar">Timesheet calendar</string>
     <string name="lbl_timesheet">Timesheet</string>
     <string name="lbl_invoice">Invoice</string>
     <string name="lbl_client">Client</string>
@@ -26,6 +27,7 @@
     <string name="btn_cancel">Cancel</string>
     <string name="btn_add">Add</string>
     <string name="btn_create">Create</string>
+    <string name="btn_calendar">Calendar</string>
 
     <!-- invoice -->
     <string name="lbl_company_name">Firma</string>
@@ -65,5 +67,9 @@
     <string name="info_timesheet_list_added_entry">Added new entry to timesheet</string>
     <string name="info_timesheet_list_updated_entry">Updated timesheet entry</string>
     <string name="info_timesheet_list_deleted_entry">Deleted entry from timesheet</string>
+
+    <string name="info_timesheet_list_add_msg_format">Added %s</string>
+    <string name="info_timesheet_list_update_msg_format">Updated %s</string>
+    <string name="info_timesheet_list_delete_msg_format">Deleted %s</string>
 
 </resources>

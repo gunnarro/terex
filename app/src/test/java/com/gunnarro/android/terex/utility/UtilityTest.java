@@ -4,12 +4,22 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.Date;
 
 public class UtilityTest {
+
+    @Test
+    public void getFirstDayOfWeek() {
+        LocalDate firstDayOfWeekDate = Utility.getFirstDayOfWeek(2023, 5, 18);
+        assertEquals("2023-05-01", firstDayOfWeekDate.toString());
+        assertEquals("2023-05-07", Utility.getLastDayOfWeek(firstDayOfWeekDate, 18).toString());
+        assertEquals(18, Utility.getWeek(firstDayOfWeekDate).intValue());
+
+    }
 
     @Test
     public void formatDateAndTime() {

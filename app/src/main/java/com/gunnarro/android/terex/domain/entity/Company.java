@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.Embedded;
 
 import dagger.Component;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,12 +13,12 @@ import lombok.Setter;
 /**
  * Used as embedded
  */
-//@Builder
 @NoArgsConstructor
 @Getter
+@Setter
 public class Company {
 
-    @ColumnInfo(name = "name")
+    @ColumnInfo(name = "company_name")
     String name;
     @ColumnInfo(name = "organization_number")
     String organizationNumber;

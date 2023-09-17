@@ -2,19 +2,18 @@ package com.gunnarro.android.terex.utility;
 
 import android.util.Log;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.WeekFields;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Locale;
@@ -24,6 +23,12 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Utility {
+
+    public static final Integer DEFAULT_DAILY_BREAK_IN_MINUTES = 30;
+    public static final Long DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES = 8 * 60L - DEFAULT_DAILY_BREAK_IN_MINUTES;
+    public static final Integer DEFAULT_HOURLY_RATE = 1075;
+    public static final String DEFAULT_STATUS = "Open";
+    public static final String TIMESHEET_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm";
 
     private static final String LOG_TAG = Utility.class.getSimpleName();
     private static final SimpleDateFormat dateFormatter;
@@ -198,5 +203,55 @@ public class Utility {
             return null;
         }
         return LocalDateTime.parse(dateTimeStr, dateTimeFormatter);
+    }
+
+    public static void getFirstDayOfWeek() {
+        LocalDate today = LocalDate.now();
+
+        // Go backward to get Monday
+        LocalDate monday = today;
+        while (monday.getDayOfWeek() != DayOfWeek.MONDAY) {
+            monday = monday.minusDays(1);
+        }
+
+        // Go forward to get Sunday
+        LocalDate sunday = today;
+        while (sunday.getDayOfWeek() != DayOfWeek.SUNDAY) {
+            sunday = sunday.plusDays(1);
+        }
+
+        System.out.println("Today: " + today);
+        System.out.println("Monday of the Week: " + monday);
+        System.out.println("Sunday of the Week: " + sunday);
+    }
+
+    public static LocalDate getFirstDayOfWeek(LocalDate date, Integer weekOfYear) {
+        return LocalDate.of(date.getYear(), date.getMonthValue(), 1)
+                .with(DayOfWeek.MONDAY)
+                .with(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear(), weekOfYear);
+    }
+
+    /**
+     * Use Monday as start of week
+     */
+    public static LocalDate getFirstDayOfWeek(Integer year, Integer month, Integer weekOfYear) {
+        return LocalDate.of(year, month, 1)
+                .with(DayOfWeek.MONDAY)
+                .with(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear(), weekOfYear);
+    }
+
+    /**
+     * use sunday as last day of week
+     */
+    public static LocalDate getLastDayOfWeek(LocalDate date, Integer weekOfYear) {
+        LocalDate firstDayOfWeek = getFirstDayOfWeek(date.getYear(), date.getMonthValue(), weekOfYear);
+        while (firstDayOfWeek.getDayOfWeek() != DayOfWeek.SUNDAY) {
+            firstDayOfWeek = firstDayOfWeek.plusDays(1);
+        }
+        return firstDayOfWeek;
+    }
+
+    public static Integer getWeek(LocalDate date) {
+        return date.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear());
     }
 }

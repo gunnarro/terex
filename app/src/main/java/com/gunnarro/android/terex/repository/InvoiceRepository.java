@@ -14,6 +14,9 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Singleton;
+
+@Singleton
 public class InvoiceRepository {
     private InvoiceDao invoiceDao;
     private LiveData<List<Invoice>> allInvoices;

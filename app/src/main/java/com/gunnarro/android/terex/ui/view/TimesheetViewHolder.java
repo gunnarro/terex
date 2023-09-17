@@ -56,7 +56,7 @@ public class TimesheetViewHolder extends RecyclerView.ViewHolder {
         }
         timesheetLine1LabelView.setText(Utility.formatTime(timesheet.getFromTime()) + " - " + Utility.formatTime(timesheet.getToTime()));
         timesheetLine1ValueView.setText(Utility.getDateDiffInHours(timesheet.getFromTime(), timesheet.getToTime()));
-        timesheetLine2LabelView.setText(timesheet.getProjectName());
+        timesheetLine2LabelView.setText(timesheet.getProjectCode());
   //      timesheetLine2ValueView.setText(String.format("%s", timesheet.getHourlyRate() * ((double) timesheet.getWorkedMinutes() / 60)));
     }
 }

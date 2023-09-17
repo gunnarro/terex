@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style type="css">
+
+    body {
+      font-size: x-small;
+    }
+
+
+        table, tr, td, th{
+font-size: x-small;
+padding: 10px;
+margin: auto;
+border: none;
+}
+
+
+    </style>
+</head>
+<body>
+
+<h2>{{title}}</h2>
+<p>
+<table>
+    <tr>
+        <td>Firma</td>
+        <td>:</td>
+        <td>gunnarro as</td>
+    </tr>
+    <tr>
+        <td>Forretningsadresse</td>
+        <td>:</td>
+        <td>Stavangergata 35, 0467 OSLO</td>
+    </tr>
+    <tr>
+        <td>Organisasjonsnummer</td>
+        <td>:</td>
+        <td>828 707 922</td>
+    </tr>
+    <tr>
+        <td>Bankkonto</td>
+        <td>:</td>
+        <td>9230 26 98831</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Kunde</td>
+        <td>:</td>
+        <td>Norway Consulting AS</td>
+    </tr>
+    <tr>
+        <td>Adresse</td>
+        <td>:</td>
+        <td>Grensen 16, 0159 Oslo</td>
+    </tr>
+    <tr>
+        <td>Telefon</td>
+        <td>:</td>
+        <td>465 19 838</td>
+    </tr>
+    <tr>
+        <td>Prosjektkode</td>
+        <td>:</td>
+        <td>techlead-catalystone-solution-as</td>
+    </tr>
+    <tr>
+        <td>Kontaktperson</td>
+        <td>:</td>
+        <td>Anita Lundtveit</td>
+    </tr>
+</table>
+</p>
+
+<p>
+<table>
+    <thead>
+    <tr>
+        <th>Year</th>
+        <th>Month</th>
+        <th>Week</th>
+        <th>From/to date</th>
+        <th>Billed hours</th>
+        <th>Billed amount</th>
+    </tr>
+    </thead>
+    <tbody>
+        {{#invoiceSummaryList}}
+            <tr>
+                <td>{{year}}</td>
+                <td>{{month}}</td>
+                <td>{{week}}</td>
+                <td>{{fromDate}} - {{toDate}}</td>
+                <td>{{sumWorkedMinutes}}</td>
+                <td>{{sumBilledWork}}</td>
+            </tr>
+        {{/invoiceSummaryList}}
+    </tbody>
+    <tfoot>
+    <tr>
+        <td>Sum</td>
+        <td>{{sunBilledHours}}</td>
+        <td>{{sumBilledAmount}}</td>
+    </tr>
+    </tfoot>
+</table>
+</p>
+</body>
+</html>

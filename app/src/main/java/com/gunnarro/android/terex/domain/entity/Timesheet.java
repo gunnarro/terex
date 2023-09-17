@@ -10,6 +10,8 @@ import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
 import com.gunnarro.android.terex.domain.converter.LocalDateTimeConverter;
 import com.gunnarro.android.terex.domain.converter.LocalTimeConverter;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -47,8 +49,12 @@ public class Timesheet {
     private String clientName;
 
     @NonNull
-    @ColumnInfo(name = "project_name", index = true)
-    private String projectName;
+    @ColumnInfo(name = "project_code", index = true)
+    private String projectCode;
+
+    @NonNull
+    @ColumnInfo(name = "workday_week")
+    private Integer workdayWeek;
 
     @NonNull
     @ColumnInfo(name = "workday_date")
@@ -62,12 +68,14 @@ public class Timesheet {
     @ColumnInfo(name = "to_time")
     private LocalTime toTime;
 
+    @NotNull
     @ColumnInfo(name = "worked_in_min")
     private Integer workedMinutes;
 
     @ColumnInfo(name = "break_in_min")
     private Integer breakInMin;
 
+    @NotNull
     @ColumnInfo(name = "hourly_rate")
     private Integer hourlyRate;
 
@@ -77,6 +85,13 @@ public class Timesheet {
 
     @ColumnInfo(name = "comment")
     private String comment;
+
+    /**
+     * Indicate if it data in this entry should be used as default setting for new entries. Set to not default as default.
+     */
+    @ColumnInfo(name = "use_as_default", defaultValue = "0")
+    private Integer useAsDefault;
+
 
     public Long getId() {
         return id;
@@ -96,12 +111,21 @@ public class Timesheet {
     }
 
     @NonNull
-    public String getProjectName() {
-        return projectName;
+    public String getProjectCode() {
+        return projectCode;
     }
 
-    public void setProjectName(@NonNull String projectName) {
-        this.projectName = projectName;
+    public void setProjectCode(@NonNull String projectCode) {
+        this.projectCode = projectCode;
+    }
+
+    @NonNull
+    public Integer getWorkdayWeek() {
+        return workdayWeek;
+    }
+
+    public void setWorkdayWeek(@NonNull Integer workdayWeek) {
+        this.workdayWeek = workdayWeek;
     }
 
     @NonNull
@@ -155,6 +179,9 @@ public class Timesheet {
         this.hourlyRate = hourlyRate;
     }
 
+    /**
+     * Valid statues: OPEN, BILLED
+     */
     @NonNull
     public String getStatus() {
         return status;
@@ -187,14 +214,22 @@ public class Timesheet {
         return lastModifiedDate;
     }
 
+    public Integer getUseAsDefault() {
+        return useAsDefault;
+    }
+
+    public void setUseAsDefault(Integer useAsDefault) {
+        this.useAsDefault = useAsDefault;
+    }
+
     public void setLastModifiedDate(@NonNull LocalDateTime lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
 
-    public static Timesheet createDefault(String client, String project, String status, Integer dailyBreakMin, LocalDate workDayDate, Long workingHoursMin, Integer hourlyRate) {
+    public static Timesheet createDefault(String clientName, String projectCode, String status, Integer dailyBreakMin, LocalDate workDayDate, Long workingHoursMin, Integer hourlyRate) {
         Timesheet timesheet = new Timesheet();
-        timesheet.setClientName(client);
-        timesheet.setProjectName(project);
+        timesheet.setClientName(clientName);
+        timesheet.setProjectCode(projectCode);
         timesheet.setStatus(status);
         timesheet.setWorkdayDate(workDayDate);
         timesheet.setFromTime(LocalTime.now(ZoneId.systemDefault()).withHour(8).withMinute(0).withSecond(0).withSecond(0).withNano(0));
@@ -211,12 +246,12 @@ public class Timesheet {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Timesheet timesheet = (Timesheet) o;
-        return clientName.equals(timesheet.clientName) && projectName.equals(timesheet.projectName) && workdayDate.equals(timesheet.workdayDate);
+        return clientName.equals(timesheet.clientName) && projectCode.equals(timesheet.projectCode) && workdayDate.isEqual(timesheet.workdayDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(clientName, projectName, workdayDate);
+        return Objects.hash(clientName, projectCode, workdayDate);
     }
 
     @NonNull
@@ -227,7 +262,8 @@ public class Timesheet {
         sb.append(", createdDate=").append(createdDate);
         sb.append(", lastModifiedDate=").append(lastModifiedDate);
         sb.append(", clientName='").append(clientName).append('\'');
-        sb.append(", projectName='").append(projectName).append('\'');
+        sb.append(", projectCode='").append(projectCode).append('\'');
+        sb.append(", workdayWeek=").append(workdayWeek);
         sb.append(", workdayDate=").append(workdayDate);
         sb.append(", fromTime=").append(fromTime);
         sb.append(", toTime=").append(toTime);
@@ -236,7 +272,27 @@ public class Timesheet {
         sb.append(", hourlyRate=").append(hourlyRate);
         sb.append(", status='").append(status).append('\'');
         sb.append(", comment='").append(comment).append('\'');
+        sb.append(", useAsDefault='").append(useAsDefault).append('\'');
         sb.append('}');
         return sb.toString();
+    }
+
+    public static Timesheet clone(Timesheet timesheet) {
+        if (timesheet == null) {
+            return null;
+        }
+        Timesheet clone = new Timesheet();
+        clone.setProjectCode(timesheet.getProjectCode());
+        clone.setClientName(timesheet.getClientName());
+        clone.setBreakInMin(timesheet.getBreakInMin());
+        clone.setWorkedMinutes(timesheet.getWorkedMinutes());
+        clone.setStatus(timesheet.getStatus());
+        clone.setHourlyRate(timesheet.getHourlyRate());
+        clone.setWorkdayWeek(timesheet.getWorkdayWeek());
+        clone.setBreakInMin(timesheet.getBreakInMin());
+        clone.setFromTime(timesheet.getFromTime());
+        clone.setToTime(timesheet.getToTime());
+        clone.setComment(timesheet.getComment());
+        return clone;
     }
 }

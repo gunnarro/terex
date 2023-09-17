@@ -23,8 +23,12 @@ public interface TimesheetDao {
     @Query("SELECT * FROM timesheet WHERE id = :id")
     Timesheet getById(long id);
 
-    @Query("SELECT * FROM timesheet WHERE client_name = :clientName AND  project_name = :projectName AND workday_date = :workdayDate")
-    Timesheet getTimesheet(String clientName, String projectName, LocalDate workdayDate);
+    @Query("SELECT * FROM timesheet ORDER BY workday_date DESC LIMIT 1")
+    Timesheet getMostRecent();
+
+
+    @Query("SELECT * FROM timesheet WHERE client_name = :clientName AND  project_code = :projectCode AND workday_date = :workdayDate")
+    Timesheet getTimesheet(String clientName, String projectCode, LocalDate workdayDate);
 
     /**
      * SELECT start_date,strftime('%Y',start_date) as "Year",
@@ -32,12 +36,11 @@ public interface TimesheetDao {
      * strftime('%d',start_date) as "Day"
      * FROM job_history;
      */
-    @Query("SELECT * FROM timesheet WHERE client_name = :clientName AND strftime('%m', datetime(workday_date, 'unixepoch')) = :monthNumber")
-    List<Timesheet> getTimesheetByMonth(String clientName, Integer monthNumber);
+    @Query("SELECT * FROM timesheet WHERE client_name = :clientName AND project_code = :projectCode AND strftime('%m', datetime(workday_date, 'unixepoch')) <> :monthNumber")
+    List<Timesheet> getTimesheetByMonth(String clientName, String projectCode, String monthNumber);
 
     @Query("SELECT * FROM timesheet WHERE client_name = :clientName AND strftime('%d', workday_date) = :monthNumber")
-    List<Timesheet> getTimesheetByWeek(String clientName, Integer monthNumber);
-
+    List<Timesheet> getTimesheetByWeek(String clientName, String monthNumber);
 
     @Query("SELECT * FROM timesheet ORDER BY workday_date ASC")
     LiveData<List<Timesheet>> getAll();

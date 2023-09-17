@@ -19,8 +19,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
@@ -43,8 +41,6 @@ public class TimesheetListFragment extends Fragment {
     public static final String TIMESHEET_ACTION_DELETE = "timesheet_delete";
     private TimesheetViewModel timesheetViewModel;
 
-    private final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +55,7 @@ public class TimesheetListFragment extends Fragment {
                 try {
                     Timesheet timesheet = Utility.gsonMapper().fromJson(bundle.getString(TIMESHEET_JSON_INTENT_KEY), Timesheet.class);
                     handleButtonActions(timesheet, bundle.getString(TIMESHEET_ACTION_KEY));
-                    Log.d(Utility.buildTag(getClass(), "onFragmentResult"), String.format("action: %s, credentials: %s", bundle.getString(TIMESHEET_ACTION_KEY), timesheet));
+                    Log.d(Utility.buildTag(getClass(), "onFragmentResult"), String.format("action: %s, timesheet: %s", bundle.getString(TIMESHEET_ACTION_KEY), timesheet));
                 } catch (Exception e) {
                     Log.e("", e.toString());
                     showInfoDialog(String.format("Application error!%s Error: %s%sErrorCode: 5001%sPlease report.", e.getMessage(), System.lineSeparator(), System.lineSeparator(), System.lineSeparator()), getActivity());
@@ -87,12 +83,26 @@ public class TimesheetListFragment extends Fragment {
 
         FloatingActionButton addButton = view.findViewById(R.id.add_timesheet);
         addButton.setOnClickListener(v -> {
+            String timesheetJson = Utility.gsonMapper().toJson(timesheetViewModel.getMostRecent(), Timesheet.class);
+            Bundle bundle = new Bundle();
+            bundle.putString(TimesheetListFragment.TIMESHEET_JSON_INTENT_KEY, timesheetJson);
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.content_frame, TimesheetAddFragment.class, new Bundle())
+                    .replace(R.id.content_frame, TimesheetAddFragment.class, bundle)
                     .setReorderingAllowed(true)
                     .commit();
         });
+
+        FloatingActionButton calendarButton = view.findViewById(R.id.view_timesheet_calendar);
+        calendarButton.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.content_frame, TimesheetCalendarFragment.class, bundle)
+                    .setReorderingAllowed(true)
+                    .commit();
+        });
+
         Log.d(Utility.buildTag(getClass(), "onCreateView"), "");
         return view;
     }
@@ -120,16 +130,16 @@ public class TimesheetListFragment extends Fragment {
             try {
                 timesheetViewModel.save(timesheet);
                 if (timesheet.getId() == null) {
-                    showSnackbar(getResources().getString(R.string.info_timesheet_list_added_entry), R.color.color_snackbar_text_add);
+                    showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_add_msg_format), timesheet.getWorkdayDate()), R.color.color_snackbar_text_add);
                 } else {
-                    showSnackbar(getResources().getString(R.string.info_timesheet_list_updated_entry), R.color.color_snackbar_text_update);
+                    showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_update_msg_format), timesheet.getWorkdayDate()), R.color.color_snackbar_text_update);
                 }
             } catch (Exception ex) {
                 showInfoDialog(String.format("Application error!%sError: %s%s Please report.", ex.getMessage(), System.lineSeparator(), System.lineSeparator()), getActivity());
             }
         } else if (TIMESHEET_ACTION_DELETE.equals(action)) {
             timesheetViewModel.delete(timesheet);
-            showSnackbar(getResources().getString(R.string.info_timesheet_list_deleted_entry), R.color.color_snackbar_text_delete);
+            showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_delete_msg_format), timesheet.getWorkdayDate()), R.color.color_snackbar_text_delete);
         } else {
             Log.w(Utility.buildTag(getClass(), "onFragmentResult"), "unknown action: " + action);
             showInfoDialog(String.format("Application error!%s Unknown action: %s%s Please report.", action, System.lineSeparator(), System.lineSeparator()), getActivity());
@@ -145,7 +155,7 @@ public class TimesheetListFragment extends Fragment {
 
     private void showInfoDialog(String infoMessage, Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Login failed!");
+        builder.setTitle("Info");
         builder.setMessage(infoMessage);
         // Set Cancelable false for when the user clicks on the outside the Dialog Box then it will remain show
         builder.setCancelable(false);

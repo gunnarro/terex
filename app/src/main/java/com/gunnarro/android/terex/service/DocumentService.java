@@ -2,6 +2,9 @@ package com.gunnarro.android.terex.service;
 
 import android.graphics.pdf.PdfDocument;
 
+import javax.inject.Singleton;
+
+@Singleton
 public class DocumentService {
 
     public void toPdf() {

@@ -7,12 +7,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.InvoiceSummary;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
@@ -21,7 +25,18 @@ import com.gunnarro.android.terex.utility.Utility;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -31,7 +46,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class AdminFragment extends Fragment {
 
     // @Inject
-    InvoiceService invoiceService = new InvoiceService();
+    InvoiceService invoiceService;
 
     @Inject
     public AdminFragment() {
@@ -41,6 +56,7 @@ public class AdminFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        invoiceService = new InvoiceService(getActivity().getApplicationContext());
         Log.d(Utility.buildTag(getClass(), "onCreate"), "");
     }
 
@@ -58,11 +74,13 @@ public class AdminFragment extends Fragment {
 
         view.findViewById(R.id.btn_admin_generate_invoice).setOnClickListener(v -> {
             try {
-                createInvoice();
+              //  createInvoice();
+                createInvoiceSummaryAttachment();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
+
         Log.d(Utility.buildTag(getClass(), "onCreateView"), "");
         return view;
     }
@@ -91,6 +109,52 @@ public class AdminFragment extends Fragment {
         int month = ((Spinner) requireView().findViewById(R.id.admin_invoice_month_spinner)).getSelectedItemPosition();
         Toast.makeText(requireContext(), "Create invoice for " + month, Toast.LENGTH_SHORT).show();
         List<InvoiceSummary> invoiceSummaries = invoiceService.buildInvoiceSummaryByWeek(2022, month);
-        invoiceSummaries.forEach( i -> Log.i("generateInvoiceSummary", i.toString()));
+        invoiceSummaries.forEach(i -> Log.i("generateInvoiceSummary", i.toString()));
+    }
+
+    private void createInvoiceSummaryAttachment() throws IOException {
+        List<InvoiceSummary> invoiceSummaries =  invoiceService.createInvoiceSummaryForMonth("Norway Consulting AS", "catalystOne monolith", 9);
+        Log.d("createInvoiceSummaryAttachment", "invoiceSummary week: " + invoiceSummaries);
+        StringBuilder mustacheTemplateStr = new StringBuilder();
+        // first read the invoice summary mustache html template
+        try (InputStream fis = requireContext().getAssets().open("template/invoice-timesheet-summary-attachment.mustache");
+             InputStreamReader isr = new InputStreamReader(fis,
+                     StandardCharsets.UTF_8);
+             BufferedReader br = new BufferedReader(isr)) {
+            br.lines().forEach(mustacheTemplateStr::append);
+        }
+
+
+        Double sumBilledAmount = invoiceSummaries.stream()
+                .mapToDouble(InvoiceSummary::getSumBilledWork)
+                .sum();
+
+        Double sumBilledMinutes = invoiceSummaries.stream()
+                .mapToDouble(InvoiceSummary::getSumWorkedMinutes)
+                .sum();
+
+        // minutes to hours;
+        Double sumBilledHours = sumBilledMinutes/60;
+
+        String invoiceSummaryHtml = createInvoiceSummaryHtml(mustacheTemplateStr.toString(), invoiceSummaries, sumBilledHours.toString(), sumBilledAmount.toString());
+
+        WebView webView = requireView().findViewById(R.id.invoice_overview_html);
+        webView.loadData(invoiceSummaryHtml, "text/html", "utf-8");
+
+        Log.d("createInvoiceSummaryAttachment", "" + invoiceSummaryHtml);
+        // thereafter convert the html to pdf
+      //  PdfUtility.htmlToPdf(invoiceSummaryHtml, requireContext().getFilesDir() + "/invoice-timesheet-summary.pdf");
+    }
+
+    private String createInvoiceSummaryHtml(String mustacheTemplateStr, List<InvoiceSummary> invoiceSummaryList, String sumBilledHours, String sumBilledAmount) {
+        MustacheFactory mf = new DefaultMustacheFactory();
+        Mustache mustache = mf.compile(new StringReader(mustacheTemplateStr),"");
+        Map<String, Object> context = new HashMap<>();
+        context.put("invoiceSummaryList", invoiceSummaryList);
+        context.put("sunBilledHours", sumBilledHours);
+        context.put("sumBilledAmount", sumBilledAmount);
+        StringWriter writer = new StringWriter();
+        mustache.execute(writer, context);
+        return writer.toString();
     }
 }

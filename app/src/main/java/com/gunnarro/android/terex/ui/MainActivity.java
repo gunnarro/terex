@@ -19,6 +19,7 @@ import com.gunnarro.android.terex.ui.fragment.AdminFragment;
 import com.gunnarro.android.terex.ui.fragment.InvoiceFragment;
 import com.gunnarro.android.terex.ui.fragment.InvoiceListFragment;
 import com.gunnarro.android.terex.ui.fragment.TimesheetAddFragment;
+import com.gunnarro.android.terex.ui.fragment.TimesheetCalendarFragment;
 import com.gunnarro.android.terex.ui.fragment.TimesheetListFragment;
 import com.gunnarro.android.terex.utility.Utility;
 
@@ -54,6 +55,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Inject
     InvoiceFragment invoiceFragment;
 
+    @Inject
+    TimesheetCalendarFragment timesheetCalendarFragment;
+
     private DrawerLayout drawer;
 
     public MainActivity() {
@@ -62,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.timesheetAddFragment = new TimesheetAddFragment();
         this.invoiceListFragment = new InvoiceListFragment();
         this.invoiceFragment = new InvoiceFragment();
+        this.timesheetCalendarFragment = new TimesheetCalendarFragment();
     }
 
     @Override
@@ -135,6 +140,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             } else if (id == R.id.nav_admin) {
                 setTitle(R.string.title_timesheet);
                 viewFragment(adminFragment);
+            } else if (id == R.id.nav_timesheet_calendar) {
+                setTitle(R.string.title_timesheet_calendar);
+                viewFragment(timesheetCalendarFragment);
             }
             // close drawer after clicking the menu item
             DrawerLayout drawer = findViewById(R.id.drawer_layout);

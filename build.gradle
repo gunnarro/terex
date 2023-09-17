@@ -25,7 +25,9 @@ java {
     targetCompatibility = JavaVersion.VERSION_19
 }
 
-allprojects {}
+allprojects {
+
+}
 
 subprojects {
     apply plugin: 'org.sonarqube'

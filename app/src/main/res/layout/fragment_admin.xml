@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragment.TimesheetRegisterWorkFragment"
+    tools:context=".ui.fragment.AdminFragment"
     tools:ignore="ExtraText">
 
     <RelativeLayout
@@ -14,7 +14,7 @@
         tools:ignore="UselessParent">
 
         <TextView
-            android:id="@+id/timesheet_register_work_section_header"
+            android:id="@+id/admin_register_work_section_header"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:background="@color/cardview_dark_background"
@@ -25,10 +25,10 @@
             android:textColor="@color/colorSection" />
 
         <TableLayout
-            android:id="@+id/timesheet_register_work_tbl"
+            android:id="@+id/admin_register_work_tbl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/timesheet_register_work_section_header"
+            android:layout_below="@+id/admin_register_work_section_header"
             android:stretchColumns="0,0, 1">
 
             <TableRow>
@@ -83,5 +83,19 @@
                     android:textAllCaps="false" />
             </TableRow>
         </TableLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/admin_register_work_tbl">
+
+            <WebView
+                android:id="@+id/invoice_overview_html"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:enabled="false"
+                android:lines="50"/>
+
+        </LinearLayout>
     </RelativeLayout>
 </FrameLayout>

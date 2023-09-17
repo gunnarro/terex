@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class TimesheetViewModel extends AndroidViewModel {
 
-    private final TimesheetRepository repository;
+    private final TimesheetRepository timesheetRepository;
     // Using LiveData and caching what getAlphabetizedWords returns has several benefits:
     // - We can put an observer on the data (instead of polling for changes) and only update the
     //   the UI when the data actually changes.
@@ -26,21 +26,25 @@ public class TimesheetViewModel extends AndroidViewModel {
 
     public TimesheetViewModel(@NonNull Application application) {
         super(application);
-        repository = new TimesheetRepository(application);
-        timesheets = repository.getAllTimesheet();
+        timesheetRepository = new TimesheetRepository(application);
+        timesheets = timesheetRepository.getAllTimesheet();
     }
 
     public LiveData<List<Timesheet>> getTimesheetLiveData() {
         return timesheets;
     }
 
+    public Timesheet getMostRecent() {
+        return timesheetRepository.getMostRecent();
+    }
+
     public void save(Timesheet timesheet) {
-        Log.d("TimesheetViewModel.save" , "save: " + timesheet);
-        repository.save(timesheet);
+        Log.d("TimesheetViewModel.save", "save: " + timesheet);
+        timesheetRepository.save(timesheet);
     }
 
     public void delete(Timesheet timesheet) {
-        Log.d("TimesheetViewModel.delete" , "save: " + timesheet);
-        repository.delete(timesheet);
+        Log.d("TimesheetViewModel.delete", "save: " + timesheet);
+        timesheetRepository.delete(timesheet);
     }
 }

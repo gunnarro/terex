@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragment.TimesheetAddFragment"
+    tools:context=".ui.fragment.RecruitmentCompanyRegistrerFragment"
     tools:ignore="ExtraText">
 
     <RelativeLayout
@@ -15,7 +15,7 @@
         tools:ignore="UselessParent">
 
         <TextView
-            android:id="@+id/timesheet_entity_id"
+            android:id="@+id/recruitment_entity_id"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:text=""
@@ -23,7 +23,7 @@
 
         <!-- horizontal date layout -->
         <LinearLayout
-            android:id="@+id/timesheet_date_layout"
+            android:id="@+id/recruitment_date_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
@@ -32,7 +32,7 @@
             tools:ignore="UselessParent">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/timesheet_created_date_layout"
+                android:id="@+id/recruitment_created_date_layout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -41,7 +41,7 @@
                 android:hint="@string/prompt_created_date">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/timesheet_created_date"
+                    android:id="@+id/recruitment_created_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:enabled="false"
@@ -50,7 +50,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/timesheet_last_modified_date_layout"
+                android:id="@+id/recruitment_last_modified_date_layout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
                 android:hint="@string/prompt_last_modified_date">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/timesheet_last_modified_date"
+                    android:id="@+id/recruitment_last_modified_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:enabled="false"
@@ -68,77 +68,19 @@
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
-        <!-- vertical spinner layout -->
-        <LinearLayout
-            android:id="@+id/timesheet_spinner_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:baselineAligned="false"
-            android:orientation="vertical"
-            tools:ignore="UselessParent">
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/timesheet_client_spinner_layout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:hint="@string/lbl_client">
-
-                <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                    android:id="@+id/timesheet_client_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    tools:ignore="KeyboardInaccessibleWidget" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/timesheet_project_spinner_layout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:hint="@string/lbl_project">
-
-                <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                    android:id="@+id/timesheet_project_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    tools:ignore="KeyboardInaccessibleWidget" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/timesheet_status_spinner_layout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/lbl_status">
-
-                <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                    android:id="@+id/timesheet_status_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    tools:ignore="KeyboardInaccessibleWidget" />
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
-
         <!-- workday date -->
         <LinearLayout
-            android:id="@+id/timesheet_work_date_layout"
+            android:id="@+id/recruitment_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/timesheet_spinner_layout"
+            android:layout_below="@id/recruitment_date_layout"
             android:layout_margin="10dp"
             android:baselineAligned="false"
             android:orientation="horizontal"
             tools:ignore="UselessParent">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/timesheet_workday_date_layout"
+                android:id="@+id/recruitment_company_name_layout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -147,15 +89,15 @@
                 android:hint="@string/lbl_workday_date">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/timesheet_workday_date"
+                    android:id="@+id/recruitment_company_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="date"
+                    android:inputType="text"
                     android:text="@string/dd_mm_yyyy" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/timesheet_from_time_layout"
+                android:id="@+id/timesheet_organization_number_layout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -164,81 +106,17 @@
                 android:hint="@string/lbl_from_time">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/timesheet_from_time"
+                    android:id="@+id/recruitment_organization_number"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="time"
-                    android:maxLength="5"
-                    android:text="@string/hh_mm" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/timesheet_to_time_layout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="@string/lbl_to_time">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/timesheet_to_time"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="time"
-                    android:maxLength="5"
+                    android:inputType="text"
+                    android:maxLength="11"
                     android:text="@string/hh_mm" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
-        <!-- horizontal break layout -->
         <LinearLayout
-            android:id="@+id/timesheet_time_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/timesheet_work_date_layout"
-            android:layout_margin="10dp"
-            android:baselineAligned="false"
-            android:orientation="horizontal"
-            tools:ignore="UselessParent">
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/timesheet_break_layout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="5dp"
-                android:layout_weight="1"
-                android:hint="@string/lbl_break">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/timesheet_break"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:maxLength="3"
-                    android:text="" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/timesheet_hourly_rate_layout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="@string/lbl_hourly_rate">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/timesheet_hourly_rate"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:maxLength="5"
-                    android:text="" />
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/timesheet_div_layout"
+            android:id="@+id/recruitment_address_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/timesheet_time_layout"
@@ -248,14 +126,138 @@
             tools:ignore="UselessParent">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/timesheet_comment_layout"
+                android:id="@+id/recruitment_street_layout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/lbl_comment">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/timesheet_comment"
+                    android:id="@+id/recruitment_street"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLength="50"
+                    android:text="" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/recruitment_street_number_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/lbl_comment">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/recruitment_number_street"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLength="50"
+                    android:text="" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/recruitment_postcode_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/lbl_comment">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/recruitment_postcode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLength="50"
+                    android:text="" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/recruitment_city_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/lbl_comment">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/recruitment_city"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLength="50"
+                    android:text="" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/recruitment_country_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/lbl_comment">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/recruitment_country"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLength="50"
+                    android:text="" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/recruitment_contact_person_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/timesheet_time_layout"
+            android:layout_margin="10dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/recruitment_contact_person_full_name_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/lbl_comment">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/recruitment_contact_person_full_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLength="50"
+                    android:text="" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/recruitment_contact_mobile_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/lbl_comment">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/recruitment_contact_person_mobile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLength="50"
+                    android:text="" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/recruitment_contact_email_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/lbl_comment">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/recruitment_contact_person_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
@@ -265,17 +267,17 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/tbl_timesheet_register_buttons"
+            android:id="@+id/recruitment_register_buttons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/timesheet_div_layout"
+            android:layout_below="@id/recruitment_address_layout"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
             android:gravity="center"
             android:orientation="horizontal">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_timesheet_add_delete"
+                android:id="@+id/btn_recruitment_add_delete"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -285,7 +287,7 @@
                 app:iconTint="@color/color_btn_bg_delete" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_timesheet_add_cancel"
+                android:id="@+id/btn_recruitment_add_cancel"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -295,7 +297,7 @@
                 app:iconTint="@color/color_btn_bg_cancel" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_timesheet_add_save"
+                android:id="@+id/btn_recruitment_add_save"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

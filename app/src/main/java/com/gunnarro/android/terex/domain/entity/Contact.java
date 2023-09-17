@@ -7,14 +7,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * Used as embedded
  */
-@Builder
+
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
+@Setter
 public class Contact {
     @ColumnInfo(name = "private_mobile_number")
     String privateMobileNumber;

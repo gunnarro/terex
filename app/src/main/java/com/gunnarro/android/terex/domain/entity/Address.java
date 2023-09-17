@@ -2,14 +2,19 @@ package com.gunnarro.android.terex.domain.entity;
 
 import androidx.room.ColumnInfo;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * used as embedded
  */
-@Builder
+
+@NoArgsConstructor
 @Getter
+@Setter
 public class Address {
     @ColumnInfo(name = "street_name")
     String streetName;
