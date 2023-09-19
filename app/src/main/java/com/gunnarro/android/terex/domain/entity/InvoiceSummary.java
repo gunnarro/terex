@@ -8,6 +8,7 @@ import androidx.room.TypeConverters;
 import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @TypeConverters(LocalDateConverter.class)
 @Entity(tableName = "invoice_summary")
@@ -72,12 +73,20 @@ public class InvoiceSummary {
         return fromDate;
     }
 
+    public String getFromDateDDMM() {
+        return fromDate.format(DateTimeFormatter.ofPattern("dd.MM"));
+    }
+
     public void setFromDate(LocalDate fromDate) {
         this.fromDate = fromDate;
     }
 
     public LocalDate getToDate() {
         return toDate;
+    }
+
+    public String getToDateDDMM() {
+        return toDate.format(DateTimeFormatter.ofPattern("dd.MM"));
     }
 
     public void setToDate(LocalDate toDate) {

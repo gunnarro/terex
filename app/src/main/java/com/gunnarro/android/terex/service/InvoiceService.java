@@ -67,6 +67,10 @@ public class InvoiceService {
         return invoiceSummaryByWeek;
     }
 
+    public List<Timesheet> getTimesheetForMonth(String clientName, String projectCode, Integer monthNumber) {
+        return timesheetRepository.getTimesheets(clientName, projectCode, monthNumber);
+    }
+
     public RegisterWork getRegisterWork(Integer id) {
         RegisterWork registerWork = null;
         if (id == null) {

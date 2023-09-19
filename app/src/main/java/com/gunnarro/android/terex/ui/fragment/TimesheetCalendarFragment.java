@@ -70,8 +70,8 @@ public class TimesheetCalendarFragment extends Fragment {
         calendarView.setDate(Calendar.getInstance().getTimeInMillis());
         calendarView.setSelected(true);
         calendarView.setLayoutMode(1);
-        calendarView.setFirstDayOfWeek(1);
-        calendarView.setShowWeekNumber(true);
+        calendarView.setFirstDayOfWeek(Calendar.MONDAY);
+        calendarView.setWeekDayTextAppearance(R.style.Widget_Material3_MaterialCalendar_Day);
 
         view.findViewById(R.id.btn_timesheet_calendar_save).setEnabled(true);
         view.findViewById(R.id.btn_timesheet_calendar_save).setOnClickListener(v -> {

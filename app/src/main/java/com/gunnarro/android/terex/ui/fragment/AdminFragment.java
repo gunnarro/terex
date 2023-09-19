@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -32,6 +33,8 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,7 +69,8 @@ public class AdminFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_admin, container, false);
         view.findViewById(R.id.btn_admin_generate_timesheet).setOnClickListener(v -> {
             try {
-                generateTimesheet();
+                //generateTimesheet();
+                createTimesheetAttachment();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -74,7 +78,7 @@ public class AdminFragment extends Fragment {
 
         view.findViewById(R.id.btn_admin_generate_invoice).setOnClickListener(v -> {
             try {
-              //  createInvoice();
+                //  createInvoice();
                 createInvoiceSummaryAttachment();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -113,7 +117,7 @@ public class AdminFragment extends Fragment {
     }
 
     private void createInvoiceSummaryAttachment() throws IOException {
-        List<InvoiceSummary> invoiceSummaries =  invoiceService.createInvoiceSummaryForMonth("Norway Consulting AS", "catalystOne monolith", 9);
+        List<InvoiceSummary> invoiceSummaries = invoiceService.createInvoiceSummaryForMonth("Norway Consulting AS", "catalystOne monolith", 9);
         Log.d("createInvoiceSummaryAttachment", "invoiceSummary week: " + invoiceSummaries);
         StringBuilder mustacheTemplateStr = new StringBuilder();
         // first read the invoice summary mustache html template
@@ -129,30 +133,71 @@ public class AdminFragment extends Fragment {
                 .mapToDouble(InvoiceSummary::getSumBilledWork)
                 .sum();
 
-        Double sumBilledMinutes = invoiceSummaries.stream()
+        Double sumBilledHours = invoiceSummaries.stream()
                 .mapToDouble(InvoiceSummary::getSumWorkedMinutes)
-                .sum();
-
-        // minutes to hours;
-        Double sumBilledHours = sumBilledMinutes/60;
+                .sum()/60;
 
         String invoiceSummaryHtml = createInvoiceSummaryHtml(mustacheTemplateStr.toString(), invoiceSummaries, sumBilledHours.toString(), sumBilledAmount.toString());
 
         WebView webView = requireView().findViewById(R.id.invoice_overview_html);
-        webView.loadData(invoiceSummaryHtml, "text/html", "utf-8");
+        webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
+        webView.loadDataWithBaseURL(null, invoiceSummaryHtml, "text/html", "utf-8", null);
 
         Log.d("createInvoiceSummaryAttachment", "" + invoiceSummaryHtml);
         // thereafter convert the html to pdf
-      //  PdfUtility.htmlToPdf(invoiceSummaryHtml, requireContext().getFilesDir() + "/invoice-timesheet-summary.pdf");
+        //  PdfUtility.htmlToPdf(invoiceSummaryHtml, requireContext().getFilesDir() + "/invoice-timesheet-summary.pdf");
     }
+
+    private void createTimesheetAttachment() throws IOException {
+        List<Timesheet> timesheets = invoiceService.getTimesheetForMonth("Norway Consulting AS", "catalystOne monolith", 9);
+
+        StringBuilder mustacheTemplateStr = new StringBuilder();
+        // first read the invoice summary mustache html template
+        try (InputStream fis = requireContext().getAssets().open("template/norway-consulting-timesheet-template.mustache");
+             InputStreamReader isr = new InputStreamReader(fis,
+                     StandardCharsets.UTF_8);
+             BufferedReader br = new BufferedReader(isr)) {
+            br.lines().forEach(mustacheTemplateStr::append);
+        }
+
+
+        Double sumBilledHours = timesheets.stream()
+                .mapToDouble(Timesheet::getWorkedMinutes)
+                .sum()/60;
+
+        String timesheetHtml = createTimesheetListHtml(mustacheTemplateStr.toString(), timesheets, sumBilledHours.toString());
+
+        WebView webView = requireView().findViewById(R.id.invoice_overview_html);
+        webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
+        webView.loadDataWithBaseURL(null, timesheetHtml, "text/html", "utf-8", null);
+
+        Log.d("createTimesheetAttachment", "" + timesheetHtml);
+        // thereafter convert the html to pdf
+        //  PdfUtility.htmlToPdf(invoiceSummaryHtml, requireContext().getFilesDir() + "/invoice-timesheet-summary.pdf");
+    }
+
 
     private String createInvoiceSummaryHtml(String mustacheTemplateStr, List<InvoiceSummary> invoiceSummaryList, String sumBilledHours, String sumBilledAmount) {
         MustacheFactory mf = new DefaultMustacheFactory();
-        Mustache mustache = mf.compile(new StringReader(mustacheTemplateStr),"");
+        Mustache mustache = mf.compile(new StringReader(mustacheTemplateStr), "");
         Map<String, Object> context = new HashMap<>();
+        context.put("title", "Vedlegg til faktura " + LocalDate.now().format(DateTimeFormatter.ISO_DATE));
         context.put("invoiceSummaryList", invoiceSummaryList);
         context.put("sunBilledHours", sumBilledHours);
         context.put("sumBilledAmount", sumBilledAmount);
+        StringWriter writer = new StringWriter();
+        mustache.execute(writer, context);
+        return writer.toString();
+    }
+
+    private String createTimesheetListHtml(String mustacheTemplateStr, List<Timesheet> timesheetList, String sumBilledHours) {
+        MustacheFactory mf = new DefaultMustacheFactory();
+        Mustache mustache = mf.compile(new StringReader(mustacheTemplateStr), "");
+        Map<String, Object> context = new HashMap<>();
+        context.put("title", "Timeliste for konsulentbistan");
+        context.put("timesheetPeriod", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM")));
+        context.put("timesheetList", timesheetList);
+        context.put("sunBilledHours", sumBilledHours);
         StringWriter writer = new StringWriter();
         mustache.execute(writer, context);
         return writer.toString();

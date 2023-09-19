@@ -1,27 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style type="css">
+<style type="text/css">
+         html {
+                 font-family: helvetica,arial,sans-serif;
+                font-size: small;
+            }
 
-    body {
-      font-size: x-small;
-    }
+         table {
+             table-layout: fixed;
+             font-size: small;
+             margin: 1em;
+             border: none;
+             border-collapse: collapse;
+             margin-bottom: 1.6em;
+        }
 
+         table caption {
+            text-align: center;
+            font-weight: bold;
+         }
 
-        table, tr, td, th{
-font-size: x-small;
-padding: 10px;
-margin: auto;
-border: none;
-}
-
-
-    </style>
+         thead tr th {
+            border-bottom: 1px solid #000000;
+            text-align: center;
+            font-weight: bold;
+        }
+         tfoot tr th {
+            border-top: 1px solid #000000;
+            font-weight: bold;
+        }
+</style>
 </head>
 <body>
 
 <h2>{{title}}</h2>
-<p>
+
 <table>
     <tr>
         <td>Firma</td>
@@ -44,9 +58,7 @@ border: none;
         <td>9230 26 98831</td>
     </tr>
     <tr>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td colspan="3">&nbsp;</td>
     </tr>
     <tr>
         <td>Kunde</td>
@@ -74,40 +86,40 @@ border: none;
         <td>Anita Lundtveit</td>
     </tr>
 </table>
-</p>
 
-<p>
 <table>
+    <caption>Oversikt fakturerte timer</caption>
     <thead>
     <tr>
-        <th>Year</th>
-        <th>Month</th>
-        <th>Week</th>
-        <th>From/to date</th>
-        <th>Billed hours</th>
-        <th>Billed amount</th>
+        <th align="center">År</th>
+        <th align="center">Mnd</th>
+        <th align="center">Uke</th>
+        <th align="center">Fra/til dato</th>
+        <th align="center">Timer</th>
+        <th align="center">Beløp</th>
     </tr>
     </thead>
     <tbody>
         {{#invoiceSummaryList}}
             <tr>
-                <td>{{year}}</td>
-                <td>{{month}}</td>
-                <td>{{week}}</td>
-                <td>{{fromDate}} - {{toDate}}</td>
-                <td>{{sumWorkedMinutes}}</td>
-                <td>{{sumBilledWork}}</td>
+                <td align="center">{{year}}</td>
+                <td align="center">{{month}}</td>
+                <td align="center">{{weekInYear}}</td>
+                <td align="center">{{fromDateDDMM}} - {{toDateDDMM}}</td>
+                <td align="right">{{sumWorkedMinutes}}</td>
+                <td align="right">{{sumBilledWork}}</td>
             </tr>
         {{/invoiceSummaryList}}
     </tbody>
     <tfoot>
     <tr>
-        <td>Sum</td>
-        <td>{{sunBilledHours}}</td>
-        <td>{{sumBilledAmount}}</td>
+        <th align="center">Sum</th>
+        <th colspan="3">&nbsp;</th>
+        <th align="right">{{sunBilledHours}}</th>
+        <th align="right">{{sumBilledAmount}}</th>
     </tr>
     </tfoot>
 </table>
-</p>
+
 </body>
 </html>

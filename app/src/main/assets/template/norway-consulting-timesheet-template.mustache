@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style type="text/css">
+         html {
+                 font-family: helvetica,arial,sans-serif;
+                font-size: small;
+            }
+
+         table {
+             table-layout: fixed;
+             font-size: small;
+             margin: 1em;
+             border: none;
+             border-collapse: collapse;
+             margin-bottom: 1.6em;
+        }
+
+         table caption {
+            text-align: center;
+            font-weight: bold;
+         }
+
+         thead tr th {
+            border-bottom: 1px solid #000000;
+            text-align: center;
+            font-weight: bold;
+        }
+         tfoot tr th {
+            border-top: 1px solid #000000;
+            font-weight: bold;
+        }
+</style>
+</head>
+<body>
+
+<h2>{{title}}</h2>
+
+<table>
+    <tr>
+        <td>Konsulentnavn</td>
+        <td>:</td>
+        <td>Gunnar Rønneberg</td>
+    </tr>
+    <tr>
+        <td>Oppdragsgiver</td>
+        <td>:</td>
+        <td>CatalystOne Solution AS</td>
+    </tr>
+    <tr>
+        <td>Kons.leverandør</td>
+        <td>:</td>
+        <td>Norway Consulting AS</td>
+    </tr>
+    <tr>
+        <td>Kontaktperson NC</td>
+        <td>:</td>
+        <td>Anita Lundtveit,+47 973 01 271</td>
+    </tr>
+    <tr>
+        <td>Timeliste sendes</td>
+        <td>:</td>
+        <td>Anita@norway-consulting.no</td>
+    </tr>
+    <tr>
+            <td>Måned/årstall</td>
+            <td>:</td>
+            <td>{{timesheetPeriod}}</td>
+        </tr>
+        <tr>
+                <td>Tilbakemelding</td>
+                <td>:</td>
+                <td></td>
+            </tr>
+</table>
+
+<table>
+    <caption>Oversikt fakturerte timer</caption>
+    <thead>
+    <tr>
+        <th align="center">Dato</th>
+        <th align="center">Fra</th>
+        <th align="center">Til</th>
+        <th align="center">Antall timer</th>
+        <th align="center">Beskrivelse av bistand</th>
+    </tr>
+    </thead>
+    <tbody>
+        {{#timesheetList}}
+            <tr>
+                <td align="center">{{workdayDate}}</td>
+                <td align="center">{{fromTime}}</td>
+                <td align="center">{{toTime}}</td>
+                <td align="right">{{workedMinutes}}</td>
+                <td align="right">{{comment}}</td>
+            </tr>
+        {{/timesheetList}}
+    </tbody>
+    <tfoot>
+    <tr>
+        <th align="center">Sum</th>
+        <th colspan="2">&nbsp;</th>
+        <th align="right">{{sunBilledHours}}</th>
+        <th></th>
+    </tr>
+    </tfoot>
+</table>
+
+</body>
+</html>
