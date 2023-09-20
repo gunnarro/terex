@@ -150,9 +150,6 @@ dependencies {
     implementation 'org.xhtmlrenderer:flying-saucer-pdf-openpdf:9.2.2'
     implementation 'org.xhtmlrenderer:flying-saucer-core:9.2.2'
 
-
-
-
     // html template engine
     implementation 'com.github.spullara.mustache.java:compiler:0.9.4'
 

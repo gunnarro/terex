@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Application"
+rootProject.name = "TeRex"
 include ':app'

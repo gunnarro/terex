@@ -1,6 +1,11 @@
 package com.gunnarro.android.terex.ui.fragment;
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Environment;
+import android.print.PdfPrint;
+import android.print.PrintAttributes;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,11 +27,13 @@ import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.InvoiceSummary;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.service.InvoiceService;
+import com.gunnarro.android.terex.utility.PdfUtility;
 import com.gunnarro.android.terex.utility.Utility;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -143,9 +150,18 @@ public class AdminFragment extends Fragment {
         webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
         webView.loadDataWithBaseURL(null, invoiceSummaryHtml, "text/html", "utf-8", null);
 
+        try {
+            String pdfFileName = "invoice_attachment_" + LocalDate.now().format(DateTimeFormatter.ISO_DATE) + ".pdf";
+            createWebPrintJob(requireView().findViewById(R.id.invoice_overview_html), pdfFileName);
+            showInfoDialog("saved pdf to " + requireContext().getFilesDir().getPath() + "/" + pdfFileName, getContext());
+
+          //  File pdf = readPdfFile(pdfFileName);
+          //  webView.loadData(pdf, "text/pdf", "utf-8");
+        } catch (Exception e) {
+            showInfoDialog(e.getMessage(), getContext());
+        }
+
         Log.d("createInvoiceSummaryAttachment", "" + invoiceSummaryHtml);
-        // thereafter convert the html to pdf
-        //  PdfUtility.htmlToPdf(invoiceSummaryHtml, requireContext().getFilesDir() + "/invoice-timesheet-summary.pdf");
     }
 
     private void createTimesheetAttachment() throws IOException {
@@ -171,9 +187,17 @@ public class AdminFragment extends Fragment {
         webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
         webView.loadDataWithBaseURL(null, timesheetHtml, "text/html", "utf-8", null);
 
+        WebView webViewPrint = new WebView(requireContext());
+        webViewPrint.loadDataWithBaseURL(null, timesheetHtml, "text/html", "utf-8", null);
+
         Log.d("createTimesheetAttachment", "" + timesheetHtml);
-        // thereafter convert the html to pdf
-        //  PdfUtility.htmlToPdf(invoiceSummaryHtml, requireContext().getFilesDir() + "/invoice-timesheet-summary.pdf");
+        try {
+            String pdfFileName = "timesheet_attachment_" + LocalDate.now().format(DateTimeFormatter.ISO_DATE) + ".pdf";
+            createWebPrintJob(webViewPrint, pdfFileName);
+            showInfoDialog("saved pdf to " + requireContext().getFilesDir().getPath() + "/" + pdfFileName, getContext());
+        } catch (Exception e) {
+            showInfoDialog(e.getMessage(), getContext());
+        }
     }
 
 
@@ -201,5 +225,33 @@ public class AdminFragment extends Fragment {
         StringWriter writer = new StringWriter();
         mustache.execute(writer, context);
         return writer.toString();
+    }
+
+    private void showInfoDialog(String infoMessage, Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Info");
+        builder.setMessage(infoMessage);
+        // Set Cancelable false for when the user clicks on the outside the Dialog Box then it will remain show
+        builder.setCancelable(false);
+        // Set the positive button with yes name Lambda OnClickListener method is use of DialogInterface interface.
+        builder.setPositiveButton("Ok", (dialog, which) -> dialog.cancel());
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    private void createWebPrintJob(WebView webView, String pdfFileName) {
+        String jobName = "printinvoice";
+        PrintAttributes attributes = new PrintAttributes.Builder()
+                .setMediaSize(PrintAttributes.MediaSize.ISO_A4)
+                .setResolution(new PrintAttributes.Resolution("pdf", "pdf", 600, 600))
+                .setMinMargins(PrintAttributes.Margins.NO_MARGINS).build();
+        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        PdfPrint pdfPrint = new PdfPrint(attributes);
+        pdfPrint.print(webView.createPrintDocumentAdapter(jobName), path, pdfFileName);
+    }
+
+
+    private File readPdfFile(String fileName) {
+        return  new File(String.format("%s/%s", requireContext().getFilesDir().getPath(), fileName));
     }
 }
