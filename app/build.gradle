@@ -124,7 +124,6 @@ dependencies {
     // calendar
     implementation 'com.kizitonwose.calendar:view:2.3.0'
     implementation 'com.kizitonwose.calendar:core:2.3.0'
-    implementation 'org.naishadhparmar.zcustomcalendar:zcustomcalendar:1.0.1'
 
 
     compileOnly 'org.projectlombok:lombok:1.18.28'
