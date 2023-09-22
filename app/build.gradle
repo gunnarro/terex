@@ -122,7 +122,7 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 
     // calendar
-
+    implementation 'com.applandeo:material-calendar-view:1.9.0-rc03'
 
     compileOnly 'org.projectlombok:lombok:1.18.28'
     annotationProcessor 'org.projectlombok:lombok:1.18.28'

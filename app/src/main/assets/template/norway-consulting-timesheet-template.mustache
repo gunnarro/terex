@@ -2,34 +2,40 @@
 <html>
 <head>
 <style type="text/css">
-         html {
-                 font-family: helvetica,arial,sans-serif;
-                font-size: small;
-            }
+          html {
+                        font-family: helvetica,arial,sans-serif;
+                        font-size: small;
+                    }
 
-         table {
-             table-layout: fixed;
-             font-size: small;
-             margin: 1em;
-             border: none;
-             border-collapse: collapse;
-             margin-bottom: 1.6em;
-        }
+                 table {
+                     table-layout: fixed;
+                     font-size: small;
+                     margin: 1em;
+                     border: none;
+                     border-collapse: collapse;
+                     margin-bottom: 1.6em;
+                }
 
-         table caption {
-            text-align: center;
-            font-weight: bold;
-         }
+                 table caption {
+                    text-align: center;
+                    font-weight: bold;
+                 }
 
-         thead tr th {
-            border-bottom: 1px solid #000000;
-            text-align: center;
-            font-weight: bold;
-        }
-         tfoot tr th {
-            border-top: 1px solid #000000;
-            font-weight: bold;
-        }
+                 thead tr th {
+                    border-bottom: 1px solid #000000;
+                    text-align: center;
+                    font-weight: bold;
+                    padding: 3px;
+                }
+                 tfoot tr th {
+                    border-top: 1px solid #000000;
+                    font-weight: bold;
+                    padding: 3px
+                }
+
+                td {
+                     padding: 5px;
+                }
 </style>
 </head>
 <body>
@@ -99,7 +105,7 @@
     <tfoot>
     <tr>
         <th align="center">Sum</th>
-        <th colspan="2">&nbsp;</th>
+        <th colspan="2" align="center">{{sunWorkDays}}</th>
         <th align="right">{{sunBilledHours}}</th>
         <th></th>
     </tr>

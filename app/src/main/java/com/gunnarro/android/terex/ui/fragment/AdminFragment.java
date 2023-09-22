@@ -132,14 +132,13 @@ public class AdminFragment extends Fragment {
             br.lines().forEach(mustacheTemplateStr::append);
         }
 
-
         Double sumBilledAmount = invoiceSummaries.stream()
                 .mapToDouble(InvoiceSummary::getSumBilledWork)
                 .sum();
 
         Double sumBilledHours = invoiceSummaries.stream()
-                .mapToDouble(InvoiceSummary::getSumWorkedMinutes)
-                .sum()/60;
+                .mapToDouble(InvoiceSummary::getSumWorkedHours)
+                .sum();
 
         String invoiceSummaryHtml = createInvoiceSummaryHtml(mustacheTemplateStr.toString(), invoiceSummaries, sumBilledHours.toString(), sumBilledAmount.toString());
 
@@ -155,8 +154,8 @@ public class AdminFragment extends Fragment {
             createWebPrintJob(requireView().findViewById(R.id.invoice_overview_html), pdfFileName);
             showInfoDialog("saved pdf to " + requireContext().getFilesDir().getPath() + "/" + pdfFileName, getContext());
 
-          //  File pdf = readPdfFile(pdfFileName);
-          //  webView.loadData(pdf, "text/pdf", "utf-8");
+            //  File pdf = readPdfFile(pdfFileName);
+            //  webView.loadData(pdf, "text/pdf", "utf-8");
         } catch (Exception e) {
             showInfoDialog(e.getMessage(), getContext());
         }
@@ -176,10 +175,9 @@ public class AdminFragment extends Fragment {
             br.lines().forEach(mustacheTemplateStr::append);
         }
 
-
         Double sumBilledHours = timesheets.stream()
                 .mapToDouble(TimesheetEntry::getWorkedMinutes)
-                .sum()/60;
+                .sum() / 60;
 
         String timesheetHtml = createTimesheetListHtml(mustacheTemplateStr.toString(), timesheets, sumBilledHours.toString());
 
@@ -199,7 +197,6 @@ public class AdminFragment extends Fragment {
             showInfoDialog(e.getMessage(), getContext());
         }
     }
-
 
     private String createInvoiceSummaryHtml(String mustacheTemplateStr, List<InvoiceSummary> invoiceSummaryList, String sumBilledHours, String sumBilledAmount) {
         MustacheFactory mf = new DefaultMustacheFactory();
@@ -221,6 +218,7 @@ public class AdminFragment extends Fragment {
         context.put("title", "Timeliste for konsulentbistan");
         context.put("timesheetPeriod", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM")));
         context.put("timesheetList", timesheetList);
+        context.put("sunWorkDays", timesheetList.size());
         context.put("sunBilledHours", sumBilledHours);
         StringWriter writer = new StringWriter();
         mustache.execute(writer, context);
@@ -250,8 +248,7 @@ public class AdminFragment extends Fragment {
         pdfPrint.print(webView.createPrintDocumentAdapter(jobName), path, pdfFileName);
     }
 
-
     private File readPdfFile(String fileName) {
-        return  new File(String.format("%s/%s", requireContext().getFilesDir().getPath(), fileName));
+        return new File(String.format("%s/%s", requireContext().getFilesDir().getPath(), fileName));
     }
 }

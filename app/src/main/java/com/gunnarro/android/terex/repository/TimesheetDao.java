@@ -36,7 +36,7 @@ public interface TimesheetDao {
      * strftime('%d',start_date) as "Day"
      * FROM job_history;
      */
-    @Query("SELECT * FROM timesheet_entry WHERE client_name = :clientName AND project_code = :projectCode AND strftime('%m', datetime(workday_date, 'unixepoch')) <> :monthNumber")
+    @Query("SELECT * FROM timesheet_entry WHERE client_name = :clientName AND project_code = :projectCode AND strftime('%m', datetime(workday_date, 'unixepoch')) <> :monthNumber ORDER BY workday_date ASC")
     List<TimesheetEntry> getTimesheetByMonth(String clientName, String projectCode, String monthNumber);
 
     @Query("SELECT * FROM timesheet_entry WHERE client_name = :clientName AND strftime('%d', workday_date) = :monthNumber")

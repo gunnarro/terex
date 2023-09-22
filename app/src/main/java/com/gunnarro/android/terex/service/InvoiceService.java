@@ -20,6 +20,7 @@ import java.time.temporal.TemporalField;
 import java.time.temporal.ValueRange;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -56,7 +57,7 @@ public class InvoiceService {
         List<TimesheetEntry> timesheets = timesheetRepository.getTimesheets(clientName, projectCode, monthNumber);
         Log.d("createInvoiceSummaryForMonth", "timesheets for mount: " + timesheets);
         // accumulate timesheet by week for the mount
-       Map<Integer, List<TimesheetEntry>> timesheetWeekMap = timesheets.stream().collect(Collectors.groupingBy(TimesheetEntry::getWorkdayWeek));
+        Map<Integer, List<TimesheetEntry>> timesheetWeekMap = timesheets.stream().collect(Collectors.groupingBy(TimesheetEntry::getWorkdayWeek));
 
         List<InvoiceSummary> invoiceSummaryByWeek = new ArrayList<>();
 
@@ -64,6 +65,7 @@ public class InvoiceService {
             invoiceSummaryByWeek.add(buildInvoiceSummaryForWeek(k, e));
 
         });
+        invoiceSummaryByWeek.sort(Comparator.comparing(InvoiceSummary::getWeekInYear));
         return invoiceSummaryByWeek;
     }
 
@@ -97,7 +99,7 @@ public class InvoiceService {
         invoiceSummary.setSumWorkedDays(timesheets.size());
         timesheets.forEach(t -> {
             invoiceSummary.setSumBilledWork(invoiceSummary.getSumBilledWork() + (t.getHourlyRate() * ((double) t.getWorkedMinutes() / 60)));
-            invoiceSummary.setSumWorkedMinutes(invoiceSummary.getSumWorkedMinutes() + t.getWorkedMinutes());
+            invoiceSummary.setSumWorkedHours(invoiceSummary.getSumWorkedHours() + (double) t.getWorkedMinutes() / 60);
         });
         return invoiceSummary;
     }
@@ -122,7 +124,7 @@ public class InvoiceService {
             invoiceSummaryByWeek.add(invoiceSummary);
             Objects.requireNonNull(weekMap.get(k)).forEach(t -> {
                 invoiceSummary.setSumBilledWork(invoiceSummary.getSumBilledWork() + (t.getHourlyRate() * ((double) t.getWorkedMinutes() / 60)));
-                invoiceSummary.setSumWorkedMinutes(invoiceSummary.getSumWorkedMinutes() + t.getWorkedMinutes());
+                invoiceSummary.setSumWorkedHours(invoiceSummary.getSumWorkedHours() + (double) t.getWorkedMinutes() / 60);
             });
         });
         return invoiceSummaryByWeek;

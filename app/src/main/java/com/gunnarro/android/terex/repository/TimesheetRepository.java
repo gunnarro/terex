@@ -9,6 +9,8 @@ import com.gunnarro.android.terex.config.AppDatabase;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.WeekFields;
@@ -85,21 +87,25 @@ public class TimesheetRepository {
 
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures
     // that you're not doing any long running operations on the main thread, blocking the UI.
-    public Long save(final TimesheetEntry timesheet) {
+    public Long save(@NotNull final TimesheetEntry timesheet) {
         try {
-            TimesheetEntry timesheetExisting = getTimesheet(timesheet.getClientName(), timesheet.getProjectCode(), timesheet.getWorkdayDate());
-            Log.d("TimesheetRepository.save", String.format("%s", timesheetExisting));
+            TimesheetEntry timesheetEntryExisting = getTimesheet(timesheet.getClientName(), timesheet.getProjectCode(), timesheet.getWorkdayDate());
+            Log.d("TimesheetRepository.save", String.format("%s", timesheetEntryExisting));
             // set the timesheet work date week number here, this is only used to simplify accumulate timesheet by week by the invoice service
             timesheet.setWorkdayWeek(timesheet.getWorkdayDate().get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()));
             Long id;
-            if (timesheetExisting == null) {
+            if (timesheetEntryExisting == null) {
                 timesheet.setCreatedDate(LocalDateTime.now());
                 timesheet.setLastModifiedDate(LocalDateTime.now());
                 id = insertTimesheet(timesheet);
+                Log.d("", "insert new timesheet: " + id + " - " + timesheet.getWorkdayDate());
             } else {
+                timesheet.setId(timesheetEntryExisting.getId());
+                timesheet.setCreatedDate(timesheetEntryExisting.getCreatedDate());
                 timesheet.setLastModifiedDate(LocalDateTime.now());
                 Integer i = updateTimesheet(timesheet);
                 id = Long.valueOf(i);
+                Log.d("", "update timesheet: " + id + " - " + timesheet.getWorkdayDate());
             }
             return id;
         } catch (InterruptedException | ExecutionException e) {

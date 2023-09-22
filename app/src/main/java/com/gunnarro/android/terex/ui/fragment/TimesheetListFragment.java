@@ -102,7 +102,7 @@ public class TimesheetListFragment extends Fragment {
             Bundle bundle = new Bundle();
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.content_frame, TimesheetCalendarFragment.class, bundle)
+                    .replace(R.id.content_frame, TimesheetCustomCalendarFragment.class, bundle)
                     .setReorderingAllowed(true)
                     .commit();
         });

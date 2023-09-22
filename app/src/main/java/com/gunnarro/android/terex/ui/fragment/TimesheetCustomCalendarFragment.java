@@ -8,30 +8,33 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CalendarView;
 
 import androidx.annotation.ColorRes;
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.applandeo.materialcalendarview.CalendarView;
+import com.applandeo.materialcalendarview.exceptions.OutOfDateRangeException;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
-import com.gunnarro.android.terex.observable.RxBus;
-import com.gunnarro.android.terex.observable.event.TimesheetEvent;
 import com.gunnarro.android.terex.repository.TimesheetRepository;
 import com.gunnarro.android.terex.utility.Utility;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.inject.Inject;
 
-public class TimesheetCalendarFragment extends Fragment {
+/**
+ * https://github.com/Applandeo/Material-Calendar-View
+ */
+public class TimesheetCustomCalendarFragment extends Fragment {
 
     private TimesheetEntry lastAddedTimesheet;
     private LocalDate selectedLocalDate;
@@ -39,7 +42,7 @@ public class TimesheetCalendarFragment extends Fragment {
     private TimesheetRepository timesheetRepository;
 
     @Inject
-    public TimesheetCalendarFragment() {
+    public TimesheetCustomCalendarFragment() {
         Log.d("TimesheetCalendarFragment", "");
         // repository = new TimesheetRepository(getContext());
     }
@@ -56,35 +59,45 @@ public class TimesheetCalendarFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_timesheet_calendar, container, false);
-        CalendarView calendarView = view.findViewById(R.id.view_timesheet_calendar);
-        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-            @Override
-            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                selectedLocalDate = LocalDate.of(year, month + 1, dayOfMonth);
-                Log.d(Utility.buildTag(getClass(), "onSelectedDayChange"), "" + selectedLocalDate);
-            }
+        View view = inflater.inflate(R.layout.fragment_timesheet_custom_calendar, container, false);
+        CalendarView calendarView = view.findViewById(R.id.view_timesheet_custom_calendar);
+
+        List<TimesheetEntry> timesheets = timesheetRepository.getTimesheets("Norway Consulting AS", "catalystOne monolith", LocalDate.now().getMonthValue());
+        List<Calendar> selectedDates = new ArrayList<>();
+        timesheets.forEach(t -> {
+            Calendar cal = Calendar.getInstance();
+            cal.set(t.getWorkdayDate().getYear(), t.getWorkdayDate().getMonth().getValue() - 1, t.getWorkdayDate().getDayOfMonth());
+            selectedDates.add(cal);
+            Log.d("TimesheetCustomCalendarFragment", "ADD SELECTED DATE: " + t.getWorkdayDate().toString());
         });
 
-        calendarView.setOnClickListener(new CalendarView.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(Utility.buildTag(getClass(), "OnClickListener"), "" + view.isClickable());
-            }
+        // calendarView.setSelectedDates(selectedDates);
+        calendarView.setDisabledDays(selectedDates);
+
+        calendarView.setOnDayClickListener(eventDay -> {
+            selectedLocalDate = LocalDate.of(
+                    eventDay.getCalendar().get(Calendar.YEAR),
+                    eventDay.getCalendar().get(Calendar.MONTH) + 1,
+                    eventDay.getCalendar().get(Calendar.DAY_OF_MONTH));
+            Log.d("clicked on date:", selectedLocalDate.toString());
         });
 
-        calendarView.setDate(Calendar.getInstance().getTimeInMillis());
         calendarView.setSelected(true);
-        calendarView.setFirstDayOfWeek(Calendar.MONDAY);
-       // calendarView.setWeekDayTextAppearance(R.style.Widget_Material3_MaterialCalendar_Day);
-
+        Calendar now = Calendar.getInstance();
+        now.setTimeInMillis(System.currentTimeMillis());
+        try {
+            calendarView.setDate(now);
+        } catch (OutOfDateRangeException e) {
+            throw new RuntimeException(e);
+        }
 
         view.findViewById(R.id.btn_timesheet_calendar_save).setEnabled(true);
         view.findViewById(R.id.btn_timesheet_calendar_save).setOnClickListener(v -> {
-         //   view.findViewById(R.id.btn_timesheet_calendar_save).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
-            handleButtonSaveClick();
+            //   view.findViewById(R.id.btn_timesheet_calendar_save).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
+            v.setEnabled(false);
+            handleButtonSaveClick(calendarView);
+            v.setEnabled(true);
         });
-
 
 
         view.findViewById(R.id.btn_timesheet_calendar_cancel).setOnClickListener(v -> {
@@ -161,30 +174,14 @@ public class TimesheetCalendarFragment extends Fragment {
     /**
      * When button save is click and new timesheet entry event is sent in order to insert it into the database
      */
-    private void handleButtonSaveClick() {
+    private void handleButtonSaveClick(CalendarView calendarView) {
         String timesheetJsonStr = getTimesheetAsJson();
         if (timesheetJsonStr == null) {
             showInfoDialog("You are directed back to register timesheet page, because there are no timesheet entry to copy! The must at least exist one timesheet entry before you can use the timesheet calendar view.", getContext());
             goToAddTimesheet();
         }
-        /*
-        Bundle result = new Bundle();
-        result.putString(TimesheetListFragment.TIMESHEET_JSON_INTENT_KEY, timesheetJsonStr);
-        result.putString(TimesheetListFragment.TIMESHEET_ACTION_KEY, TimesheetListFragment.TIMESHEET_ACTION_SAVE);
-        getParentFragmentManager().setFragmentResult(TimesheetListFragment.TIMESHEET_REQUEST_KEY, result);
-        Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new add item intent: " + getTimesheetAsJson());
-        */
         timesheetRepository.save(getTimesheetEntry());
         showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_add_msg_format), selectedLocalDate), R.color.color_snackbar_text_add);
-        /*
-        // when finished publish result so fragment can pick up the backup finished event
-        RxBus.getInstance().publish(
-                TimesheetEvent.builder()
-                        .eventType(TimesheetEvent.TimesheetEventTypeEnum.ADD)
-                        .timesheetEntry(getTimesheetEntry())
-                        .build());
-
-         */
     }
 
     private void showSnackbar(String msg, @ColorRes int bgColor) {

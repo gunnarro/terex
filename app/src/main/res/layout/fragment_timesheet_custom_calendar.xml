@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragment.TimesheetCalendarFragment"
+    tools:context=".ui.fragment.TimesheetCustomCalendarFragment"
     tools:ignore="ExtraText">
 
     <RelativeLayout
@@ -19,17 +19,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <CalendarView
-                android:id="@+id/view_timesheet_calendar"
+            <com.applandeo.materialcalendarview.CalendarView
+                android:id="@+id/view_timesheet_custom_calendar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scrollbars="none"
-                android:soundEffectsEnabled="false"
-                android:textAlignment="center"
-                android:layout_gravity="center"
-                android:weekNumberColor="@color/biometric_error_color"
-                android:weekSeparatorLineColor="@color/cardview_dark_background" />
-
+                android:layout_height="match_parent"
+                app:headerColor="@color/colorBackground"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:selectionBetweenMonthsEnabled="true"
+                app:headerLabelColor="@color/calendar_header"
+                app:selectionColor="@color/calendar_selected_date"
+                app:disabledDaysLabelsColor="@color/calendar_disabled_date"
+                app:todayLabelColor="@color/calendar_today_date"
+                app:swipeEnabled="true"
+                app:firstDayOfWeek="monday"
+                app:type="many_days_picker" />
         </LinearLayout>
 
         <LinearLayout

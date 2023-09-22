@@ -28,14 +28,13 @@ public class InvoiceSummary {
     private LocalDate toDate;
     @ColumnInfo(name = "sum_worked_days")
     private Integer sumWorkedDays = 0;
-    @ColumnInfo(name = "sum_worked_minutes")
-    private Integer sumWorkedMinutes = 0;
+    @ColumnInfo(name = "sum_worked_hours")
+    private double sumWorkedHours = 0;
     @ColumnInfo(name = "sum_billed_work")
     private double sumBilledWork = 0;
 
     public InvoiceSummary() {
     }
-
 
     public int getId() {
         return id;
@@ -97,17 +96,18 @@ public class InvoiceSummary {
         return sumWorkedDays;
     }
 
+    public double getSumWorkedHours() {
+        return sumWorkedHours;
+    }
+
+    public void setSumWorkedHours(double sumWorkedHours) {
+        this.sumWorkedHours = sumWorkedHours;
+    }
+
     public void setSumWorkedDays(Integer sumWorkedDays) {
         this.sumWorkedDays = sumWorkedDays;
     }
 
-    public Integer getSumWorkedMinutes() {
-        return sumWorkedMinutes;
-    }
-
-    public void setSumWorkedMinutes(Integer sumWorkedMinutes) {
-        this.sumWorkedMinutes = sumWorkedMinutes;
-    }
 
     public double getSumBilledWork() {
         return sumBilledWork;
@@ -127,7 +127,7 @@ public class InvoiceSummary {
         sb.append(", fromDate=").append(fromDate);
         sb.append(", toDate=").append(toDate);
         sb.append(", sumWorkedDays=").append(sumWorkedDays);
-        sb.append(", sumWorkedMinutes=").append(sumWorkedMinutes);
+        sb.append(", sumWorkedHours=").append(sumWorkedHours);
         sb.append(", sumBilledWork=").append(sumBilledWork);
         sb.append('}');
         return sb.toString();
