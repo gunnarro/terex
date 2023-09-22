@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragment.TimesheetListFragment"
+    tools:context=".ui.fragment.TimesheetCalendarFragment"
     tools:ignore="ExtraText">
 
     <RelativeLayout
@@ -28,6 +28,12 @@
                 android:textAlignment="center"
                 android:weekNumberColor="@color/biometric_error_color"
                 android:weekSeparatorLineColor="@color/cardview_dark_background" />
+
+            <com.kizitonwose.calendar.view.CalendarView
+                android:id="@+id/calendarView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                 />
         </LinearLayout>
 
         <LinearLayout
@@ -35,12 +41,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/timesheet_calendar_layout"
-            android:layout_marginTop="50dp"
             android:layout_marginLeft="50dp"
+            android:layout_marginTop="50dp"
             android:layout_marginRight="50dp"
             android:gravity="center"
             android:orientation="horizontal">
-
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_timesheet_calendar_cancel"

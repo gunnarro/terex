@@ -6,7 +6,7 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 
 import com.gunnarro.android.terex.config.AppDatabase;
-import com.gunnarro.android.terex.domain.entity.Timesheet;
+import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 
 import java.time.LocalDate;
@@ -27,7 +27,7 @@ import javax.inject.Singleton;
 public class TimesheetRepository {
 
     private final TimesheetDao timesheetDao;
-    private final LiveData<List<Timesheet>> timesheetList;
+    private final LiveData<List<TimesheetEntry>> timesheetList;
 
     // Note that in order to unit test the WordRepository, you have to remove the Application
     // dependency. This adds complexity and much more code, and this sample is not about testing.
@@ -41,11 +41,11 @@ public class TimesheetRepository {
 
     }
 
-    public List<Timesheet> getTimesheets(String clientName, String projectCode, Integer month) {
+    public List<TimesheetEntry> getTimesheets(String clientName, String projectCode, Integer month) {
         try {
-            CompletionService<List<Timesheet>> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
+            CompletionService<List<TimesheetEntry>> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
             service.submit(() -> timesheetDao.getTimesheetByMonth(clientName, projectCode, "09"));
-            Future<List<Timesheet>> future = service.take();
+            Future<List<TimesheetEntry>> future = service.take();
             return future != null ? future.get() : null;
         } catch (InterruptedException | ExecutionException e) {
             // Something crashed, therefore restore interrupted state before leaving.
@@ -59,12 +59,12 @@ public class TimesheetRepository {
      * Return a clone of data for the last added timesheet or from the timesheet marked as uses as default.
      * Note! all data is not returned, such as id, created and last modified date, for example.
      */
-    public Timesheet getMostRecent() {
+    public TimesheetEntry getMostRecent() {
         try {
-            CompletionService<Timesheet> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
+            CompletionService<TimesheetEntry> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
             service.submit(timesheetDao::getMostRecent);
-            Future<Timesheet> future = service.take();
-            return Timesheet.clone(future.get());
+            Future<TimesheetEntry> future = service.take();
+            return TimesheetEntry.clone(future.get());
         } catch (InterruptedException | ExecutionException e) {
             // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();
@@ -74,20 +74,20 @@ public class TimesheetRepository {
 
     // Room executes all queries on a separate thread.
     // Observed LiveData will notify the observer when the data has changed.
-    public LiveData<List<Timesheet>> getAllTimesheet() {
+    public LiveData<List<TimesheetEntry>> getAllTimesheet() {
         Log.d("TimesheetRepository.getAllTimesheet", "refresh live data in fragment");
         return timesheetDao.getAll();
     }
 
-    public List<Timesheet> getTimesheetByProject(String projectCode, int month) {
+    public List<TimesheetEntry> getTimesheetByProject(String projectCode, int month) {
         return Objects.requireNonNull(timesheetList.getValue()).stream().filter(t -> t.getProjectCode().equals(projectCode) && t.getWorkdayDate().getMonthValue() == month).collect(Collectors.toList());
     }
 
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures
     // that you're not doing any long running operations on the main thread, blocking the UI.
-    public Long save(final Timesheet timesheet) {
+    public Long save(final TimesheetEntry timesheet) {
         try {
-            Timesheet timesheetExisting = getTimesheet(timesheet.getClientName(), timesheet.getProjectCode(), timesheet.getWorkdayDate());
+            TimesheetEntry timesheetExisting = getTimesheet(timesheet.getClientName(), timesheet.getProjectCode(), timesheet.getWorkdayDate());
             Log.d("TimesheetRepository.save", String.format("%s", timesheetExisting));
             // set the timesheet work date week number here, this is only used to simplify accumulate timesheet by week by the invoice service
             timesheet.setWorkdayWeek(timesheet.getWorkdayDate().get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()));
@@ -110,28 +110,28 @@ public class TimesheetRepository {
         }
     }
 
-    private Timesheet getTimesheet(String clientName, String projectCode, LocalDate workDayDate) throws InterruptedException, ExecutionException {
-        CompletionService<Timesheet> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
+    private TimesheetEntry getTimesheet(String clientName, String projectCode, LocalDate workDayDate) throws InterruptedException, ExecutionException {
+        CompletionService<TimesheetEntry> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
         service.submit(() -> timesheetDao.getTimesheet(clientName, projectCode, workDayDate));
-        Future<Timesheet> future = service.take();
+        Future<TimesheetEntry> future = service.take();
         return future != null ? future.get() : null;
     }
 
-    private Long insertTimesheet(Timesheet timesheet) throws InterruptedException, ExecutionException {
+    private Long insertTimesheet(TimesheetEntry timesheet) throws InterruptedException, ExecutionException {
         CompletionService<Long> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
         service.submit(() -> timesheetDao.insert(timesheet));
         Future<Long> future = service.take();
         return future != null ? future.get() : null;
     }
 
-    private Integer updateTimesheet(Timesheet timesheet) throws InterruptedException, ExecutionException {
+    private Integer updateTimesheet(TimesheetEntry timesheet) throws InterruptedException, ExecutionException {
         CompletionService<Integer> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
         service.submit(() -> timesheetDao.update(timesheet));
         Future<Integer> future = service.take();
         return future != null ? future.get() : null;
     }
 
-    public void delete(Timesheet timesheet) {
+    public void delete(TimesheetEntry timesheet) {
         AppDatabase.databaseExecutor.execute(() -> {
             timesheetDao.delete(timesheet);
             Log.d("TimesheetRepository.delete", "deleted, id=" + timesheet.getId());

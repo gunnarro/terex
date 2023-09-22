@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 setTitle(R.string.title_invoice_overview);
                 viewFragment(invoiceFragment);
             } else if (id == R.id.nav_admin) {
-                setTitle(R.string.title_timesheet);
+                setTitle(R.string.title_admin);
                 viewFragment(adminFragment);
             } else if (id == R.id.nav_timesheet_calendar) {
                 setTitle(R.string.title_timesheet_calendar);

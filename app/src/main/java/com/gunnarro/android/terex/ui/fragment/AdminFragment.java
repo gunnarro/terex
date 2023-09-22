@@ -25,9 +25,8 @@ import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.InvoiceSummary;
-import com.gunnarro.android.terex.domain.entity.Timesheet;
+import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.service.InvoiceService;
-import com.gunnarro.android.terex.utility.PdfUtility;
 import com.gunnarro.android.terex.utility.Utility;
 
 import org.jetbrains.annotations.NotNull;
@@ -45,8 +44,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -111,7 +108,7 @@ public class AdminFragment extends Fragment {
 
     private void generateTimesheet() {
         int month = ((Spinner) requireView().findViewById(R.id.admin_invoice_month_spinner)).getSelectedItemPosition();
-        List<Timesheet> timesheets = invoiceService.generateTimesheet(2023, month + 1);
+        List<TimesheetEntry> timesheets = invoiceService.generateTimesheet(2023, month + 1);
         timesheets.forEach(t -> Log.i("generateTimesheet", t.toString()));
         Toast.makeText(requireContext(), "Generate timesheet for " + month, Toast.LENGTH_SHORT).show();
     }
@@ -150,6 +147,9 @@ public class AdminFragment extends Fragment {
         webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
         webView.loadDataWithBaseURL(null, invoiceSummaryHtml, "text/html", "utf-8", null);
 
+        WebView webViewPrint = new WebView(requireContext());
+        webViewPrint.loadDataWithBaseURL(null, invoiceSummaryHtml, "text/html", "utf-8", null);
+
         try {
             String pdfFileName = "invoice_attachment_" + LocalDate.now().format(DateTimeFormatter.ISO_DATE) + ".pdf";
             createWebPrintJob(requireView().findViewById(R.id.invoice_overview_html), pdfFileName);
@@ -165,7 +165,7 @@ public class AdminFragment extends Fragment {
     }
 
     private void createTimesheetAttachment() throws IOException {
-        List<Timesheet> timesheets = invoiceService.getTimesheetForMonth("Norway Consulting AS", "catalystOne monolith", 9);
+        List<TimesheetEntry> timesheets = invoiceService.getTimesheetForMonth("Norway Consulting AS", "catalystOne monolith", 9);
 
         StringBuilder mustacheTemplateStr = new StringBuilder();
         // first read the invoice summary mustache html template
@@ -178,7 +178,7 @@ public class AdminFragment extends Fragment {
 
 
         Double sumBilledHours = timesheets.stream()
-                .mapToDouble(Timesheet::getWorkedMinutes)
+                .mapToDouble(TimesheetEntry::getWorkedMinutes)
                 .sum()/60;
 
         String timesheetHtml = createTimesheetListHtml(mustacheTemplateStr.toString(), timesheets, sumBilledHours.toString());
@@ -214,7 +214,7 @@ public class AdminFragment extends Fragment {
         return writer.toString();
     }
 
-    private String createTimesheetListHtml(String mustacheTemplateStr, List<Timesheet> timesheetList, String sumBilledHours) {
+    private String createTimesheetListHtml(String mustacheTemplateStr, List<TimesheetEntry> timesheetList, String sumBilledHours) {
         MustacheFactory mf = new DefaultMustacheFactory();
         Mustache mustache = mf.compile(new StringReader(mustacheTemplateStr), "");
         Map<String, Object> context = new HashMap<>();

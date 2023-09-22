@@ -8,7 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.gunnarro.android.terex.domain.entity.InvoiceSummary;
-import com.gunnarro.android.terex.domain.entity.Timesheet;
+import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -25,7 +25,7 @@ public class InvoiceServiceTest {
     @Test
     void generateTimesheet() {
         InvoiceService invoiceService = new InvoiceService(applicationContextMock);
-        List<Timesheet> timesheets = invoiceService.generateTimesheet(2023, 2);
+        List<TimesheetEntry> timesheets = invoiceService.generateTimesheet(2023, 2);
         assertEquals(19, timesheets.size());
         assertEquals(30, timesheets.get(0).getBreakInMin());
         assertEquals(1075, timesheets.get(0).getHourlyRate());
@@ -62,7 +62,7 @@ public class InvoiceServiceTest {
     @org.junit.Test
     public void jsonToTimesheet()  {
         InvoiceService invoiceService = new InvoiceService(applicationContextMock);
-        List<Timesheet> timesheets = invoiceService.generateTimesheet(2022, 3);
+        List<TimesheetEntry> timesheets = invoiceService.generateTimesheet(2022, 3);
         String jsonStr = null;
         try {
             jsonStr = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(timesheets);

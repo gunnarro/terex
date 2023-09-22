@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.gunnarro.android.terex.domain.entity.Timesheet;
+import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.repository.TimesheetRepository;
 
 import java.util.List;
@@ -22,7 +22,7 @@ public class TimesheetViewModel extends AndroidViewModel {
     // Using LiveData and caching what getAlphabetizedWords returns has several benefits:
     // - We can put an observer on the data (instead of polling for changes) and only update the
     //   the UI when the data actually changes.
-    private final LiveData<List<Timesheet>> timesheets;
+    private final LiveData<List<TimesheetEntry>> timesheets;
 
     public TimesheetViewModel(@NonNull Application application) {
         super(application);
@@ -30,20 +30,20 @@ public class TimesheetViewModel extends AndroidViewModel {
         timesheets = timesheetRepository.getAllTimesheet();
     }
 
-    public LiveData<List<Timesheet>> getTimesheetLiveData() {
+    public LiveData<List<TimesheetEntry>> getTimesheetLiveData() {
         return timesheets;
     }
 
-    public Timesheet getMostRecent() {
+    public TimesheetEntry getMostRecent() {
         return timesheetRepository.getMostRecent();
     }
 
-    public void save(Timesheet timesheet) {
+    public void save(TimesheetEntry timesheet) {
         Log.d("TimesheetViewModel.save", "save: " + timesheet);
         timesheetRepository.save(timesheet);
     }
 
-    public void delete(Timesheet timesheet) {
+    public void delete(TimesheetEntry timesheet) {
         Log.d("TimesheetViewModel.delete", "save: " + timesheet);
         timesheetRepository.delete(timesheet);
     }

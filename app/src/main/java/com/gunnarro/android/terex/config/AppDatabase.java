@@ -16,7 +16,7 @@ import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.InvoiceSummary;
 import com.gunnarro.android.terex.domain.entity.RecruitmentCompany;
 import com.gunnarro.android.terex.domain.entity.RegisterWork;
-import com.gunnarro.android.terex.domain.entity.Timesheet;
+import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.repository.InvoiceDao;
 import com.gunnarro.android.terex.repository.TimesheetDao;
 
@@ -26,7 +26,7 @@ import java.util.concurrent.Executors;
 /**
  * Thread safe database instance.
  */
-@Database(entities = {Timesheet.class, Invoice.class, InvoiceSummary.class}, version = 21, views = {TimesheetView.class})
+@Database(entities = {TimesheetEntry.class, Invoice.class, InvoiceSummary.class}, version = 22, views = {TimesheetView.class})
 public abstract class AppDatabase extends RoomDatabase {
     // marking the instance as volatile to ensure atomic access to the variable
     private static volatile AppDatabase INSTANCE;
@@ -78,7 +78,7 @@ public abstract class AppDatabase extends RoomDatabase {
             // and below line is to populate our data.
             // new PopulateDbAsyncTask(INSTANCE).execute();
             RegisterWork work = RegisterWork.buildDefault("MasterCard");
-            Timesheet timesheet = new Timesheet();
+            TimesheetEntry timesheet = new TimesheetEntry();
             timesheet.setStatus(work.getStatus());
             timesheet.setClientName(work.getClientName());
             timesheet.setProjectCode(work.getProjectName());
@@ -95,7 +95,7 @@ public abstract class AppDatabase extends RoomDatabase {
     private static class PopulateDbAsyncTask extends AsyncTask<Void, Void, Void> {
         PopulateDbAsyncTask(AppDatabase instance) {
             RegisterWork work = RegisterWork.buildDefault("MasterCard");
-            Timesheet timesheet = new Timesheet();
+            TimesheetEntry timesheet = new TimesheetEntry();
             timesheet.setStatus(work.getStatus());
             timesheet.setClientName(work.getClientName());
             timesheet.setProjectCode(work.getProjectName());

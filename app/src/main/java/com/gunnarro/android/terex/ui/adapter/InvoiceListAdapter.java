@@ -8,10 +8,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
 import com.gunnarro.android.terex.domain.entity.Invoice;
-import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.ui.view.InvoiceViewHolder;
-import com.gunnarro.android.terex.ui.view.TimesheetViewHolder;
-import com.gunnarro.android.terex.utility.Utility;
 
 public class InvoiceListAdapter extends ListAdapter<Invoice, InvoiceViewHolder>{
 

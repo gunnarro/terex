@@ -23,7 +23,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.gunnarro.android.terex.R;
-import com.gunnarro.android.terex.domain.entity.Timesheet;
+import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.service.RecruitmentService;
 import com.gunnarro.android.terex.utility.Utility;
@@ -67,12 +67,12 @@ public class TimesheetAddFragment extends Fragment implements View.OnClickListen
 
         String[] clients = recruitmentService.getRecruitmentNames();
         String[] projects = recruitmentService.getProjectNames();
-        Timesheet timesheet = Timesheet.createDefault(clients[0], projects[0], Utility.DEFAULT_STATUS, Utility.DEFAULT_DAILY_BREAK_IN_MINUTES, LocalDate.now(), Utility.DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES, Utility.DEFAULT_HOURLY_RATE);
+        TimesheetEntry timesheet = TimesheetEntry.createDefault(clients[0], projects[0], Utility.DEFAULT_STATUS, Utility.DEFAULT_DAILY_BREAK_IN_MINUTES, LocalDate.now(), Utility.DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES, Utility.DEFAULT_HOURLY_RATE);
         // check if this is an existing or a new timesheet
         String timesheetJson = getArguments() != null ? getArguments().getString(TimesheetListFragment.TIMESHEET_JSON_INTENT_KEY) : null;
         if (timesheetJson != null && !timesheetJson.isEmpty()) {
             try {
-                timesheet = Utility.gsonMapper().fromJson(timesheetJson, Timesheet.class);
+                timesheet = Utility.gsonMapper().fromJson(timesheetJson, TimesheetEntry.class);
                 Log.d(Utility.buildTag(getClass(), "onFragmentResult"), String.format("json: %s, timesheet: %s", timesheetJson, timesheet));
             } catch (Exception e) {
                 Log.e("", e.toString());
@@ -200,7 +200,7 @@ public class TimesheetAddFragment extends Fragment implements View.OnClickListen
                 .commit();
     }
 
-    private void updateTimesheetAddView(View view, @NotNull Timesheet timesheet) {
+    private void updateTimesheetAddView(View view, @NotNull TimesheetEntry timesheet) {
         TextView id = view.findViewById(R.id.timesheet_entity_id);
         id.setText(String.valueOf(timesheet.getId()));
 
@@ -270,7 +270,7 @@ public class TimesheetAddFragment extends Fragment implements View.OnClickListen
     }
 
     private String getTimesheetAsJson() {
-        Timesheet timesheet = new Timesheet();
+        TimesheetEntry timesheet = new TimesheetEntry();
 
         TextView idView = requireView().findViewById(R.id.timesheet_entity_id);
         timesheet.setId(Utility.isInteger(idView.getText().toString()) ? Long.parseLong(idView.getText().toString()) : null);

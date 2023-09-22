@@ -8,9 +8,7 @@ import androidx.lifecycle.LiveData;
 import com.gunnarro.android.terex.config.AppDatabase;
 import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.InvoiceSummary;
-import com.gunnarro.android.terex.domain.entity.Timesheet;
 
-import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 

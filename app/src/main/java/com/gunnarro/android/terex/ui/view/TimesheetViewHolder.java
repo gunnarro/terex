@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gunnarro.android.terex.R;
-import com.gunnarro.android.terex.domain.entity.Timesheet;
+import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.utility.Utility;
 
 import java.time.format.DateTimeFormatter;
@@ -42,7 +42,7 @@ public class TimesheetViewHolder extends RecyclerView.ViewHolder {
     }
 
 
-    public void bindListLine(Timesheet timesheet) {
+    public void bindListLine(TimesheetEntry timesheet) {
         timesheetLineHeaderView.setText(timesheet.getWorkdayDate().format(DateTimeFormatter.ofPattern(Utility.WORKDAY_DATE_PATTERN, Locale.getDefault())));
         if (timesheet.getStatus().equals("Open")) {
             timesheetLine1StatusView.setBackgroundColor(Color.parseColor("#0100f6"));

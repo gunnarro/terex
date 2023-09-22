@@ -117,6 +117,15 @@ dependencies {
     implementation "de.mkammerer:argon2-jvm:$mkammerer_argon2_jvm"
     implementation "org.jasypt:jasypt:$jasypt"
 
+    // for rx eventbus
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.9'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+
+    // calendar
+    implementation 'com.kizitonwose.calendar:view:2.3.0'
+    implementation 'com.kizitonwose.calendar:core:2.3.0'
+
+
     compileOnly 'org.projectlombok:lombok:1.18.28'
     annotationProcessor 'org.projectlombok:lombok:1.18.28'
 

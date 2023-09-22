@@ -11,18 +11,17 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.gunnarro.android.terex.R;
-import com.gunnarro.android.terex.domain.entity.Timesheet;
+import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.ui.fragment.TimesheetListFragment;
 import com.gunnarro.android.terex.ui.view.TimesheetViewHolder;
 import com.gunnarro.android.terex.utility.Utility;
 
-public class TimesheetListAdapter extends ListAdapter<Timesheet, TimesheetViewHolder> implements AdapterView.OnItemClickListener {
+public class TimesheetListAdapter extends ListAdapter<TimesheetEntry, TimesheetViewHolder> implements AdapterView.OnItemClickListener {
 
     private final FragmentManager fragmentManager;
 
-    public TimesheetListAdapter(@NonNull FragmentManager fragmentManager, @NonNull DiffUtil.ItemCallback<Timesheet> diffCallback) {
+    public TimesheetListAdapter(@NonNull FragmentManager fragmentManager, @NonNull DiffUtil.ItemCallback<TimesheetEntry> diffCallback) {
         super(diffCallback);
         this.fragmentManager = fragmentManager;
         Log.d("TimesheetListAdapter", "init");
@@ -41,7 +40,7 @@ public class TimesheetListAdapter extends ListAdapter<Timesheet, TimesheetViewHo
         return th;
     }
 
-    private String toJson(Timesheet timesheet) {
+    private String toJson(TimesheetEntry timesheet) {
         try {
             return Utility.gsonMapper().toJson(timesheet);
         } catch (Exception e) {
@@ -52,7 +51,7 @@ public class TimesheetListAdapter extends ListAdapter<Timesheet, TimesheetViewHo
 
     @Override
     public void onBindViewHolder(TimesheetViewHolder holder, int position) {
-        Timesheet current = getItem(position);
+        TimesheetEntry current = getItem(position);
         holder.bindListLine(current);
     }
 
@@ -65,14 +64,14 @@ public class TimesheetListAdapter extends ListAdapter<Timesheet, TimesheetViewHo
     /**
      *
      */
-    public static class TimesheetDiff extends DiffUtil.ItemCallback<Timesheet> {
+    public static class TimesheetDiff extends DiffUtil.ItemCallback<TimesheetEntry> {
         @Override
-        public boolean areItemsTheSame(@NonNull Timesheet oldItem, @NonNull Timesheet newItem) {
+        public boolean areItemsTheSame(@NonNull TimesheetEntry oldItem, @NonNull TimesheetEntry newItem) {
             return oldItem == newItem;
         }
 
         @Override
-        public boolean areContentsTheSame(@NonNull Timesheet oldItem, @NonNull Timesheet newItem) {
+        public boolean areContentsTheSame(@NonNull TimesheetEntry oldItem, @NonNull TimesheetEntry newItem) {
             return oldItem.equals(newItem);
         }
     }

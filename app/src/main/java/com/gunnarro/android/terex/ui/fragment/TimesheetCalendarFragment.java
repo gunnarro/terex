@@ -2,6 +2,7 @@ package com.gunnarro.android.terex.ui.fragment;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,12 +10,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
 
+import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.gunnarro.android.terex.R;
-import com.gunnarro.android.terex.domain.entity.Timesheet;
+import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
+import com.gunnarro.android.terex.observable.RxBus;
+import com.gunnarro.android.terex.observable.event.TimesheetEvent;
 import com.gunnarro.android.terex.repository.TimesheetRepository;
 import com.gunnarro.android.terex.utility.Utility;
 
@@ -27,7 +33,7 @@ import javax.inject.Inject;
 
 public class TimesheetCalendarFragment extends Fragment {
 
-    private Timesheet lastAddedTimesheet;
+    private TimesheetEntry lastAddedTimesheet;
     private LocalDate selectedLocalDate;
 
     private TimesheetRepository timesheetRepository;
@@ -75,18 +81,8 @@ public class TimesheetCalendarFragment extends Fragment {
 
         view.findViewById(R.id.btn_timesheet_calendar_save).setEnabled(true);
         view.findViewById(R.id.btn_timesheet_calendar_save).setOnClickListener(v -> {
-            view.findViewById(R.id.btn_timesheet_calendar_save).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
-
-            String timesheetJsonStr = getTimesheetAsJson();
-            if (timesheetJsonStr == null) {
-                showInfoDialog("You are directed back to register timesheet page, because there are no timesheet entry to copy! The must at least exist one timesheet entry before you can use the timesheet calendar view.", getContext());
-                goToAddTimesheet();
-            }
-            Bundle result = new Bundle();
-            result.putString(TimesheetListFragment.TIMESHEET_JSON_INTENT_KEY, timesheetJsonStr);
-            result.putString(TimesheetListFragment.TIMESHEET_ACTION_KEY, TimesheetListFragment.TIMESHEET_ACTION_SAVE);
-            getParentFragmentManager().setFragmentResult(TimesheetListFragment.TIMESHEET_REQUEST_KEY, result);
-            Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new add item intent: " + getTimesheetAsJson());
+         //   view.findViewById(R.id.btn_timesheet_calendar_save).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
+            handleButtonSaveClick();
         });
 
         view.findViewById(R.id.btn_timesheet_calendar_cancel).setOnClickListener(v -> {
@@ -123,6 +119,15 @@ public class TimesheetCalendarFragment extends Fragment {
         }
     }
 
+    private TimesheetEntry getTimesheetEntry() {
+        if (lastAddedTimesheet == null) {
+            return null;
+        }
+        // need only update the work day date because we all other data is read from the last added timesheet.
+        lastAddedTimesheet.setWorkdayDate(selectedLocalDate);
+        return lastAddedTimesheet;
+    }
+
     private void returnToTimesheetList() {
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
@@ -149,5 +154,41 @@ public class TimesheetCalendarFragment extends Fragment {
         builder.setPositiveButton("Ok", (dialog, which) -> dialog.cancel());
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+
+    /**
+     * When button save is click and new timesheet entry event is sent in order to insert it into the database
+     */
+    private void handleButtonSaveClick() {
+        String timesheetJsonStr = getTimesheetAsJson();
+        if (timesheetJsonStr == null) {
+            showInfoDialog("You are directed back to register timesheet page, because there are no timesheet entry to copy! The must at least exist one timesheet entry before you can use the timesheet calendar view.", getContext());
+            goToAddTimesheet();
+        }
+        /*
+        Bundle result = new Bundle();
+        result.putString(TimesheetListFragment.TIMESHEET_JSON_INTENT_KEY, timesheetJsonStr);
+        result.putString(TimesheetListFragment.TIMESHEET_ACTION_KEY, TimesheetListFragment.TIMESHEET_ACTION_SAVE);
+        getParentFragmentManager().setFragmentResult(TimesheetListFragment.TIMESHEET_REQUEST_KEY, result);
+        Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new add item intent: " + getTimesheetAsJson());
+        */
+        timesheetRepository.save(getTimesheetEntry());
+        showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_add_msg_format), selectedLocalDate), R.color.color_snackbar_text_add);
+        /*
+        // when finished publish result so fragment can pick up the backup finished event
+        RxBus.getInstance().publish(
+                TimesheetEvent.builder()
+                        .eventType(TimesheetEvent.TimesheetEventTypeEnum.ADD)
+                        .timesheetEntry(getTimesheetEntry())
+                        .build());
+
+         */
+    }
+
+    private void showSnackbar(String msg, @ColorRes int bgColor) {
+        Resources.Theme theme = getResources().newTheme();
+        Snackbar snackbar = Snackbar.make(requireView().findViewById(R.id.timesheet_calendar_layout), msg, BaseTransientBottomBar.LENGTH_LONG);
+        snackbar.setTextColor(getResources().getColor(bgColor, theme));
+        snackbar.show();
     }
 }

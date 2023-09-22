@@ -11,7 +11,7 @@ import androidx.room.Update;
 
 import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
 import com.gunnarro.android.terex.domain.converter.LocalTimeConverter;
-import com.gunnarro.android.terex.domain.entity.Timesheet;
+import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -20,15 +20,15 @@ import java.util.List;
 @Dao
 public interface TimesheetDao {
 
-    @Query("SELECT * FROM timesheet WHERE id = :id")
-    Timesheet getById(long id);
+    @Query("SELECT * FROM timesheet_entry WHERE id = :id")
+    TimesheetEntry getById(long id);
 
-    @Query("SELECT * FROM timesheet ORDER BY workday_date DESC LIMIT 1")
-    Timesheet getMostRecent();
+    @Query("SELECT * FROM timesheet_entry ORDER BY workday_date DESC LIMIT 1")
+    TimesheetEntry getMostRecent();
 
 
-    @Query("SELECT * FROM timesheet WHERE client_name = :clientName AND  project_code = :projectCode AND workday_date = :workdayDate")
-    Timesheet getTimesheet(String clientName, String projectCode, LocalDate workdayDate);
+    @Query("SELECT * FROM timesheet_entry WHERE client_name = :clientName AND  project_code = :projectCode AND workday_date = :workdayDate")
+    TimesheetEntry getTimesheet(String clientName, String projectCode, LocalDate workdayDate);
 
     /**
      * SELECT start_date,strftime('%Y',start_date) as "Year",
@@ -36,17 +36,17 @@ public interface TimesheetDao {
      * strftime('%d',start_date) as "Day"
      * FROM job_history;
      */
-    @Query("SELECT * FROM timesheet WHERE client_name = :clientName AND project_code = :projectCode AND strftime('%m', datetime(workday_date, 'unixepoch')) <> :monthNumber")
-    List<Timesheet> getTimesheetByMonth(String clientName, String projectCode, String monthNumber);
+    @Query("SELECT * FROM timesheet_entry WHERE client_name = :clientName AND project_code = :projectCode AND strftime('%m', datetime(workday_date, 'unixepoch')) <> :monthNumber")
+    List<TimesheetEntry> getTimesheetByMonth(String clientName, String projectCode, String monthNumber);
 
-    @Query("SELECT * FROM timesheet WHERE client_name = :clientName AND strftime('%d', workday_date) = :monthNumber")
-    List<Timesheet> getTimesheetByWeek(String clientName, String monthNumber);
+    @Query("SELECT * FROM timesheet_entry WHERE client_name = :clientName AND strftime('%d', workday_date) = :monthNumber")
+    List<TimesheetEntry> getTimesheetByWeek(String clientName, String monthNumber);
 
-    @Query("SELECT * FROM timesheet ORDER BY workday_date ASC")
-    LiveData<List<Timesheet>> getAll();
+    @Query("SELECT * FROM timesheet_entry ORDER BY workday_date ASC")
+    LiveData<List<TimesheetEntry>> getAll();
 
-    @Query("SELECT * FROM timesheet WHERE strftime('%Y', workday_date) = :week")
-    LiveData<List<Timesheet>> getByWeek(int week);
+    @Query("SELECT * FROM timesheet_entry WHERE strftime('%Y', workday_date) = :week")
+    LiveData<List<TimesheetEntry>> getByWeek(int week);
 
     /**
      *
@@ -54,7 +54,7 @@ public interface TimesheetDao {
      * @return the id of the inserted timesheet row
      */
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    Long insert(Timesheet timesheet);
+    Long insert(TimesheetEntry timesheet);
 
     /**
      *
@@ -62,13 +62,13 @@ public interface TimesheetDao {
      * @return number of updated row(S), should only be one for this method.
      */
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    int update(Timesheet timesheet);
+    int update(TimesheetEntry timesheet);
 
     /**
      *
      * @param timesheet
      */
     @Delete
-    void delete(Timesheet timesheet);
+    void delete(TimesheetEntry timesheet);
 
 }

@@ -10,6 +10,13 @@ import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@NoArgsConstructor
+@Setter
+@Getter
 @TypeConverters(LocalDateConverter.class)
 @Entity(tableName = "invoice")
 public class Invoice {
@@ -20,10 +27,18 @@ public class Invoice {
     private Integer invoiceId;
     @ColumnInfo(name = "client_id")
     private Integer clientId;
-  //  @ColumnInfo(name = "company_id")
-  //  private Integer companyId;
+    //  @ColumnInfo(name = "company_id")
+    //  private Integer companyId;
     @ColumnInfo(name = "invoice_date")
     private LocalDate invoiceDate;
+    @ColumnInfo(name = "invoice_status")
+    private String status;
+    @ColumnInfo(name = "due_date")
+    private LocalDate dueDate;
+    @ColumnInfo(name = "vat")
+    private double vat;
+    @ColumnInfo(name = "amount_due")
+    private double amountDue;
 
     public int getId() {
         return id;
@@ -80,13 +95,6 @@ public class Invoice {
     public void setAmountDue(double amountDue) {
         this.amountDue = amountDue;
     }
-
-    @ColumnInfo(name = "due_date")
-    private LocalDate dueDate;
-    @ColumnInfo(name = "vat")
-    private double vat;
-    @ColumnInfo(name = "amount_due")
-    private double amountDue;
 
     @Override
     public boolean equals(Object o) {

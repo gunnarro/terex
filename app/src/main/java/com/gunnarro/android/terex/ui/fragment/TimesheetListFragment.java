@@ -23,7 +23,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.gunnarro.android.terex.R;
-import com.gunnarro.android.terex.domain.entity.Timesheet;
+import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
+import com.gunnarro.android.terex.observable.RxBus;
+import com.gunnarro.android.terex.observable.event.TimesheetEvent;
 import com.gunnarro.android.terex.ui.adapter.TimesheetListAdapter;
 import com.gunnarro.android.terex.ui.view.TimesheetViewModel;
 import com.gunnarro.android.terex.utility.Utility;
@@ -31,6 +33,8 @@ import com.gunnarro.android.terex.utility.Utility;
 import org.jetbrains.annotations.NotNull;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 @AndroidEntryPoint
 public class TimesheetListFragment extends Fragment {
@@ -53,7 +57,7 @@ public class TimesheetListFragment extends Fragment {
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
                 Log.d(Utility.buildTag(getClass(), "onFragmentResult"), "intent: " + requestKey + "json:  + " + bundle.getString(TIMESHEET_JSON_INTENT_KEY));
                 try {
-                    Timesheet timesheet = Utility.gsonMapper().fromJson(bundle.getString(TIMESHEET_JSON_INTENT_KEY), Timesheet.class);
+                    TimesheetEntry timesheet = Utility.gsonMapper().fromJson(bundle.getString(TIMESHEET_JSON_INTENT_KEY), TimesheetEntry.class);
                     handleButtonActions(timesheet, bundle.getString(TIMESHEET_ACTION_KEY));
                     Log.d(Utility.buildTag(getClass(), "onFragmentResult"), String.format("action: %s, timesheet: %s", bundle.getString(TIMESHEET_ACTION_KEY), timesheet));
                 } catch (Exception e) {
@@ -83,7 +87,7 @@ public class TimesheetListFragment extends Fragment {
 
         FloatingActionButton addButton = view.findViewById(R.id.add_timesheet);
         addButton.setOnClickListener(v -> {
-            String timesheetJson = Utility.gsonMapper().toJson(timesheetViewModel.getMostRecent(), Timesheet.class);
+            String timesheetJson = Utility.gsonMapper().toJson(timesheetViewModel.getMostRecent(), TimesheetEntry.class);
             Bundle bundle = new Bundle();
             bundle.putString(TimesheetListFragment.TIMESHEET_JSON_INTENT_KEY, timesheetJson);
             requireActivity().getSupportFragmentManager()
@@ -103,6 +107,8 @@ public class TimesheetListFragment extends Fragment {
                     .commit();
         });
 
+        // listen after timesheet add and delete events
+        RxBus.getInstance().listen().subscribe(getInputObserver());
         Log.d(Utility.buildTag(getClass(), "onCreateView"), "");
         return view;
     }
@@ -125,7 +131,7 @@ public class TimesheetListFragment extends Fragment {
         super.onDestroyView();
     }
 
-    private void handleButtonActions(Timesheet timesheet, String action) {
+    private void handleButtonActions(TimesheetEntry timesheet, String action) {
         if (TIMESHEET_ACTION_SAVE.equals(action)) {
             try {
                 timesheetViewModel.save(timesheet);
@@ -163,5 +169,37 @@ public class TimesheetListFragment extends Fragment {
         builder.setPositiveButton("Ok", (dialog, which) -> dialog.cancel());
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+
+    // listen for timesheet add and delete events
+    private Observer<Object> getInputObserver() {
+        return new Observer<Object>() {
+            @Override
+            public void onSubscribe(@NotNull Disposable d) {
+                Log.d(Utility.buildTag(getClass(), "getInputObserver.onSubscribe"), "");
+            }
+
+            @Override
+            public void onNext(@NotNull Object obj) {
+                if (obj instanceof TimesheetEvent event) {
+                    Log.d(Utility.buildTag(getClass(), "getInputObserver.onNext"), String.format("handle event: %s", event));
+                    if (event.isAdd()) {
+                        timesheetViewModel.save(event.getTimesheetEntry());
+                    } else if (event.isDelete()) {
+                       // not implemented
+                    }
+                }
+            }
+
+            @Override
+            public void onError(@NotNull Throwable e) {
+                Log.e(Utility.buildTag(getClass(), "getInputObserver.onError"), String.format("%s", e.getMessage()));
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d(Utility.buildTag(getClass(), "getInputObserver.onComplete"), "");
+            }
+        };
     }
 }

@@ -5,7 +5,7 @@ import androidx.room.DatabaseView;
 
 import java.util.List;
 
-@DatabaseView("SELECT * FROM timesheet")
+@DatabaseView("SELECT * FROM timesheet_entry")
 public class TimesheetView {
     @ColumnInfo(name = "name")
     private String name;
