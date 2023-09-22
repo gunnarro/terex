@@ -29,11 +29,6 @@
                 android:weekNumberColor="@color/biometric_error_color"
                 android:weekSeparatorLineColor="@color/cardview_dark_background" />
 
-            <com.kizitonwose.calendar.view.CalendarView
-                android:id="@+id/calendarView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                 />
         </LinearLayout>
 
         <LinearLayout

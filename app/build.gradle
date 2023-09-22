@@ -122,8 +122,6 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 
     // calendar
-    implementation 'com.kizitonwose.calendar:view:2.3.0'
-    implementation 'com.kizitonwose.calendar:core:2.3.0'
 
 
     compileOnly 'org.projectlombok:lombok:1.18.28'

@@ -78,12 +78,15 @@ public class TimesheetCalendarFragment extends Fragment {
         calendarView.setLayoutMode(1);
         calendarView.setFirstDayOfWeek(Calendar.MONDAY);
         calendarView.setWeekDayTextAppearance(R.style.Widget_Material3_MaterialCalendar_Day);
+        calendarView.dispatchSetSelected(true);
 
         view.findViewById(R.id.btn_timesheet_calendar_save).setEnabled(true);
         view.findViewById(R.id.btn_timesheet_calendar_save).setOnClickListener(v -> {
          //   view.findViewById(R.id.btn_timesheet_calendar_save).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
             handleButtonSaveClick();
         });
+
+
 
         view.findViewById(R.id.btn_timesheet_calendar_cancel).setOnClickListener(v -> {
             view.findViewById(R.id.btn_timesheet_calendar_cancel).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
