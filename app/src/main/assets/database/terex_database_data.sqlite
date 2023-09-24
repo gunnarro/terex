@@ -8,3 +8,21 @@ VALUES
     (6, "hourly_rate", 1075),
     (7, "status", 'Open'),
     (8, "comment", "no comments");
+
+
+INSERT INTO address (id, street_name, street_number, street_number_prefix, post_code, city, country_code)
+VALUES (1, "stavangergata", "35", null, "0467", "oslo", "no" ),
+VALUES (2, "grensen", "16", null, "0159", "oslo", "no" );
+
+INSERT INTO contact_info (id, private_mobile_number, private_email_address, work_mobile_number, work_email_address)
+VALUES (1, null, null, "gunnar_ronneberg@yahoo.no", "+4745465500"),
+VALUES (2, null, null, "Anita@norway-consulting.no", "+4797301271");
+
+INSERT INTO person (first_name, middle_name, last_name, address_id, contact_info_id)
+VALUES (1, "gunnar", null, "rønneberg", null, 1),
+VALUES (2, "anita", null, "lundtveit", null, 2),
+
+INSERT INTO company (id, company_name, organization_number, bank_account_number, address_id, contact_info_id, contact_person_id)
+VALUES (1, "gunnarro as", "828707922", "92302698831", 1, 1, 1),
+VALUES (2, "Norway Consulting AS", "917616647", null, 2, 2, 2),
+VALUES (2, "catalystone solutions as", " 915263836", null, null, null);

@@ -16,5 +16,5 @@ public class Person {
     @ColumnInfo(name = "gender")
     String gender;
     @ColumnInfo(name = "marital_status")
-    String materialStatus;
+    String maritalStatus;
 }

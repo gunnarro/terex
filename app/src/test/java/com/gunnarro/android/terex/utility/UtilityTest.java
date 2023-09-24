@@ -56,4 +56,13 @@ public class UtilityTest {
         assertEquals("15-12-2022", Utility.formatToDDMMYYYY(2022, 12, 15));
         assertEquals("30-10-2022", Utility.formatToDDMMYYYY(2022, 10, 30));
     }
+
+    @Test
+    public void mapToMonthName() {
+        assertEquals(13, Utility.getMonths().length);
+        assertEquals("January", Utility.getMonths()[0]);
+        assertEquals("December", Utility.getMonths()[Utility.getMonths().length - 2]);
+        assertEquals("January", Utility.mapMonthNumberToName(0));
+        assertEquals(0, Utility.mapMonthNameToNumber("January").intValue());
+    }
 }

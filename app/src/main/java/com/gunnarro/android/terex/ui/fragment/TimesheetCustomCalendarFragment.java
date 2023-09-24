@@ -61,10 +61,10 @@ public class TimesheetCustomCalendarFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_timesheet_custom_calendar, container, false);
         CalendarView calendarView = view.findViewById(R.id.view_timesheet_custom_calendar);
-
-        List<TimesheetEntry> timesheets = timesheetRepository.getTimesheets("Norway Consulting AS", "catalystOne monolith", LocalDate.now().getMonthValue());
+        Long timesheetId = 1L;
+        List<TimesheetEntry> timesheetEntryList = timesheetRepository.getTimesheetEntryList(timesheetId);
         List<Calendar> selectedDates = new ArrayList<>();
-        timesheets.forEach(t -> {
+        timesheetEntryList.forEach(t -> {
             Calendar cal = Calendar.getInstance();
             cal.set(t.getWorkdayDate().getYear(), t.getWorkdayDate().getMonth().getValue() - 1, t.getWorkdayDate().getDayOfMonth());
             selectedDates.add(cal);
@@ -154,7 +154,7 @@ public class TimesheetCustomCalendarFragment extends Fragment {
     private void goToAddTimesheet() {
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_frame, TimesheetAddFragment.class, null)
+                .replace(R.id.content_frame, TimesheetAddEntryFragment.class, null)
                 .setReorderingAllowed(true)
                 .commit();
     }
@@ -180,7 +180,7 @@ public class TimesheetCustomCalendarFragment extends Fragment {
             showInfoDialog("You are directed back to register timesheet page, because there are no timesheet entry to copy! The must at least exist one timesheet entry before you can use the timesheet calendar view.", getContext());
             goToAddTimesheet();
         }
-        timesheetRepository.save(getTimesheetEntry());
+        timesheetRepository.saveTimesheetEntry(getTimesheetEntry());
         showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_add_msg_format), selectedLocalDate), R.color.color_snackbar_text_add);
     }
 

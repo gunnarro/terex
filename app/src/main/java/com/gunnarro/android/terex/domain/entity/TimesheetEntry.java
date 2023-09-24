@@ -3,6 +3,7 @@ package com.gunnarro.android.terex.domain.entity;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
@@ -30,11 +31,16 @@ import lombok.Setter;
 @Getter
 @Setter
 @TypeConverters({LocalDateConverter.class, LocalTimeConverter.class, LocalDateTimeConverter.class})
-@Entity(tableName = "timesheet_entry")
+@Entity(tableName = "timesheet_entry", indices = {@Index(value = {"timesheet_id", "workday_date"},
+        unique = true)})
 public class TimesheetEntry {
 
     @PrimaryKey(autoGenerate = true)
     private Long id;
+
+    @NonNull
+    @ColumnInfo(name = "timesheet_id")
+    private Long timesheetId;
 
     @NonNull
     @ColumnInfo(name = "created_date")
@@ -43,14 +49,6 @@ public class TimesheetEntry {
     @NonNull
     @ColumnInfo(name = "last_modified_date")
     private LocalDateTime lastModifiedDate;
-
-    @NonNull
-    @ColumnInfo(name = "client_name", index = true)
-    private String clientName;
-
-    @NonNull
-    @ColumnInfo(name = "project_code", index = true)
-    private String projectCode;
 
     @NonNull
     @ColumnInfo(name = "workday_week")
@@ -97,26 +95,17 @@ public class TimesheetEntry {
         return id;
     }
 
+    @NonNull
+    public Long getTimesheetId() {
+        return timesheetId;
+    }
+
+    public void setTimesheetId(@NonNull Long timesheetId) {
+        this.timesheetId = timesheetId;
+    }
+
     public void setId(Long id) {
         this.id = id;
-    }
-
-    @NonNull
-    public String getClientName() {
-        return clientName;
-    }
-
-    public void setClientName(@NonNull String clientName) {
-        this.clientName = clientName;
-    }
-
-    @NonNull
-    public String getProjectCode() {
-        return projectCode;
-    }
-
-    public void setProjectCode(@NonNull String projectCode) {
-        this.projectCode = projectCode;
     }
 
     @NonNull
@@ -226,32 +215,17 @@ public class TimesheetEntry {
         this.lastModifiedDate = lastModifiedDate;
     }
 
-    public static TimesheetEntry createDefault(String clientName, String projectCode, String status, Integer dailyBreakMin, LocalDate workDayDate, Long workingHoursMin, Integer hourlyRate) {
-        TimesheetEntry timesheet = new TimesheetEntry();
-        timesheet.setClientName(clientName);
-        timesheet.setProjectCode(projectCode);
-        timesheet.setStatus(status);
-        timesheet.setWorkdayDate(workDayDate);
-        timesheet.setFromTime(LocalTime.now(ZoneId.systemDefault()).withHour(8).withMinute(0).withSecond(0).withSecond(0).withNano(0));
-        // add 7,5 hours
-        timesheet.setToTime(timesheet.getFromTime().plusMinutes(workingHoursMin));
-        timesheet.setWorkedMinutes(Long.valueOf(ChronoUnit.MINUTES.between(timesheet.getFromTime(), timesheet.getToTime())).intValue());
-        timesheet.setBreakInMin(dailyBreakMin);
-        timesheet.setHourlyRate(hourlyRate);
-        return timesheet;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TimesheetEntry timesheet = (TimesheetEntry) o;
-        return clientName.equals(timesheet.clientName) && projectCode.equals(timesheet.projectCode) && workdayDate.isEqual(timesheet.workdayDate);
+        TimesheetEntry that = (TimesheetEntry) o;
+        return Objects.equals(id, that.id) && timesheetId.equals(that.timesheetId) && createdDate.equals(that.createdDate) && lastModifiedDate.equals(that.lastModifiedDate) && workdayWeek.equals(that.workdayWeek) && workdayDate.equals(that.workdayDate) && fromTime.equals(that.fromTime) && toTime.equals(that.toTime) && workedMinutes.equals(that.workedMinutes) && Objects.equals(breakInMin, that.breakInMin) && hourlyRate.equals(that.hourlyRate) && status.equals(that.status) && Objects.equals(comment, that.comment) && Objects.equals(useAsDefault, that.useAsDefault);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(clientName, projectCode, workdayDate);
+        return Objects.hash(id, timesheetId, createdDate, lastModifiedDate, workdayWeek, workdayDate, fromTime, toTime, workedMinutes, breakInMin, hourlyRate, status, comment, useAsDefault);
     }
 
     @NonNull
@@ -259,10 +233,9 @@ public class TimesheetEntry {
     public String toString() {
         final StringBuffer sb = new StringBuffer("Timesheet{");
         sb.append("id=").append(id);
+        sb.append(", timesheetId=").append(timesheetId);
         sb.append(", createdDate=").append(createdDate);
         sb.append(", lastModifiedDate=").append(lastModifiedDate);
-        sb.append(", clientName='").append(clientName).append('\'');
-        sb.append(", projectCode='").append(projectCode).append('\'');
         sb.append(", workdayWeek=").append(workdayWeek);
         sb.append(", workdayDate=").append(workdayDate);
         sb.append(", fromTime=").append(fromTime);
@@ -277,13 +250,26 @@ public class TimesheetEntry {
         return sb.toString();
     }
 
+    public static TimesheetEntry createDefault(Long timesheetId, String status, Integer dailyBreakMin, LocalDate workDayDate, Long workingHoursMin, Integer hourlyRate) {
+        TimesheetEntry timesheetEntry = new TimesheetEntry();
+        timesheetEntry.setTimesheetId(timesheetId);
+        timesheetEntry.setStatus(status);
+        timesheetEntry.setWorkdayDate(workDayDate);
+        timesheetEntry.setFromTime(LocalTime.now(ZoneId.systemDefault()).withHour(8).withMinute(0).withSecond(0).withSecond(0).withNano(0));
+        // add 7,5 hours
+        timesheetEntry.setToTime(timesheetEntry.getFromTime().plusMinutes(workingHoursMin));
+        timesheetEntry.setWorkedMinutes(Long.valueOf(ChronoUnit.MINUTES.between(timesheetEntry.getFromTime(), timesheetEntry.getToTime())).intValue());
+        timesheetEntry.setBreakInMin(dailyBreakMin);
+        timesheetEntry.setHourlyRate(hourlyRate);
+        return timesheetEntry;
+    }
+
     public static TimesheetEntry clone(TimesheetEntry timesheet) {
         if (timesheet == null) {
             return null;
         }
         TimesheetEntry clone = new TimesheetEntry();
-        clone.setProjectCode(timesheet.getProjectCode());
-        clone.setClientName(timesheet.getClientName());
+        clone.setTimesheetId(timesheet.getTimesheetId());
         clone.setBreakInMin(timesheet.getBreakInMin());
         clone.setWorkedMinutes(timesheet.getWorkedMinutes());
         clone.setStatus(timesheet.getStatus());

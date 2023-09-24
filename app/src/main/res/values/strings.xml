@@ -1,16 +1,19 @@
 <resources>
     <string name="app_name">TeRex</string>
     <string name="title_admin">Administration</string>
-    <string name="title_timesheet">TimeSheet</string>
+    <string name="title_timesheet">Timesheet</string>
     <string name="title_register_work">Register Work</string>
     <string name="title_invoice_overview">Invoice Overview</string>
     <string name="title_invoice">Invoice</string>
     <string name="title_credential">Credential Store</string>
     <string name="title_credential_register">Credential Store</string>
     <string name="title_timesheet_calendar">Timesheet calendar</string>
+    <string name="title_timesheet_new">New timesheet</string>
+    <string name="lbl_description">Description</string>
     <string name="lbl_timesheet">Timesheet</string>
     <string name="lbl_invoice">Invoice</string>
     <string name="lbl_client">Client</string>
+    <string name="lbl_title">Title</string>
     <string name="lbl_project">Project</string>
     <string name="lbl_hourly_rate">Hourly rate</string>
     <string name="lbl_from_date_time">From</string>
@@ -49,6 +52,10 @@
     <string name="lbl_workday_date">Workday date</string>
     <string name="lbl_to_time">To time</string>
     <string name="lbl_from_time">From time</string>
+    <string name="lbl_from_date">From date</string>
+    <string name="lbl_to_date">To date</string>
+    <string name="lbl_year">Year</string>
+    <string name="lbl_month">Month</string>
     <string name="hh_mm">HH:mm</string>
     <string name="dd_mm_yyyy">dd-MM-yyyy</string>
     <string name="btn_delete">Delete</string>

@@ -8,6 +8,7 @@ import androidx.room.TypeConverters;
 import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 import lombok.Getter;
@@ -27,8 +28,6 @@ public class Invoice {
     private Integer invoiceId;
     @ColumnInfo(name = "client_id")
     private Integer clientId;
-    //  @ColumnInfo(name = "company_id")
-    //  private Integer companyId;
     @ColumnInfo(name = "invoice_date")
     private LocalDate invoiceDate;
     @ColumnInfo(name = "invoice_status")
@@ -37,8 +36,10 @@ public class Invoice {
     private LocalDate dueDate;
     @ColumnInfo(name = "vat")
     private double vat;
-    @ColumnInfo(name = "amount_due")
-    private double amountDue;
+    @ColumnInfo(name = "amount")
+    private double amount;
+
+    private transient List<InvoiceSummary> invoiceSummaryList;
 
     public int getId() {
         return id;
@@ -88,12 +89,12 @@ public class Invoice {
         this.vat = vat;
     }
 
-    public double getAmountDue() {
-        return amountDue;
+    public double getAmount() {
+        return amount;
     }
 
-    public void setAmountDue(double amountDue) {
-        this.amountDue = amountDue;
+    public void setAmount(double amount) {
+        this.amount = amount;
     }
 
     @Override
@@ -101,7 +102,7 @@ public class Invoice {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Invoice invoice = (Invoice) o;
-        return id == invoice.id && Double.compare(invoice.vat, vat) == 0 && Double.compare(invoice.amountDue, amountDue) == 0 && invoiceId.equals(invoice.invoiceId) && Objects.equals(clientId, invoice.clientId) && Objects.equals(invoiceDate, invoice.invoiceDate) && Objects.equals(dueDate, invoice.dueDate);
+        return id == invoice.id && Double.compare(invoice.vat, vat) == 0 && Double.compare(invoice.amount, amount) == 0 && invoiceId.equals(invoice.invoiceId) && Objects.equals(clientId, invoice.clientId) && Objects.equals(invoiceDate, invoice.invoiceDate) && Objects.equals(dueDate, invoice.dueDate);
     }
 
     @Override

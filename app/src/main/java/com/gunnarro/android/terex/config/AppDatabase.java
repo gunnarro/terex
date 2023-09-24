@@ -16,9 +16,11 @@ import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.InvoiceSummary;
 import com.gunnarro.android.terex.domain.entity.RecruitmentCompany;
 import com.gunnarro.android.terex.domain.entity.RegisterWork;
+import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.repository.InvoiceDao;
 import com.gunnarro.android.terex.repository.TimesheetDao;
+import com.gunnarro.android.terex.repository.TimesheetEntryDao;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -26,16 +28,16 @@ import java.util.concurrent.Executors;
 /**
  * Thread safe database instance.
  */
-@Database(entities = {TimesheetEntry.class, Invoice.class, InvoiceSummary.class}, version = 23, views = {TimesheetView.class})
+@Database(entities = {Timesheet.class, TimesheetEntry.class, Invoice.class, InvoiceSummary.class}, version = 27, views = {TimesheetView.class})
 public abstract class AppDatabase extends RoomDatabase {
     // marking the instance as volatile to ensure atomic access to the variable
     private static volatile AppDatabase INSTANCE;
-    private static final int NUMBER_OF_THREADS = 4;
+    private static final int NUMBER_OF_THREADS = 10;
     public static final ExecutorService databaseExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
     public static AppDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
-            // Allow only single single thread access to the database
+            // Allow only single thread access to the database
             synchronized (AppDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
@@ -51,6 +53,8 @@ public abstract class AppDatabase extends RoomDatabase {
     }
 
     public abstract TimesheetDao timesheetDao();
+
+    public abstract TimesheetEntryDao timesheetEntryDao();
 
     public abstract InvoiceDao invoiceDao();
 
@@ -79,15 +83,14 @@ public abstract class AppDatabase extends RoomDatabase {
             // new PopulateDbAsyncTask(INSTANCE).execute();
             RegisterWork work = RegisterWork.buildDefault("MasterCard");
             TimesheetEntry timesheet = new TimesheetEntry();
+            timesheet.setTimesheetId(1L);
             timesheet.setStatus(work.getStatus());
-            timesheet.setClientName(work.getClientName());
-            timesheet.setProjectCode(work.getProjectName());
             timesheet.setHourlyRate(work.getHourlyRate());
             timesheet.setBreakInMin(work.getBreakInMin());
             timesheet.setWorkdayDate(work.getWorkdayDate());
             timesheet.setFromTime(work.getFromTime());
             timesheet.setToTime(work.getToTime());
-            INSTANCE.timesheetDao().insert(timesheet);
+            INSTANCE.timesheetEntryDao().insert(timesheet);
         }
     };
 
@@ -96,15 +99,14 @@ public abstract class AppDatabase extends RoomDatabase {
         PopulateDbAsyncTask(AppDatabase instance) {
             RegisterWork work = RegisterWork.buildDefault("MasterCard");
             TimesheetEntry timesheet = new TimesheetEntry();
+            timesheet.setTimesheetId(1L);
             timesheet.setStatus(work.getStatus());
-            timesheet.setClientName(work.getClientName());
-            timesheet.setProjectCode(work.getProjectName());
             timesheet.setHourlyRate(work.getHourlyRate());
             timesheet.setBreakInMin(work.getBreakInMin());
             timesheet.setWorkdayDate(work.getWorkdayDate());
             timesheet.setFromTime(work.getFromTime());
             timesheet.setToTime(work.getToTime());
-            instance.timesheetDao().insert(timesheet);
+            instance.timesheetEntryDao().insert(timesheet);
         }
 
         @Override

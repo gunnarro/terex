@@ -27,7 +27,7 @@ public class InvoiceListAdapter extends ListAdapter<Invoice, InvoiceViewHolder>{
     public void onBindViewHolder(InvoiceViewHolder holder, int position) {
         Invoice current = getItem(position);
         holder.bindListItemHeader(current.getInvoiceDate().toString() + " - " + current.getDueDate());
-        holder.bindListItemBody(current.getClientId() + ", " + current.getInvoiceId() + "," + current.getAmountDue());
+        holder.bindListItemBody(current.getClientId() + ", " + current.getInvoiceId() + "," + current.getAmount());
     }
 
     public static class InvoiceDiff extends DiffUtil.ItemCallback<Invoice> {

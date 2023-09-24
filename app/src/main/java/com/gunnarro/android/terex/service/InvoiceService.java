@@ -6,6 +6,7 @@ import android.util.Log;
 import com.gunnarro.android.terex.domain.entity.InvoiceSummary;
 import com.gunnarro.android.terex.domain.entity.RegisterWork;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
+import com.gunnarro.android.terex.repository.InvoiceRepository;
 import com.gunnarro.android.terex.repository.TimesheetRepository;
 import com.gunnarro.android.terex.utility.Utility;
 
@@ -36,7 +37,8 @@ import javax.inject.Singleton;
 @Singleton
 public class InvoiceService {
 
-    private TimesheetRepository timesheetRepository;
+    private final TimesheetRepository timesheetRepository;
+    private InvoiceRepository invoiceRepository;
 
 
     /**
@@ -46,15 +48,15 @@ public class InvoiceService {
     @Inject
     public InvoiceService(Context applicationContext) {
         timesheetRepository = new TimesheetRepository(applicationContext);
+        invoiceRepository = new InvoiceRepository(applicationContext);
     }
 
     /**
-     * @param monthNumber note! is from 1 to 12
      * @return
      */
-    public List<InvoiceSummary> createInvoiceSummaryForMonth(String clientName, String projectCode, Integer monthNumber) {
-        Log.d("createInvoiceSummaryForMonth", "timesheets for mount: " + clientName + ", " + projectCode + ", " + monthNumber);
-        List<TimesheetEntry> timesheets = timesheetRepository.getTimesheets(clientName, projectCode, monthNumber);
+    public List<InvoiceSummary> createInvoiceSummary(Long timesheetId) {
+        Log.d("createInvoiceSummaryForMonth", "timesheets for mount: " + timesheetId);
+        List<TimesheetEntry> timesheets = timesheetRepository.getTimesheetEntryList(timesheetId);
         Log.d("createInvoiceSummaryForMonth", "timesheets for mount: " + timesheets);
         // accumulate timesheet by week for the mount
         Map<Integer, List<TimesheetEntry>> timesheetWeekMap = timesheets.stream().collect(Collectors.groupingBy(TimesheetEntry::getWorkdayWeek));
@@ -65,12 +67,13 @@ public class InvoiceService {
             invoiceSummaryByWeek.add(buildInvoiceSummaryForWeek(k, e));
 
         });
+
         invoiceSummaryByWeek.sort(Comparator.comparing(InvoiceSummary::getWeekInYear));
         return invoiceSummaryByWeek;
     }
 
-    public List<TimesheetEntry> getTimesheetForMonth(String clientName, String projectCode, Integer monthNumber) {
-        return timesheetRepository.getTimesheets(clientName, projectCode, monthNumber);
+    public List<TimesheetEntry> getTimesheet(Long timesheetId) {
+        return timesheetRepository.getTimesheetEntryList(timesheetId);
     }
 
     public RegisterWork getRegisterWork(Integer id) {
@@ -157,8 +160,9 @@ public class InvoiceService {
                 .collect(Collectors.toList());
     }
 
+
     private TimesheetEntry createTimesheet(LocalDate day) {
-        return TimesheetEntry.createDefault(null, null, Utility.DEFAULT_STATUS, Utility.DEFAULT_DAILY_BREAK_IN_MINUTES, day, Utility.DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES, Utility.DEFAULT_HOURLY_RATE);
+        return TimesheetEntry.createDefault(timesheetRepository.getCurrentTimesheetId("*", "*"), Utility.DEFAULT_STATUS, Utility.DEFAULT_DAILY_BREAK_IN_MINUTES, day, Utility.DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES, Utility.DEFAULT_HOURLY_RATE);
     }
 
     private static int getWeek(LocalDate date) {

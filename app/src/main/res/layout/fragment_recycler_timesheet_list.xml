@@ -13,6 +13,13 @@
             android:layout_height="match_parent"
             tools:context=".ui.fragment.TimesheetListFragment">
 
+            <TextView
+                android:id="@+id/timesheet_list_header"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="List Header"/>
+
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/timesheet_recyclerview"
                 android:layout_width="0dp"

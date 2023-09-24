@@ -35,8 +35,7 @@ public class InvoiceServiceTest {
         assertEquals("08:00", timesheets.get(0).getFromTime().toString());
         assertEquals("15:30", timesheets.get(0).getToTime().toString());
         assertEquals(null, timesheets.get(0).getComment());
-        assertEquals(null, timesheets.get(0).getClientName());
-        assertEquals(null, timesheets.get(0).getProjectCode());
+
     }
 
     @Test
@@ -47,7 +46,7 @@ public class InvoiceServiceTest {
         assertEquals(0, invoiceSummaries.get(0).getInvoiceId());
         assertEquals(24187.5, invoiceSummaries.get(0).getSumBilledWork());
         assertEquals(3, invoiceSummaries.get(0).getSumWorkedDays());
-        assertEquals(1350, invoiceSummaries.get(0).getSumWorkedMinutes());
+        assertEquals(1350, invoiceSummaries.get(0).getSumWorkedHours());
     }
 
     @org.junit.Test

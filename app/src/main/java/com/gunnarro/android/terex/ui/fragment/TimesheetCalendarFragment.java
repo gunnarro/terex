@@ -19,8 +19,6 @@ import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
-import com.gunnarro.android.terex.observable.RxBus;
-import com.gunnarro.android.terex.observable.event.TimesheetEvent;
 import com.gunnarro.android.terex.repository.TimesheetRepository;
 import com.gunnarro.android.terex.utility.Utility;
 
@@ -141,7 +139,7 @@ public class TimesheetCalendarFragment extends Fragment {
     private void goToAddTimesheet() {
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_frame, TimesheetAddFragment.class, null)
+                .replace(R.id.content_frame, TimesheetAddEntryFragment.class, null)
                 .setReorderingAllowed(true)
                 .commit();
     }
@@ -174,7 +172,7 @@ public class TimesheetCalendarFragment extends Fragment {
         getParentFragmentManager().setFragmentResult(TimesheetListFragment.TIMESHEET_REQUEST_KEY, result);
         Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new add item intent: " + getTimesheetAsJson());
         */
-        timesheetRepository.save(getTimesheetEntry());
+        timesheetRepository.saveTimesheetEntry(getTimesheetEntry());
         showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_add_msg_format), selectedLocalDate), R.color.color_snackbar_text_add);
         /*
         // when finished publish result so fragment can pick up the backup finished event

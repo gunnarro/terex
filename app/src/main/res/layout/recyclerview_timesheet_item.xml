@@ -53,7 +53,7 @@
                 android:id="@+id/timesheet_line_1_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
+                android:layout_marginStart="4dp"
                 android:layout_weight="1"
                 android:gravity="start"
                 android:text="08:00 - 15:30" />
@@ -82,7 +82,7 @@
                 android:id="@+id/timesheet_line_2_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
+                android:layout_marginStart="4dp"
                 android:layout_weight="1"
                 android:gravity="start"
                 android:text="Timepris" />

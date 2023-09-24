@@ -14,8 +14,10 @@ import lombok.Setter;
  * Used as embedded
  */
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class Company {
 
     @ColumnInfo(name = "company_name")
@@ -24,6 +26,10 @@ public class Company {
     String organizationNumber;
     @ColumnInfo(name = "bank_account_number")
     String bankAccountNumber;
+    @Embedded
+    Address businessAddress;
+    @Embedded
+    Contact contactInfo;
 
     public String getName() {
         return name;
@@ -57,18 +63,12 @@ public class Company {
         this.businessAddress = businessAddress;
     }
 
-    public Contact getContact() {
-        return contact;
+    public Contact getContactInfo() {
+        return contactInfo;
     }
 
-    public void setContact(Contact contact) {
-        this.contact = contact;
+    public void setContactInfo(Contact contactInfo) {
+        this.contactInfo = contactInfo;
     }
-
-    @Embedded
-    Address businessAddress;
-    @Embedded
-    Contact contact;
-
 
 }

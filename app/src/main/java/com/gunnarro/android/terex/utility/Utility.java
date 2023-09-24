@@ -6,6 +6,7 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.text.DateFormatSymbols;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
@@ -13,14 +14,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.WeekFields;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.TimeZone;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class Utility {
 
@@ -28,28 +27,20 @@ public class Utility {
     public static final Long DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES = 8 * 60L - DEFAULT_DAILY_BREAK_IN_MINUTES;
     public static final Integer DEFAULT_HOURLY_RATE = 1075;
     public static final String DEFAULT_STATUS = "Open";
-    public static final String TIMESHEET_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm";
-
-    private static final String LOG_TAG = Utility.class.getSimpleName();
     private static final SimpleDateFormat dateFormatter;
     private static final String DATE_TIME_PATTERN = "dd-MM-yyyy HH:mm";
     public static final String WORKDAY_DATE_PATTERN = "EEE d MMM";
     private static final String DATE_PATTERN = "dd-MM-yyyy";
     private static final String TIME_PATTERN = "HH:mm";
-
     private static String currentUUID;
 
     private static final Gson gson = new GsonBuilder()
-            //   .registerTypeAdapter(Id.class, new IdTypeAdapter())
-            // .setDateFormat(DateFormat.LONG)
             .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeTypeAdapter())
             .registerTypeAdapter(LocalDate.class, new LocalDateTypeAdapter())
             .registerTypeAdapter(LocalTime.class, new LocalTimeTypeAdapter())
             .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
             .setPrettyPrinting()
-            // .setVersion(1.0)
             .create();
-
 
     public static Gson gsonMapper() {
         return gson;
@@ -59,12 +50,6 @@ public class Utility {
         return dateTimeFormatter;
     }
 
-    // private static final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
-/*
-    public static ObjectMapper getJsonMapper() {
-        return mapper;
-    }
-*/
     private Utility() {
         genNewUUID();
     }
@@ -173,20 +158,6 @@ public class Utility {
         return String.format("%s-%s-%s", dd, mm, year);
     }
 
-    ;
-
-    /**
-     * @param map the map of words to be sorted
-     * @return return a sorted map by value, i.e most frequent word at top
-     */
-    public static LinkedHashMap<String, Integer> getTop10Values(Map<String, Integer> map) {
-        return map.entrySet()
-                .stream()
-                .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
-                .limit(10)
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-    }
-
 
     private static final Pattern POSITIVE_INTEGER_PATTERN = Pattern.compile("\\d+");
 
@@ -253,5 +224,38 @@ public class Utility {
 
     public static Integer getWeek(LocalDate date) {
         return date.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear());
+    }
+
+    public static LocalDate getFirstDayOfMonth(LocalDate date) {
+        return LocalDate.of(date.getYear(), date.getMonth(), 1);
+    }
+
+    public static LocalDate getLastDayOfMonth(LocalDate date) {
+        return date.with(TemporalAdjusters.lastDayOfMonth());
+    }
+
+    public static String[] getYears() {
+        return new String[]{"2023", "2024"};
+    }
+
+    public static String[] getMonths() {
+        return new DateFormatSymbols().getMonths();
+    }
+
+    /**
+     * go from 0 - 11
+     */
+    public static String mapMonthNumberToName(Integer monthNumber) {
+        return getMonths()[monthNumber];
+    }
+
+    public static Integer mapMonthNameToNumber(String monthName) {
+        String[] months = getMonths();
+        for (int i=0; i<months.length; i++) {
+            if (months[i].equalsIgnoreCase(monthName)) {
+                return i;
+            }
+        }
+        return null;
     }
 }

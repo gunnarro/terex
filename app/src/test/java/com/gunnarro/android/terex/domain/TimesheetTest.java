@@ -42,8 +42,6 @@ public class TimesheetTest {
         timesheet1.setCreatedDate(LocalDateTime.now());
         timesheet1.setLastModifiedDate(LocalDateTime.now());
         timesheet1.setWorkdayDate(LocalDate.now());
-        timesheet1.setClientName("Recruitment AS");
-        timesheet1.setProjectCode("refactor monolith");
         timesheet1.setHourlyRate(1075);
         timesheet1.setStatus("open");
         timesheet1.setBreakInMin(30);
@@ -58,30 +56,26 @@ public class TimesheetTest {
     }
 
     @Test
-    public void timesheetAreEqual() {
+    public void timesheetEntryAreEqual() {
         TimesheetEntry timesheet1 = new TimesheetEntry();
-        timesheet1.setClientName("Recruitment AS");
-        timesheet1.setProjectCode("refactor monolith");
+        timesheet1.setTimesheetId(23L);
         timesheet1.setWorkdayDate(LocalDate.of(2023, 9, 9));
 
         TimesheetEntry timesheet2 = new TimesheetEntry();
-        timesheet2.setClientName("Recruitment AS");
-        timesheet2.setProjectCode("refactor monolith");
+        timesheet1.setTimesheetId(23L);
         timesheet2.setWorkdayDate(LocalDate.of(2023, 9, 9));
 
         assertTrue(timesheet1.equals(timesheet2));
     }
 
     @Test
-    public void timesheetNotEqual() {
+    public void timesheetEntryNotEqual() {
         TimesheetEntry timesheet1 = new TimesheetEntry();
-        timesheet1.setClientName("Recruitment AS");
-        timesheet1.setProjectCode("refactor monolith");
+        timesheet1.setTimesheetId(23L);
         timesheet1.setWorkdayDate(LocalDate.of(2023, 9, 9));
 
         TimesheetEntry timesheet2 = new TimesheetEntry();
-        timesheet2.setClientName("Recruitment AS");
-        timesheet2.setProjectCode("refactor monolith");
+        timesheet1.setTimesheetId(23L);
         timesheet2.setWorkdayDate(LocalDate.of(2023, 9, 10));
 
         assertTrue(!timesheet1.equals(timesheet2));

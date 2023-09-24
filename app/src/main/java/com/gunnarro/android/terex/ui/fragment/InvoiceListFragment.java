@@ -46,10 +46,10 @@ public class InvoiceListFragment extends Fragment {
         getParentFragmentManager().setFragmentResultListener(NEW_INVOICE_REQUEST_KEY, this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
-                Log.d(Utility.buildTag(getClass(), "onFragmentResult"), "intent: " + requestKey + "json:  + " + bundle.getString(TimesheetListFragment.TIMESHEET_JSON_INTENT_KEY));
+                Log.d(Utility.buildTag(getClass(), "onFragmentResult"), "requestKey: " + requestKey + ", bundle: " + bundle);
                 Invoice invoice;
                 try {
-                    invoice = mapper.readValue(bundle.getString(TimesheetListFragment.TIMESHEET_JSON_INTENT_KEY), Invoice.class);
+                    invoice = mapper.readValue(bundle.getString(TimesheetListFragment.TIMESHEET_ENTRY_JSON_INTENT_KEY), Invoice.class);
                 } catch (JsonProcessingException e) {
                     Log.e("", e.toString());
                     throw new RuntimeException("Application Error: " + e);

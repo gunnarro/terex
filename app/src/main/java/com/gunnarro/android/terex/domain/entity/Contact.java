@@ -19,8 +19,10 @@ import lombok.Setter;
 public class Contact {
     @ColumnInfo(name = "private_mobile_number")
     String privateMobileNumber;
+    @ColumnInfo(name = "private_email_address")
+    String privateEmailAddress;
     @ColumnInfo(name = "work_mobile_number")
     String workMobileNumber;
-    @ColumnInfo(name = "email_address")
-    String emailAddress;
+    @ColumnInfo(name = "work_email_address")
+    String workEmailAddress;
 }

@@ -2,6 +2,8 @@ package com.gunnarro.android.terex.service;
 
 import com.gunnarro.android.terex.domain.entity.RecruitmentCompany;
 
+import java.text.DateFormatSymbols;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -19,12 +21,10 @@ public class RecruitmentService {
     }
 
     public String[] getRecruitmentNames() {
-        RecruitmentCompany recruitmentCompany = new RecruitmentCompany();
         return new String[]{"Norway Consulting AS", "Technogarden", "IT-Verket"};
     }
 
     public String[] getProjectNames() {
-        RecruitmentCompany recruitmentCompany = new RecruitmentCompany();
-        return new String[]{"catalystOne monolith", "Nets efaktura"};
+        return new String[]{"catalystOne solutions", "Nets efaktura"};
     }
 }

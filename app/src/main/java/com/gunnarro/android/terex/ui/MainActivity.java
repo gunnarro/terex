@@ -18,9 +18,10 @@ import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.ui.fragment.AdminFragment;
 import com.gunnarro.android.terex.ui.fragment.InvoiceFragment;
 import com.gunnarro.android.terex.ui.fragment.InvoiceListFragment;
-import com.gunnarro.android.terex.ui.fragment.TimesheetAddFragment;
+import com.gunnarro.android.terex.ui.fragment.TimesheetAddEntryFragment;
 import com.gunnarro.android.terex.ui.fragment.TimesheetCustomCalendarFragment;
 import com.gunnarro.android.terex.ui.fragment.TimesheetListFragment;
+import com.gunnarro.android.terex.ui.fragment.TimesheetNewFragment;
 import com.gunnarro.android.terex.utility.Utility;
 
 import java.io.File;
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     TimesheetListFragment timesheetListFragment;
 
     @Inject
-    TimesheetAddFragment timesheetAddFragment;
+    TimesheetAddEntryFragment timesheetAddFragment;
 
     @Inject
     InvoiceListFragment invoiceListFragment;
@@ -58,15 +59,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Inject
     TimesheetCustomCalendarFragment timesheetCalendarFragment;
 
+    @Inject
+    TimesheetNewFragment timesheetNewFragment;
+
     private DrawerLayout drawer;
 
     public MainActivity() {
         this.adminFragment = new AdminFragment();
         this.timesheetListFragment = new TimesheetListFragment();
-        this.timesheetAddFragment = new TimesheetAddFragment();
+        this.timesheetAddFragment = new TimesheetAddEntryFragment();
         this.invoiceListFragment = new InvoiceListFragment();
         this.invoiceFragment = new InvoiceFragment();
         this.timesheetCalendarFragment = new TimesheetCustomCalendarFragment();
+        this.timesheetNewFragment = new TimesheetNewFragment();
     }
 
     @Override
@@ -143,6 +148,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             } else if (id == R.id.nav_timesheet_calendar) {
                 setTitle(R.string.title_timesheet_calendar);
                 viewFragment(timesheetCalendarFragment);
+            } else if (id == R.id.nav_timesheet_new) {
+                setTitle(R.string.title_timesheet_new);
+                viewFragment(timesheetNewFragment);
             }
             // close drawer after clicking the menu item
             DrawerLayout drawer = findViewById(R.id.drawer_layout);

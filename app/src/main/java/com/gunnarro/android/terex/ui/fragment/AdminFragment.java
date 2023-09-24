@@ -2,6 +2,7 @@ package com.gunnarro.android.terex.ui.fragment;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.print.PdfPrint;
@@ -24,6 +25,7 @@ import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.gunnarro.android.terex.R;
+import com.gunnarro.android.terex.domain.entity.Company;
 import com.gunnarro.android.terex.domain.entity.InvoiceSummary;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.service.InvoiceService;
@@ -74,7 +76,7 @@ public class AdminFragment extends Fragment {
         view.findViewById(R.id.btn_admin_generate_timesheet).setOnClickListener(v -> {
             try {
                 //generateTimesheet();
-                createTimesheetAttachment();
+                createTimesheetAttachment(1L);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -83,7 +85,8 @@ public class AdminFragment extends Fragment {
         view.findViewById(R.id.btn_admin_generate_invoice).setOnClickListener(v -> {
             try {
                 //  createInvoice();
-                createInvoiceSummaryAttachment();
+                createInvoiceSummaryAttachment(1L);
+                //  sendInvoiceToClient("gunnar_ronneberg@yahoo.no", "test", "message", null);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -120,8 +123,8 @@ public class AdminFragment extends Fragment {
         invoiceSummaries.forEach(i -> Log.i("generateInvoiceSummary", i.toString()));
     }
 
-    private void createInvoiceSummaryAttachment() throws IOException {
-        List<InvoiceSummary> invoiceSummaries = invoiceService.createInvoiceSummaryForMonth("Norway Consulting AS", "catalystOne monolith", 9);
+    private void createInvoiceSummaryAttachment(Long timesheetId) throws IOException {
+        List<InvoiceSummary> invoiceSummaries = invoiceService.createInvoiceSummary(timesheetId);
         Log.d("createInvoiceSummaryAttachment", "invoiceSummary week: " + invoiceSummaries);
         StringBuilder mustacheTemplateStr = new StringBuilder();
         // first read the invoice summary mustache html template
@@ -163,8 +166,8 @@ public class AdminFragment extends Fragment {
         Log.d("createInvoiceSummaryAttachment", "" + invoiceSummaryHtml);
     }
 
-    private void createTimesheetAttachment() throws IOException {
-        List<TimesheetEntry> timesheets = invoiceService.getTimesheetForMonth("Norway Consulting AS", "catalystOne monolith", 9);
+    private void createTimesheetAttachment(Long timesheetId) throws IOException {
+        List<TimesheetEntry> timesheetEntryList = invoiceService.getTimesheet(timesheetId);
 
         StringBuilder mustacheTemplateStr = new StringBuilder();
         // first read the invoice summary mustache html template
@@ -175,11 +178,11 @@ public class AdminFragment extends Fragment {
             br.lines().forEach(mustacheTemplateStr::append);
         }
 
-        Double sumBilledHours = timesheets.stream()
+        Double sumBilledHours = timesheetEntryList.stream()
                 .mapToDouble(TimesheetEntry::getWorkedMinutes)
                 .sum() / 60;
 
-        String timesheetHtml = createTimesheetListHtml(mustacheTemplateStr.toString(), timesheets, sumBilledHours.toString());
+        String timesheetHtml = createTimesheetListHtml(mustacheTemplateStr.toString(), timesheetEntryList, sumBilledHours.toString());
 
         WebView webView = requireView().findViewById(R.id.invoice_overview_html);
         webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
@@ -250,5 +253,26 @@ public class AdminFragment extends Fragment {
 
     private File readPdfFile(String fileName) {
         return new File(String.format("%s/%s", requireContext().getFilesDir().getPath(), fileName));
+    }
+
+    private void sendInvoiceToClient(String toEmailAddress, String subject, String message, String filePath) {
+        //  Uri contentUri = FileProvider.getUriForFile(this.requireContext(),"${BuildConfig.APPLICATION_ID}.fileProvider", filePath);
+
+        Intent email = new Intent(Intent.ACTION_SEND);
+        email.putExtra(Intent.EXTRA_EMAIL, new String[]{toEmailAddress});
+        email.putExtra(Intent.EXTRA_SUBJECT, subject);
+        email.putExtra(Intent.EXTRA_TEXT, message);
+        //email.putExtra(Intent.EXTRA_STREAM, null);
+        //need this to prompts email client only
+        email.setType("message/rfc822");
+        startActivity(Intent.createChooser(email, "Choose Email client :"));
+    }
+
+    private Company getClient() {
+        return null;
+    }
+
+    private Company getMyCompany() {
+        return null;
     }
 }

@@ -18,6 +18,8 @@ public class InvoiceSummary {
     public int id;
     @ColumnInfo(name = "invoice_id")
     public int invoiceId;
+    @ColumnInfo(name = "timesheet_id")
+    public Integer timesheetId;
     @ColumnInfo(name = "year")
     private Integer year;
     @ColumnInfo(name = "week_in_year")
