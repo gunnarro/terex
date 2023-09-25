@@ -54,9 +54,9 @@ public class TimesheetEntryViewHolder extends RecyclerView.ViewHolder {
             timesheetLine1StatusView.setBackgroundColor(Color.parseColor("#f5f600"));
             timesheetLine2StatusView.setBackgroundColor(Color.parseColor("#f5f600"));
         }
-        timesheetLine1LabelView.setText(Utility.formatTime(timesheetEntry.getFromTime()) + " - " + Utility.formatTime(timesheetEntry.getToTime()));
+        timesheetLine1LabelView.setText(String.format("%s - %s", Utility.formatTime(timesheetEntry.getFromTime()), Utility.formatTime(timesheetEntry.getToTime())));
         timesheetLine1ValueView.setText(Utility.getDateDiffInHours(timesheetEntry.getFromTime(), timesheetEntry.getToTime()));
-        timesheetLine2LabelView.setText(timesheetEntry.getTimesheetId().toString());
-  //      timesheetLine2ValueView.setText(String.format("%s", timesheet.getHourlyRate() * ((double) timesheet.getWorkedMinutes() / 60)));
+        timesheetLine2LabelView.setText(String.format("%s", timesheetEntry.getHourlyRate()));
+        timesheetLine2ValueView.setText(String.format("%s", timesheetEntry.getHourlyRate()*(timesheetEntry.getWorkedMinutes()/60)));
     }
 }

@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp">
+    android:layout_margin="4dp"
+    android:orientation="vertical">
 
-    <TextView android:id="@+id/timesheet_entity_id"
-        android:layout_height="0dp"
+    <TextView
+        android:id="@+id/timesheet_entity_id"
         android:layout_width="0dp"
+        android:layout_height="0dp"
         android:text=""
         android:visibility="invisible" />
 
@@ -18,8 +19,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="0dp"
         android:background="@color/colorSmsReceived"
-        android:textStyle="normal"
-        android:text="Fre 6 April" />
+        android:text="Fre 6 April"
+        android:textStyle="normal" />
 
     <ImageView
         android:id="@+id/ic_timesheet_row_delete"
@@ -28,9 +29,10 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="2dp"
         android:layout_marginEnd="7dp"
-        android:background="@color/colorSmsSent"
+
+        android:contentDescription="@string/btn_delete"
         android:elevation="1dp"
-        android:src="@drawable/ic_list_item_delete" />
+        android:src="@drawable/ic_delete_red_24dp" />
 
     <TableLayout
         android:layout_width="match_parent"
@@ -76,7 +78,7 @@
                 android:layout_weight=".1"
                 android:background="@color/colorAccent"
                 android:gravity="start"
-                android:minWidth="5dp"/>
+                android:minWidth="5dp" />
 
             <TextView
                 android:id="@+id/timesheet_line_2_label"

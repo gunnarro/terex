@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
@@ -25,6 +26,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
+import com.gunnarro.android.terex.domain.entity.TimesheetWithEntries;
 import com.gunnarro.android.terex.observable.RxBus;
 import com.gunnarro.android.terex.observable.event.TimesheetEvent;
 import com.gunnarro.android.terex.ui.adapter.TimesheetListAdapter;
@@ -79,16 +81,17 @@ public class TimesheetListFragment extends Fragment {
         final TimesheetListAdapter adapter = new TimesheetListAdapter(getParentFragmentManager(), new TimesheetListAdapter.TimesheetDiff());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        //recyclerView.setOnClickListener(v -> Log.d("", "clicked on list item...."));
 
-        // Add an observer on the LiveData returned by getAlphabetizedWords.
-        // The onChanged() method fires when the observed data changes and the activity is
-        // in the foreground.
-        // Update the cached copy of the words in the adapter.
+        // Update the cached copy of the timesheet entries in the adapter.
         timesheetViewModel.getTimesheetLiveData().observe(requireActivity(), adapter::submitList);
 
         List<Timesheet> timesheets = timesheetViewModel.getAllTimesheets();
         Log.d("all timesheets", "timesheets: " + timesheets);
+        TimesheetWithEntries timesheetWithEntries = timesheetViewModel.getTimesheetWithEntries(1L);
+        Log.d("all timesheets", "timesheet with entries: " + timesheetViewModel.getTimesheetWithEntries(1L));
+
+        TextView listHeaderView = view.findViewById(R.id.timesheet_list_header);
+        listHeaderView.setText(String.format("[%s-%s] %s - %s", timesheetWithEntries.getTimesheet().getMonth(), timesheetWithEntries.getTimesheet().getYear(), timesheetWithEntries.getTimesheet().getClientName(), timesheetWithEntries.getTimesheet().getProjectCode()));
 
         FloatingActionButton addButton = view.findViewById(R.id.add_timesheet);
         addButton.setOnClickListener(v -> {

@@ -187,46 +187,48 @@ public class TimesheetAddEntryFragment extends Fragment implements View.OnClickL
                 .commit();
     }
 
-    private void updateTimesheetAddView(View view, @NotNull TimesheetEntry timesheet) {
+    private void updateTimesheetAddView(View view, @NotNull TimesheetEntry timesheetEntry) {
+
+        if (timesheetEntry.getTimesheetId() == null) throw new TerexApplicationException("timesheetId is null!", "timesheetId is null!", null);
 
         TextView timesheetId = view.findViewById(R.id.timesheet_entry_timesheet_id);
-        timesheetId.setText(String.valueOf(timesheet.getTimesheetId()));
+        timesheetId.setText(String.valueOf(timesheetEntry.getTimesheetId()));
 
         TextView id = view.findViewById(R.id.timesheet_entry_id);
-        id.setText(String.valueOf(timesheet.getId()));
+        id.setText(String.valueOf(timesheetEntry.getId()));
 
         EditText createdDateView = view.findViewById(R.id.timesheet_entry_created_date);
-        createdDateView.setText(Utility.formatDateTime(timesheet.getCreatedDate()));
+        createdDateView.setText(Utility.formatDateTime(timesheetEntry.getCreatedDate()));
 
         EditText lastModifiedDateView = view.findViewById(R.id.timesheet_entry_last_modified_date);
-        lastModifiedDateView.setText(Utility.formatDateTime(timesheet.getLastModifiedDate()));
+        lastModifiedDateView.setText(Utility.formatDateTime(timesheetEntry.getLastModifiedDate()));
 
         AutoCompleteTextView statusSpinner = view.findViewById(R.id.timesheet_entry_status_spinner);
-        statusSpinner.setText(timesheet.getStatus());
+        statusSpinner.setText(timesheetEntry.getStatus());
 
         EditText hourlyRateView = view.findViewById(R.id.timesheet_entry_hourly_rate);
-        hourlyRateView.setText(String.format("%s", timesheet.getHourlyRate()));
+        hourlyRateView.setText(String.format("%s", timesheetEntry.getHourlyRate()));
 
         EditText workdayDateView = view.findViewById(R.id.timesheet_entry_workday_date);
-        workdayDateView.setText(Utility.formatDate(timesheet.getWorkdayDate()));
+        workdayDateView.setText(Utility.formatDate(timesheetEntry.getWorkdayDate()));
 
         EditText fromTimeView = view.findViewById(R.id.timesheet_entry_from_time);
-        fromTimeView.setText(Utility.formatTime(timesheet.getFromTime()));
+        fromTimeView.setText(Utility.formatTime(timesheetEntry.getFromTime()));
 
         EditText toTimeView = view.findViewById(R.id.timesheet_entry_to_time);
-        toTimeView.setText(Utility.formatTime(timesheet.getToTime()));
+        toTimeView.setText(Utility.formatTime(timesheetEntry.getToTime()));
 
         EditText breakView = view.findViewById(R.id.timesheet_entry_break);
-        breakView.setText(String.format("%s", timesheet.getBreakInMin()));
+        breakView.setText(String.format("%s", timesheetEntry.getBreakInMin()));
 
         //TextView workedHoursView = view.findViewById(R.id.timesheet_worked_hours);
         //workedHoursView.setText(String.format("%s", "0"));
 
         EditText commentView = view.findViewById(R.id.timesheet_entry_comment);
-        commentView.setText(timesheet.getComment());
+        commentView.setText(timesheetEntry.getComment());
 
         // hide fields if this is a new
-        if (timesheet.getId() == null) {
+        if (timesheetEntry.getId() == null) {
             view.findViewById(R.id.timesheet_entry_created_date_layout).setVisibility(View.GONE);
             view.findViewById(R.id.timesheet_entry_last_modified_date_layout).setVisibility(View.GONE);
             view.findViewById(R.id.btn_timesheet_entry_delete).setVisibility(View.GONE);
@@ -234,7 +236,7 @@ public class TimesheetAddEntryFragment extends Fragment implements View.OnClickL
             // change button icon to from add new to save
             ((MaterialButton) view.findViewById(R.id.btn_timesheet_entry_save)).setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_check_black_24dp));
         }
-        Log.d(Utility.buildTag(getClass(), "updateTimesheetAddView"), String.format("updated %s ", timesheet));
+        Log.d(Utility.buildTag(getClass(), "updateTimesheetAddView"), String.format("updated %s ", timesheetEntry));
     }
 
     @Override

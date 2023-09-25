@@ -218,7 +218,7 @@ public class AdminFragment extends Fragment {
         MustacheFactory mf = new DefaultMustacheFactory();
         Mustache mustache = mf.compile(new StringReader(mustacheTemplateStr), "");
         Map<String, Object> context = new HashMap<>();
-        context.put("title", "Timeliste for konsulentbistan");
+        context.put("title", "Timeliste for konsulentbistand");
         context.put("timesheetPeriod", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM")));
         context.put("timesheetList", timesheetList);
         context.put("sunWorkDays", timesheetList.size());

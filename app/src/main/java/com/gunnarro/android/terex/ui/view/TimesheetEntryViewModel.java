@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData;
 
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
+import com.gunnarro.android.terex.domain.entity.TimesheetWithEntries;
 import com.gunnarro.android.terex.repository.TimesheetRepository;
 
 import java.util.List;
@@ -41,6 +42,10 @@ public class TimesheetEntryViewModel extends AndroidViewModel {
 
     public List<Timesheet> getAllTimesheets() {
         return timesheetRepository.getAllTimesheets();
+    }
+
+    public TimesheetWithEntries getTimesheetWithEntries(Long timesheetId) {
+        return timesheetRepository.getTimesheetWithEntries(timesheetId);
     }
 
     public void saveTimesheet(Timesheet timesheet) {

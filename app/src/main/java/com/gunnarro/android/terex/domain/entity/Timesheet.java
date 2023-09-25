@@ -208,6 +208,7 @@ public class Timesheet {
         sb.append(", projectCode='").append(projectCode).append('\'');
         sb.append(", year=").append(year);
         sb.append(", month=").append(month);
+        sb.append(", status=").append(status);
         sb.append('}');
         return sb.toString();
     }

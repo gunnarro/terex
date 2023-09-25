@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 import com.gunnarro.android.terex.config.AppDatabase;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
+import com.gunnarro.android.terex.domain.entity.TimesheetWithEntries;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.utility.Utility;
 
@@ -40,6 +41,19 @@ public class TimesheetRepository {
         timesheetDao = AppDatabase.getDatabase(applicationContext).timesheetDao();
         timesheetEntryDao = AppDatabase.getDatabase(applicationContext).timesheetEntryDao();
         timesheetEntryList = timesheetEntryDao.getTimesheetEntryListLiveData(1L);
+    }
+
+    public TimesheetWithEntries getTimesheetWithEntries(Long timesheetId) {
+        try {
+            CompletionService<TimesheetWithEntries> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
+            service.submit(() -> timesheetDao.getTimesheetWithEntriesById(timesheetId));
+            Future<TimesheetWithEntries> future = service.take();
+            return future != null ? future.get() : null;
+        } catch (InterruptedException | ExecutionException e) {
+            // Something crashed, therefore restore interrupted state before leaving.
+            Thread.currentThread().interrupt();
+            throw new TerexApplicationException("Error getting timesheet with entries list", e.getMessage(), e.getCause());
+        }
     }
 
     public Timesheet createTimesheet(@NotNull String clientName, @NotNull String projectCode, @NotNull LocalDate timesheetDate) {
@@ -158,7 +172,7 @@ public class TimesheetRepository {
                 timesheet.setCreatedDate(LocalDateTime.now());
                 timesheet.setLastModifiedDate(LocalDateTime.now());
                 id = insertTimesheet(timesheet);
-                Log.d("", "insert new timesheet: " + id + " - " + timesheetExisting);
+                Log.d("", "insert new timesheet: " + id + " - " + timesheet);
             } else {
                 timesheet.setId(timesheetExisting.getId());
                 timesheet.setCreatedDate(timesheetExisting.getCreatedDate());
