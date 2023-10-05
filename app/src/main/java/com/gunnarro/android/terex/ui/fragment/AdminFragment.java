@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.print.PdfPrint;
-import android.print.PrintAttributes;
 import android.provider.DocumentsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
