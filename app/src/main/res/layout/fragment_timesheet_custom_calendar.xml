@@ -33,6 +33,7 @@
                 app:disabledDaysLabelsColor="@color/calendar_disabled_date"
                 app:todayLabelColor="@color/calendar_today_date"
                 app:swipeEnabled="true"
+                app:eventsEnabled="true"
                 app:firstDayOfWeek="monday"
                 app:type="many_days_picker" />
         </LinearLayout>

@@ -28,7 +28,7 @@ import java.util.concurrent.Executors;
 /**
  * Thread safe database instance.
  */
-@Database(entities = {Timesheet.class, TimesheetEntry.class, Invoice.class, InvoiceSummary.class}, version = 27, views = {TimesheetView.class})
+@Database(entities = {Timesheet.class, TimesheetEntry.class, Invoice.class, InvoiceSummary.class}, version = 28, views = {TimesheetView.class})
 public abstract class AppDatabase extends RoomDatabase {
     // marking the instance as volatile to ensure atomic access to the variable
     private static volatile AppDatabase INSTANCE;

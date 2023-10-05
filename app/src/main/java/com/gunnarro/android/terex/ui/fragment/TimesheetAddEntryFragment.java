@@ -58,30 +58,33 @@ public class TimesheetAddEntryFragment extends Fragment implements View.OnClickL
         View view = inflater.inflate(R.layout.fragment_timesheet_add_entry, container, false);
 
         String[] timesheets = {"catalystone solutions as"};
-        TimesheetEntry timesheet = TimesheetEntry.createDefault(1L, Utility.DEFAULT_STATUS, Utility.DEFAULT_DAILY_BREAK_IN_MINUTES, LocalDate.now(), Utility.DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES, Utility.DEFAULT_HOURLY_RATE);
+        TimesheetEntry timesheetEntry = null;
         // check if this is an existing or a new timesheet
         String timesheetJson = getArguments() != null ? getArguments().getString(TimesheetListFragment.TIMESHEET_ENTRY_JSON_INTENT_KEY) : null;
+        Log.d("receives timesheet", "" + timesheetJson);
         if (timesheetJson != null && !timesheetJson.isEmpty()) {
             try {
-                timesheet = Utility.gsonMapper().fromJson(timesheetJson, TimesheetEntry.class);
-                Log.d(Utility.buildTag(getClass(), "onFragmentResult"), String.format("json: %s, timesheet: %s", timesheetJson, timesheet));
+                timesheetEntry = Utility.gsonMapper().fromJson(timesheetJson, TimesheetEntry.class);
+                Log.d(Utility.buildTag(getClass(), "onFragmentResult"), String.format("json: %s, timesheet: %s", timesheetJson, timesheetEntry));
             } catch (Exception e) {
                 Log.e("", e.toString());
                 throw new TerexApplicationException("Application Error!", "5000", e);
             }
         } else {
-            Log.d(Utility.buildTag(getClass(), "onFragmentResult"), String.format("default timesheet entry not found! use timesheet: %s", timesheet));
+            Log.d(Utility.buildTag(getClass(), "onFragmentResult"), String.format("default timesheet entry not found! use timesheet: %s", timesheetEntry));
         }
 
         // create timesheet spinner
-        final AutoCompleteTextView clientSpinner = view.findViewById(R.id.timesheet_entry_timesheet_spinner);
-        ArrayAdapter<String> clientAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, timesheets);
-        clientSpinner.setAdapter(clientAdapter);
+        final AutoCompleteTextView timesheetSpinner = view.findViewById(R.id.timesheet_entry_timesheet_spinner);
+        ArrayAdapter<String> timesheetAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, timesheets);
+        timesheetSpinner.setAdapter(timesheetAdapter);
+        timesheetSpinner.setListSelection(0);
 
         // create status spinner
         final AutoCompleteTextView statusSpinner = view.findViewById(R.id.timesheet_entry_status_spinner);
         ArrayAdapter<CharSequence> statusAdapter = ArrayAdapter.createFromResource(requireContext(), R.array.timesheet_statuses, android.R.layout.simple_spinner_item);
         statusSpinner.setAdapter(statusAdapter);
+        statusSpinner.setListSelection(0);
 
         // workday date picker
         TextInputEditText workdayDate = view.findViewById(R.id.timesheet_entry_workday_date);
@@ -167,10 +170,12 @@ public class TimesheetAddEntryFragment extends Fragment implements View.OnClickL
             returnToTimesheetList();
         });
 
-        if (timesheet != null) {
-            updateTimesheetAddView(view, timesheet);
+        if (timesheetEntry == null) {
+            // no recent timesheet entry found, use default settings
+            timesheetEntry = TimesheetEntry.createDefault(1L, Utility.DEFAULT_STATUS, Utility.DEFAULT_DAILY_BREAK_IN_MINUTES, LocalDate.now(), Utility.DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES, Utility.DEFAULT_HOURLY_RATE);
         }
-        Log.d(Utility.buildTag(getClass(), "onCreateView"), String.format("%s", timesheet));
+        updateTimesheetAddView(view, timesheetEntry);
+        Log.d(Utility.buildTag(getClass(), "onCreateView"), String.format("%s", timesheetEntry));
         return view;
     }
 
@@ -188,7 +193,7 @@ public class TimesheetAddEntryFragment extends Fragment implements View.OnClickL
     }
 
     private void updateTimesheetAddView(View view, @NotNull TimesheetEntry timesheetEntry) {
-
+        Log.d("update timesheet add view", timesheetEntry.toString());
         if (timesheetEntry.getTimesheetId() == null) throw new TerexApplicationException("timesheetId is null!", "timesheetId is null!", null);
 
         TextView timesheetId = view.findViewById(R.id.timesheet_entry_timesheet_id);
@@ -202,6 +207,9 @@ public class TimesheetAddEntryFragment extends Fragment implements View.OnClickL
 
         EditText lastModifiedDateView = view.findViewById(R.id.timesheet_entry_last_modified_date);
         lastModifiedDateView.setText(Utility.formatDateTime(timesheetEntry.getLastModifiedDate()));
+
+        AutoCompleteTextView timesheetSpinner = view.findViewById(R.id.timesheet_entry_timesheet_spinner);
+        timesheetSpinner.setText("fix me");
 
         AutoCompleteTextView statusSpinner = view.findViewById(R.id.timesheet_entry_status_spinner);
         statusSpinner.setText(timesheetEntry.getStatus());
@@ -228,9 +236,8 @@ public class TimesheetAddEntryFragment extends Fragment implements View.OnClickL
         commentView.setText(timesheetEntry.getComment());
 
         // hide fields if this is a new
-        if (timesheetEntry.getId() == null) {
-            view.findViewById(R.id.timesheet_entry_created_date_layout).setVisibility(View.GONE);
-            view.findViewById(R.id.timesheet_entry_last_modified_date_layout).setVisibility(View.GONE);
+        if (timesheetEntry == null || timesheetEntry.getId() == null) {
+            view.findViewById(R.id.timesheet_entry_date_layout).setVisibility(View.GONE);
             view.findViewById(R.id.btn_timesheet_entry_delete).setVisibility(View.GONE);
         } else {
             // change button icon to from add new to save
@@ -276,6 +283,9 @@ public class TimesheetAddEntryFragment extends Fragment implements View.OnClickL
         if (lastModifiedDateTime != null) {
             timesheet.setLastModifiedDate(lastModifiedDateTime);
         }
+
+        AutoCompleteTextView timesheetSpinner = requireView().findViewById(R.id.timesheet_entry_timesheet_spinner);
+        //timesheet.setStatus(timesheetSpinner.getText().toString());
 
         AutoCompleteTextView statusSpinner = requireView().findViewById(R.id.timesheet_entry_status_spinner);
         timesheet.setStatus(statusSpinner.getText().toString());

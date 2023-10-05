@@ -18,14 +18,14 @@
             android:id="@+id/timesheet_entry_timesheet_id"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:text=""
+            android:enabled="false"
             android:visibility="invisible" />
 
         <TextView
             android:id="@+id/timesheet_entry_id"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:text=""
+            android:enabled="false"
             android:visibility="invisible" />
 
         <!-- horizontal date layout -->

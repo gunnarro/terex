@@ -36,8 +36,8 @@ public class TimesheetEntryViewModel extends AndroidViewModel {
         return timesheetEntryList;
     }
 
-    public TimesheetEntry getMostRecent() {
-        return timesheetRepository.getMostRecent();
+    public TimesheetEntry getMostRecentTimesheetEntry() {
+        return timesheetRepository.getMostRecentTimeSheetEntry();
     }
 
     public List<Timesheet> getAllTimesheets() {

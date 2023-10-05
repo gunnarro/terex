@@ -91,11 +91,13 @@ public class TimesheetListFragment extends Fragment {
         Log.d("all timesheets", "timesheet with entries: " + timesheetViewModel.getTimesheetWithEntries(1L));
 
         TextView listHeaderView = view.findViewById(R.id.timesheet_list_header);
-        listHeaderView.setText(String.format("[%s-%s] %s - %s", timesheetWithEntries.getTimesheet().getMonth(), timesheetWithEntries.getTimesheet().getYear(), timesheetWithEntries.getTimesheet().getClientName(), timesheetWithEntries.getTimesheet().getProjectCode()));
+        if (timesheetWithEntries != null && timesheetWithEntries.getTimesheet() != null ) {
+            listHeaderView.setText(String.format("[%s-%s] %s - %s", timesheetWithEntries.getTimesheet().getMonth(), timesheetWithEntries.getTimesheet().getYear(), timesheetWithEntries.getTimesheet().getClientName(), timesheetWithEntries.getTimesheet().getProjectCode()));
+        }
 
-        FloatingActionButton addButton = view.findViewById(R.id.add_timesheet);
+        FloatingActionButton addButton = view.findViewById(R.id.add_timesheet_entry);
         addButton.setOnClickListener(v -> {
-            String timesheetJson = Utility.gsonMapper().toJson(timesheetViewModel.getMostRecent(), TimesheetEntry.class);
+            String timesheetJson = Utility.gsonMapper().toJson(timesheetViewModel.getMostRecentTimesheetEntry(), TimesheetEntry.class);
             Bundle bundle = new Bundle();
             bundle.putString(TimesheetListFragment.TIMESHEET_ENTRY_JSON_INTENT_KEY, timesheetJson);
             requireActivity().getSupportFragmentManager()

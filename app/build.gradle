@@ -134,6 +134,11 @@ dependencies {
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.14.3'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.3'
 
+    // html to pdf
+    // https://mvnrepository.com/artifact/com.itextpdf/kernel
+    implementation("com.itextpdf:kernel:8.0.1")
+    implementation("com.itextpdf:html2pdf:5.0.1")
+
 
     // custom calendar library
    // implementation 'com.kizitonwose.calendar:view:2.3.0'

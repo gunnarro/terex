@@ -3,10 +3,12 @@ package com.gunnarro.android.terex.ui.fragment;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.print.PdfPrint;
 import android.print.PrintAttributes;
+import android.provider.DocumentsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,8 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.Spinner;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -30,11 +30,14 @@ import com.gunnarro.android.terex.domain.entity.InvoiceSummary;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.service.InvoiceService;
 import com.gunnarro.android.terex.utility.Utility;
+import com.itextpdf.html2pdf.ConverterProperties;
+import com.itextpdf.html2pdf.HtmlConverter;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -54,8 +57,10 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class AdminFragment extends Fragment {
 
+    private final static String INVOICE_TIMESHEET_SUMMARY_ATTACHMENT_TEMPLATE = "html/template/invoice-attachment.mustache";
+    private final static String RECRUITMENT_TIMESHEET_TEMPLATE = "html/template/norway-consulting-timesheet-template.mustache";
     // @Inject
-    InvoiceService invoiceService;
+    private InvoiceService invoiceService;
 
     @Inject
     public AdminFragment() {
@@ -65,7 +70,7 @@ public class AdminFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        invoiceService = new InvoiceService(getActivity().getApplicationContext());
+        invoiceService = new InvoiceService(requireActivity().getApplicationContext());
         Log.d(Utility.buildTag(getClass(), "onCreate"), "");
     }
 
@@ -73,20 +78,30 @@ public class AdminFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_admin, container, false);
-        view.findViewById(R.id.btn_admin_generate_timesheet).setOnClickListener(v -> {
+        /**
+         view.findViewById(R.id.btn_admin_generate_timesheet).setOnClickListener(v -> {
+         try {
+         //generateTimesheet();
+         createTimesheetAttachment(1L);
+         } catch (Exception e) {
+         e.printStackTrace();
+         }
+         });
+         */
+        view.findViewById(R.id.btn_create_invoice_attachment).setOnClickListener(v -> {
             try {
-                //generateTimesheet();
-                createTimesheetAttachment(1L);
+                createInvoiceSummaryAttachment(1L);
+                //  sendInvoiceToClient("gunnar_ronneberg@yahoo.no", "test", "message", null);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
 
-        view.findViewById(R.id.btn_admin_generate_invoice).setOnClickListener(v -> {
+        view.findViewById(R.id.btn_invoice_attachment_send_email).setOnClickListener(v -> {
             try {
-                //  createInvoice();
-                createInvoiceSummaryAttachment(1L);
-                //  sendInvoiceToClient("gunnar_ronneberg@yahoo.no", "test", "message", null);
+                File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+                File pdfFile = new File(path.getPath() +  "/invoice_attachment_" + LocalDate.now().format(DateTimeFormatter.ISO_DATE) + ".pdf");
+                sendInvoiceToClient("gunnar_ronneberg@yahoo.no", "test", "message", pdfFile);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -108,7 +123,7 @@ public class AdminFragment extends Fragment {
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
     }
-
+/*
     private void generateTimesheet() {
         int month = ((Spinner) requireView().findViewById(R.id.admin_invoice_month_spinner)).getSelectedItemPosition();
         List<TimesheetEntry> timesheets = invoiceService.generateTimesheet(2023, month + 1);
@@ -122,13 +137,13 @@ public class AdminFragment extends Fragment {
         List<InvoiceSummary> invoiceSummaries = invoiceService.buildInvoiceSummaryByWeek(2022, month);
         invoiceSummaries.forEach(i -> Log.i("generateInvoiceSummary", i.toString()));
     }
-
+*/
     private void createInvoiceSummaryAttachment(Long timesheetId) throws IOException {
         List<InvoiceSummary> invoiceSummaries = invoiceService.createInvoiceSummary(timesheetId);
         Log.d("createInvoiceSummaryAttachment", "invoiceSummary week: " + invoiceSummaries);
         StringBuilder mustacheTemplateStr = new StringBuilder();
         // first read the invoice summary mustache html template
-        try (InputStream fis = requireContext().getAssets().open("template/invoice-timesheet-summary-attachment.mustache");
+        try (InputStream fis = requireContext().getAssets().open(INVOICE_TIMESHEET_SUMMARY_ATTACHMENT_TEMPLATE);
              InputStreamReader isr = new InputStreamReader(fis,
                      StandardCharsets.UTF_8);
              BufferedReader br = new BufferedReader(isr)) {
@@ -144,25 +159,17 @@ public class AdminFragment extends Fragment {
                 .sum();
 
         String invoiceSummaryHtml = createInvoiceSummaryHtml(mustacheTemplateStr.toString(), invoiceSummaries, sumBilledHours.toString(), sumBilledAmount.toString());
-
-        WebView webView = requireView().findViewById(R.id.invoice_overview_html);
-        webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
-        webView.loadDataWithBaseURL(null, invoiceSummaryHtml, "text/html", "utf-8", null);
-
+        // need some time in order to load date before printed.
         WebView webViewPrint = new WebView(requireContext());
         webViewPrint.loadDataWithBaseURL(null, invoiceSummaryHtml, "text/html", "utf-8", null);
 
-        try {
-            String pdfFileName = "invoice_attachment_" + LocalDate.now().format(DateTimeFormatter.ISO_DATE) + ".pdf";
-            createWebPrintJob(requireView().findViewById(R.id.invoice_overview_html), pdfFileName);
-            showInfoDialog("saved pdf to " + requireContext().getFilesDir().getPath() + "/" + pdfFileName, getContext());
+        WebView webView = requireView().findViewById(R.id.invoice_overview_html);
+        webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
+        webView.loadDataWithBaseURL("file:///android_asset/", invoiceSummaryHtml, "text/html", "utf-8", null);
 
-            //  File pdf = readPdfFile(pdfFileName);
-            //  webView.loadData(pdf, "text/pdf", "utf-8");
-        } catch (Exception e) {
-            showInfoDialog(e.getMessage(), getContext());
-        }
-
+        Log.d("createInvoiceSummaryAttachment", "" + invoiceSummaryHtml);
+     //   createWebPrintJob(webViewPrint, "invoice_attachment_webview");
+        createPdf(invoiceSummaryHtml, "invoice_attachment");
         Log.d("createInvoiceSummaryAttachment", "" + invoiceSummaryHtml);
     }
 
@@ -171,7 +178,7 @@ public class AdminFragment extends Fragment {
 
         StringBuilder mustacheTemplateStr = new StringBuilder();
         // first read the invoice summary mustache html template
-        try (InputStream fis = requireContext().getAssets().open("template/norway-consulting-timesheet-template.mustache");
+        try (InputStream fis = requireContext().getAssets().open(RECRUITMENT_TIMESHEET_TEMPLATE);
              InputStreamReader isr = new InputStreamReader(fis,
                      StandardCharsets.UTF_8);
              BufferedReader br = new BufferedReader(isr)) {
@@ -183,22 +190,17 @@ public class AdminFragment extends Fragment {
                 .sum() / 60;
 
         String timesheetHtml = createTimesheetListHtml(mustacheTemplateStr.toString(), timesheetEntryList, sumBilledHours.toString());
+        // need some time in order to load date before printed.
+        WebView webViewPrint = new WebView(requireContext());
+        webViewPrint.loadDataWithBaseURL(null, timesheetHtml, "text/html", "utf-8", null);
 
         WebView webView = requireView().findViewById(R.id.invoice_overview_html);
         webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
         webView.loadDataWithBaseURL(null, timesheetHtml, "text/html", "utf-8", null);
 
-        WebView webViewPrint = new WebView(requireContext());
-        webViewPrint.loadDataWithBaseURL(null, timesheetHtml, "text/html", "utf-8", null);
-
         Log.d("createTimesheetAttachment", "" + timesheetHtml);
-        try {
-            String pdfFileName = "timesheet_attachment_" + LocalDate.now().format(DateTimeFormatter.ISO_DATE) + ".pdf";
-            createWebPrintJob(webViewPrint, pdfFileName);
-            showInfoDialog("saved pdf to " + requireContext().getFilesDir().getPath() + "/" + pdfFileName, getContext());
-        } catch (Exception e) {
-            showInfoDialog(e.getMessage(), getContext());
-        }
+      //  createWebPrintJob(webViewPrint, "timesheet_attachment");
+        createPdf(timesheetHtml, "invoice-attachment-new");
     }
 
     private String createInvoiceSummaryHtml(String mustacheTemplateStr, List<InvoiceSummary> invoiceSummaryList, String sumBilledHours, String sumBilledAmount) {
@@ -240,32 +242,37 @@ public class AdminFragment extends Fragment {
         alertDialog.show();
     }
 
-    private void createWebPrintJob(WebView webView, String pdfFileName) {
-        String jobName = "printinvoice";
-        PrintAttributes attributes = new PrintAttributes.Builder()
-                .setMediaSize(PrintAttributes.MediaSize.ISO_A4)
-                .setResolution(new PrintAttributes.Resolution("pdf", "pdf", 600, 600))
-                .setMinMargins(PrintAttributes.Margins.NO_MARGINS).build();
-        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        PdfPrint pdfPrint = new PdfPrint(attributes);
-        pdfPrint.print(webView.createPrintDocumentAdapter(jobName), path, pdfFileName);
+    private void createWebPrintJob(final WebView webView, final String fileName) {
+        try {
+            String pdfFileName = fileName + "_" + LocalDate.now().format(DateTimeFormatter.ISO_DATE) + ".pdf";
+            String jobName = "printinvoice";
+            PrintAttributes attributes = new PrintAttributes.Builder()
+                    .setMediaSize(PrintAttributes.MediaSize.ISO_A4)
+                    .setResolution(new PrintAttributes.Resolution("pdf", "pdf", 600, 600))
+                    .setMinMargins(PrintAttributes.Margins.NO_MARGINS)
+                    .build();
+            File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+            PdfPrint pdfPrint = new PdfPrint(attributes);
+            pdfPrint.print(webView.createPrintDocumentAdapter(jobName), path, pdfFileName);
+            showInfoDialog("saved pdf to: " + path + "/" + pdfFileName, requireContext());
+        } catch (Exception e) {
+            showInfoDialog(e.getMessage(), requireContext());
+        }
     }
 
     private File readPdfFile(String fileName) {
         return new File(String.format("%s/%s", requireContext().getFilesDir().getPath(), fileName));
     }
 
-    private void sendInvoiceToClient(String toEmailAddress, String subject, String message, String filePath) {
-        //  Uri contentUri = FileProvider.getUriForFile(this.requireContext(),"${BuildConfig.APPLICATION_ID}.fileProvider", filePath);
-
+    private void sendInvoiceToClient(String toEmailAddress, String subject, String message, File pdfFile) {
         Intent email = new Intent(Intent.ACTION_SEND);
         email.putExtra(Intent.EXTRA_EMAIL, new String[]{toEmailAddress});
         email.putExtra(Intent.EXTRA_SUBJECT, subject);
         email.putExtra(Intent.EXTRA_TEXT, message);
-        //email.putExtra(Intent.EXTRA_STREAM, null);
+        email.putExtra(Intent.EXTRA_STREAM, pdfFile);
         //need this to prompts email client only
         email.setType("message/rfc822");
-        startActivity(Intent.createChooser(email, "Choose Email client :"));
+        startActivity(Intent.createChooser(email, "Choose Email client:"));
     }
 
     private Company getClient() {
@@ -274,5 +281,51 @@ public class AdminFragment extends Fragment {
 
     private Company getMyCompany() {
         return null;
+    }
+
+    private void openFile(Uri pickerInitialUri) {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("application/pdf");
+
+        // Optionally, specify a URI for the file that should appear in the
+        // system file picker when it loads.
+        intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, pickerInitialUri);
+    }
+
+    public void createPdf(String html, String fileName) throws IOException {
+
+        String pdfFileName = fileName + "_" + LocalDate.now().format(DateTimeFormatter.ISO_DATE) + ".pdf";
+        String htmlFileName = fileName + "_" + LocalDate.now().format(DateTimeFormatter.ISO_DATE) + ".html";
+        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File pdfFile = new File(path, pdfFileName);
+        File htmlFile = new File(path, htmlFileName);
+        try {
+            FileOutputStream fos = new FileOutputStream(htmlFile);
+            fos.write(html.getBytes());
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // save css to disk
+
+
+        // save logo to disk
+
+
+        ConverterProperties converterProperties = new ConverterProperties();
+        converterProperties.setBaseUri("file:///" + path.getPath());
+       // converterProperties.setBaseUri(".");
+     /*   FontProvider fontProvider  = new FontProvider();
+        fontProvider.addFont("/path/to/my-font.ttf");
+        fontProvider.addStandardPdfFonts();
+        fontProvider.addSystemFonts(); //for fallback
+        converterProperties.setFontProvider(fontProvider);
+        HtmlConverter.convertToPdf(new File("./input.html"), new File("output.pdf"), converterProperties);
+  */
+        HtmlConverter.convertToPdf(htmlFile, pdfFile, converterProperties);
+      //  HtmlConverter.convertToPdf(html, new FileOutputStream(pdfFile));
+
     }
 }

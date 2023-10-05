@@ -13,6 +13,7 @@ import androidx.annotation.ColorRes;
 import androidx.fragment.app.Fragment;
 
 import com.applandeo.materialcalendarview.CalendarView;
+import com.applandeo.materialcalendarview.EventDay;
 import com.applandeo.materialcalendarview.exceptions.OutOfDateRangeException;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
@@ -32,7 +33,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 /**
- * https://github.com/Applandeo/Material-Calendar-View
+ * <a href="https://github.com/Applandeo/Material-Calendar-View">Material-Calendar-View</a>
  */
 public class TimesheetCustomCalendarFragment extends Fragment {
 
@@ -52,7 +53,7 @@ public class TimesheetCustomCalendarFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         timesheetRepository = new TimesheetRepository(getContext());
-        lastAddedTimesheet = timesheetRepository.getMostRecent();
+        lastAddedTimesheet = timesheetRepository.getMostRecentTimeSheetEntry();
         Log.d(Utility.buildTag(getClass(), "onCreate"), "");
     }
 
@@ -62,17 +63,9 @@ public class TimesheetCustomCalendarFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_timesheet_custom_calendar, container, false);
         CalendarView calendarView = view.findViewById(R.id.view_timesheet_custom_calendar);
         Long timesheetId = 1L;
-        List<TimesheetEntry> timesheetEntryList = timesheetRepository.getTimesheetEntryList(timesheetId);
-        List<Calendar> selectedDates = new ArrayList<>();
-        timesheetEntryList.forEach(t -> {
-            Calendar cal = Calendar.getInstance();
-            cal.set(t.getWorkdayDate().getYear(), t.getWorkdayDate().getMonth().getValue() - 1, t.getWorkdayDate().getDayOfMonth());
-            selectedDates.add(cal);
-            Log.d("TimesheetCustomCalendarFragment", "ADD SELECTED DATE: " + t.getWorkdayDate().toString());
-        });
-
         // calendarView.setSelectedDates(selectedDates);
-        calendarView.setDisabledDays(selectedDates);
+        calendarView.setDisabledDays(createSelectedDates(timesheetId));
+        calendarView.setEvents(createEventDays(timesheetId));
 
         calendarView.setOnDayClickListener(eventDay -> {
             selectedLocalDate = LocalDate.of(
@@ -118,6 +111,31 @@ public class TimesheetCustomCalendarFragment extends Fragment {
     @Override
     public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+    }
+
+
+    private  List<EventDay> createEventDays(Long timesheetId) {
+        List<EventDay> eventDays = new ArrayList<>();
+        List<TimesheetEntry> timesheetEntryList = timesheetRepository.getTimesheetEntryList(timesheetId);
+        timesheetEntryList.forEach(t -> {
+            Calendar cal = Calendar.getInstance();
+            cal.set(t.getWorkdayDate().getYear(), t.getWorkdayDate().getMonth().getValue() - 1, t.getWorkdayDate().getDayOfMonth());
+            eventDays.add(new EventDay(cal, R.drawable.timesheet_day_ok_24, getResources().getColor(R.color.color_btn_bg_delete, null)));
+            Log.d("TimesheetCustomCalendarFragment", "ADD SELECTED DATE: " + t.getWorkdayDate().toString());
+        });
+        return eventDays;
+    }
+
+    private List<Calendar> createSelectedDates(Long timesheetId) {
+        List<TimesheetEntry> timesheetEntryList = timesheetRepository.getTimesheetEntryList(timesheetId);
+        List<Calendar> selectedDates = new ArrayList<>();
+        timesheetEntryList.forEach(t -> {
+            Calendar cal = Calendar.getInstance();
+            cal.set(t.getWorkdayDate().getYear(), t.getWorkdayDate().getMonth().getValue() - 1, t.getWorkdayDate().getDayOfMonth());
+            selectedDates.add(cal);
+            Log.d("TimesheetCustomCalendarFragment", "ADD SELECTED DATE: " + t.getWorkdayDate().toString());
+        });
+        return selectedDates;
     }
 
     private String getTimesheetAsJson() {

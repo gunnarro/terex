@@ -3,6 +3,8 @@ package com.gunnarro.android.terex.service;
 import android.content.Context;
 import android.util.Log;
 
+import com.gunnarro.android.terex.domain.dto.TimesheetDto;
+import com.gunnarro.android.terex.domain.dto.TimesheetEntryDto;
 import com.gunnarro.android.terex.domain.entity.InvoiceSummary;
 import com.gunnarro.android.terex.domain.entity.RegisterWork;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
@@ -60,12 +62,9 @@ public class InvoiceService {
         Log.d("createInvoiceSummaryForMonth", "timesheets for mount: " + timesheets);
         // accumulate timesheet by week for the mount
         Map<Integer, List<TimesheetEntry>> timesheetWeekMap = timesheets.stream().collect(Collectors.groupingBy(TimesheetEntry::getWorkdayWeek));
-
         List<InvoiceSummary> invoiceSummaryByWeek = new ArrayList<>();
-
         timesheetWeekMap.forEach((k, e) -> {
             invoiceSummaryByWeek.add(buildInvoiceSummaryForWeek(k, e));
-
         });
 
         invoiceSummaryByWeek.sort(Comparator.comparing(InvoiceSummary::getWeekInYear));
@@ -74,6 +73,23 @@ public class InvoiceService {
 
     public List<TimesheetEntry> getTimesheet(Long timesheetId) {
         return timesheetRepository.getTimesheetEntryList(timesheetId);
+    }
+
+    public TimesheetDto getTimesheetDto(Long timesheetId) {
+        TimesheetDto timesheetDto = new TimesheetDto();
+        List<TimesheetEntryDto> timesheetEntryDtoList = new ArrayList<>();
+        List<TimesheetEntry> timesheetEntryList = timesheetRepository.getTimesheetEntryList(timesheetId);
+        timesheetDto.setTimesheetEntryDtoList(timesheetEntryList.stream().map(this::mapToTimesheetEntryDto).collect(Collectors.toList()));
+        return timesheetDto;
+    }
+
+    private TimesheetEntryDto mapToTimesheetEntryDto(TimesheetEntry timesheetEntry) {
+        TimesheetEntryDto timesheetEntryDto = new TimesheetEntryDto();
+        timesheetEntryDto.setComments(timesheetEntry.getComment());
+        timesheetEntryDto.setFromTime(timesheetEntry.getFromTime().toString());
+        timesheetEntryDto.setToTime(timesheetEntry.getToTime().toString());
+        timesheetEntryDto.setWorkdayDate(timesheetEntry.getWorkdayDate());
+        return timesheetEntryDto;
     }
 
     public RegisterWork getRegisterWork(Integer id) {

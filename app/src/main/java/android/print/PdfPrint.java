@@ -34,7 +34,10 @@ public class PdfPrint {
         }
         File file = new File(path, fileName);
         try {
-            file.createNewFile();
+            // simply override if the file already exist
+            if (!file.exists()) {
+                file.createNewFile();
+            }
             return ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_WRITE);
         } catch (Exception e) {
             Log.e(TAG, "Failed to open ParcelFileDescriptor", e);

@@ -2,17 +2,19 @@
 <html>
 <head>
 <style type="text/css">
-          html {
+         html {
                         font-family: helvetica,arial,sans-serif;
-                        font-size: small;
+                        font-size: 100%;
                     }
 
                  table {
-                     table-layout: fixed;
-                     font-size: small;
+                     table-layout: auto;
+                     font-size: 100%;
                      margin: 1em;
                      border: none;
                      border-collapse: collapse;
+                     margin-left: auto;
+                     margin-right: auto;
                      margin-bottom: 1.6em;
                 }
 
@@ -40,9 +42,8 @@
 </head>
 <body>
 
-<h2>{{title}}</h2>
-
 <table>
+    <caption>{{title}}</caption>
     <tr>
         <td>Konsulentnavn</td>
         <td>:</td>
@@ -97,7 +98,7 @@
                 <td align="center">{{workdayDate}}</td>
                 <td align="center">{{fromTime}}</td>
                 <td align="center">{{toTime}}</td>
-                <td align="right">{{workedMinutes}}</td>
+                <td align="right">{{workedHours}}</td>
                 <td align="right">{{comment}}</td>
             </tr>
         {{/timesheetList}}

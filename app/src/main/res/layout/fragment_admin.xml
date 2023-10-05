@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -29,8 +30,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/admin_register_work_section_header"
-            android:stretchColumns="0,0, 1">
-
+            android:stretchColumns="0,0, 1, 1">
+<!--
             <TableRow>
                 <TextView
                     android:padding="3dip"
@@ -47,16 +48,15 @@
                     android:entries="@array/months"
                     android:padding="3dip" />
 
-                <Button
-                    android:id="@+id/btn_admin_generate_timesheet"
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_timesheet_month_spinner"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:textAlignment="center"
-                    android:layout_marginEnd="5dp"
                     android:text="@string/btn_create"
-                    android:textAllCaps="false" />
+                    app:iconTint="@color/color_btn_bg_cancel" />
             </TableRow>
-
+-->
             <TableRow>
                 <TextView
                     android:padding="3dip"
@@ -73,14 +73,21 @@
                     android:entries="@array/months"
                     android:padding="3dip" />
 
-                <Button
-                    android:id="@+id/btn_admin_generate_invoice"
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_create_invoice_attachment"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:textAlignment="center"
-                    android:layout_marginEnd="5dp"
                     android:text="@string/btn_create"
-                    android:textAllCaps="false" />
+                    app:iconTint="@color/color_btn_bg_cancel" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_invoice_attachment_send_email"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Send email"
+                    app:iconTint="@color/color_btn_bg_cancel" />
             </TableRow>
         </TableLayout>
 

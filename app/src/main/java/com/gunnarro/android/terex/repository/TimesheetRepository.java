@@ -132,7 +132,7 @@ public class TimesheetRepository {
      * Return a clone of data for the last added timesheet or from the timesheet marked as uses as default.
      * Note! all data is not returned, such as id, created and last modified date, for example.
      */
-    public TimesheetEntry getMostRecent() {
+    public TimesheetEntry getMostRecentTimeSheetEntry() {
         try {
             CompletionService<TimesheetEntry> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
             service.submit(timesheetEntryDao::getMostRecent);

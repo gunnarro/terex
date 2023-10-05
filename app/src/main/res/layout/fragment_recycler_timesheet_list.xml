@@ -36,7 +36,7 @@
 
         <!-- This will be the parent Floating Action Button -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/add_timesheet"
+            android:id="@+id/add_timesheet_entry"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|bottom"
@@ -58,8 +58,8 @@
             android:contentDescription="@string/btn_calendar"
             android:src="@drawable/ic_add_white_24dp"
             app:backgroundTint="@color/cardview_dark_background"
-            app:layout_constraintBottom_toTopOf="@+id/add_timesheet"
-            app:layout_constraintEnd_toEndOf="@+id/add_timesheet"
-            app:layout_constraintStart_toStartOf="@+id/add_timesheet" />
+            app:layout_constraintBottom_toTopOf="@+id/add_timesheet_entry"
+            app:layout_constraintEnd_toEndOf="@+id/add_timesheet_entry"
+            app:layout_constraintStart_toStartOf="@+id/add_timesheet_entry" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
