@@ -168,13 +168,12 @@ public class AdminFragment extends Fragment {
         webView.loadDataWithBaseURL("file:///android_asset/", invoiceSummaryHtml, "text/html", "utf-8", null);
 
         Log.d("createInvoiceSummaryAttachment", "" + invoiceSummaryHtml);
-     //   createWebPrintJob(webViewPrint, "invoice_attachment_webview");
         createPdf(invoiceSummaryHtml, "invoice_attachment");
         Log.d("createInvoiceSummaryAttachment", "" + invoiceSummaryHtml);
     }
 
     private void createTimesheetAttachment(Long timesheetId) throws IOException {
-        List<TimesheetEntry> timesheetEntryList = invoiceService.getTimesheet(timesheetId);
+        List<TimesheetEntry> timesheetEntryList = invoiceService.getTimesheetEntryList(timesheetId);
 
         StringBuilder mustacheTemplateStr = new StringBuilder();
         // first read the invoice summary mustache html template
@@ -199,7 +198,6 @@ public class AdminFragment extends Fragment {
         webView.loadDataWithBaseURL(null, timesheetHtml, "text/html", "utf-8", null);
 
         Log.d("createTimesheetAttachment", "" + timesheetHtml);
-      //  createWebPrintJob(webViewPrint, "timesheet_attachment");
         createPdf(timesheetHtml, "invoice-attachment-new");
     }
 
@@ -240,24 +238,6 @@ public class AdminFragment extends Fragment {
         builder.setPositiveButton("Ok", (dialog, which) -> dialog.cancel());
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
-    }
-
-    private void createWebPrintJob(final WebView webView, final String fileName) {
-        try {
-            String pdfFileName = fileName + "_" + LocalDate.now().format(DateTimeFormatter.ISO_DATE) + ".pdf";
-            String jobName = "printinvoice";
-            PrintAttributes attributes = new PrintAttributes.Builder()
-                    .setMediaSize(PrintAttributes.MediaSize.ISO_A4)
-                    .setResolution(new PrintAttributes.Resolution("pdf", "pdf", 600, 600))
-                    .setMinMargins(PrintAttributes.Margins.NO_MARGINS)
-                    .build();
-            File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-            PdfPrint pdfPrint = new PdfPrint(attributes);
-            pdfPrint.print(webView.createPrintDocumentAdapter(jobName), path, pdfFileName);
-            showInfoDialog("saved pdf to: " + path + "/" + pdfFileName, requireContext());
-        } catch (Exception e) {
-            showInfoDialog(e.getMessage(), requireContext());
-        }
     }
 
     private File readPdfFile(String fileName) {

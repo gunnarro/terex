@@ -71,13 +71,12 @@ public class InvoiceService {
         return invoiceSummaryByWeek;
     }
 
-    public List<TimesheetEntry> getTimesheet(Long timesheetId) {
+    public List<TimesheetEntry> getTimesheetEntryList(Long timesheetId) {
         return timesheetRepository.getTimesheetEntryList(timesheetId);
     }
 
     public TimesheetDto getTimesheetDto(Long timesheetId) {
         TimesheetDto timesheetDto = new TimesheetDto();
-        List<TimesheetEntryDto> timesheetEntryDtoList = new ArrayList<>();
         List<TimesheetEntry> timesheetEntryList = timesheetRepository.getTimesheetEntryList(timesheetId);
         timesheetDto.setTimesheetEntryDtoList(timesheetEntryList.stream().map(this::mapToTimesheetEntryDto).collect(Collectors.toList()));
         return timesheetDto;
