@@ -20,16 +20,14 @@ import lombok.Setter;
 @Setter
 @Getter
 @TypeConverters(LocalDateConverter.class)
-@Entity(tableName = "invoice", indices = {@Index(value = {"timesheet_id", "client_id"},
+@Entity(tableName = "invoice", indices = {@Index(value = {"client_id", "invoice_number"},
         unique = true)})
 public class Invoice {
 
     @PrimaryKey(autoGenerate = true)
     public Long id;
-    @ColumnInfo(name = "invoice_id")
-    private Long invoiceId;
-    @ColumnInfo(name = "timesheet_id")
-    private Long timesheetId;
+    @ColumnInfo(name = "invoice_number")
+    public Integer invoiceNumber;
     @ColumnInfo(name = "client_id")
     private Long clientId;
     @ColumnInfo(name = "invoice_status")
@@ -53,20 +51,12 @@ public class Invoice {
         this.id = id;
     }
 
-    public Long getInvoiceId() {
-        return invoiceId;
+    public Integer getInvoiceNumber() {
+        return invoiceNumber;
     }
 
-    public void setInvoiceId(Long invoiceId) {
-        this.invoiceId = invoiceId;
-    }
-
-    public Long getTimesheetId() {
-        return timesheetId;
-    }
-
-    public void setTimesheetId(Long timesheetId) {
-        this.timesheetId = timesheetId;
+    public void setInvoiceNumber(Integer invoiceNumber) {
+        this.invoiceNumber = invoiceNumber;
     }
 
     public Long getClientId() {
@@ -130,20 +120,19 @@ public class Invoice {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Invoice invoice = (Invoice) o;
-        return Objects.equals(invoiceId, invoice.invoiceId) && Objects.equals(timesheetId, invoice.timesheetId) && Objects.equals(clientId, invoice.clientId);
+        return invoiceNumber.equals(invoice.invoiceNumber) && clientId.equals(invoice.clientId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(invoiceId, timesheetId, clientId);
+        return Objects.hash(invoiceNumber, clientId);
     }
 
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("Invoice{");
         sb.append("id=").append(id);
-        sb.append(", invoiceId=").append(invoiceId);
-        sb.append(", timesheetId=").append(timesheetId);
+        sb.append(", invoiceNumber=").append(invoiceNumber);
         sb.append(", clientId=").append(clientId);
         sb.append(", status='").append(status).append('\'');
         sb.append(", billingDate=").append(billingDate);

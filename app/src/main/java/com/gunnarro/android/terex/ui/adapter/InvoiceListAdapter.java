@@ -10,11 +10,11 @@ import androidx.recyclerview.widget.ListAdapter;
 import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.ui.view.InvoiceViewHolder;
 
-public class InvoiceListAdapter extends ListAdapter<Invoice, InvoiceViewHolder>{
+public class InvoiceListAdapter extends ListAdapter<Invoice, InvoiceViewHolder> {
 
     public InvoiceListAdapter(@NonNull DiffUtil.ItemCallback<Invoice> diffCallback) {
         super(diffCallback);
-        Log.d("InvoiceListAdapter","init");
+        Log.d("InvoiceListAdapter", "init");
     }
 
     @NonNull
@@ -26,8 +26,8 @@ public class InvoiceListAdapter extends ListAdapter<Invoice, InvoiceViewHolder>{
     @Override
     public void onBindViewHolder(InvoiceViewHolder holder, int position) {
         Invoice current = getItem(position);
-        holder.bindListItemHeader(current.getBillingDate().toString() + " - " + current.getDueDate());
-        holder.bindListItemBody(current.getClientId() + ", " + current.getInvoiceId() + "," + current.getAmount());
+        holder.bindListItemHeader(current.getDueDate().toString() + " - " + current.getStatus() + " " + current.getId() + " " + current.getInvoiceNumber());
+        holder.bindListItemBody("" + current.getAmount());
     }
 
     public static class InvoiceDiff extends DiffUtil.ItemCallback<Invoice> {

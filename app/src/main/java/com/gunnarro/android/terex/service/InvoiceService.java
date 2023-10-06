@@ -39,6 +39,8 @@ import java.util.stream.Stream;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import kotlin.random.Random;
+
 @Singleton
 public class InvoiceService {
 
@@ -63,8 +65,10 @@ public class InvoiceService {
     public Long createInvoice(Company company, Company client, Long timesheetId) {
         // create the invoice
         Invoice invoice = new Invoice();
-        invoice.setTimesheetId(timesheetId);
+        invoice.setInvoiceNumber(Random.Default.nextInt(100, 10000));
+        invoice.setClientId(client.getId());
         invoice.setStatus("processed");
+        invoice.setAmount(8750);
         invoice.setDueDate(LocalDate.now().plusDays(10));
         invoice.setBillingDate(LocalDate.now());
         Long invoiceId = invoiceRepository.insertInvoice(invoice);

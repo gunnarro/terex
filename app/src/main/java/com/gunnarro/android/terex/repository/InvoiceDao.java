@@ -17,7 +17,7 @@ import java.util.Map;
 @Dao
 public interface InvoiceDao {
 
-    @Query("SELECT * FROM invoice i JOIN invoice_summary s ON i.invoice_id = s.invoice_id WHERE i.invoice_id = :invoiceId")
+    @Query("SELECT * FROM invoice i JOIN invoice_summary s ON i.id = s.invoice_id WHERE i.id = :invoiceId")
     Map<Invoice, List<InvoiceSummary>> getInvoiceById(long invoiceId);
 
     @Query("SELECT * FROM invoice ORDER BY billing_date ASC")
