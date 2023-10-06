@@ -2,8 +2,12 @@ package com.gunnarro.android.terex.domain.entity;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Embedded;
+import androidx.room.Entity;
+import androidx.room.Index;
+import androidx.room.PrimaryKey;
 
-import dagger.Component;
+import org.jetbrains.annotations.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,8 +22,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
+@Entity(tableName = "timesheet", indices = {@Index(value = {"organization_number"},
+        unique = true)})
 public class Company {
-
+    @NotNull
+    @PrimaryKey(autoGenerate = true)
+    Long id;
     @ColumnInfo(name = "company_name")
     String name;
     @ColumnInfo(name = "organization_number")
@@ -30,6 +38,17 @@ public class Company {
     Address businessAddress;
     @Embedded
     Contact contactInfo;
+    @Embedded
+    Person contactPerson;
+
+    @NotNull
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(@NotNull Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -71,4 +90,11 @@ public class Company {
         this.contactInfo = contactInfo;
     }
 
+    public Person getContactPerson() {
+        return contactPerson;
+    }
+
+    public void setContactPerson(Person contactPerson) {
+        this.contactPerson = contactPerson;
+    }
 }

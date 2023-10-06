@@ -14,7 +14,7 @@ public class InvoiceListAdapter extends ListAdapter<Invoice, InvoiceViewHolder>{
 
     public InvoiceListAdapter(@NonNull DiffUtil.ItemCallback<Invoice> diffCallback) {
         super(diffCallback);
-        Log.d("TimesheetListAdapter","init");
+        Log.d("InvoiceListAdapter","init");
     }
 
     @NonNull
@@ -26,7 +26,7 @@ public class InvoiceListAdapter extends ListAdapter<Invoice, InvoiceViewHolder>{
     @Override
     public void onBindViewHolder(InvoiceViewHolder holder, int position) {
         Invoice current = getItem(position);
-        holder.bindListItemHeader(current.getInvoiceDate().toString() + " - " + current.getDueDate());
+        holder.bindListItemHeader(current.getBillingDate().toString() + " - " + current.getDueDate());
         holder.bindListItemBody(current.getClientId() + ", " + current.getInvoiceId() + "," + current.getAmount());
     }
 

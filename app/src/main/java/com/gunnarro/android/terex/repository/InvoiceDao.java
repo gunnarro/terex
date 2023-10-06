@@ -18,13 +18,16 @@ import java.util.Map;
 public interface InvoiceDao {
 
     @Query("SELECT * FROM invoice i JOIN invoice_summary s ON i.invoice_id = s.invoice_id WHERE i.invoice_id = :invoiceId")
-    Map<Invoice, List<InvoiceSummary>> getInvoiceById(int invoiceId);
+    Map<Invoice, List<InvoiceSummary>> getInvoiceById(long invoiceId);
 
-    @Query("SELECT * FROM invoice ORDER BY invoice_date ASC")
+    @Query("SELECT * FROM invoice ORDER BY billing_date ASC")
     LiveData<List<Invoice>> getAll();
 
+    @Query("SELECT * FROM invoice i WHERE i.id = :invoiceId")
+    Invoice getInvoice(long invoiceId);
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    void insert(Invoice invoice);
+    long insert(Invoice invoice);
 
     @Update
     void update(Invoice invoice);

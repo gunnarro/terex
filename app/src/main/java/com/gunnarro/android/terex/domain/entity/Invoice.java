@@ -2,6 +2,7 @@ package com.gunnarro.android.terex.domain.entity;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
@@ -19,19 +20,22 @@ import lombok.Setter;
 @Setter
 @Getter
 @TypeConverters(LocalDateConverter.class)
-@Entity(tableName = "invoice")
+@Entity(tableName = "invoice", indices = {@Index(value = {"timesheet_id", "client_id"},
+        unique = true)})
 public class Invoice {
 
     @PrimaryKey(autoGenerate = true)
-    public int id;
+    public Long id;
     @ColumnInfo(name = "invoice_id")
-    private Integer invoiceId;
+    private Long invoiceId;
+    @ColumnInfo(name = "timesheet_id")
+    private Long timesheetId;
     @ColumnInfo(name = "client_id")
-    private Integer clientId;
-    @ColumnInfo(name = "invoice_date")
-    private LocalDate invoiceDate;
+    private Long clientId;
     @ColumnInfo(name = "invoice_status")
     private String status;
+    @ColumnInfo(name = "billing_date")
+    private LocalDate billingDate;
     @ColumnInfo(name = "due_date")
     private LocalDate dueDate;
     @ColumnInfo(name = "vat")
@@ -41,36 +45,52 @@ public class Invoice {
 
     private transient List<InvoiceSummary> invoiceSummaryList;
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Integer getInvoiceId() {
+    public Long getInvoiceId() {
         return invoiceId;
     }
 
-    public void setInvoiceId(Integer invoiceId) {
+    public void setInvoiceId(Long invoiceId) {
         this.invoiceId = invoiceId;
     }
 
-    public Integer getClientId() {
+    public Long getTimesheetId() {
+        return timesheetId;
+    }
+
+    public void setTimesheetId(Long timesheetId) {
+        this.timesheetId = timesheetId;
+    }
+
+    public Long getClientId() {
         return clientId;
     }
 
-    public void setClientId(Integer clientId) {
+    public void setClientId(Long clientId) {
         this.clientId = clientId;
     }
 
-    public LocalDate getInvoiceDate() {
-        return invoiceDate;
+    public String getStatus() {
+        return status;
     }
 
-    public void setInvoiceDate(LocalDate invoiceDate) {
-        this.invoiceDate = invoiceDate;
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public LocalDate getBillingDate() {
+        return billingDate;
+    }
+
+    public void setBillingDate(LocalDate billingDate) {
+        this.billingDate = billingDate;
     }
 
     public LocalDate getDueDate() {
@@ -97,16 +117,41 @@ public class Invoice {
         this.amount = amount;
     }
 
+    public List<InvoiceSummary> getInvoiceSummaryList() {
+        return invoiceSummaryList;
+    }
+
+    public void setInvoiceSummaryList(List<InvoiceSummary> invoiceSummaryList) {
+        this.invoiceSummaryList = invoiceSummaryList;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Invoice invoice = (Invoice) o;
-        return id == invoice.id && Double.compare(invoice.vat, vat) == 0 && Double.compare(invoice.amount, amount) == 0 && invoiceId.equals(invoice.invoiceId) && Objects.equals(clientId, invoice.clientId) && Objects.equals(invoiceDate, invoice.invoiceDate) && Objects.equals(dueDate, invoice.dueDate);
+        return Objects.equals(invoiceId, invoice.invoiceId) && Objects.equals(timesheetId, invoice.timesheetId) && Objects.equals(clientId, invoice.clientId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, invoiceId);
+        return Objects.hash(invoiceId, timesheetId, clientId);
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Invoice{");
+        sb.append("id=").append(id);
+        sb.append(", invoiceId=").append(invoiceId);
+        sb.append(", timesheetId=").append(timesheetId);
+        sb.append(", clientId=").append(clientId);
+        sb.append(", status='").append(status).append('\'');
+        sb.append(", billingDate=").append(billingDate);
+        sb.append(", dueDate=").append(dueDate);
+        sb.append(", vat=").append(vat);
+        sb.append(", amount=").append(amount);
+        sb.append(", invoiceSummaryList=").append(invoiceSummaryList);
+        sb.append('}');
+        return sb.toString();
     }
 }

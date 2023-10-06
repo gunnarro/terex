@@ -31,6 +31,7 @@
     <string name="btn_add">Add</string>
     <string name="btn_create">Create</string>
     <string name="btn_calendar">Calendar</string>
+    <string name="btn_email">Send email</string>
 
     <!-- invoice -->
     <string name="lbl_company_name">Firma</string>

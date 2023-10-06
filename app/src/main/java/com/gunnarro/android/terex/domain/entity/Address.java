@@ -24,7 +24,6 @@ public class Address {
     String streetNumber;
     @ColumnInfo(name = "street_number_prefix")
     String streetNumberPrefix;
-
     @ColumnInfo(name = "post_code")
     String postCode;
     @ColumnInfo(name = "city")

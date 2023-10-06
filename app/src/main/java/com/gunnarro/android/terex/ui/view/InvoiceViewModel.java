@@ -34,6 +34,6 @@ public class InvoiceViewModel extends AndroidViewModel {
 
     public void insert(Invoice invoice) {
         Log.d("InvoiceViewModel.insert" , "insert: " + invoice);
-        repository.insert(invoice);
+        repository.insertInvoice(invoice);
     }
 }

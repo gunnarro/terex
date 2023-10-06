@@ -2,24 +2,26 @@ package com.gunnarro.android.terex.domain.entity;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 @TypeConverters(LocalDateConverter.class)
-@Entity(tableName = "invoice_summary")
+@Entity(tableName = "invoice_summary", indices = {@Index(value = {"invoice_id", "timesheet_id"},
+        unique = true)})
 public class InvoiceSummary {
 
     @PrimaryKey(autoGenerate = true)
-    public int id;
+    public Long id;
     @ColumnInfo(name = "invoice_id")
-    public int invoiceId;
+    public Long invoiceId;
     @ColumnInfo(name = "timesheet_id")
-    public Integer timesheetId;
+    public Long timesheetId;
     @ColumnInfo(name = "year")
     private Integer year;
     @ColumnInfo(name = "week_in_year")
@@ -38,20 +40,28 @@ public class InvoiceSummary {
     public InvoiceSummary() {
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public int getInvoiceId() {
+    public Long getInvoiceId() {
         return invoiceId;
     }
 
-    public void setInvoiceId(int invoiceId) {
+    public void setInvoiceId(Long invoiceId) {
         this.invoiceId = invoiceId;
+    }
+
+    public Long getTimesheetId() {
+        return timesheetId;
+    }
+
+    public void setTimesheetId(Long timesheetId) {
+        this.timesheetId = timesheetId;
     }
 
     public Integer getYear() {
@@ -74,20 +84,12 @@ public class InvoiceSummary {
         return fromDate;
     }
 
-    public String getFromDateDDMM() {
-        return fromDate.format(DateTimeFormatter.ofPattern("dd.MM"));
-    }
-
     public void setFromDate(LocalDate fromDate) {
         this.fromDate = fromDate;
     }
 
     public LocalDate getToDate() {
         return toDate;
-    }
-
-    public String getToDateDDMM() {
-        return toDate.format(DateTimeFormatter.ofPattern("dd.MM"));
     }
 
     public void setToDate(LocalDate toDate) {
@@ -98,6 +100,10 @@ public class InvoiceSummary {
         return sumWorkedDays;
     }
 
+    public void setSumWorkedDays(Integer sumWorkedDays) {
+        this.sumWorkedDays = sumWorkedDays;
+    }
+
     public double getSumWorkedHours() {
         return sumWorkedHours;
     }
@@ -105,11 +111,6 @@ public class InvoiceSummary {
     public void setSumWorkedHours(double sumWorkedHours) {
         this.sumWorkedHours = sumWorkedHours;
     }
-
-    public void setSumWorkedDays(Integer sumWorkedDays) {
-        this.sumWorkedDays = sumWorkedDays;
-    }
-
 
     public double getSumBilledWork() {
         return sumBilledWork;
@@ -120,10 +121,24 @@ public class InvoiceSummary {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        InvoiceSummary that = (InvoiceSummary) o;
+        return Objects.equals(invoiceId, that.invoiceId) && Objects.equals(timesheetId, that.timesheetId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(invoiceId, timesheetId);
+    }
+
+    @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("InvoiceSummary{");
         sb.append("id=").append(id);
         sb.append(", invoiceId=").append(invoiceId);
+        sb.append(", timesheetId=").append(timesheetId);
         sb.append(", year=").append(year);
         sb.append(", weekInYear=").append(weekInYear);
         sb.append(", fromDate=").append(fromDate);
@@ -134,4 +149,5 @@ public class InvoiceSummary {
         sb.append('}');
         return sb.toString();
     }
+
 }

@@ -96,6 +96,19 @@ public class TimesheetRepository {
         return timesheetDao.getTimesheet("*", "*", LocalDate.now().getYear(), LocalDate.now().getMonthValue());
     }
 
+    public List<Timesheet> getTimesheets(String status) {
+        try {
+            CompletionService<List<Timesheet>> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
+            service.submit(timesheetDao::getAllTimesheets);
+            Future<List<Timesheet>> future = service.take();
+            return future != null ? future.get() : null;
+        } catch (InterruptedException | ExecutionException e) {
+            // Something crashed, therefore restore interrupted state before leaving.
+            Thread.currentThread().interrupt();
+            throw new TerexApplicationException("Error getting timesheet list", e.getMessage(), e.getCause());
+        }
+    }
+
     public List<Timesheet> getAllTimesheets() {
         try {
             CompletionService<List<Timesheet>> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);

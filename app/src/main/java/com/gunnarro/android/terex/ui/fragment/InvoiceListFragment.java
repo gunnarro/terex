@@ -32,6 +32,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class InvoiceListFragment extends Fragment {
     public static final String NEW_INVOICE_REQUEST_KEY = "2";
+    private static final String INVOICE_JSON_INTENT_KEY = "222";
     private InvoiceViewModel invoiceViewModel;
 
     private final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
@@ -49,7 +50,7 @@ public class InvoiceListFragment extends Fragment {
                 Log.d(Utility.buildTag(getClass(), "onFragmentResult"), "requestKey: " + requestKey + ", bundle: " + bundle);
                 Invoice invoice;
                 try {
-                    invoice = mapper.readValue(bundle.getString(TimesheetListFragment.TIMESHEET_ENTRY_JSON_INTENT_KEY), Invoice.class);
+                    invoice = mapper.readValue(bundle.getString(InvoiceListFragment.INVOICE_JSON_INTENT_KEY), Invoice.class);
                 } catch (JsonProcessingException e) {
                     Log.e("", e.toString());
                     throw new RuntimeException("Application Error: " + e);
@@ -78,7 +79,7 @@ public class InvoiceListFragment extends Fragment {
         FloatingActionButton addButton = view.findViewById(R.id.add_invoice);
         addButton.setOnClickListener(v -> requireActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_frame, InvoiceFragment.class, null)
+                .replace(R.id.content_frame, InvoiceNewFragment.class, null)
                 .setReorderingAllowed(true)
                 .commit());
         Log.d(Utility.buildTag(getClass(), "onCreateView"), "");

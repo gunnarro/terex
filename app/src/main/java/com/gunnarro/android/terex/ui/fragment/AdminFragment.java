@@ -23,7 +23,6 @@ import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.gunnarro.android.terex.R;
-import com.gunnarro.android.terex.domain.entity.Company;
 import com.gunnarro.android.terex.domain.entity.InvoiceSummary;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.service.InvoiceService;
@@ -88,8 +87,7 @@ public class AdminFragment extends Fragment {
          */
         view.findViewById(R.id.btn_create_invoice_attachment).setOnClickListener(v -> {
             try {
-                createInvoiceSummaryAttachment(1L);
-                //  sendInvoiceToClient("gunnar_ronneberg@yahoo.no", "test", "message", null);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -98,8 +96,6 @@ public class AdminFragment extends Fragment {
         view.findViewById(R.id.btn_invoice_attachment_send_email).setOnClickListener(v -> {
             try {
                 File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-                File pdfFile = new File(path.getPath() +  "/invoice_attachment_" + LocalDate.now().format(DateTimeFormatter.ISO_DATE) + ".pdf");
-                sendInvoiceToClient("gunnar_ronneberg@yahoo.no", "test", "message", pdfFile);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -136,39 +132,6 @@ public class AdminFragment extends Fragment {
         invoiceSummaries.forEach(i -> Log.i("generateInvoiceSummary", i.toString()));
     }
 */
-    private void createInvoiceSummaryAttachment(Long timesheetId) throws IOException {
-        List<InvoiceSummary> invoiceSummaries = invoiceService.createInvoiceSummary(timesheetId);
-        Log.d("createInvoiceSummaryAttachment", "invoiceSummary week: " + invoiceSummaries);
-        StringBuilder mustacheTemplateStr = new StringBuilder();
-        // first read the invoice summary mustache html template
-        try (InputStream fis = requireContext().getAssets().open(INVOICE_TIMESHEET_SUMMARY_ATTACHMENT_TEMPLATE);
-             InputStreamReader isr = new InputStreamReader(fis,
-                     StandardCharsets.UTF_8);
-             BufferedReader br = new BufferedReader(isr)) {
-            br.lines().forEach(mustacheTemplateStr::append);
-        }
-
-        Double sumBilledAmount = invoiceSummaries.stream()
-                .mapToDouble(InvoiceSummary::getSumBilledWork)
-                .sum();
-
-        Double sumBilledHours = invoiceSummaries.stream()
-                .mapToDouble(InvoiceSummary::getSumWorkedHours)
-                .sum();
-
-        String invoiceSummaryHtml = createInvoiceSummaryHtml(mustacheTemplateStr.toString(), invoiceSummaries, sumBilledHours.toString(), sumBilledAmount.toString());
-        // need some time in order to load date before printed.
-        WebView webViewPrint = new WebView(requireContext());
-        webViewPrint.loadDataWithBaseURL(null, invoiceSummaryHtml, "text/html", "utf-8", null);
-
-        WebView webView = requireView().findViewById(R.id.invoice_overview_html);
-        webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
-        webView.loadDataWithBaseURL("file:///android_asset/", invoiceSummaryHtml, "text/html", "utf-8", null);
-
-        Log.d("createInvoiceSummaryAttachment", "" + invoiceSummaryHtml);
-        createPdf(invoiceSummaryHtml, "invoice_attachment");
-        Log.d("createInvoiceSummaryAttachment", "" + invoiceSummaryHtml);
-    }
 
     private void createTimesheetAttachment(Long timesheetId) throws IOException {
         List<TimesheetEntry> timesheetEntryList = invoiceService.getTimesheetEntryList(timesheetId);
@@ -242,24 +205,6 @@ public class AdminFragment extends Fragment {
         return new File(String.format("%s/%s", requireContext().getFilesDir().getPath(), fileName));
     }
 
-    private void sendInvoiceToClient(String toEmailAddress, String subject, String message, File pdfFile) {
-        Intent email = new Intent(Intent.ACTION_SEND);
-        email.putExtra(Intent.EXTRA_EMAIL, new String[]{toEmailAddress});
-        email.putExtra(Intent.EXTRA_SUBJECT, subject);
-        email.putExtra(Intent.EXTRA_TEXT, message);
-        email.putExtra(Intent.EXTRA_STREAM, pdfFile);
-        //need this to prompts email client only
-        email.setType("message/rfc822");
-        startActivity(Intent.createChooser(email, "Choose Email client:"));
-    }
-
-    private Company getClient() {
-        return null;
-    }
-
-    private Company getMyCompany() {
-        return null;
-    }
 
     private void openFile(Uri pickerInitialUri) {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
@@ -272,7 +217,6 @@ public class AdminFragment extends Fragment {
     }
 
     public void createPdf(String html, String fileName) throws IOException {
-
         String pdfFileName = fileName + "_" + LocalDate.now().format(DateTimeFormatter.ISO_DATE) + ".pdf";
         String htmlFileName = fileName + "_" + LocalDate.now().format(DateTimeFormatter.ISO_DATE) + ".html";
         File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);

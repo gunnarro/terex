@@ -37,8 +37,8 @@ class InvoiceDaoTest {
     fun insertInvoice() {
         val invoice = Invoice()
         invoice.invoiceId = 123456789
-        invoice.amountDue = 250.50
-        invoice.invoiceDate = LocalDate.now()
+        invoice.amount = 250.50
+        invoice.billingDate = LocalDate.now()
         invoice.vat = 25.00
         invoiceDao!!.insert(invoice)
         val newInvoice = invoiceDao!!.getInvoiceById(invoice.invoiceId)

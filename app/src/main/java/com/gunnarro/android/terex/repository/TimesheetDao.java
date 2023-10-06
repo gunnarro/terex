@@ -30,6 +30,9 @@ public interface TimesheetDao {
     @Query("SELECT * FROM timesheet ORDER BY client_name")
     List<Timesheet> getAllTimesheets();
 
+    @Query("SELECT * FROM timesheet WHERE status = :status ORDER BY year, month DESC")
+    List<Timesheet> getTimesheets(String status);
+
     /**
      * @param timesheet timesheet to be inserted
      * @return the id of the inserted timesheet entry row
