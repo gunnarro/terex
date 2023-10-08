@@ -133,62 +133,6 @@ public class AdminFragment extends Fragment {
     }
 */
 
-    private void createTimesheetAttachment(Long timesheetId) throws IOException {
-        List<TimesheetEntry> timesheetEntryList = invoiceService.getTimesheetEntryList(timesheetId);
-
-        StringBuilder mustacheTemplateStr = new StringBuilder();
-        // first read the invoice summary mustache html template
-        try (InputStream fis = requireContext().getAssets().open(RECRUITMENT_TIMESHEET_TEMPLATE);
-             InputStreamReader isr = new InputStreamReader(fis,
-                     StandardCharsets.UTF_8);
-             BufferedReader br = new BufferedReader(isr)) {
-            br.lines().forEach(mustacheTemplateStr::append);
-        }
-
-        Double sumBilledHours = timesheetEntryList.stream()
-                .mapToDouble(TimesheetEntry::getWorkedMinutes)
-                .sum() / 60;
-
-        String timesheetHtml = createTimesheetListHtml(mustacheTemplateStr.toString(), timesheetEntryList, sumBilledHours.toString());
-        // need some time in order to load date before printed.
-        WebView webViewPrint = new WebView(requireContext());
-        webViewPrint.loadDataWithBaseURL(null, timesheetHtml, "text/html", "utf-8", null);
-
-        WebView webView = requireView().findViewById(R.id.invoice_overview_html);
-        webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
-        webView.loadDataWithBaseURL(null, timesheetHtml, "text/html", "utf-8", null);
-
-        Log.d("createTimesheetAttachment", "" + timesheetHtml);
-        createPdf(timesheetHtml, "invoice-attachment-new");
-    }
-
-    private String createInvoiceSummaryHtml(String mustacheTemplateStr, List<InvoiceSummary> invoiceSummaryList, String sumBilledHours, String sumBilledAmount) {
-        MustacheFactory mf = new DefaultMustacheFactory();
-        Mustache mustache = mf.compile(new StringReader(mustacheTemplateStr), "");
-        Map<String, Object> context = new HashMap<>();
-        context.put("title", "Vedlegg til faktura " + LocalDate.now().format(DateTimeFormatter.ISO_DATE));
-        context.put("invoiceSummaryList", invoiceSummaryList);
-        context.put("sunBilledHours", sumBilledHours);
-        context.put("sumBilledAmount", sumBilledAmount);
-        StringWriter writer = new StringWriter();
-        mustache.execute(writer, context);
-        return writer.toString();
-    }
-
-    private String createTimesheetListHtml(String mustacheTemplateStr, List<TimesheetEntry> timesheetList, String sumBilledHours) {
-        MustacheFactory mf = new DefaultMustacheFactory();
-        Mustache mustache = mf.compile(new StringReader(mustacheTemplateStr), "");
-        Map<String, Object> context = new HashMap<>();
-        context.put("title", "Timeliste for konsulentbistand");
-        context.put("timesheetPeriod", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM")));
-        context.put("timesheetList", timesheetList);
-        context.put("sunWorkDays", timesheetList.size());
-        context.put("sunBilledHours", sumBilledHours);
-        StringWriter writer = new StringWriter();
-        mustache.execute(writer, context);
-        return writer.toString();
-    }
-
     private void showInfoDialog(String infoMessage, Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Info");
@@ -199,55 +143,5 @@ public class AdminFragment extends Fragment {
         builder.setPositiveButton("Ok", (dialog, which) -> dialog.cancel());
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
-    }
-
-    private File readPdfFile(String fileName) {
-        return new File(String.format("%s/%s", requireContext().getFilesDir().getPath(), fileName));
-    }
-
-
-    private void openFile(Uri pickerInitialUri) {
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("application/pdf");
-
-        // Optionally, specify a URI for the file that should appear in the
-        // system file picker when it loads.
-        intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, pickerInitialUri);
-    }
-
-    public void createPdf(String html, String fileName) throws IOException {
-        String pdfFileName = fileName + "_" + LocalDate.now().format(DateTimeFormatter.ISO_DATE) + ".pdf";
-        String htmlFileName = fileName + "_" + LocalDate.now().format(DateTimeFormatter.ISO_DATE) + ".html";
-        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        File pdfFile = new File(path, pdfFileName);
-        File htmlFile = new File(path, htmlFileName);
-        try {
-            FileOutputStream fos = new FileOutputStream(htmlFile);
-            fos.write(html.getBytes());
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // save css to disk
-
-
-        // save logo to disk
-
-
-        ConverterProperties converterProperties = new ConverterProperties();
-        converterProperties.setBaseUri("file:///" + path.getPath());
-       // converterProperties.setBaseUri(".");
-     /*   FontProvider fontProvider  = new FontProvider();
-        fontProvider.addFont("/path/to/my-font.ttf");
-        fontProvider.addStandardPdfFonts();
-        fontProvider.addSystemFonts(); //for fallback
-        converterProperties.setFontProvider(fontProvider);
-        HtmlConverter.convertToPdf(new File("./input.html"), new File("output.pdf"), converterProperties);
-  */
-        HtmlConverter.convertToPdf(htmlFile, pdfFile, converterProperties);
-      //  HtmlConverter.convertToPdf(html, new FileOutputStream(pdfFile));
-
     }
 }
