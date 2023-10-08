@@ -9,6 +9,7 @@ import androidx.room.TypeConverters;
 
 import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
 import com.gunnarro.android.terex.domain.converter.LocalDateTimeConverter;
+import com.gunnarro.android.terex.repository.TimesheetRepository;
 import com.gunnarro.android.terex.utility.Utility;
 
 import org.jetbrains.annotations.NotNull;
@@ -33,6 +34,8 @@ public class Timesheet {
     @NotNull
     @PrimaryKey(autoGenerate = true)
     public Long id;
+    @ColumnInfo(name = "invoice_number")
+    public Long invoiceNumber;
     @NonNull
     @ColumnInfo(name = "created_date")
     private LocalDateTime createdDate;
@@ -64,6 +67,14 @@ public class Timesheet {
     @NotNull
     public Long getId() {
         return id;
+    }
+
+    public Long getInvoiceNumber() {
+        return invoiceNumber;
+    }
+
+    public void setInvoiceNumber(Long invoiceNumber) {
+        this.invoiceNumber = invoiceNumber;
     }
 
     public void setId(@NotNull Long id) {
@@ -162,7 +173,7 @@ public class Timesheet {
         Timesheet timesheet = new Timesheet();
         timesheet.setClientName(clientName);
         timesheet.setProjectCode(projectCode);
-        timesheet.setStatus("Open");
+        timesheet.setStatus(TimesheetRepository.TimesheetStatusEnum.OPEN.name());
         timesheet.setYear(now.getYear());
         timesheet.setMonth(now.getMonthValue());
         timesheet.setFromDate(Utility.getFirstDayOfMonth(now));
@@ -201,14 +212,22 @@ public class Timesheet {
         return Objects.hash(clientName, projectCode, year, month);
     }
 
+    @NonNull
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("Timesheet{");
-        sb.append("clientName='").append(clientName).append('\'');
+        sb.append("id=").append(id);
+        sb.append(", invoiceNumber=").append(invoiceNumber);
+        sb.append(", createdDate=").append(createdDate);
+        sb.append(", lastModifiedDate=").append(lastModifiedDate);
+        sb.append(", clientName='").append(clientName).append('\'');
         sb.append(", projectCode='").append(projectCode).append('\'');
         sb.append(", year=").append(year);
         sb.append(", month=").append(month);
-        sb.append(", status=").append(status);
+        sb.append(", fromDate=").append(fromDate);
+        sb.append(", toDate=").append(toDate);
+        sb.append(", status='").append(status).append('\'');
+        sb.append(", description='").append(description).append('\'');
         sb.append('}');
         return sb.toString();
     }

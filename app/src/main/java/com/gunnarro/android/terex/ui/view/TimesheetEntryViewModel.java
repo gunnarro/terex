@@ -53,12 +53,12 @@ public class TimesheetEntryViewModel extends AndroidViewModel {
     }
 
     public void saveTimesheetEntry(TimesheetEntry timesheet) {
-        Log.d("TimesheetViewModel.save", "save: " + timesheet);
+        Log.d("TimesheetViewModel.saveTimesheetEntry", "save: " + timesheet);
         timesheetRepository.saveTimesheetEntry(timesheet);
     }
 
     public void deleteTimesheetEntry(TimesheetEntry timesheet) {
-        Log.d("TimesheetViewModel.delete", "save: " + timesheet);
+        Log.d("TimesheetViewModel.deleteTimesheetEntry", "save: " + timesheet);
         timesheetRepository.deleteTimesheetEntry(timesheet);
     }
 }

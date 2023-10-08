@@ -34,17 +34,17 @@ public interface TimesheetDao {
     List<Timesheet> getTimesheets(String status);
 
     /**
-     * @param timesheet timesheet to be inserted
+     * @param timesheet timesheet to be inserted. Abort if conflict, i.e. silently drop the insert
      * @return the id of the inserted timesheet entry row
      */
     @Insert(onConflict = OnConflictStrategy.ABORT)
     Long insert(Timesheet timesheet);
 
     /**
-     * @param timesheet updated timesheet
+     * @param timesheet updated timesheet. Replace on conflict, i.e, replace old data with the new one
      * @return number of updated row(S), should only be one for this method.
      */
-    @Update(onConflict = OnConflictStrategy.ABORT)
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     int update(Timesheet timesheet);
 
     /**

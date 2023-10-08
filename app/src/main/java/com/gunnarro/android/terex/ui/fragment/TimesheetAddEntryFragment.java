@@ -25,6 +25,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
+import com.gunnarro.android.terex.repository.TimesheetRepository;
 import com.gunnarro.android.terex.utility.Utility;
 
 import org.jetbrains.annotations.NotNull;
@@ -172,7 +173,7 @@ public class TimesheetAddEntryFragment extends Fragment implements View.OnClickL
 
         if (timesheetEntry == null) {
             // no recent timesheet entry found, use default settings
-            timesheetEntry = TimesheetEntry.createDefault(1L, Utility.DEFAULT_STATUS, Utility.DEFAULT_DAILY_BREAK_IN_MINUTES, LocalDate.now(), Utility.DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES, Utility.DEFAULT_HOURLY_RATE);
+            timesheetEntry = TimesheetEntry.createDefault(1L, TimesheetRepository.TimesheetStatusEnum.OPEN.name(), Utility.DEFAULT_DAILY_BREAK_IN_MINUTES, LocalDate.now(), Utility.DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES, Utility.DEFAULT_HOURLY_RATE);
         }
         updateTimesheetAddView(view, timesheetEntry);
         Log.d(Utility.buildTag(getClass(), "onCreateView"), String.format("%s", timesheetEntry));

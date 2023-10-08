@@ -26,6 +26,8 @@ import com.gunnarro.android.terex.domain.entity.InvoiceSummary;
 import com.gunnarro.android.terex.domain.entity.Person;
 import com.gunnarro.android.terex.domain.entity.SpinnerItem;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
+import com.gunnarro.android.terex.exception.TerexApplicationException;
+import com.gunnarro.android.terex.repository.TimesheetRepository;
 import com.gunnarro.android.terex.service.InvoiceService;
 import com.gunnarro.android.terex.utility.Utility;
 import com.itextpdf.html2pdf.ConverterProperties;
@@ -77,7 +79,7 @@ public class InvoiceNewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_invoice_new, container, false);
-        List<Timesheet> timesheetList = invoiceService.getTimesheets("Open");
+        List<Timesheet> timesheetList = invoiceService.getTimesheets(TimesheetRepository.TimesheetStatusEnum.OPEN.name());
         List<SpinnerItem> timesheetItems = timesheetList.stream().map(t -> new SpinnerItem(t.id, t.getProjectCode())).collect(Collectors.toList());
         final AutoCompleteTextView timesheetSpinner = view.findViewById(R.id.invoice_timesheet_spinner);
         ArrayAdapter<SpinnerItem> timesheetAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, timesheetItems);
@@ -94,8 +96,8 @@ public class InvoiceNewFragment extends Fragment {
                     Long invoiceId = createInvoice(item.id());
                     createInvoiceSummaryAttachment(invoiceId);
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (TerexApplicationException e) {
+                showInfoDialog("Error creating invoice!", requireContext());
             }
         });
 
@@ -135,30 +137,34 @@ public class InvoiceNewFragment extends Fragment {
         return invoiceId;
     }
 
-    private void createInvoiceSummaryAttachment(Long invoiceId) throws IOException {
-        Invoice invoice = invoiceService.getInvoice(invoiceId);
-        Log.d("createInvoiceSummaryAttachment", "invoiceSummary week: " + invoice.getInvoiceSummaryList());
-        StringBuilder mustacheTemplateStr = new StringBuilder();
-        // first read the invoice summary mustache html template
-        try (InputStream fis = requireContext().getAssets().open(INVOICE_TIMESHEET_SUMMARY_ATTACHMENT_TEMPLATE);
-             InputStreamReader isr = new InputStreamReader(fis,
-                     StandardCharsets.UTF_8);
-             BufferedReader br = new BufferedReader(isr)) {
-            br.lines().forEach(mustacheTemplateStr::append);
+    private void createInvoiceSummaryAttachment(Long invoiceId) {
+        try {
+            Invoice invoice = invoiceService.getInvoice(invoiceId);
+            Log.d("createInvoiceSummaryAttachment", "invoiceSummary week: " + invoice.getInvoiceSummaryList());
+            StringBuilder mustacheTemplateStr = new StringBuilder();
+            // first read the invoice summary mustache html template
+            try (InputStream fis = requireContext().getAssets().open(INVOICE_TIMESHEET_SUMMARY_ATTACHMENT_TEMPLATE);
+                 InputStreamReader isr = new InputStreamReader(fis,
+                         StandardCharsets.UTF_8);
+                 BufferedReader br = new BufferedReader(isr)) {
+                br.lines().forEach(mustacheTemplateStr::append);
+            }
+
+            Double sumBilledAmount = invoice.getInvoiceSummaryList().stream()
+                    .mapToDouble(InvoiceSummary::getSumBilledWork)
+                    .sum();
+
+            Double sumBilledHours = invoice.getInvoiceSummaryList().stream()
+                    .mapToDouble(InvoiceSummary::getSumWorkedHours)
+                    .sum();
+
+            String invoiceSummaryHtml = createInvoiceSummaryHtml(mustacheTemplateStr.toString(), invoice.getInvoiceSummaryList(), sumBilledHours.toString(), sumBilledAmount.toString());
+            Log.d("createInvoiceSummaryAttachment", "" + invoiceSummaryHtml);
+            createPdf(invoiceSummaryHtml, "invoice_attachment");
+            Log.d("createInvoiceSummaryAttachment", "" + invoiceSummaryHtml);
+        } catch (Exception e) {
+            throw new TerexApplicationException(String.format("Error crating invoice attachment, invoice ref=%s", invoiceId), "50023", e);
         }
-
-        Double sumBilledAmount = invoice.getInvoiceSummaryList().stream()
-                .mapToDouble(InvoiceSummary::getSumBilledWork)
-                .sum();
-
-        Double sumBilledHours = invoice.getInvoiceSummaryList().stream()
-                .mapToDouble(InvoiceSummary::getSumWorkedHours)
-                .sum();
-
-        String invoiceSummaryHtml = createInvoiceSummaryHtml(mustacheTemplateStr.toString(), invoice.getInvoiceSummaryList(), sumBilledHours.toString(), sumBilledAmount.toString());
-        Log.d("createInvoiceSummaryAttachment", "" + invoiceSummaryHtml);
-        createPdf(invoiceSummaryHtml, "invoice_attachment");
-        Log.d("createInvoiceSummaryAttachment", "" + invoiceSummaryHtml);
     }
 
     private String createInvoiceSummaryHtml(String mustacheTemplateStr, List<InvoiceSummary> invoiceSummaryList, String sumBilledHours, String sumBilledAmount) {
@@ -253,7 +259,7 @@ public class InvoiceNewFragment extends Fragment {
 
     private Company getClient() {
         Company client = new Company();
-        getCompany().setId(20L);
+        client.setId(20L);
         client.setName("Norway Consulting AS");
         client.setOrganizationNumber("");
         Address address = new Address();

@@ -26,13 +26,26 @@ public interface InvoiceDao {
     @Query("SELECT * FROM invoice i WHERE i.id = :invoiceId")
     Invoice getInvoice(long invoiceId);
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    /**
+     * @param invoice timesheet to be inserted. Abort if conflict, i.e. silently drop the insert
+     * @return the id of the inserted invoice row
+     */
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     long insert(Invoice invoice);
 
-    @Update
-    void update(Invoice invoice);
+    /**
+     * @param invoice updated invoice. Replace on conflict, i.e, replace old data with the new one
+     * @return number of updated row(S), should only be one for this method.
+     */
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    int update(Invoice invoice);
 
+    /**
+     * @param invoice to be deleted
+     */
     @Delete
     void delete(Invoice invoice);
 
+    @Query("SELECT * FROM invoice i WHERE i.reference = :reference")
+    Invoice getInvoiceByRef(String reference);
 }

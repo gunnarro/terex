@@ -51,8 +51,7 @@ public class TimesheetListAdapter extends ListAdapter<TimesheetEntry, TimesheetE
 
     @Override
     public void onBindViewHolder(TimesheetEntryViewHolder holder, int position) {
-        TimesheetEntry current = getItem(position);
-        holder.bindListLine(current);
+        holder.bindListLine(getItem(position));
     }
 
     @Override

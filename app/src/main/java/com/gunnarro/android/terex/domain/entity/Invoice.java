@@ -1,5 +1,6 @@
 package com.gunnarro.android.terex.domain.entity;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Index;
@@ -7,6 +8,7 @@ import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
+import com.gunnarro.android.terex.domain.converter.LocalDateTimeConverter;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,10 +21,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @Setter
 @Getter
-@TypeConverters(LocalDateConverter.class)
-@Entity(tableName = "invoice", indices = {@Index(value = {"client_id", "invoice_number"},
+@TypeConverters({LocalDateConverter.class, LocalDateTimeConverter.class})
+@Entity(tableName = "invoice", indices = {@Index(value = {"client_id", "reference"},
         unique = true)})
-public class Invoice {
+public class Invoice extends BaseEntity {
 
     @PrimaryKey(autoGenerate = true)
     public Long id;
@@ -30,6 +32,8 @@ public class Invoice {
     public Integer invoiceNumber;
     @ColumnInfo(name = "client_id")
     private Long clientId;
+    @ColumnInfo(name = "reference")
+    private String reference;
     @ColumnInfo(name = "invoice_status")
     private String status;
     @ColumnInfo(name = "billing_date")
@@ -65,6 +69,14 @@ public class Invoice {
 
     public void setClientId(Long clientId) {
         this.clientId = clientId;
+    }
+
+    public String getReference() {
+        return reference;
+    }
+
+    public void setReference(String reference) {
+        this.reference = reference;
     }
 
     public String getStatus() {
@@ -120,20 +132,22 @@ public class Invoice {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Invoice invoice = (Invoice) o;
-        return invoiceNumber.equals(invoice.invoiceNumber) && clientId.equals(invoice.clientId);
+        return clientId.equals(invoice.clientId) && reference.equals(invoice.reference);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(invoiceNumber, clientId);
+        return Objects.hash(clientId, reference);
     }
 
+    @NonNull
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("Invoice{");
         sb.append("id=").append(id);
         sb.append(", invoiceNumber=").append(invoiceNumber);
         sb.append(", clientId=").append(clientId);
+        sb.append(", reference=").append(reference);
         sb.append(", status='").append(status).append('\'');
         sb.append(", billingDate=").append(billingDate);
         sb.append(", dueDate=").append(dueDate);

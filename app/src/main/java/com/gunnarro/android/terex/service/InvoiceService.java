@@ -3,12 +3,12 @@ package com.gunnarro.android.terex.service;
 import android.content.Context;
 import android.util.Log;
 
-import com.gunnarro.android.terex.domain.dto.TimesheetDto;
+import androidx.room.Transaction;
+
 import com.gunnarro.android.terex.domain.dto.TimesheetEntryDto;
 import com.gunnarro.android.terex.domain.entity.Company;
 import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.InvoiceSummary;
-import com.gunnarro.android.terex.domain.entity.RegisterWork;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.repository.InvoiceRepository;
@@ -62,16 +62,20 @@ public class InvoiceService {
         return invoiceRepository.getInvoice(invoiceId);
     }
 
+    @Transaction
     public Long createInvoice(Company company, Company client, Long timesheetId) {
         // create the invoice
         Invoice invoice = new Invoice();
         invoice.setInvoiceNumber(Random.Default.nextInt(100, 10000));
         invoice.setClientId(client.getId());
-        invoice.setStatus("processed");
-        invoice.setAmount(8750);
-        invoice.setDueDate(LocalDate.now().plusDays(10));
+        // ensure that a timesheet is only billed once.
+        invoice.setReference(String.format("invoice-timesheet-ref_%s", timesheetId));
+        invoice.setStatus("new");
+        // fixme, should be unique for a timesheet
         invoice.setBillingDate(LocalDate.now());
-        Long invoiceId = invoiceRepository.insertInvoice(invoice);
+        // defaulted to 10 days after billing date
+        invoice.setDueDate(invoice.getBillingDate().plusDays(10));
+        Long invoiceId = invoiceRepository.saveInvoice(invoice);
         Log.d("createInvoice", "created invoice=" + invoiceId);
         // then accumulate timesheet entries
         List<InvoiceSummary> invoiceSummaries = createInvoiceSummary(invoiceId, timesheetId);
@@ -80,6 +84,11 @@ public class InvoiceService {
             invoiceRepository.insertInvoiceSummary(i);
             Log.d("inserted invoice summary", "" + i);
         });
+
+        double sumAmount = invoiceSummaries.stream().mapToDouble(InvoiceSummary::getSumBilledWork).sum();
+        invoice.setAmount(sumAmount);
+        invoice.setStatus("processed");
+        invoiceRepository.saveInvoice(invoice);
         return invoiceId;
     }
 
@@ -97,15 +106,11 @@ public class InvoiceService {
         Map<Integer, List<TimesheetEntry>> timesheetWeekMap = timesheetEntryList.stream().collect(Collectors.groupingBy(TimesheetEntry::getWorkdayWeek));
         List<InvoiceSummary> invoiceSummaryByWeek = new ArrayList<>();
         timesheetWeekMap.forEach((k, e) -> {
-            invoiceSummaryByWeek.add(buildInvoiceSummaryForWeek(invoiceId, timesheetId, k, e));
+            invoiceSummaryByWeek.add(buildInvoiceSummaryForWeek(invoiceId, k, e));
         });
 
         invoiceSummaryByWeek.sort(Comparator.comparing(InvoiceSummary::getWeekInYear));
         return invoiceSummaryByWeek;
-    }
-
-    public void createInvoice(Invoice invoice) {
-        invoiceRepository.insertInvoice(invoice);
     }
 
     public List<Timesheet> getTimesheets(String status) {
@@ -114,13 +119,6 @@ public class InvoiceService {
 
     public List<TimesheetEntry> getTimesheetEntryList(Long timesheetId) {
         return timesheetRepository.getTimesheetEntryList(timesheetId);
-    }
-
-    public TimesheetDto getTimesheetDto(Long timesheetId) {
-        TimesheetDto timesheetDto = new TimesheetDto();
-        List<TimesheetEntry> timesheetEntryList = timesheetRepository.getTimesheetEntryList(timesheetId);
-        timesheetDto.setTimesheetEntryDtoList(timesheetEntryList.stream().map(this::mapToTimesheetEntryDto).collect(Collectors.toList()));
-        return timesheetDto;
     }
 
     private TimesheetEntryDto mapToTimesheetEntryDto(TimesheetEntry timesheetEntry) {
@@ -132,14 +130,6 @@ public class InvoiceService {
         return timesheetEntryDto;
     }
 
-    public RegisterWork getRegisterWork(Integer id) {
-        RegisterWork registerWork = null;
-        if (id == null) {
-            registerWork = new RegisterWork();
-        }
-        return registerWork;
-    }
-
     /**
      * @param year  current year
      * @param month from january to december, for example Month.MARCH
@@ -149,10 +139,9 @@ public class InvoiceService {
         return getWorkingDays(year, month).stream().map(this::createTimesheet).collect(Collectors.toList());
     }
 
-    private InvoiceSummary buildInvoiceSummaryForWeek(Long invoiceId, Long timesheetId, Integer week, List<TimesheetEntry> timesheets) {
+    private InvoiceSummary buildInvoiceSummaryForWeek(Long invoiceId, Integer week, List<TimesheetEntry> timesheets) {
         InvoiceSummary invoiceSummary = new InvoiceSummary();
         invoiceSummary.setInvoiceId(invoiceId);
-        invoiceSummary.setTimesheetId(timesheetId);
         invoiceSummary.setWeekInYear(week);
         invoiceSummary.setYear(timesheets.get(0).getWorkdayDate().getYear());
         invoiceSummary.setFromDate(Utility.getFirstDayOfWeek(timesheets.get(0).getWorkdayDate(), week));
@@ -179,8 +168,6 @@ public class InvoiceService {
         weekMap.forEach((k, e) -> {
             InvoiceSummary invoiceSummary = new InvoiceSummary();
             invoiceSummary.setWeekInYear(k);
-            //invoiceSummary.setFromDate(e.get(0).getFromDate().toLocalDate());
-            //invoiceSummary.setToDate(e.get(e.size() -1).getToDate().toLocalDate());
             invoiceSummary.setSumWorkedDays(e.size());
             invoiceSummaryByWeek.add(invoiceSummary);
             Objects.requireNonNull(weekMap.get(k)).forEach(t -> {
@@ -215,16 +202,11 @@ public class InvoiceService {
     }
 
     private TimesheetEntry createTimesheet(LocalDate day) {
-        return TimesheetEntry.createDefault(timesheetRepository.getCurrentTimesheetId("*", "*"), Utility.DEFAULT_STATUS, Utility.DEFAULT_DAILY_BREAK_IN_MINUTES, day, Utility.DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES, Utility.DEFAULT_HOURLY_RATE);
+        return TimesheetEntry.createDefault(timesheetRepository.getCurrentTimesheetId("*", "*"), TimesheetRepository.TimesheetStatusEnum.OPEN.name(), Utility.DEFAULT_DAILY_BREAK_IN_MINUTES, day, Utility.DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES, Utility.DEFAULT_HOURLY_RATE);
     }
 
     private static int getWeek(LocalDate date) {
         TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
         return date.get(woy);
-    }
-
-    private static boolean isWeekend(final LocalDate date) {
-        DayOfWeek day = DayOfWeek.of(date.get(ChronoField.DAY_OF_WEEK));
-        return day == DayOfWeek.SUNDAY || day == DayOfWeek.SATURDAY;
     }
 }

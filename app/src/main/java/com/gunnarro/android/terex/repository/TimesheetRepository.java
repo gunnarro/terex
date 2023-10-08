@@ -29,9 +29,13 @@ import javax.inject.Singleton;
 @Singleton
 public class TimesheetRepository {
 
+    public enum TimesheetStatusEnum {
+        OPEN, CLOSED;
+    }
+
     private final TimesheetDao timesheetDao;
     private final TimesheetEntryDao timesheetEntryDao;
-    private final LiveData<List<TimesheetEntry>> timesheetEntryList;
+   // private final LiveData<List<TimesheetEntry>> timesheetEntryList;
 
     // Note that in order to unit test the WordRepository, you have to remove the Application
     // dependency. This adds complexity and much more code, and this sample is not about testing.
@@ -40,7 +44,7 @@ public class TimesheetRepository {
     public TimesheetRepository(Context applicationContext) {
         timesheetDao = AppDatabase.getDatabase(applicationContext).timesheetDao();
         timesheetEntryDao = AppDatabase.getDatabase(applicationContext).timesheetEntryDao();
-        timesheetEntryList = timesheetEntryDao.getTimesheetEntryListLiveData(1L);
+     //   timesheetEntryList = timesheetEntryDao.getTimesheetEntryListLiveData(1L);
     }
 
     public TimesheetWithEntries getTimesheetWithEntries(Long timesheetId) {
@@ -58,7 +62,7 @@ public class TimesheetRepository {
 
     public Timesheet createTimesheet(@NotNull String clientName, @NotNull String projectCode, @NotNull LocalDate timesheetDate) {
         Timesheet timesheet = new Timesheet();
-        timesheet.setStatus("open");
+        timesheet.setStatus(TimesheetStatusEnum.OPEN.name());
         timesheet.setClientName(clientName);
         timesheet.setProjectCode(projectCode);
         timesheet.setFromDate(Utility.getFirstDayOfMonth(timesheetDate));
@@ -118,6 +122,7 @@ public class TimesheetRepository {
         } catch (InterruptedException | ExecutionException e) {
             // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();
+            e.printStackTrace();
             throw new TerexApplicationException("Error getting timesheet list", e.getMessage(), e.getCause());
         }
     }
@@ -161,7 +166,7 @@ public class TimesheetRepository {
     // Room executes all queries on a separate thread.
     // Observed LiveData will notify the observer when the data has changed.
     public LiveData<List<TimesheetEntry>> getTimesheetEntryListLiveData(Long timesheetId) {
-        Log.d("TimesheetRepository.getTimesheetEntryListLiveData", "refresh live data in fragment");
+        Log.d("TimesheetRepository.getTimesheetEntryListLiveData", "refresh live data in fragment, timesheetId=" + timesheetId);
         try {
             CompletionService<LiveData<List<TimesheetEntry>>> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
             service.submit(() -> timesheetEntryDao.getTimesheetEntryListLiveData(timesheetId));
@@ -180,7 +185,7 @@ public class TimesheetRepository {
         try {
             Timesheet timesheetExisting = getTimesheet(timesheet.getClientName(), timesheet.getProjectCode(), timesheet.getYear(), timesheet.getMonth());
             Log.d("TimesheetRepository.saveTimesheet", String.format("%s", timesheetExisting));
-            Long id;
+            Long id = null;
             if (timesheetExisting == null) {
                 timesheet.setCreatedDate(LocalDateTime.now());
                 timesheet.setLastModifiedDate(LocalDateTime.now());
@@ -190,8 +195,8 @@ public class TimesheetRepository {
                 timesheet.setId(timesheetExisting.getId());
                 timesheet.setCreatedDate(timesheetExisting.getCreatedDate());
                 timesheet.setLastModifiedDate(LocalDateTime.now());
-                Integer i = updateTimesheet(timesheet);
-                id = Long.valueOf(i);
+                updateTimesheet(timesheet);
+                id = timesheet.getId();
                 Log.d("", "update timesheet: " + id + " - " + timesheet);
             }
             return id;
@@ -225,7 +230,7 @@ public class TimesheetRepository {
             Log.d("TimesheetRepository.saveTimesheetEntry", String.format("%s", timesheetEntryExisting));
             // set the timesheet work date week number here, this is only used to simplify accumulate timesheet by week by the invoice service
             timesheetEntry.setWorkdayWeek(timesheetEntry.getWorkdayDate().get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()));
-            Long id;
+            Long id = null;
             if (timesheetEntryExisting == null) {
                 timesheetEntry.setCreatedDate(LocalDateTime.now());
                 timesheetEntry.setLastModifiedDate(LocalDateTime.now());
@@ -235,8 +240,8 @@ public class TimesheetRepository {
                 timesheetEntry.setId(timesheetEntryExisting.getId());
                 timesheetEntry.setCreatedDate(timesheetEntryExisting.getCreatedDate());
                 timesheetEntry.setLastModifiedDate(LocalDateTime.now());
-                Integer i = updateTimesheetEntry(timesheetEntry);
-                id = Long.valueOf(i);
+                updateTimesheetEntry(timesheetEntry);
+                id = timesheetEntry.getId();
                 Log.d("", "update timesheet entry: " + id + " - " + timesheetEntry.getWorkdayDate());
             }
             return id;

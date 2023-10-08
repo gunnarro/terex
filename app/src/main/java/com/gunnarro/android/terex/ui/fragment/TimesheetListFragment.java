@@ -61,8 +61,11 @@ public class TimesheetListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         // Get a new or existing ViewModel from the ViewModelProvider.
-        timesheetViewModel = new ViewModelProvider(this).get(TimesheetEntryViewModel.class);
-
+        try {
+            timesheetViewModel = new ViewModelProvider(this).get(TimesheetEntryViewModel.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         getParentFragmentManager().setFragmentResultListener(TIMESHEET_REQUEST_KEY, this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {

@@ -1,7 +1,9 @@
 package com.gunnarro.android.terex.ui.adapter;
 
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
@@ -9,8 +11,9 @@ import androidx.recyclerview.widget.ListAdapter;
 
 import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.ui.view.InvoiceViewHolder;
+import com.gunnarro.android.terex.utility.Utility;
 
-public class InvoiceListAdapter extends ListAdapter<Invoice, InvoiceViewHolder> {
+public class InvoiceListAdapter extends ListAdapter<Invoice, InvoiceViewHolder> implements AdapterView.OnItemClickListener {
 
     public InvoiceListAdapter(@NonNull DiffUtil.ItemCallback<Invoice> diffCallback) {
         super(diffCallback);
@@ -25,9 +28,13 @@ public class InvoiceListAdapter extends ListAdapter<Invoice, InvoiceViewHolder> 
 
     @Override
     public void onBindViewHolder(InvoiceViewHolder holder, int position) {
-        Invoice current = getItem(position);
-        holder.bindListItemHeader(current.getDueDate().toString() + " - " + current.getStatus() + " " + current.getId() + " " + current.getInvoiceNumber());
-        holder.bindListItemBody("" + current.getAmount());
+        holder.bindListLine(getItem(position));
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Log.d(Utility.buildTag(getClass(), "onItemClick"), "position: " + position + ", id: " + id);
+        notifyItemRangeRemoved(position, 1);
     }
 
     public static class InvoiceDiff extends DiffUtil.ItemCallback<Invoice> {

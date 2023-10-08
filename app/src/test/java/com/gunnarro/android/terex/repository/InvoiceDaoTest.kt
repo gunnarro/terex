@@ -36,12 +36,12 @@ class InvoiceDaoTest {
     @Test
     fun insertInvoice() {
         val invoice = Invoice()
-        invoice.invoiceId = 123456789
+        invoice.id = 123456789
         invoice.amount = 250.50
         invoice.billingDate = LocalDate.now()
         invoice.vat = 25.00
         invoiceDao!!.insert(invoice)
-        val newInvoice = invoiceDao!!.getInvoiceById(invoice.invoiceId)
+        val newInvoice = invoiceDao!!.getInvoiceById(invoice.id)
         Assert.assertTrue(newInvoice.keys.stream().findFirst().isPresent)
     }
 

@@ -1,5 +1,6 @@
 package com.gunnarro.android.terex.domain.entity;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Index;
@@ -7,21 +8,20 @@ import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
+import com.gunnarro.android.terex.domain.converter.LocalDateTimeConverter;
 
 import java.time.LocalDate;
 import java.util.Objects;
 
-@TypeConverters(LocalDateConverter.class)
-@Entity(tableName = "invoice_summary", indices = {@Index(value = {"invoice_id", "timesheet_id"},
+@TypeConverters({LocalDateConverter.class, LocalDateTimeConverter.class})
+@Entity(tableName = "invoice_summary", indices = {@Index(value = {"invoice_id", "year", "week_in_year"},
         unique = true)})
-public class InvoiceSummary {
+public class InvoiceSummary extends BaseEntity {
 
     @PrimaryKey(autoGenerate = true)
     public Long id;
     @ColumnInfo(name = "invoice_id")
     public Long invoiceId;
-    @ColumnInfo(name = "timesheet_id")
-    public Long timesheetId;
     @ColumnInfo(name = "year")
     private Integer year;
     @ColumnInfo(name = "week_in_year")
@@ -54,14 +54,6 @@ public class InvoiceSummary {
 
     public void setInvoiceId(Long invoiceId) {
         this.invoiceId = invoiceId;
-    }
-
-    public Long getTimesheetId() {
-        return timesheetId;
-    }
-
-    public void setTimesheetId(Long timesheetId) {
-        this.timesheetId = timesheetId;
     }
 
     public Integer getYear() {
@@ -125,20 +117,20 @@ public class InvoiceSummary {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         InvoiceSummary that = (InvoiceSummary) o;
-        return Objects.equals(invoiceId, that.invoiceId) && Objects.equals(timesheetId, that.timesheetId);
+        return invoiceId.equals(that.invoiceId) && year.equals(that.year) && weekInYear.equals(that.weekInYear);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(invoiceId, timesheetId);
+        return Objects.hash(invoiceId, year, weekInYear);
     }
 
+    @NonNull
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("InvoiceSummary{");
         sb.append("id=").append(id);
         sb.append(", invoiceId=").append(invoiceId);
-        sb.append(", timesheetId=").append(timesheetId);
         sb.append(", year=").append(year);
         sb.append(", weekInYear=").append(weekInYear);
         sb.append(", fromDate=").append(fromDate);
@@ -149,5 +141,4 @@ public class InvoiceSummary {
         sb.append('}');
         return sb.toString();
     }
-
 }

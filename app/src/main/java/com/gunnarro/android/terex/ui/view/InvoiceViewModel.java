@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class InvoiceViewModel extends AndroidViewModel {
 
-    private final InvoiceRepository repository;
+    private final InvoiceRepository invoiceRepository;
     // Using LiveData and caching what getAlphabetizedWords returns has several benefits:
     // - We can put an observer on the data (instead of polling for changes) and only update the
     //   the UI when the data actually changes.
@@ -24,16 +24,16 @@ public class InvoiceViewModel extends AndroidViewModel {
 
     public InvoiceViewModel(Application application) {
         super(application);
-        repository = new InvoiceRepository(application);
-        invoices = repository.getAllInvoices();
+        invoiceRepository = new InvoiceRepository(application);
+        invoices = invoiceRepository.getAllInvoices();
     }
 
     public LiveData<List<Invoice>> getAllInvoices() {
         return invoices;
     }
 
-    public void insert(Invoice invoice) {
-        Log.d("InvoiceViewModel.insert" , "insert: " + invoice);
-        repository.insertInvoice(invoice);
+    public void saveInvoice(Invoice invoice) {
+        Log.d("InvoiceViewModel.insert", "save: " + invoice);
+        invoiceRepository.saveInvoice(invoice);
     }
 }

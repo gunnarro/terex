@@ -26,7 +26,6 @@ public class Utility {
     public static final Integer DEFAULT_DAILY_BREAK_IN_MINUTES = 30;
     public static final Long DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES = 8 * 60L - DEFAULT_DAILY_BREAK_IN_MINUTES;
     public static final Integer DEFAULT_HOURLY_RATE = 1075;
-    public static final String DEFAULT_STATUS = "Open";
     private static final SimpleDateFormat dateFormatter;
     private static final String DATE_TIME_PATTERN = "dd-MM-yyyy HH:mm";
     public static final String WORKDAY_DATE_PATTERN = "EEE d MMM";
@@ -251,7 +250,7 @@ public class Utility {
 
     public static Integer mapMonthNameToNumber(String monthName) {
         String[] months = getMonths();
-        for (int i=0; i<months.length; i++) {
+        for (int i = 0; i < months.length; i++) {
             if (months[i].equalsIgnoreCase(monthName)) {
                 return i;
             }

@@ -10,6 +10,7 @@ import androidx.room.TypeConverters;
 import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
 import com.gunnarro.android.terex.domain.converter.LocalDateTimeConverter;
 import com.gunnarro.android.terex.domain.converter.LocalTimeConverter;
+import com.gunnarro.android.terex.repository.TimesheetRepository;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -78,7 +79,7 @@ public class TimesheetEntry {
     private Integer hourlyRate;
 
     @NonNull
-    @ColumnInfo(name = "status", defaultValue = "Open")
+    @ColumnInfo(name = "status", defaultValue = "OPEN")
     private String status;
 
     @ColumnInfo(name = "comment")
@@ -228,28 +229,6 @@ public class TimesheetEntry {
         return Objects.hash(id, timesheetId, createdDate, lastModifiedDate, workdayWeek, workdayDate, fromTime, toTime, workedMinutes, breakInMin, hourlyRate, status, comment, useAsDefault);
     }
 
-    @NonNull
-    @Override
-    public String toString() {
-        final StringBuffer sb = new StringBuffer("Timesheet{");
-        sb.append("id=").append(id);
-        sb.append(", timesheetId=").append(timesheetId);
-        sb.append(", createdDate=").append(createdDate);
-        sb.append(", lastModifiedDate=").append(lastModifiedDate);
-        sb.append(", workdayWeek=").append(workdayWeek);
-        sb.append(", workdayDate=").append(workdayDate);
-        sb.append(", fromTime=").append(fromTime);
-        sb.append(", toTime=").append(toTime);
-        sb.append(", workedMinutes=").append(workedMinutes);
-        sb.append(", breakInMin=").append(breakInMin);
-        sb.append(", hourlyRate=").append(hourlyRate);
-        sb.append(", status='").append(status).append('\'');
-        sb.append(", comment='").append(comment).append('\'');
-        sb.append(", useAsDefault='").append(useAsDefault).append('\'');
-        sb.append('}');
-        return sb.toString();
-    }
-
     public static TimesheetEntry createDefault(Long timesheetId, String status, Integer dailyBreakMin, LocalDate workDayDate, Long workingHoursMin, Integer hourlyRate) {
         TimesheetEntry timesheetEntry = new TimesheetEntry();
         timesheetEntry.setTimesheetId(timesheetId);
@@ -280,5 +259,27 @@ public class TimesheetEntry {
         clone.setToTime(timesheet.getToTime());
         clone.setComment(timesheet.getComment());
         return clone;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Timesheet{");
+        sb.append("id=").append(id);
+        sb.append(", timesheetId=").append(timesheetId);
+        sb.append(", createdDate=").append(createdDate);
+        sb.append(", lastModifiedDate=").append(lastModifiedDate);
+        sb.append(", workdayWeek=").append(workdayWeek);
+        sb.append(", workdayDate=").append(workdayDate);
+        sb.append(", fromTime=").append(fromTime);
+        sb.append(", toTime=").append(toTime);
+        sb.append(", workedMinutes=").append(workedMinutes);
+        sb.append(", breakInMin=").append(breakInMin);
+        sb.append(", hourlyRate=").append(hourlyRate);
+        sb.append(", status='").append(status).append('\'');
+        sb.append(", comment='").append(comment).append('\'');
+        sb.append(", useAsDefault='").append(useAsDefault).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 }

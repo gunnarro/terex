@@ -55,7 +55,7 @@ public class InvoiceListFragment extends Fragment {
                     Log.e("", e.toString());
                     throw new RuntimeException("Application Error: " + e);
                 }
-                invoiceViewModel.insert(invoice);
+                invoiceViewModel.saveInvoice(invoice);
                 Log.d(Utility.buildTag(getClass(), "onCreateView"), "added new item, " + invoice.getInvoiceNumber());
             }
         });

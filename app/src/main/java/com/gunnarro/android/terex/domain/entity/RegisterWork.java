@@ -1,5 +1,7 @@
 package com.gunnarro.android.terex.domain.entity;
 
+import com.gunnarro.android.terex.repository.TimesheetRepository;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -23,7 +25,7 @@ public class RegisterWork {
     public static final Integer DEFAULT_DAILY_BREAK_IN_MINUTES = 30;
     public static final Long DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES = 8 * 60L - DEFAULT_DAILY_BREAK_IN_MINUTES;
     public static final Integer DEFAULT_HOURLY_RATE = 1075;
-    public static final String DEFAULT_STATUS = "Open";
+    public static final String DEFAULT_STATUS = TimesheetRepository.TimesheetStatusEnum.OPEN.name();
     public static final String TIMESHEET_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm";
 
     private String clientName;

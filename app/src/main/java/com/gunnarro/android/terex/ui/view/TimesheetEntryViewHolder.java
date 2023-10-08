@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
+import com.gunnarro.android.terex.repository.TimesheetRepository;
 import com.gunnarro.android.terex.utility.Utility;
 
 import java.time.format.DateTimeFormatter;
@@ -44,10 +45,10 @@ public class TimesheetEntryViewHolder extends RecyclerView.ViewHolder {
 
     public void bindListLine(TimesheetEntry timesheetEntry) {
         timesheetLineHeaderView.setText(timesheetEntry.getWorkdayDate().format(DateTimeFormatter.ofPattern(Utility.WORKDAY_DATE_PATTERN, Locale.getDefault())));
-        if (timesheetEntry.getStatus().equals("Open")) {
+        if (timesheetEntry.getStatus().equals(TimesheetRepository.TimesheetStatusEnum.OPEN.name())) {
             timesheetLine1StatusView.setBackgroundColor(Color.parseColor("#0100f6"));
             timesheetLine2StatusView.setBackgroundColor(Color.parseColor("#0100f6"));
-        } else if (timesheetEntry.getStatus().equals("Billed")) {
+        } else if (timesheetEntry.getStatus().equals(TimesheetRepository.TimesheetStatusEnum.CLOSED.name())) {
             timesheetLine1StatusView.setBackgroundColor(Color.parseColor("#54aa00"));
             timesheetLine2StatusView.setBackgroundColor(Color.parseColor("#54aa00"));
         } else {

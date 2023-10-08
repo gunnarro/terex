@@ -55,7 +55,7 @@ public interface TimesheetEntryDao {
 
     /**
      *
-     * @param timesheetEntry updated timesheet
+     * @param timesheetEntry updated timesheet. Replace on conflict, i.e, replace old data with the new one
      * @return number of updated row(S), should only be one for this method.
      */
     @Update(onConflict = OnConflictStrategy.REPLACE)
