@@ -54,6 +54,7 @@ public class TimesheetAddEntryFragment extends Fragment implements View.OnClickL
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         requireActivity().setTitle(R.string.title_register_work);
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_timesheet_add_entry, container, false);
@@ -113,7 +114,6 @@ public class TimesheetAddEntryFragment extends Fragment implements View.OnClickL
                     R.style.DialogTheme,
                     (timePicker, selectedHour, selectedMinute) -> {
                         fromTime.setText(Utility.formatToHHMM(selectedHour, selectedMinute));
-                        updateWorkedHours();
                     },
                     LocalTime.now().getHour(),
                     LocalTime.now().getMinute(),
@@ -132,7 +132,6 @@ public class TimesheetAddEntryFragment extends Fragment implements View.OnClickL
                     R.style.DialogTheme,
                     (timePicker, selectedHour, selectedMinute) -> {
                         toTime.setText(Utility.formatToHHMM(selectedHour, selectedMinute));
-                        updateWorkedHours();
                     },
                     LocalTime.now().getHour(),
                     LocalTime.now().getMinute(),
@@ -195,7 +194,8 @@ public class TimesheetAddEntryFragment extends Fragment implements View.OnClickL
 
     private void updateTimesheetAddView(View view, @NotNull TimesheetEntry timesheetEntry) {
         Log.d("update timesheet add view", timesheetEntry.toString());
-        if (timesheetEntry.getTimesheetId() == null) throw new TerexApplicationException("timesheetId is null!", "timesheetId is null!", null);
+        if (timesheetEntry.getTimesheetId() == null)
+            throw new TerexApplicationException("timesheetId is null!", "timesheetId is null!", null);
 
         TextView timesheetId = view.findViewById(R.id.timesheet_entry_timesheet_id);
         timesheetId.setText(String.valueOf(timesheetEntry.getTimesheetId()));
@@ -343,20 +343,5 @@ public class TimesheetAddEntryFragment extends Fragment implements View.OnClickL
                 }
             }
         };
-    }
-
-    private boolean isInputFormDataValid() {
-        return true;
-    }
-
-    // FIXME
-    private void updateWorkedHours() {
-        /*
-        EditText fromTime = requireView().findViewById(R.id.timesheet_from_time);
-        EditText toTime = requireView().findViewById(R.id.timesheet_to_time);
-        TextView workedHoursView = requireView().findViewById(R.id.timesheet_worked_hours);
-        workedHoursView.setText(Utility.getDateDiffInHours(LocalTime.parse(fromTime.getText()), LocalTime.parse(toTime.getText())));
-
-         */
     }
 }

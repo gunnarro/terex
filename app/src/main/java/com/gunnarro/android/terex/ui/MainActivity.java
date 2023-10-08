@@ -48,13 +48,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     TimesheetListFragment timesheetListFragment;
 
     @Inject
-    TimesheetAddEntryFragment timesheetAddFragment;
-
-    @Inject
-    InvoiceListFragment invoiceListFragment;
-
-    @Inject
-    InvoiceNewFragment invoiceFragment;
+    TimesheetAddEntryFragment timesheetAddEntryFragment;
 
     @Inject
     TimesheetCustomCalendarFragment timesheetCalendarFragment;
@@ -62,12 +56,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Inject
     TimesheetNewFragment timesheetNewFragment;
 
+    @Inject
+    InvoiceListFragment invoiceListFragment;
+
+    @Inject
+    InvoiceNewFragment invoiceFragment;
+
     private DrawerLayout drawer;
 
     public MainActivity() {
         this.adminFragment = new AdminFragment();
         this.timesheetListFragment = new TimesheetListFragment();
-        this.timesheetAddFragment = new TimesheetAddEntryFragment();
+        this.timesheetAddEntryFragment = new TimesheetAddEntryFragment();
         this.invoiceListFragment = new InvoiceListFragment();
         this.invoiceFragment = new InvoiceNewFragment();
         this.timesheetCalendarFragment = new TimesheetCustomCalendarFragment();
@@ -131,26 +131,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Log.d("MainActivity.onNavigationItemSelected", "selected: " + menuItem.getItemId());
             int id = menuItem.getItemId();
             if (id == R.id.nav_timesheet_register_work) {
+                viewFragment(timesheetAddEntryFragment);
                 setTitle(R.string.title_register_work);
-                viewFragment(timesheetAddFragment);
             } else if (id == R.id.nav_timesheet_list) {
-                setTitle(R.string.title_timesheet);
                 viewFragment(timesheetListFragment);
+                setTitle(R.string.title_timesheet);
             } else if (id == R.id.nav_invoice_list) {
-                setTitle(R.string.title_invoice);
                 viewFragment(invoiceListFragment);
+                setTitle(R.string.title_invoice);
             } else if (id == R.id.nav_invoice) {
-                setTitle(R.string.title_invoice_overview);
                 viewFragment(invoiceFragment);
+                setTitle(R.string.title_invoice_overview);
             } else if (id == R.id.nav_admin) {
-                setTitle(R.string.title_admin);
                 viewFragment(adminFragment);
+                setTitle(R.string.title_admin);
             } else if (id == R.id.nav_timesheet_calendar) {
-                setTitle(R.string.title_timesheet_calendar);
                 viewFragment(timesheetCalendarFragment);
+                setTitle(R.string.title_timesheet_calendar);
             } else if (id == R.id.nav_timesheet_new) {
-                setTitle(R.string.title_timesheet_new);
                 viewFragment(timesheetNewFragment);
+                setTitle(R.string.title_timesheet_new);
             }
             // close drawer after clicking the menu item
             DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void viewFragment(@NonNull Fragment fragment) {
-        Log.d(Utility.buildTag(getClass(), "viewFragment"), "fragment: " + fragment.getTag());
+        Log.d(Utility.buildTag(getClass(), "viewFragment"), "fragment tag: " + fragment.getTag());
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.content_frame, fragment, fragment.getTag())

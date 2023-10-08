@@ -40,6 +40,7 @@ public class InvoiceListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requireActivity().setTitle(R.string.title_invoice_overview);
         setHasOptionsMenu(true);
         // Get a new or existing ViewModel from the ViewModelProvider.
         invoiceViewModel = new ViewModelProvider(this).get(InvoiceViewModel.class);

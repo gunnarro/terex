@@ -51,6 +51,7 @@ public class TimesheetCustomCalendarFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requireActivity().setTitle(R.string.title_timesheet_calendar);
         setHasOptionsMenu(true);
         timesheetRepository = new TimesheetRepository(getContext());
         lastAddedTimesheet = timesheetRepository.getMostRecentTimeSheetEntry();

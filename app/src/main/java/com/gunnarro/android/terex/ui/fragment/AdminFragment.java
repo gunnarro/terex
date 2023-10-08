@@ -66,6 +66,7 @@ public class AdminFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requireActivity().setTitle(R.string.title_admin);
         setHasOptionsMenu(true);
         invoiceService = new InvoiceService(requireActivity().getApplicationContext());
         Log.d(Utility.buildTag(getClass(), "onCreate"), "");

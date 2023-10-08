@@ -49,6 +49,7 @@ public class CompanyEditFragment extends Fragment implements View.OnClickListene
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         requireActivity().setTitle(R.string.title_timesheet_new);
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_timesheet_new, container, false);

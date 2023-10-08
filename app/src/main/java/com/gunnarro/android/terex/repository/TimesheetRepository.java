@@ -103,7 +103,7 @@ public class TimesheetRepository {
     public List<Timesheet> getTimesheets(String status) {
         try {
             CompletionService<List<Timesheet>> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
-            service.submit(timesheetDao::getAllTimesheets);
+            service.submit(() -> timesheetDao.getTimesheets(status));
             Future<List<Timesheet>> future = service.take();
             return future != null ? future.get() : null;
         } catch (InterruptedException | ExecutionException e) {

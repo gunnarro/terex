@@ -35,8 +35,6 @@ import com.gunnarro.android.terex.utility.Utility;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
 import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
@@ -59,6 +57,7 @@ public class TimesheetListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requireActivity().setTitle(R.string.title_timesheet);
         setHasOptionsMenu(true);
         // Get a new or existing ViewModel from the ViewModelProvider.
         try {
@@ -88,8 +87,6 @@ public class TimesheetListFragment extends Fragment {
         // Update the cached copy of the timesheet entries in the adapter.
         timesheetViewModel.getTimesheetLiveData().observe(requireActivity(), adapter::submitList);
 
-        List<Timesheet> timesheets = timesheetViewModel.getAllTimesheets();
-        Log.d("all timesheets", "timesheets: " + timesheets);
         TimesheetWithEntries timesheetWithEntries = timesheetViewModel.getTimesheetWithEntries(1L);
         Log.d("all timesheets", "timesheet with entries: " + timesheetViewModel.getTimesheetWithEntries(1L));
 

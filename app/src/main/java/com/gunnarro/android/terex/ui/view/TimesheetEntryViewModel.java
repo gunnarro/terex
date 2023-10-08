@@ -29,7 +29,7 @@ public class TimesheetEntryViewModel extends AndroidViewModel {
     public TimesheetEntryViewModel(@NonNull Application application) {
         super(application);
         timesheetRepository = new TimesheetRepository(application);
-        timesheetEntryList = timesheetRepository.getTimesheetEntryListLiveData(1L);
+        timesheetEntryList = timesheetRepository.getTimesheetEntryListLiveData(0L);
     }
 
     public LiveData<List<TimesheetEntry>> getTimesheetLiveData() {
