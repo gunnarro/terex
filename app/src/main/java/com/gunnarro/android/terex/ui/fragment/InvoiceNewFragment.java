@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
@@ -26,19 +28,17 @@ import com.gunnarro.android.terex.domain.entity.InvoiceSummary;
 import com.gunnarro.android.terex.domain.entity.Person;
 import com.gunnarro.android.terex.domain.entity.SpinnerItem;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
+import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.repository.TimesheetRepository;
 import com.gunnarro.android.terex.service.InvoiceService;
 import com.gunnarro.android.terex.utility.PdfUtility;
 import com.gunnarro.android.terex.utility.Utility;
-import com.itextpdf.html2pdf.ConverterProperties;
-import com.itextpdf.html2pdf.HtmlConverter;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -95,8 +95,9 @@ public class InvoiceNewFragment extends Fragment {
                 if (item == null) {
                     showInfoDialog("Please select a timesheet!", requireContext());
                 } else {
-                    Long invoiceId = createInvoice(item.id());
-                    createInvoiceSummaryAttachment(invoiceId);
+                    Invoice invoice = createInvoice(item.id());
+                    createInvoiceSummaryAttachment(invoice.id);
+                    createTimesheetAttachment(item.id());
                 }
             } catch (TerexApplicationException e) {
                 showInfoDialog("Error creating invoice!", requireContext());
@@ -131,15 +132,15 @@ public class InvoiceNewFragment extends Fragment {
      * @param timesheetId to be created invoice for
      * @return id of the invoice
      */
-    private Long createInvoice(Long timesheetId) {
+    private Invoice createInvoice(Long timesheetId) {
         Long invoiceId = invoiceService.createInvoice(getCompany(), getClient(), timesheetId);
         if (invoiceId == null) {
             showInfoDialog("No timesheet found! timesheetId=" + timesheetId, requireContext());
         }
-        return invoiceId;
+        return invoiceService.getInvoice(invoiceId);
     }
 
-    private void createInvoiceSummaryAttachment(Long invoiceId) {
+    private boolean createInvoiceSummaryAttachment(Long invoiceId) {
         try {
             Invoice invoice = invoiceService.getInvoice(invoiceId);
             Log.d("createInvoiceSummaryAttachment", "invoiceSummary week: " + invoice.getInvoiceSummaryList());
@@ -162,8 +163,7 @@ public class InvoiceNewFragment extends Fragment {
 
             String invoiceSummaryHtml = createInvoiceSummaryHtml(mustacheTemplateStr.toString(), invoice.getInvoiceSummaryList(), sumBilledHours.toString(), sumBilledAmount.toString());
             Log.d("createInvoiceSummaryAttachment", "" + invoiceSummaryHtml);
-            PdfUtility.htmlToPdf(invoiceSummaryHtml, "invoice_attachment");
-            Log.d("createInvoiceSummaryAttachment", "" + invoiceSummaryHtml);
+            return PdfUtility.htmlToPdf(invoiceSummaryHtml, "invoice_attachment");
         } catch (Exception e) {
             throw new TerexApplicationException(String.format("Error crating invoice attachment, invoice ref=%s", invoiceId), "50023", e);
         }
@@ -186,6 +186,43 @@ public class InvoiceNewFragment extends Fragment {
     }
 
 
+    private boolean createTimesheetAttachment(Long timesheetId) {
+        try {
+            List<TimesheetEntry> timesheetEntryList = invoiceService.getTimesheetEntryList(timesheetId);
+
+            StringBuilder mustacheTemplateStr = new StringBuilder();
+            // first read the invoice summary mustache html template
+            try (InputStream fis = requireContext().getAssets().open(RECRUITMENT_TIMESHEET_TEMPLATE);
+                 InputStreamReader isr = new InputStreamReader(fis,
+                         StandardCharsets.UTF_8);
+                 BufferedReader br = new BufferedReader(isr)) {
+                br.lines().forEach(mustacheTemplateStr::append);
+            }
+
+            Double sumBilledHours = timesheetEntryList.stream()
+                    .mapToDouble(TimesheetEntry::getWorkedMinutes)
+                    .sum() / 60;
+
+            String timesheetHtml = createTimesheetListHtml(mustacheTemplateStr.toString(), timesheetEntryList, sumBilledHours.toString());
+            return PdfUtility.htmlToPdf(timesheetHtml, "timesheet_attachment");
+        } catch (Exception e) {
+            throw new TerexApplicationException(String.format("Error crating timesheet attachment, timesheetId=%s", timesheetId), "50023", e);
+        }
+    }
+
+    private String createTimesheetListHtml(String mustacheTemplateStr, List<TimesheetEntry> timesheetList, String sumBilledHours) {
+        MustacheFactory mf = new DefaultMustacheFactory();
+        Mustache mustache = mf.compile(new StringReader(mustacheTemplateStr), "");
+        Map<String, Object> context = new HashMap<>();
+        context.put("title", "Timeliste for konsulentbistand");
+        context.put("timesheetPeriod", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM")));
+        context.put("timesheetList", timesheetList);
+        context.put("sunWorkDays", timesheetList.size());
+        context.put("sunBilledHours", sumBilledHours);
+        StringWriter writer = new StringWriter();
+        mustache.execute(writer, context);
+        return writer.toString();
+    }
 
 
     private void sendInvoiceToClient(String toEmailAddress, String subject, String message, File pdfFile) {

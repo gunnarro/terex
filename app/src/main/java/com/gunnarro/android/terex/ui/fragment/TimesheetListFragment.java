@@ -120,9 +120,9 @@ public class TimesheetListFragment extends Fragment {
         });
 
         // if timesheet has status closed, it is not possible to do any kind of changes
-        if (timesheetWithEntries.getTimesheet().getStatus().equals(TimesheetRepository.TimesheetStatusEnum.CLOSED.name())) {
-            addButton.setEnabled(false);
-            calendarButton.setEnabled(false);
+        if (timesheetWithEntries != null && timesheetWithEntries.getTimesheet().getStatus().equals(TimesheetRepository.TimesheetStatusEnum.CLOSED.name())) {
+            addButton.setVisibility(View.INVISIBLE);
+            calendarButton.setVisibility(View.INVISIBLE);
         }
         // listen after timesheet add and delete events
         RxBus.getInstance().listen().subscribe(getInputObserver());

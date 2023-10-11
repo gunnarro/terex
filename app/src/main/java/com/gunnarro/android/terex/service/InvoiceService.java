@@ -11,6 +11,7 @@ import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.InvoiceSummary;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
+import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.repository.InvoiceRepository;
 import com.gunnarro.android.terex.repository.TimesheetRepository;
 import com.gunnarro.android.terex.utility.Utility;
@@ -70,7 +71,7 @@ public class InvoiceService {
         invoice.setClientId(client.getId());
         // ensure that a timesheet is only billed once.
         invoice.setReference(String.format("invoice-timesheet-ref_%s", timesheetId));
-        invoice.setStatus("new");
+        invoice.setStatus(InvoiceRepository.InvoiceStatusEnum.OPEN.name());
         // fixme, should be unique for a timesheet
         invoice.setBillingDate(LocalDate.now());
         // defaulted to 10 days after billing date
@@ -87,7 +88,7 @@ public class InvoiceService {
 
         double sumAmount = invoiceSummaries.stream().mapToDouble(InvoiceSummary::getSumBilledWork).sum();
         invoice.setAmount(sumAmount);
-        invoice.setStatus("processed");
+        invoice.setStatus(InvoiceRepository.InvoiceStatusEnum.CREATED.name());
         invoiceRepository.saveInvoice(invoice);
         return invoiceId;
     }
@@ -96,6 +97,11 @@ public class InvoiceService {
      * @return
      */
     private List<InvoiceSummary> createInvoiceSummary(Long invoiceId, Long timesheetId) {
+        // check timesheet status
+        Timesheet timesheet = timesheetRepository.getTimesheet(timesheetId);
+        if (timesheet.getStatus().equals(TimesheetRepository.TimesheetStatusEnum.CLOSED.name())) {
+            throw new TerexApplicationException("Application error, timesheet is closed", "50023", null);
+        }
         Log.d("createInvoiceSummary", String.format("invoiceId=%s, timesheetId=%s", invoiceId, timesheetId));
         List<TimesheetEntry> timesheetEntryList = timesheetRepository.getTimesheetEntryList(timesheetId);
         if (timesheetEntryList == null || timesheetEntryList.isEmpty()) {
@@ -108,6 +114,9 @@ public class InvoiceService {
         timesheetWeekMap.forEach((k, e) -> {
             invoiceSummaryByWeek.add(buildInvoiceSummaryForWeek(invoiceId, k, e));
         });
+        // close the timesheet after invoice have been generated, is not possible to do any form of changes on the time list.
+        timesheet.setStatus(TimesheetRepository.TimesheetStatusEnum.CLOSED.name());
+        timesheetRepository.saveTimesheet(timesheet);
 
         invoiceSummaryByWeek.sort(Comparator.comparing(InvoiceSummary::getWeekInYear));
         return invoiceSummaryByWeek;

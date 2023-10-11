@@ -122,7 +122,7 @@ public class InvoiceRepository {
                 Log.d("", "inserted new invoice: " + id + " - " + invoice.getReference());
             } else {
                 invoice.setId(invoiceExisting.getId());
-              //  invoice.setCreatedDate(invoiceExisting.getCreatedDate());
+                invoice.setCreatedDate(invoiceExisting.getCreatedDate());
                 invoice.setLastModifiedDate(LocalDateTime.now());
                 updateInvoice(invoice);
                 id = invoice.getId();

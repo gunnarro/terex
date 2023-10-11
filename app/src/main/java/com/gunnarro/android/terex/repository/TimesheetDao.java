@@ -22,7 +22,7 @@ public interface TimesheetDao {
     TimesheetWithEntries getTimesheetWithEntriesById(Long id);
 
     @Query("SELECT * FROM timesheet WHERE year = :year AND month = :month")
-    TimesheetWithEntries getCurrentTimesheetWithEntriesById(Integer year, Integer month);
+    TimesheetWithEntries getCurrentTimesheetWithEntries(Integer year, Integer month);
 
 
     @Query("SELECT * FROM timesheet WHERE client_name = :clientName AND project_code = :projectCode AND year = :year AND month = :month")

@@ -51,7 +51,7 @@ public class TimesheetRepository {
     public TimesheetWithEntries getCurrentTimesheetWithEntries() {
         try {
             CompletionService<TimesheetWithEntries> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
-            service.submit(() -> timesheetDao.getCurrentTimesheetWithEntriesById(LocalDate.now().getYear(), LocalDate.now().getMonthValue()));
+            service.submit(() -> timesheetDao.getCurrentTimesheetWithEntries(LocalDate.now().getYear(), LocalDate.now().getMonthValue()));
             Future<TimesheetWithEntries> future = service.take();
             return future != null ? future.get() : null;
         } catch (InterruptedException | ExecutionException e) {
@@ -88,7 +88,17 @@ public class TimesheetRepository {
     }
 
     public Timesheet getTimesheet(Long id) {
-        return timesheetDao.getTimesheetById(id);
+        try {
+            CompletionService<Timesheet> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
+            service.submit(() -> timesheetDao.getTimesheetById(id));
+            Future<Timesheet> future = service.take();
+            return future != null ? future.get() : null;
+        } catch (InterruptedException | ExecutionException e) {
+            // Something crashed, therefore restore interrupted state before leaving.
+            Thread.currentThread().interrupt();
+            e.printStackTrace();
+            throw new TerexApplicationException("Error getting timesheet!", e.getMessage(), e.getCause());
+        }
     }
 
     public Timesheet getTimesheet(String clientName, String projectCode, Integer year, Integer mount) {
@@ -101,7 +111,7 @@ public class TimesheetRepository {
             // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();
             e.printStackTrace();
-            throw new TerexApplicationException("Error getting timesheet entry list", e.getMessage(), e.getCause());
+            throw new TerexApplicationException("Error getting timesheet!", e.getMessage(), e.getCause());
         }
     }
 
