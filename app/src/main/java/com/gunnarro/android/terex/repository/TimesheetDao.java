@@ -5,11 +5,9 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-import androidx.room.Transaction;
 import androidx.room.Update;
 
 import com.gunnarro.android.terex.domain.entity.Timesheet;
-import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetWithEntries;
 
 import java.util.List;
@@ -20,9 +18,12 @@ public interface TimesheetDao {
     @Query("SELECT * FROM timesheet WHERE id = :id")
     Timesheet getTimesheetById(Long id);
 
-    @Transaction
     @Query("SELECT * FROM timesheet WHERE id = :id")
     TimesheetWithEntries getTimesheetWithEntriesById(Long id);
+
+    @Query("SELECT * FROM timesheet WHERE year = :year AND month = :month")
+    TimesheetWithEntries getCurrentTimesheetWithEntriesById(Integer year, Integer month);
+
 
     @Query("SELECT * FROM timesheet WHERE client_name = :clientName AND project_code = :projectCode AND year = :year AND month = :month")
     Timesheet getTimesheet(String clientName, String projectCode, Integer year, Integer month);

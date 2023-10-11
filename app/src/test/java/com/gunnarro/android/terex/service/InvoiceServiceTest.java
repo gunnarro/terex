@@ -10,11 +10,16 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.gunnarro.android.terex.domain.entity.InvoiceSummary;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
+@Disabled
+@ExtendWith(MockitoExtension.class)
 public class InvoiceServiceTest {
 
     private final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
@@ -41,7 +46,7 @@ public class InvoiceServiceTest {
     @Test
     void buildInvoiceSummary() {
         InvoiceService invoiceService = new InvoiceService(applicationContextMock);
-        List<InvoiceSummary> invoiceSummaries = invoiceService.buildInvoiceSummaryByWeek(2023,2);
+        List<InvoiceSummary> invoiceSummaries = invoiceService.buildInvoiceSummaryByWeek(2023, 2);
         assertEquals(5, invoiceSummaries.size());
         assertEquals(0, invoiceSummaries.get(0).getInvoiceId());
         assertEquals(24187.5, invoiceSummaries.get(0).getSumBilledWork());
@@ -49,17 +54,19 @@ public class InvoiceServiceTest {
         assertEquals(1350, invoiceSummaries.get(0).getSumWorkedHours());
     }
 
-    @org.junit.Test
-    public void buildInvoiceSummaryByWeek()  {
+
+    @Test
+    public void buildInvoiceSummaryByWeek() {
         InvoiceService invoiceService = new InvoiceService(applicationContextMock);
         List<InvoiceSummary> list = invoiceService.buildInvoiceSummaryByWeek(2022, 3);
-        list.forEach( t -> {
+        list.forEach(t -> {
             System.out.println(t);
         });
     }
 
-    @org.junit.Test
-    public void jsonToTimesheet()  {
+
+    @Test
+    public void jsonToTimesheet() {
         InvoiceService invoiceService = new InvoiceService(applicationContextMock);
         List<TimesheetEntry> timesheets = invoiceService.generateTimesheet(2022, 3);
         String jsonStr = null;

@@ -1,39 +1,37 @@
 package com.gunnarro.android.terex.utility;
 
 
+import android.os.Environment;
 import android.util.Log;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class PdfUtility {
 
-    public static void htmlToPdf(String html, String pdfFileName) throws IOException {
-        Log.d("htmlToPdf", pdfFileName);
-        String xhtml = htmlToXhtml(html);
-        xhtmlToPdf(xhtml, pdfFileName);
-    }
+    public static boolean htmlToPdf(String html, String fileName) {
+        String pdfFileName = fileName + "_" + LocalDate.now().format(DateTimeFormatter.ISO_DATE) + ".pdf";
+        String htmlFileName = fileName + "_" + LocalDate.now().format(DateTimeFormatter.ISO_DATE) + ".html";
+        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File pdfFile = new File(path, pdfFileName);
+        File htmlFile = new File(path, htmlFileName);
+        try {
 
-    private static void xhtmlToPdf(String xhtml, String outFileName) throws IOException {
-        File output = new File(outFileName);
-        ITextRenderer iTextRenderer = new ITextRenderer();
-        iTextRenderer.setDocumentFromString(xhtml);
-        iTextRenderer.layout();
-        OutputStream os = new FileOutputStream(output);
-        iTextRenderer.createPDF(os);
-        os.close();
-    }
+            FileOutputStream fos = new FileOutputStream(pdfFile);
+            fos.write(html.getBytes());
+            fos.close();
 
-    private static String htmlToXhtml(String html) {
-        Document document = Jsoup.parse(html);
-        document.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
-        return document.html();
+            fos = new FileOutputStream(htmlFile);
+            fos.write(html.getBytes());
+            fos.close();
+            return true;
+        } catch (IOException e) {
+            Log.e("Error convert html to pdf!", e.getMessage());
+            return false;
+        }
     }
 }
 

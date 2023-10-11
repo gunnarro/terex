@@ -10,7 +10,6 @@ import androidx.room.TypeConverters;
 import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
 import com.gunnarro.android.terex.domain.converter.LocalDateTimeConverter;
 import com.gunnarro.android.terex.domain.converter.LocalTimeConverter;
-import com.gunnarro.android.terex.repository.TimesheetRepository;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -216,18 +215,6 @@ public class TimesheetEntry {
         this.lastModifiedDate = lastModifiedDate;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        TimesheetEntry that = (TimesheetEntry) o;
-        return Objects.equals(id, that.id) && timesheetId.equals(that.timesheetId) && createdDate.equals(that.createdDate) && lastModifiedDate.equals(that.lastModifiedDate) && workdayWeek.equals(that.workdayWeek) && workdayDate.equals(that.workdayDate) && fromTime.equals(that.fromTime) && toTime.equals(that.toTime) && workedMinutes.equals(that.workedMinutes) && Objects.equals(breakInMin, that.breakInMin) && hourlyRate.equals(that.hourlyRate) && status.equals(that.status) && Objects.equals(comment, that.comment) && Objects.equals(useAsDefault, that.useAsDefault);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, timesheetId, createdDate, lastModifiedDate, workdayWeek, workdayDate, fromTime, toTime, workedMinutes, breakInMin, hourlyRate, status, comment, useAsDefault);
-    }
 
     public static TimesheetEntry createDefault(Long timesheetId, String status, Integer dailyBreakMin, LocalDate workDayDate, Long workingHoursMin, Integer hourlyRate) {
         TimesheetEntry timesheetEntry = new TimesheetEntry();
@@ -259,6 +246,19 @@ public class TimesheetEntry {
         clone.setToTime(timesheet.getToTime());
         clone.setComment(timesheet.getComment());
         return clone;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TimesheetEntry that = (TimesheetEntry) o;
+        return timesheetId.equals(that.timesheetId) && workdayDate.equals(that.workdayDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(timesheetId, workdayDate);
     }
 
     @NonNull

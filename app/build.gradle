@@ -170,6 +170,7 @@ dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter:$junit_jupiter"
     //noinspection GradleDependency
     testImplementation "org.mockito:mockito-inline:$mockito_inline"
+    testImplementation("org.mockito:mockito-junit-jupiter:$mockito_junit_jupiter")
     // for android instrumentation tests
     //noinspection GradleDependency
     androidTestImplementation "androidx.test.ext:junit:$androidx_junit"

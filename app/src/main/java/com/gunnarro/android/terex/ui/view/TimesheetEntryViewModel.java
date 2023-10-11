@@ -48,6 +48,10 @@ public class TimesheetEntryViewModel extends AndroidViewModel {
         return timesheetRepository.getTimesheetWithEntries(timesheetId);
     }
 
+    public TimesheetWithEntries getCurrentTimesheetWithEntries() {
+        return timesheetRepository.getCurrentTimesheetWithEntries();
+    }
+
     public void saveTimesheet(Timesheet timesheet) {
         timesheetRepository.saveTimesheet(timesheet);
     }

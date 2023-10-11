@@ -29,6 +29,7 @@ import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.repository.TimesheetRepository;
 import com.gunnarro.android.terex.service.InvoiceService;
+import com.gunnarro.android.terex.utility.PdfUtility;
 import com.gunnarro.android.terex.utility.Utility;
 import com.itextpdf.html2pdf.ConverterProperties;
 import com.itextpdf.html2pdf.HtmlConverter;
@@ -161,7 +162,7 @@ public class InvoiceNewFragment extends Fragment {
 
             String invoiceSummaryHtml = createInvoiceSummaryHtml(mustacheTemplateStr.toString(), invoice.getInvoiceSummaryList(), sumBilledHours.toString(), sumBilledAmount.toString());
             Log.d("createInvoiceSummaryAttachment", "" + invoiceSummaryHtml);
-            createPdf(invoiceSummaryHtml, "invoice_attachment");
+            PdfUtility.htmlToPdf(invoiceSummaryHtml, "invoice_attachment");
             Log.d("createInvoiceSummaryAttachment", "" + invoiceSummaryHtml);
         } catch (Exception e) {
             throw new TerexApplicationException(String.format("Error crating invoice attachment, invoice ref=%s", invoiceId), "50023", e);
@@ -184,40 +185,8 @@ public class InvoiceNewFragment extends Fragment {
         return writer.toString();
     }
 
-    public void createPdf(String html, String fileName) throws IOException {
-        String pdfFileName = fileName + "_" + LocalDate.now().format(DateTimeFormatter.ISO_DATE) + ".pdf";
-        String htmlFileName = fileName + "_" + LocalDate.now().format(DateTimeFormatter.ISO_DATE) + ".html";
-        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        File pdfFile = new File(path, pdfFileName);
-        File htmlFile = new File(path, htmlFileName);
-        try {
-            FileOutputStream fos = new FileOutputStream(htmlFile);
-            fos.write(html.getBytes());
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // save css to disk
 
 
-        // save logo to disk
-
-
-        ConverterProperties converterProperties = new ConverterProperties();
-        converterProperties.setBaseUri("file:///" + path.getPath());
-        // converterProperties.setBaseUri(".");
-     /*   FontProvider fontProvider  = new FontProvider();
-        fontProvider.addFont("/path/to/my-font.ttf");
-        fontProvider.addStandardPdfFonts();
-        fontProvider.addSystemFonts(); //for fallback
-        converterProperties.setFontProvider(fontProvider);
-        HtmlConverter.convertToPdf(new File("./input.html"), new File("output.pdf"), converterProperties);
-  */
-        HtmlConverter.convertToPdf(htmlFile, pdfFile, converterProperties);
-        //  HtmlConverter.convertToPdf(html, new FileOutputStream(pdfFile));
-        showInfoDialog("created pdf: " + pdfFile.getPath(), requireContext());
-    }
 
     private void sendInvoiceToClient(String toEmailAddress, String subject, String message, File pdfFile) {
         Intent email = new Intent(Intent.ACTION_SEND);

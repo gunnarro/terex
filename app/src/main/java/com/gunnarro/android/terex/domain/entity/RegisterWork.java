@@ -40,7 +40,7 @@ public class RegisterWork {
 
     private LocalTime toTime;
 
-    private double workedHours;
+    private Double workedHours;
 
     private Integer breakInMin;
 
@@ -97,11 +97,11 @@ public class RegisterWork {
         this.toTime = toTime;
     }
 
-    public double getWorkedHours() {
+    public Double getWorkedHours() {
         return workedHours;
     }
 
-    public void setWorkedHours(double workedHours) {
+    public void setWorkedHours(Double workedHours) {
         this.workedHours = workedHours;
     }
 

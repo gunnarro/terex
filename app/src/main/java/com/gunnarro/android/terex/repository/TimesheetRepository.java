@@ -30,12 +30,12 @@ import javax.inject.Singleton;
 public class TimesheetRepository {
 
     public enum TimesheetStatusEnum {
-        OPEN, CLOSED;
+        OPEN, ACTIVE, CLOSED;
     }
 
     private final TimesheetDao timesheetDao;
     private final TimesheetEntryDao timesheetEntryDao;
-   // private final LiveData<List<TimesheetEntry>> timesheetEntryList;
+    // private final LiveData<List<TimesheetEntry>> timesheetEntryList;
 
     // Note that in order to unit test the WordRepository, you have to remove the Application
     // dependency. This adds complexity and much more code, and this sample is not about testing.
@@ -44,7 +44,21 @@ public class TimesheetRepository {
     public TimesheetRepository(Context applicationContext) {
         timesheetDao = AppDatabase.getDatabase(applicationContext).timesheetDao();
         timesheetEntryDao = AppDatabase.getDatabase(applicationContext).timesheetEntryDao();
-     //   timesheetEntryList = timesheetEntryDao.getTimesheetEntryListLiveData(1L);
+        //   timesheetEntryList = timesheetEntryDao.getTimesheetEntryListLiveData(1L);
+    }
+
+
+    public TimesheetWithEntries getCurrentTimesheetWithEntries() {
+        try {
+            CompletionService<TimesheetWithEntries> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
+            service.submit(() -> timesheetDao.getCurrentTimesheetWithEntriesById(LocalDate.now().getYear(), LocalDate.now().getMonthValue()));
+            Future<TimesheetWithEntries> future = service.take();
+            return future != null ? future.get() : null;
+        } catch (InterruptedException | ExecutionException e) {
+            // Something crashed, therefore restore interrupted state before leaving.
+            Thread.currentThread().interrupt();
+            throw new TerexApplicationException("Error getting timesheet with entries list", e.getMessage(), e.getCause());
+        }
     }
 
     public TimesheetWithEntries getTimesheetWithEntries(Long timesheetId) {

@@ -29,6 +29,7 @@ import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetWithEntries;
 import com.gunnarro.android.terex.observable.RxBus;
 import com.gunnarro.android.terex.observable.event.TimesheetEvent;
+import com.gunnarro.android.terex.repository.TimesheetRepository;
 import com.gunnarro.android.terex.ui.adapter.TimesheetListAdapter;
 import com.gunnarro.android.terex.ui.view.TimesheetEntryViewModel;
 import com.gunnarro.android.terex.utility.Utility;
@@ -87,8 +88,9 @@ public class TimesheetListFragment extends Fragment {
         // Update the cached copy of the timesheet entries in the adapter.
         timesheetViewModel.getTimesheetLiveData().observe(requireActivity(), adapter::submitList);
 
-        TimesheetWithEntries timesheetWithEntries = timesheetViewModel.getTimesheetWithEntries(1L);
-        Log.d("all timesheets", "timesheet with entries: " + timesheetViewModel.getTimesheetWithEntries(1L));
+      //  TimesheetWithEntries timesheetWithEntries = timesheetViewModel.getTimesheetWithEntries(1L);
+        TimesheetWithEntries timesheetWithEntries = timesheetViewModel.getCurrentTimesheetWithEntries();
+        Log.d("all timesheets", "timesheet with entries: " + timesheetWithEntries);
 
         TextView listHeaderView = view.findViewById(R.id.timesheet_list_header);
         if (timesheetWithEntries != null && timesheetWithEntries.getTimesheet() != null ) {
@@ -117,6 +119,11 @@ public class TimesheetListFragment extends Fragment {
                     .commit();
         });
 
+        // if timesheet has status closed, it is not possible to do any kind of changes
+        if (timesheetWithEntries.getTimesheet().getStatus().equals(TimesheetRepository.TimesheetStatusEnum.CLOSED.name())) {
+            addButton.setEnabled(false);
+            calendarButton.setEnabled(false);
+        }
         // listen after timesheet add and delete events
         RxBus.getInstance().listen().subscribe(getInputObserver());
         Log.d(Utility.buildTag(getClass(), "onCreateView"), "");

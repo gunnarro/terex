@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import com.gunnarro.android.terex.domain.entity.RegisterWork;
+import com.gunnarro.android.terex.repository.TimesheetRepository;
 
 import org.junit.Test;
 public class RegisterWorkTest {
@@ -14,8 +15,8 @@ public class RegisterWorkTest {
         RegisterWork work = RegisterWork.buildDefault("MasterCard");
         assertEquals("30", work.getBreakInMin().toString());
         assertEquals("1075", work.getHourlyRate().toString());
-        assertEquals("Open", work.getStatus());
-        assertEquals("7.5", work.getWorkedHours());
+        assertEquals(TimesheetRepository.TimesheetStatusEnum.OPEN.name(), work.getStatus());
+        assertEquals("7.5", work.getWorkedHours().toString());
         assertNotNull(work.getFromTime());
         assertNotNull(work.getToTime());
         assertNull(work.getComment());
