@@ -2,9 +2,10 @@
     <string name="app_name">TeRex</string>
     <!-- titles -->
     <string name="title_admin">Administration</string>
+    <string name="title_timesheets">Timesheets</string>
     <string name="title_timesheet">Timesheet</string>
     <string name="title_register_work">Register Work</string>
-    <string name="title_invoice_overview">Invoice Overview</string>
+    <string name="title_invoices">Invoices</string>
     <string name="title_invoice">Invoice</string>
     <string name="title_project">Project</string>
     <string name="title_credential">Credential Store</string>

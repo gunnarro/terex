@@ -56,7 +56,7 @@ public class TimesheetAddEntryFragment extends Fragment implements View.OnClickL
         super.onCreate(savedInstanceState);
         requireActivity().setTitle(R.string.title_register_work);
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_timesheet_add_entry, container, false);
+        View view = inflater.inflate(R.layout.fragment_timesheet_entry_add, container, false);
         // create status spinner
         final AutoCompleteTextView statusSpinner = view.findViewById(R.id.timesheet_entry_status_spinner);
         ArrayAdapter<CharSequence> statusAdapter = ArrayAdapter.createFromResource(requireContext(), R.array.timesheet_statuses, android.R.layout.simple_spinner_item);

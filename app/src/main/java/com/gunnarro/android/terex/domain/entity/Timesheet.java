@@ -9,7 +9,6 @@ import androidx.room.TypeConverters;
 
 import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
 import com.gunnarro.android.terex.domain.converter.LocalDateTimeConverter;
-import com.gunnarro.android.terex.repository.TimesheetRepository;
 import com.gunnarro.android.terex.utility.Utility;
 
 import org.jetbrains.annotations.NotNull;
@@ -24,6 +23,11 @@ import lombok.Setter;
 /**
  * typically there is one timesheet per month.
  * A timesheet contains time sheet entries.
+ *
+ * A timesheet is unique based on client name, project code, year and mount.
+ * This model is basically based upon one timesheet per month.
+ *
+ * When status is set equal to BILLED, the is is no possible to change the timesheet or any assigned timesheet entry.
  */
 @Getter
 @Setter
@@ -31,6 +35,15 @@ import lombok.Setter;
 @Entity(tableName = "timesheet", indices = {@Index(value = {"client_name", "project_code", "year", "month"},
         unique = true)})
 public class Timesheet {
+
+    /**
+     * OPEN: Created but not in use, i.e, the timesheet is empty. When first timesheet entry is added the status changes to ACTIVE.
+     * ACTIVE: Open and have work registered, i.e, timesheet entries. When attached to a invoice the status changes to BILLED.
+     * BILLED: Added as attachment to a invoice. Not possible to change or delete the timesheet or any assigned timesheet entries.
+     */
+    public enum TimesheetStatusEnum {
+        OPEN, ACTIVE, BILLED;
+    }
 
     @PrimaryKey(autoGenerate = true)
     public Long id;
@@ -188,7 +201,7 @@ public class Timesheet {
         Timesheet timesheet = new Timesheet();
         timesheet.setClientName(clientName);
         timesheet.setProjectCode(projectCode);
-        timesheet.setStatus(TimesheetRepository.TimesheetStatusEnum.OPEN.name());
+        timesheet.setStatus(Timesheet.TimesheetStatusEnum.OPEN.name());
         timesheet.setYear(now.getYear());
         timesheet.setMonth(now.getMonthValue());
         timesheet.setFromDate(Utility.getFirstDayOfMonth(now));

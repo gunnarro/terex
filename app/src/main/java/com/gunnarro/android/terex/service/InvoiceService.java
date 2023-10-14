@@ -13,7 +13,6 @@ import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.repository.InvoiceRepository;
-import com.gunnarro.android.terex.repository.TimesheetRepository;
 import com.gunnarro.android.terex.utility.Utility;
 
 import java.time.DateTimeException;
@@ -46,7 +45,7 @@ import kotlin.random.Random;
 @Singleton
 public class InvoiceService {
 
-    private final TimesheetRepository timesheetRepository;
+    private final TimesheetService timesheetService;
     private final InvoiceRepository invoiceRepository;
 
 
@@ -56,7 +55,7 @@ public class InvoiceService {
 
     @Inject
     public InvoiceService(Context applicationContext) {
-        timesheetRepository = new TimesheetRepository(applicationContext);
+        timesheetService = new TimesheetService(applicationContext);
         invoiceRepository = new InvoiceRepository(applicationContext);
     }
 
@@ -99,12 +98,12 @@ public class InvoiceService {
      */
     private List<InvoiceSummary> createInvoiceSummary(Long invoiceId, Long timesheetId) {
         // check timesheet status
-        Timesheet timesheet = timesheetRepository.getTimesheet(timesheetId);
-        if (timesheet.getStatus().equals(TimesheetRepository.TimesheetStatusEnum.CLOSED.name())) {
+        Timesheet timesheet = timesheetService.getTimesheet(timesheetId);
+        if (timesheet.getStatus().equals(Timesheet.TimesheetStatusEnum.BILLED.name())) {
             throw new TerexApplicationException("Application error, timesheet is closed", "50023", null);
         }
         Log.d("createInvoiceSummary", String.format("invoiceId=%s, timesheetId=%s", invoiceId, timesheetId));
-        List<TimesheetEntry> timesheetEntryList = timesheetRepository.getTimesheetEntryList(timesheetId);
+        List<TimesheetEntry> timesheetEntryList = timesheetService.getTimesheetEntryList(timesheetId);
         if (timesheetEntryList == null || timesheetEntryList.isEmpty()) {
             return null;
         }
@@ -117,19 +116,19 @@ public class InvoiceService {
         });
         Log.d("createInvoiceSummary", "timesheet summary by week: " + invoiceSummaryByWeek);
         // close the timesheet after invoice have been generated, is not possible to do any form of changes on the time list.
-        timesheet.setStatus(TimesheetRepository.TimesheetStatusEnum.CLOSED.name());
-        timesheetRepository.saveTimesheet(timesheet);
+        timesheet.setStatus(Timesheet.TimesheetStatusEnum.BILLED.name());
+        timesheetService.saveTimesheet(timesheet);
 
         invoiceSummaryByWeek.sort(Comparator.comparing(InvoiceSummary::getWeekInYear));
         return invoiceSummaryByWeek;
     }
 
     public List<Timesheet> getTimesheets(String status) {
-        return timesheetRepository.getTimesheets(status);
+        return timesheetService.getTimesheets(status);
     }
 
     public List<TimesheetEntry> getTimesheetEntryList(Long timesheetId) {
-        return timesheetRepository.getTimesheetEntryList(timesheetId);
+        return timesheetService.getTimesheetEntryList(timesheetId);
     }
 
     private TimesheetEntryDto mapToTimesheetEntryDto(TimesheetEntry timesheetEntry) {
@@ -215,7 +214,7 @@ public class InvoiceService {
     }
 
     private TimesheetEntry createTimesheet(LocalDate day) {
-        return TimesheetEntry.createDefault(new java.util.Random().nextLong(), TimesheetRepository.TimesheetStatusEnum.OPEN.name(), Utility.DEFAULT_DAILY_BREAK_IN_MINUTES, day, Utility.DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES, Utility.DEFAULT_HOURLY_RATE);
+        return TimesheetEntry.createDefault(new java.util.Random().nextLong(), Timesheet.TimesheetStatusEnum.OPEN.name(), Utility.DEFAULT_DAILY_BREAK_IN_MINUTES, day, Utility.DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES, Utility.DEFAULT_HOURLY_RATE);
     }
 
     private static int getWeek(LocalDate date) {

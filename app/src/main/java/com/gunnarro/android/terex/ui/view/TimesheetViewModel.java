@@ -18,7 +18,7 @@ import java.util.List;
  * Repository is completely separated from the UI through the ViewModel.
  * We use AndroidViewModel because we can pass the application context in the constructor.
  */
-public class TimesheetEntryViewModel extends AndroidViewModel {
+public class TimesheetViewModel extends AndroidViewModel {
 
     private final TimesheetService timesheetService;
     // Using LiveData and caching what getAlphabetizedWords returns has several benefits:
@@ -26,7 +26,7 @@ public class TimesheetEntryViewModel extends AndroidViewModel {
     //   the UI when the data actually changes.
     private final LiveData<List<TimesheetEntry>> timesheetEntryList;
 
-    public TimesheetEntryViewModel(@NonNull Application application) {
+    public TimesheetViewModel(@NonNull Application application) {
         super(application);
         timesheetService = new TimesheetService(application);
         timesheetEntryList = timesheetService.getTimesheetEntryListLiveData(0L);

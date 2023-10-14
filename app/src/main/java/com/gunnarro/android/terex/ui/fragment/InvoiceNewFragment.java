@@ -28,7 +28,6 @@ import com.gunnarro.android.terex.domain.entity.SpinnerItem;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
-import com.gunnarro.android.terex.repository.TimesheetRepository;
 import com.gunnarro.android.terex.service.InvoiceService;
 import com.gunnarro.android.terex.utility.PdfUtility;
 import com.gunnarro.android.terex.utility.Utility;
@@ -78,7 +77,7 @@ public class InvoiceNewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_invoice_new, container, false);
-        List<Timesheet> timesheetList = invoiceService.getTimesheets(TimesheetRepository.TimesheetStatusEnum.OPEN.name());
+        List<Timesheet> timesheetList = invoiceService.getTimesheets(Timesheet.TimesheetStatusEnum.OPEN.name());
         List<SpinnerItem> timesheetItems = timesheetList.stream().map(t -> new SpinnerItem(t.id, t.getProjectCode())).collect(Collectors.toList());
         final AutoCompleteTextView timesheetSpinner = view.findViewById(R.id.invoice_timesheet_spinner);
         ArrayAdapter<SpinnerItem> timesheetAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, timesheetItems);

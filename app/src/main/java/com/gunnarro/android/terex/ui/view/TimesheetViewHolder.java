@@ -16,7 +16,7 @@ import com.gunnarro.android.terex.utility.Utility;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
-public class TimesheetEntryViewHolder extends RecyclerView.ViewHolder {
+public class TimesheetViewHolder extends RecyclerView.ViewHolder {
     private final TextView timesheetLineHeaderView;
     private final View timesheetLine1StatusView;
     private final TextView timesheetLine1LabelView;
@@ -26,7 +26,7 @@ public class TimesheetEntryViewHolder extends RecyclerView.ViewHolder {
     private final TextView timesheetLine2ValueView;
 
 
-    private TimesheetEntryViewHolder(View itemView) {
+    private TimesheetViewHolder(View itemView) {
         super(itemView);
         timesheetLineHeaderView = itemView.findViewById(R.id.timesheet_line_header);
         timesheetLine1StatusView = itemView.findViewById(R.id.timesheet_line_1_status);
@@ -37,9 +37,9 @@ public class TimesheetEntryViewHolder extends RecyclerView.ViewHolder {
         timesheetLine2ValueView = itemView.findViewById(R.id.timesheet_line_2_value);
     }
 
-    public static TimesheetEntryViewHolder create(ViewGroup parent) {
+    public static TimesheetViewHolder create(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_timesheet_entry_item, parent, false);
-        return new TimesheetEntryViewHolder(view);
+        return new TimesheetViewHolder(view);
     }
 
 

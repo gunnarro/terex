@@ -12,13 +12,8 @@ import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetWithEntries;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.WeekFields;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
@@ -28,10 +23,6 @@ import javax.inject.Singleton;
 
 @Singleton
 public class TimesheetRepository {
-
-    public enum TimesheetStatusEnum {
-        OPEN, ACTIVE, CLOSED;
-    }
 
     private final TimesheetDao timesheetDao;
     private final TimesheetEntryDao timesheetEntryDao;
@@ -49,11 +40,11 @@ public class TimesheetRepository {
 
 
     @Transaction
-    public TimesheetWithEntries getCurrentTimesheetWithEntries() {
+    public TimesheetWithEntries getCurrentTimesheetWithEntries(Integer year, Integer month) {
         try {
             CompletionService<TimesheetWithEntries> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
-            Log.d("getCurrentTimesheetWithEntries", String.format("%s - %s",LocalDate.now().getYear(), LocalDate.now().getMonthValue()));
-            service.submit(() -> timesheetDao.getCurrentTimesheetWithEntries(LocalDate.now().getYear(), LocalDate.now().getMonthValue()));
+            Log.d("getCurrentTimesheetWithEntries", String.format("%s - %s", year, month));
+            service.submit(() -> timesheetDao.getCurrentTimesheetWithEntries(year, month));
             Future<TimesheetWithEntries> future = service.take();
             return future != null ? future.get() : null;
         } catch (InterruptedException | ExecutionException e) {
@@ -179,94 +170,36 @@ public class TimesheetRepository {
         }
     }
 
-
-    public Long saveTimesheet(Timesheet timesheet) {
-        try {
-            Timesheet timesheetExisting = getTimesheet(timesheet.getClientName(), timesheet.getProjectCode(), timesheet.getYear(), timesheet.getMonth());
-            Log.d("TimesheetRepository.saveTimesheet", String.format("%s", timesheetExisting));
-            Long id = null;
-            if (timesheetExisting == null) {
-                timesheet.setCreatedDate(LocalDateTime.now());
-                timesheet.setLastModifiedDate(LocalDateTime.now());
-                id = insertTimesheet(timesheet);
-                Log.d("", "insert new timesheet: " + id + " - " + timesheet);
-            } else {
-                timesheet.setId(timesheetExisting.getId());
-                timesheet.setCreatedDate(timesheetExisting.getCreatedDate());
-                timesheet.setLastModifiedDate(LocalDateTime.now());
-                updateTimesheet(timesheet);
-                id = timesheet.getId();
-                Log.d("", "update timesheet: " + id + " - " + timesheet);
-            }
-            return id;
-        } catch (InterruptedException | ExecutionException e) {
-            // Something crashed, therefore restore interrupted state before leaving.
-            Thread.currentThread().interrupt();
-            e.printStackTrace();
-            throw new TerexApplicationException("Error saving timesheet!", e.getMessage(), e.getCause());
-        }
-    }
-
-    private Integer updateTimesheet(Timesheet timesheet) throws InterruptedException, ExecutionException {
+    public Integer updateTimesheet(Timesheet timesheet) throws InterruptedException, ExecutionException {
         CompletionService<Integer> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
         service.submit(() -> timesheetDao.update(timesheet));
         Future<Integer> future = service.take();
         return future != null ? future.get() : null;
     }
 
-    private Long insertTimesheet(Timesheet timesheet) throws InterruptedException, ExecutionException {
+    public Long insertTimesheet(Timesheet timesheet) throws InterruptedException, ExecutionException {
         CompletionService<Long> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
         service.submit(() -> timesheetDao.insert(timesheet));
         Future<Long> future = service.take();
         return future != null ? future.get() : null;
     }
 
-    // You must call this on a non-UI thread or your app will throw an exception. Room ensures
-    // that you're not doing any long running operations on the main thread, blocking the UI.
-    public Long saveTimesheetEntry(@NotNull final TimesheetEntry timesheetEntry) {
-        try {
-            TimesheetEntry timesheetEntryExisting = getTimesheetEntry(timesheetEntry.getTimesheetId(), timesheetEntry.getWorkdayDate());
-            Log.d("TimesheetRepository.saveTimesheetEntry", String.format("%s", timesheetEntryExisting));
-            // set the timesheet work date week number here, this is only used to simplify accumulate timesheet by week by the invoice service
-            timesheetEntry.setWorkdayWeek(timesheetEntry.getWorkdayDate().get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()));
-            Long id = null;
-            if (timesheetEntryExisting == null) {
-                timesheetEntry.setCreatedDate(LocalDateTime.now());
-                timesheetEntry.setLastModifiedDate(LocalDateTime.now());
-                id = insertTimesheetEntry(timesheetEntry);
-                Log.d("", "insert new timesheet entry: " + id + " - " + timesheetEntry.getWorkdayDate());
-            } else {
-                timesheetEntry.setId(timesheetEntryExisting.getId());
-                timesheetEntry.setCreatedDate(timesheetEntryExisting.getCreatedDate());
-                timesheetEntry.setLastModifiedDate(LocalDateTime.now());
-                updateTimesheetEntry(timesheetEntry);
-                id = timesheetEntry.getId();
-                Log.d("", "update timesheet entry: " + id + " - " + timesheetEntry.getWorkdayDate());
-            }
-            return id;
-        } catch (InterruptedException | ExecutionException e) {
-            // Something crashed, therefore restore interrupted state before leaving.
-            Thread.currentThread().interrupt();
-            e.printStackTrace();
-            throw new TerexApplicationException("Error saving timesheet entry!", e.getMessage(), e.getCause());
-        }
-    }
 
-    private TimesheetEntry getTimesheetEntry(Long timesheetId, LocalDate workDayDate) throws InterruptedException, ExecutionException {
+    public TimesheetEntry getTimesheetEntry(Long timesheetId, LocalDate workDayDate) throws InterruptedException, ExecutionException {
         CompletionService<TimesheetEntry> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
         service.submit(() -> timesheetEntryDao.getTimesheet(timesheetId, workDayDate));
         Future<TimesheetEntry> future = service.take();
         return future != null ? future.get() : null;
     }
 
-    private Long insertTimesheetEntry(TimesheetEntry timesheetEntry) throws InterruptedException, ExecutionException {
+    public Long insertTimesheetEntry(TimesheetEntry timesheetEntry) throws InterruptedException, ExecutionException {
         CompletionService<Long> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
         service.submit(() -> timesheetEntryDao.insert(timesheetEntry));
         Future<Long> future = service.take();
         return future != null ? future.get() : null;
     }
 
-    private Integer updateTimesheetEntry(TimesheetEntry timesheetEntry) throws InterruptedException, ExecutionException {
+    public Integer updateTimesheetEntry(TimesheetEntry timesheetEntry) throws InterruptedException, ExecutionException {
         CompletionService<Integer> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
         service.submit(() -> timesheetEntryDao.update(timesheetEntry));
         Future<Integer> future = service.take();

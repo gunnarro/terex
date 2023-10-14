@@ -21,7 +21,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
-import com.gunnarro.android.terex.repository.TimesheetRepository;
+import com.gunnarro.android.terex.service.TimesheetService;
 import com.gunnarro.android.terex.utility.Utility;
 
 import org.jetbrains.annotations.NotNull;
@@ -38,14 +38,13 @@ import javax.inject.Inject;
  */
 public class TimesheetCustomCalendarFragment extends Fragment {
 
-    private LocalDate selectedLocalDate;
+    private LocalDate selectedWorkDayDate;
 
-    private TimesheetRepository timesheetRepository;
+    private TimesheetService timesheetService;
 
     @Inject
     public TimesheetCustomCalendarFragment() {
         Log.d("TimesheetCalendarFragment", "");
-        // repository = new TimesheetRepository(getContext());
     }
 
     @Override
@@ -53,14 +52,14 @@ public class TimesheetCustomCalendarFragment extends Fragment {
         super.onCreate(savedInstanceState);
         requireActivity().setTitle(R.string.title_timesheet_calendar);
         setHasOptionsMenu(true);
-        timesheetRepository = new TimesheetRepository(getContext());
+        timesheetService = new TimesheetService(getContext());
         Log.d(Utility.buildTag(getClass(), "onCreate"), "");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_timesheet_custom_calendar, container, false);
+        View view = inflater.inflate(R.layout.fragment_timesheet_entry_custom_calendar, container, false);
         CalendarView calendarView = view.findViewById(R.id.view_timesheet_custom_calendar);
         Long timesheetId = 1L;
         // calendarView.setSelectedDates(selectedDates);
@@ -68,11 +67,11 @@ public class TimesheetCustomCalendarFragment extends Fragment {
         calendarView.setEvents(createEventDays(timesheetId));
 
         calendarView.setOnDayClickListener(eventDay -> {
-            selectedLocalDate = LocalDate.of(
+            selectedWorkDayDate = LocalDate.of(
                     eventDay.getCalendar().get(Calendar.YEAR),
                     eventDay.getCalendar().get(Calendar.MONTH) + 1,
                     eventDay.getCalendar().get(Calendar.DAY_OF_MONTH));
-            Log.d("clicked on date:", selectedLocalDate.toString());
+            Log.d("clicked on date:", selectedWorkDayDate.toString());
         });
 
         calendarView.setSelected(true);
@@ -133,7 +132,7 @@ public class TimesheetCustomCalendarFragment extends Fragment {
 
     private List<EventDay> createEventDays(Long timesheetId) {
         List<EventDay> eventDays = new ArrayList<>();
-        List<TimesheetEntry> timesheetEntryList = timesheetRepository.getTimesheetEntryList(timesheetId);
+        List<TimesheetEntry> timesheetEntryList = timesheetService.getTimesheetEntryList(timesheetId);
         timesheetEntryList.forEach(t -> {
             Calendar cal = Calendar.getInstance();
             cal.set(t.getWorkdayDate().getYear(), t.getWorkdayDate().getMonth().getValue() - 1, t.getWorkdayDate().getDayOfMonth());
@@ -144,7 +143,7 @@ public class TimesheetCustomCalendarFragment extends Fragment {
     }
 
     private List<Calendar> createSelectedDates(Long timesheetId) {
-        List<TimesheetEntry> timesheetEntryList = timesheetRepository.getTimesheetEntryList(timesheetId);
+        List<TimesheetEntry> timesheetEntryList = timesheetService.getTimesheetEntryList(timesheetId);
         List<Calendar> selectedDates = new ArrayList<>();
         timesheetEntryList.forEach(t -> {
             Calendar cal = Calendar.getInstance();
@@ -158,7 +157,7 @@ public class TimesheetCustomCalendarFragment extends Fragment {
     private TimesheetEntry getTimesheetEntry() {
         TimesheetEntry timesheetEntry = readTimesheetEntryFromBundle();
         // need only update the work day date because we all other data is read from the last added timesheet.
-        timesheetEntry.setWorkdayDate(selectedLocalDate);
+        timesheetEntry.setWorkdayDate(selectedWorkDayDate);
         return timesheetEntry;
     }
 
@@ -191,11 +190,18 @@ public class TimesheetCustomCalendarFragment extends Fragment {
     }
 
     /**
+     * Check that selected workday date is not before or after the date range of the timesheet.
+     */
+    private boolean isWorkdayDateValid() {
+      return false; //selectedWorkDayDate.isBefore() || selectedWorkDayDate.isAfter();
+    };
+
+    /**
      * When button save is click and new timesheet entry event is sent in order to insert it into the database
      */
     private void handleButtonSaveClick(CalendarView calendarView) {
-        timesheetRepository.saveTimesheetEntry(getTimesheetEntry());
-        showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_add_msg_format), selectedLocalDate), R.color.color_snackbar_text_add);
+        timesheetService.saveTimesheetEntry(getTimesheetEntry());
+        showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_add_msg_format), selectedWorkDayDate), R.color.color_snackbar_text_add);
     }
 
     private void showSnackbar(String msg, @ColorRes int bgColor) {

@@ -16,7 +16,6 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.navigation.NavigationView;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.ui.fragment.AdminFragment;
-import com.gunnarro.android.terex.ui.fragment.InvoiceNewFragment;
 import com.gunnarro.android.terex.ui.fragment.InvoiceListFragment;
 import com.gunnarro.android.terex.ui.fragment.TimesheetAddEntryFragment;
 import com.gunnarro.android.terex.ui.fragment.TimesheetCustomCalendarFragment;
@@ -59,9 +58,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Inject
     InvoiceListFragment invoiceListFragment;
 
-    @Inject
-    InvoiceNewFragment invoiceFragment;
-
     private DrawerLayout drawer;
 
     public MainActivity() {
@@ -69,7 +65,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.timesheetListFragment = new TimesheetListFragment();
         this.timesheetAddEntryFragment = new TimesheetAddEntryFragment();
         this.invoiceListFragment = new InvoiceListFragment();
-        this.invoiceFragment = new InvoiceNewFragment();
         this.timesheetCalendarFragment = new TimesheetCustomCalendarFragment();
         this.timesheetNewFragment = new TimesheetNewFragment();
     }
@@ -139,11 +134,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             } else if (id == R.id.nav_admin) {
                 viewFragment(adminFragment);
                 setTitle(R.string.title_admin);
-            } else if (id == R.id.nav_timesheet_new) {
+            }
+            /*
+            else if (id == R.id.nav_timesheet_new) {
                 viewFragment(timesheetNewFragment);
                 setTitle(R.string.title_timesheet_new);
             }
-            /*else if (id == R.id.nav_invoice) {
+            else if (id == R.id.nav_invoice) {
                 viewFragment(invoiceFragment);
                 setTitle(R.string.title_invoice_overview);
             } else if (id == R.id.nav_timesheet_calendar) {

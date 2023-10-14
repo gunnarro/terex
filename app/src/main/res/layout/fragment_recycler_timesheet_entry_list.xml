@@ -32,7 +32,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:listitem="@layout/recyclerview_timesheet_item" />
+            tools:listitem="@layout/recyclerview_timesheet_entry_item" />
 
         <!-- This will be the parent Floating Action Button -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton

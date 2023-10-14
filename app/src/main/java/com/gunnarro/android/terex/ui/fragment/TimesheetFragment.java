@@ -42,7 +42,7 @@ import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
 @AndroidEntryPoint
-public class TimesheetListFragment extends Fragment {
+public class TimesheetFragment extends Fragment {
     public static final String TIMESHEET_REQUEST_KEY = "100";
     public static final String TIMESHEET_ENTRY_JSON_INTENT_KEY = "timesheet_entry_as_json";
     public static final String TIMESHEET_ENTRY_ACTION_KEY = "11";
@@ -135,7 +135,7 @@ public class TimesheetListFragment extends Fragment {
         }
         String timesheetJson = Utility.gsonMapper().toJson(mostRecentTimesheetEntry, TimesheetEntry.class);
         Bundle bundle = new Bundle();
-        bundle.putString(TimesheetListFragment.TIMESHEET_ENTRY_JSON_INTENT_KEY, timesheetJson);
+        bundle.putString(TimesheetFragment.TIMESHEET_ENTRY_JSON_INTENT_KEY, timesheetJson);
         return bundle;
     }
 
