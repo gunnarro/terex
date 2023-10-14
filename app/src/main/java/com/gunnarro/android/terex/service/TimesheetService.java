@@ -124,4 +124,12 @@ public class TimesheetService {
     public Timesheet getTimesheet(Long timesheetId) {
         return timesheetRepository.getTimesheet(timesheetId);
     }
+
+    public LiveData<List<Timesheet>> getTimesheetListLiveData() {
+        return timesheetRepository.getAllTimesheets();
+    }
+
+    public void deleteTimesheet(Timesheet timesheet) {
+        timesheetRepository.deleteTimesheet(timesheet);
+    }
 }

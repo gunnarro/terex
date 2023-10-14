@@ -122,7 +122,7 @@ public class TimesheetAddEntryFragment extends Fragment implements View.OnClickL
             Bundle result = new Bundle();
             result.putString(TimesheetListFragment.TIMESHEET_ENTRY_JSON_INTENT_KEY, getTimesheetAsJson());
             result.putString(TimesheetListFragment.TIMESHEET_ENTRY_ACTION_KEY, TimesheetListFragment.TIMESHEET_ENTRY_ACTION_SAVE);
-            getParentFragmentManager().setFragmentResult(TimesheetListFragment.TIMESHEET_REQUEST_KEY, result);
+            getParentFragmentManager().setFragmentResult(TimesheetListFragment.TIMESHEET_ENTRY_REQUEST_KEY, result);
             Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new timesheet entry intent: " + getTimesheetAsJson());
             returnToTimesheetList();
         });
@@ -132,7 +132,7 @@ public class TimesheetAddEntryFragment extends Fragment implements View.OnClickL
             Bundle result = new Bundle();
             result.putString(TimesheetListFragment.TIMESHEET_ENTRY_JSON_INTENT_KEY, getTimesheetAsJson());
             result.putString(TimesheetListFragment.TIMESHEET_ENTRY_ACTION_KEY, TimesheetListFragment.TIMESHEET_ENTRY_ACTION_DELETE);
-            getParentFragmentManager().setFragmentResult(TimesheetListFragment.TIMESHEET_REQUEST_KEY, result);
+            getParentFragmentManager().setFragmentResult(TimesheetListFragment.TIMESHEET_ENTRY_REQUEST_KEY, result);
             Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new delete item intent");
             returnToTimesheetList();
         });

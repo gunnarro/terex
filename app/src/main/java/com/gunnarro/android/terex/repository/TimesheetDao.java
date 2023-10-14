@@ -1,5 +1,6 @@
 package com.gunnarro.android.terex.repository;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -28,7 +29,7 @@ public interface TimesheetDao {
     Timesheet getTimesheet(String clientName, String projectCode, Integer year, Integer month);
 
     @Query("SELECT * FROM timesheet ORDER BY client_name")
-    List<Timesheet> getAllTimesheets();
+    LiveData<List<Timesheet>> getAllTimesheets();
 
     @Query("SELECT * FROM timesheet WHERE status = :status ORDER BY year, month DESC")
     List<Timesheet> getTimesheets(String status);

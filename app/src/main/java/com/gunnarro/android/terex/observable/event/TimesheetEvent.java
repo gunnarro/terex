@@ -1,5 +1,6 @@
 package com.gunnarro.android.terex.observable.event;
 
+import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 
 import org.jetbrains.annotations.NotNull;
@@ -12,13 +13,13 @@ import javax.annotation.concurrent.Immutable;
 public class TimesheetEvent {
 
     private final TimesheetEventTypeEnum eventType;
-    private final TimesheetEntry timesheetEntry;
+    private final Timesheet timesheet;
 
     private final String status;
 
     private TimesheetEvent(Builder builder) {
         this.eventType = Objects.requireNonNull(builder.eventType, "eventType");
-        this.timesheetEntry = Objects.requireNonNull(builder.timesheetEntry, "timesheetEntry");
+        this.timesheet = Objects.requireNonNull(builder.timesheet, "timesheet");
         this.status = builder.status;
     }
 
@@ -34,8 +35,8 @@ public class TimesheetEvent {
         return eventType.equals(TimesheetEventTypeEnum.DELETE);
     }
 
-    public TimesheetEntry getTimesheetEntry() {
-        return timesheetEntry;
+    public Timesheet getTimesheet() {
+        return timesheet;
     }
 
     @NotNull
@@ -43,7 +44,7 @@ public class TimesheetEvent {
     public String toString() {
         final StringBuilder sb = new StringBuilder("TimesheetEvent{");
         sb.append("eventType=").append(eventType);
-        sb.append(", timesheetEntry=").append(timesheetEntry);
+        sb.append(", timesheet=").append(timesheet);
         sb.append('}');
         return sb.toString();
     }
@@ -57,7 +58,7 @@ public class TimesheetEvent {
      */
     public static class Builder {
         private TimesheetEventTypeEnum eventType;
-        private TimesheetEntry timesheetEntry;
+        private Timesheet timesheet;
         private String status;
 
         private Builder() {
@@ -68,8 +69,8 @@ public class TimesheetEvent {
             return this;
         }
 
-        public Builder timesheetEntry(TimesheetEntry timesheetEntry) {
-            this.timesheetEntry = timesheetEntry;
+        public Builder timesheet(Timesheet timesheet) {
+            this.timesheet = timesheet;
             return this;
         }
 
@@ -80,7 +81,7 @@ public class TimesheetEvent {
 
         public Builder of(TimesheetEvent timesheetEvent, TimesheetEntry timesheetEntry, String status) {
             this.eventType = timesheetEvent.eventType;
-            this.timesheetEntry = timesheetEntry;
+            this.timesheet = timesheet;
             this.status = status;
             return this;
         }

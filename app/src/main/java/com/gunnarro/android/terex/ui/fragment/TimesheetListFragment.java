@@ -29,7 +29,7 @@ import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetWithEntries;
 import com.gunnarro.android.terex.observable.RxBus;
 import com.gunnarro.android.terex.observable.event.TimesheetEvent;
-import com.gunnarro.android.terex.ui.adapter.TimesheetListAdapter;
+import com.gunnarro.android.terex.ui.adapter.TimesheetEntryListAdapter;
 import com.gunnarro.android.terex.ui.view.TimesheetEntryViewModel;
 import com.gunnarro.android.terex.utility.Utility;
 
@@ -43,18 +43,13 @@ import io.reactivex.disposables.Disposable;
 
 @AndroidEntryPoint
 public class TimesheetListFragment extends Fragment {
-    public static final String TIMESHEET_REQUEST_KEY = "100";
+    public static final String TIMESHEET_ENTRY_REQUEST_KEY = "200";
     public static final String TIMESHEET_ENTRY_JSON_INTENT_KEY = "timesheet_entry_as_json";
-    public static final String TIMESHEET_ENTRY_ACTION_KEY = "11";
+    public static final String TIMESHEET_ENTRY_ACTION_KEY = "211";
     public static final String TIMESHEET_ENTRY_ACTION_SAVE = "timesheet_entry_save";
     public static final String TIMESHEET_ENTRY_ACTION_DELETE = "timesheet_entry_delete";
 
-    public static final String TIMESHEET_JSON_INTENT_KEY = "timesheet_as_json";
-    public static final String TIMESHEET_ACTION_KEY = "22";
-    public static final String TIMESHEET_ACTION_SAVE = "timesheet_save";
-    public static final String TIMESHEET_ACTION_DELETE = "timesheet_delete";
-
-    private TimesheetEntryViewModel timesheetViewModel;
+    private TimesheetEntryViewModel timesheetEntryViewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,11 +58,11 @@ public class TimesheetListFragment extends Fragment {
         setHasOptionsMenu(true);
         // Get a new or existing ViewModel from the ViewModelProvider.
         try {
-            timesheetViewModel = new ViewModelProvider(this).get(TimesheetEntryViewModel.class);
+            timesheetEntryViewModel = new ViewModelProvider(this).get(TimesheetEntryViewModel.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        getParentFragmentManager().setFragmentResultListener(TIMESHEET_REQUEST_KEY, this, new FragmentResultListener() {
+        getParentFragmentManager().setFragmentResultListener(TIMESHEET_ENTRY_REQUEST_KEY, this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
                 Log.d(Utility.buildTag(getClass(), "onFragmentResult"), "requestKey: " + requestKey + ", bundle:" + bundle);
@@ -81,25 +76,25 @@ public class TimesheetListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_recycler_timesheet_entry_list, container, false);
-        RecyclerView recyclerView = view.findViewById(R.id.timesheet_recyclerview);
-        final TimesheetListAdapter adapter = new TimesheetListAdapter(getParentFragmentManager(), new TimesheetListAdapter.TimesheetDiff());
+        RecyclerView recyclerView = view.findViewById(R.id.timesheet_entry_recyclerview);
+        final TimesheetEntryListAdapter adapter = new TimesheetEntryListAdapter(getParentFragmentManager(), new TimesheetEntryListAdapter.TimesheetEntryDiff());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // Update the cached copy of the timesheet entries in the adapter.
-        timesheetViewModel.getTimesheetLiveData().observe(requireActivity(), adapter::submitList);
+        timesheetEntryViewModel.getTimesheetLiveData().observe(requireActivity(), adapter::submitList);
 
         //  TimesheetWithEntries timesheetWithEntries = timesheetViewModel.getTimesheetWithEntries(1L);
-        TimesheetWithEntries timesheetWithEntries = timesheetViewModel.getCurrentTimesheetWithEntries();
+        TimesheetWithEntries timesheetWithEntries = timesheetEntryViewModel.getCurrentTimesheetWithEntries();
         Log.d("all timesheets", "timesheet with entries: " + timesheetWithEntries);
 
-        TextView listHeaderView = view.findViewById(R.id.timesheet_list_header);
+        TextView listHeaderView = view.findViewById(R.id.timesheet_entry_list_header);
         if (timesheetWithEntries != null && timesheetWithEntries.getTimesheet() != null) {
             listHeaderView.setText(String.format("[%s-%s] %s - %s %S", timesheetWithEntries.getTimesheet().getMonth(), timesheetWithEntries.getTimesheet().getYear(), timesheetWithEntries.getTimesheet().getClientName(), timesheetWithEntries.getTimesheet().getProjectCode(),
                     timesheetWithEntries.getTimesheet().getStatus()));
         }
 
-        FloatingActionButton addButton = view.findViewById(R.id.add_timesheet_entry);
+        FloatingActionButton addButton = view.findViewById(R.id.timesheet_entry_add_btn);
         addButton.setOnClickListener(v -> {
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
@@ -108,7 +103,7 @@ public class TimesheetListFragment extends Fragment {
                     .commit();
         });
 
-        FloatingActionButton calendarButton = view.findViewById(R.id.view_timesheet_calendar);
+        FloatingActionButton calendarButton = view.findViewById(R.id.timesheet_entry_calendar_btn);
         calendarButton.setOnClickListener(v -> {
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
@@ -123,13 +118,13 @@ public class TimesheetListFragment extends Fragment {
             calendarButton.setVisibility(View.INVISIBLE);
         }
         // listen after timesheet add and delete events
-        RxBus.getInstance().listen().subscribe(getInputObserver());
+        //RxBus.getInstance().listen().subscribe(getInputObserver());
         Log.d(Utility.buildTag(getClass(), "onCreateView"), "");
         return view;
     }
 
     private Bundle createTimesheetEntryBundle(Long timesheetId) {
-        TimesheetEntry mostRecentTimesheetEntry = timesheetViewModel.getMostRecentTimesheetEntry(timesheetId);
+        TimesheetEntry mostRecentTimesheetEntry = timesheetEntryViewModel.getMostRecentTimesheetEntry(timesheetId);
         if (mostRecentTimesheetEntry == null) {
             mostRecentTimesheetEntry = createDefaultTimesheetEntry(timesheetId);
         }
@@ -161,9 +156,7 @@ public class TimesheetListFragment extends Fragment {
         if (bundle == null) {
             return;
         }
-        if (bundle.getString(TIMESHEET_ACTION_KEY) != null) {
-            handleTimesheetActions(bundle.getString(TIMESHEET_JSON_INTENT_KEY), bundle.getString(TIMESHEET_ACTION_KEY));
-        } else if (bundle.getString(TIMESHEET_ENTRY_ACTION_KEY) != null) {
+        if (bundle.getString(TIMESHEET_ENTRY_ACTION_KEY) != null) {
             handleTimesheetEntryActions(bundle.getString(TIMESHEET_ENTRY_JSON_INTENT_KEY), bundle.getString(TIMESHEET_ENTRY_ACTION_KEY));
         } else {
             Log.w("unknown action!", "unknown action: " + bundle);
@@ -175,7 +168,7 @@ public class TimesheetListFragment extends Fragment {
         try {
             TimesheetEntry timesheetEntry = Utility.gsonMapper().fromJson(timesheetEntryJson, TimesheetEntry.class);
             if (TIMESHEET_ENTRY_ACTION_SAVE.equals(action)) {
-                timesheetViewModel.saveTimesheetEntry(timesheetEntry);
+                timesheetEntryViewModel.saveTimesheetEntry(timesheetEntry);
                 if (timesheetEntry.getId() == null) {
                     showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_add_msg_format), timesheetEntry.getWorkdayDate()), R.color.color_snackbar_text_add);
                 } else {
@@ -183,36 +176,13 @@ public class TimesheetListFragment extends Fragment {
                 }
 
             } else if (TIMESHEET_ENTRY_ACTION_DELETE.equals(action)) {
-                timesheetViewModel.deleteTimesheetEntry(timesheetEntry);
+                timesheetEntryViewModel.deleteTimesheetEntry(timesheetEntry);
                 showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_delete_msg_format), timesheetEntry.getWorkdayDate()), R.color.color_snackbar_text_delete);
             } else {
                 Log.w(Utility.buildTag(getClass(), "handleTimesheetEntryActions"), "unknown action: " + action);
                 showInfoDialog(String.format("Application error!%s Unknown action: %s%s Please report.", action, System.lineSeparator(), System.lineSeparator()), getActivity());
             }
         } catch (Exception ex) {
-            showInfoDialog(String.format("Application error!%sError: %s%s Please report.", ex.getMessage(), System.lineSeparator(), System.lineSeparator()), getActivity());
-        }
-    }
-
-    private void handleTimesheetActions(String timesheetJson, String action) {
-        Log.d(Utility.buildTag(getClass(), "handleTimesheetActions"), String.format("action: %s, timesheet: %s", action, timesheetJson));
-        try {
-            Timesheet timesheet = Utility.gsonMapper().fromJson(timesheetJson, Timesheet.class);
-            if (TIMESHEET_ACTION_SAVE.equals(action)) {
-                if (timesheet.getId() == null) {
-                    timesheetViewModel.saveTimesheet(timesheet);
-                    showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_add_msg_format), timesheet.toString()), R.color.color_snackbar_text_add);
-                } else {
-                    showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_update_msg_format), timesheet), R.color.color_snackbar_text_update);
-                }
-            } else if (TIMESHEET_ACTION_DELETE.equals(action)) {
-                showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_delete_msg_format), timesheet.toString()), R.color.color_snackbar_text_delete);
-            } else {
-                Log.w(Utility.buildTag(getClass(), "handleTimesheetActions"), "unknown action: " + action);
-                showInfoDialog(String.format("Application error!%s Unknown action: %s%s Please report.", action, System.lineSeparator(), System.lineSeparator()), getActivity());
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
             showInfoDialog(String.format("Application error!%sError: %s%s Please report.", ex.getMessage(), System.lineSeparator(), System.lineSeparator()), getActivity());
         }
     }
@@ -253,7 +223,7 @@ public class TimesheetListFragment extends Fragment {
                 if (obj instanceof TimesheetEvent event) {
                     Log.d(Utility.buildTag(getClass(), "getInputObserver.onNext"), String.format("handle event: %s", event));
                     if (event.isAdd()) {
-                        timesheetViewModel.saveTimesheetEntry(event.getTimesheetEntry());
+                       // timesheetEntryViewModel.saveTimesheetEntry(event.getTimesheetEntry());
                     } else if (event.isDelete()) {
                         // not implemented
                     }

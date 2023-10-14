@@ -60,7 +60,7 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
         Timesheet timesheet = Timesheet.createDefault(clients[0], projects[0]);
 
         // check if this is an existing or a new timesheet
-        String timesheetJson = getArguments() != null ? getArguments().getString(TimesheetListFragment.TIMESHEET_JSON_INTENT_KEY) : null;
+        String timesheetJson = getArguments() != null ? getArguments().getString(TimesheetFragment.TIMESHEET_JSON_INTENT_KEY) : null;
         if (timesheetJson != null && !timesheetJson.isEmpty()) {
             try {
                 timesheet = Utility.gsonMapper().fromJson(timesheetJson, Timesheet.class);
@@ -106,7 +106,7 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
         monthSpinner.setOnItemClickListener((parent, view1, position, id) -> {
             Log.d("monthSpinner", "selected: " + monthAdapter.getItem(position));
             AutoCompleteTextView year = requireView().findViewById(R.id.timesheet_new_year_spinner);
-            Log.d("monthSpinner", String.format("selected, year=%s, mount=%s", year.getText(),  monthAdapter.getItem(position)));
+            Log.d("monthSpinner", String.format("selected, year=%s, mount=%s", year.getText(), monthAdapter.getItem(position)));
             updateFromToDate(Utility.toLocalDate(year.getText().toString(), monthAdapter.getItem(position).toString(), 1));
         });
 
@@ -115,9 +115,9 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
         view.findViewById(R.id.btn_timesheet_new_save).setOnClickListener(v -> {
             view.findViewById(R.id.btn_timesheet_new_save).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
             Bundle result = new Bundle();
-            result.putString(TimesheetListFragment.TIMESHEET_JSON_INTENT_KEY, getTimesheetAsJson());
-            result.putString(TimesheetListFragment.TIMESHEET_ACTION_KEY, TimesheetListFragment.TIMESHEET_ACTION_SAVE);
-            getParentFragmentManager().setFragmentResult(TimesheetListFragment.TIMESHEET_REQUEST_KEY, result);
+            result.putString(TimesheetFragment.TIMESHEET_JSON_INTENT_KEY, getTimesheetAsJson());
+            result.putString(TimesheetFragment.TIMESHEET_ACTION_KEY, TimesheetFragment.TIMESHEET_ACTION_SAVE);
+            getParentFragmentManager().setFragmentResult(TimesheetFragment.TIMESHEET_REQUEST_KEY, result);
             Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new timesheet intent: " + getTimesheetAsJson());
             returnToTimesheetList();
         });
@@ -125,9 +125,9 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
         view.findViewById(R.id.btn_timesheet_new_delete).setOnClickListener(v -> {
             view.findViewById(R.id.btn_timesheet_new_delete).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
             Bundle result = new Bundle();
-            result.putString(TimesheetListFragment.TIMESHEET_JSON_INTENT_KEY, getTimesheetAsJson());
-            result.putString(TimesheetListFragment.TIMESHEET_ACTION_KEY, TimesheetListFragment.TIMESHEET_ACTION_DELETE);
-            getParentFragmentManager().setFragmentResult(TimesheetListFragment.TIMESHEET_REQUEST_KEY, result);
+            result.putString(TimesheetFragment.TIMESHEET_JSON_INTENT_KEY, getTimesheetAsJson());
+            result.putString(TimesheetFragment.TIMESHEET_ACTION_KEY, TimesheetFragment.TIMESHEET_ACTION_DELETE);
+            getParentFragmentManager().setFragmentResult(TimesheetFragment.TIMESHEET_REQUEST_KEY, result);
             Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new delete item intent");
             returnToTimesheetList();
         });
@@ -141,7 +141,7 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
         });
 
         if (timesheet != null) {
-             updateTimesheetNewView(view, timesheet);
+            updateTimesheetNewView(view, timesheet);
         }
 
         view.findViewById(R.id.timesheet_new_id).setVisibility(View.GONE);
@@ -154,7 +154,7 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
     private void returnToTimesheetList() {
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_frame, TimesheetListFragment.class, null)
+                .replace(R.id.content_frame, TimesheetFragment.class, null)
                 .setReorderingAllowed(true)
                 .commit();
     }
@@ -170,8 +170,8 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
         EditText lastModifiedDateView = view.findViewById(R.id.timesheet_new_last_modified_date);
         lastModifiedDateView.setText(Utility.formatDateTime(timesheet.getLastModifiedDate()));
 
-         AutoCompleteTextView clientSpinner = view.findViewById(R.id.timesheet_new_client_spinner);
-         clientSpinner.setText(timesheet.getClientName());
+        AutoCompleteTextView clientSpinner = view.findViewById(R.id.timesheet_new_client_spinner);
+        clientSpinner.setText(timesheet.getClientName());
 
         AutoCompleteTextView projectSpinner = view.findViewById(R.id.timesheet_new_project_spinner);
         projectSpinner.setText(timesheet.getProjectCode());
@@ -180,10 +180,10 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
         statusSpinner.setText(timesheet.getStatus());
 
         AutoCompleteTextView yearSpinner = view.findViewById(R.id.timesheet_new_year_spinner);
-        yearSpinner.setText(String.format("%s",timesheet.getYear().toString()));
+        yearSpinner.setText(String.format("%s", timesheet.getYear().toString()));
 
         AutoCompleteTextView monthSpinner = view.findViewById(R.id.timesheet_new_month_spinner);
-        monthSpinner.setText(Utility.mapMonthNumberToName(timesheet.getMonth() -1));
+        monthSpinner.setText(Utility.mapMonthNumberToName(timesheet.getMonth() - 1));
 
         EditText fromTimeView = view.findViewById(R.id.timesheet_new_from_date);
         fromTimeView.setText(Utility.formatDate(timesheet.getFromDate()));
@@ -265,6 +265,7 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
         TextView descriptionView = requireView().findViewById(R.id.timesheet_new_description);
         timesheet.setDescription(descriptionView.getText().toString());
 
+        timesheet.createTimesheetRef();
         try {
             return Utility.gsonMapper().toJson(timesheet);
         } catch (Exception e) {

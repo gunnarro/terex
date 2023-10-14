@@ -8,26 +8,27 @@
     tools:context=".ui.fragment.TimesheetFragment"
     tools:ignore="ExtraText">
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/timesheet_list_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ui.fragment.InvoiceListFragment">
+        android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/invoice_recyclerview"
+            android:id="@+id/timesheet_recyclerview"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:padding="@dimen/list_big_padding"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:listitem="@layout/recyclerview_invoice_item" />
+            tools:listitem="@layout/recyclerview_timesheet_item" />
 
+        <!-- This will be the parent Floating Action Button -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/add_invoice"
+            android:id="@+id/timesheet_add_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="start|bottom"
             android:layout_margin="16dp"
             android:contentDescription="@string/btn_add"
             android:src="@drawable/ic_add_white_24dp"

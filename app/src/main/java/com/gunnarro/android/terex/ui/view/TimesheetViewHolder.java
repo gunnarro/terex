@@ -10,11 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
-import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.utility.Utility;
-
-import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 
 public class TimesheetViewHolder extends RecyclerView.ViewHolder {
     private final TextView timesheetLineHeaderView;
@@ -38,26 +34,26 @@ public class TimesheetViewHolder extends RecyclerView.ViewHolder {
     }
 
     public static TimesheetViewHolder create(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_timesheet_entry_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_timesheet_item, parent, false);
         return new TimesheetViewHolder(view);
     }
 
 
-    public void bindListLine(TimesheetEntry timesheetEntry) {
-        timesheetLineHeaderView.setText(timesheetEntry.getWorkdayDate().format(DateTimeFormatter.ofPattern(Utility.WORKDAY_DATE_PATTERN, Locale.getDefault())));
-        if (timesheetEntry.getStatus().equals(Timesheet.TimesheetStatusEnum.OPEN.name())) {
+    public void bindListLine(Timesheet timesheet) {
+        timesheetLineHeaderView.setText(timesheet.getTimesheetRef());
+        if (timesheet.getStatus().equals(Timesheet.TimesheetStatusEnum.OPEN.name())) {
             timesheetLine1StatusView.setBackgroundColor(Color.parseColor("#0100f6"));
             timesheetLine2StatusView.setBackgroundColor(Color.parseColor("#0100f6"));
-        } else if (timesheetEntry.getStatus().equals(Timesheet.TimesheetStatusEnum.BILLED.name())) {
+        } else if (timesheet.getStatus().equals(Timesheet.TimesheetStatusEnum.BILLED.name())) {
             timesheetLine1StatusView.setBackgroundColor(Color.parseColor("#54aa00"));
             timesheetLine2StatusView.setBackgroundColor(Color.parseColor("#54aa00"));
         } else {
             timesheetLine1StatusView.setBackgroundColor(Color.parseColor("#f5f600"));
             timesheetLine2StatusView.setBackgroundColor(Color.parseColor("#f5f600"));
         }
-        timesheetLine1LabelView.setText(String.format("%s - %s", Utility.formatTime(timesheetEntry.getFromTime()), Utility.formatTime(timesheetEntry.getToTime())));
-        timesheetLine1ValueView.setText(Utility.getDateDiffInHours(timesheetEntry.getFromTime(), timesheetEntry.getToTime()));
-        timesheetLine2LabelView.setText(String.format("%s", timesheetEntry.getHourlyRate()));
-        timesheetLine2ValueView.setText(String.format("%s", timesheetEntry.getHourlyRate()*(timesheetEntry.getWorkedMinutes()/60)));
+        timesheetLine1LabelView.setText(String.format("%s - %s", Utility.formatDate(timesheet.getFromDate()), Utility.formatDate(timesheet.getToDate())));
+        timesheetLine1ValueView.setText(timesheet.getStatus());
+        timesheetLine2LabelView.setText("Invoice");
+        timesheetLine2ValueView.setText(timesheet.getInvoiceNumber() != null ? timesheet.getInvoiceNumber().toString() : "");
     }
 }

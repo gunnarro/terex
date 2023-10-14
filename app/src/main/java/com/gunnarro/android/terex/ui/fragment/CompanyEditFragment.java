@@ -58,7 +58,7 @@ public class CompanyEditFragment extends Fragment implements View.OnClickListene
         String[] projects = recruitmentService.getProjectNames();
 
         Timesheet timesheet = Timesheet.createDefault(clients[0], projects[0]);
-
+/*
         // check if this is an existing or a new timesheet
         String timesheetJson = getArguments() != null ? getArguments().getString(TimesheetListFragment.TIMESHEET_JSON_INTENT_KEY) : null;
         if (timesheetJson != null && !timesheetJson.isEmpty()) {
@@ -147,6 +147,7 @@ public class CompanyEditFragment extends Fragment implements View.OnClickListene
         view.findViewById(R.id.timesheet_new_created_date).setVisibility(View.GONE);
         view.findViewById(R.id.timesheet_new_last_modified_date_layout).setVisibility(View.GONE);
         Log.d(Utility.buildTag(getClass(), "onCreateView"), String.format("%s", timesheet));
+  */
         return view;
     }
 

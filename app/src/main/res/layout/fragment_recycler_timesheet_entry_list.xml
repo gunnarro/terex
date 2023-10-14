@@ -9,7 +9,7 @@
     tools:ignore="ExtraText">
 
     <TextView
-        android:id="@+id/timesheet_list_header"
+        android:id="@+id/timesheet_entry_list_header"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@color/cardview_dark_background"
@@ -20,12 +20,12 @@
         android:textColor="@color/colorSection" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/timesheet_list_layout"
+        android:id="@+id/timesheet_entry_list_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/timesheet_recyclerview"
+            android:id="@+id/timesheet_entry_recyclerview"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -36,7 +36,7 @@
 
         <!-- This will be the parent Floating Action Button -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/add_timesheet_entry"
+            android:id="@+id/timesheet_entry_add_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|bottom"
@@ -48,7 +48,7 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/view_timesheet_calendar"
+            android:id="@+id/timesheet_entry_calendar_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
@@ -58,8 +58,8 @@
             android:contentDescription="@string/btn_calendar"
             android:src="@drawable/ic_add_white_24dp"
             app:backgroundTint="@color/cardview_dark_background"
-            app:layout_constraintBottom_toTopOf="@+id/add_timesheet_entry"
-            app:layout_constraintEnd_toEndOf="@+id/add_timesheet_entry"
-            app:layout_constraintStart_toStartOf="@+id/add_timesheet_entry" />
+            app:layout_constraintBottom_toTopOf="@+id/timesheet_entry_add_btn"
+            app:layout_constraintEnd_toEndOf="@+id/timesheet_entry_add_btn"
+            app:layout_constraintStart_toStartOf="@+id/timesheet_entry_add_btn" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

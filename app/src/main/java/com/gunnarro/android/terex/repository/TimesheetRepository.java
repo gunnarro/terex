@@ -108,11 +108,11 @@ public class TimesheetRepository {
         }
     }
 
-    public List<Timesheet> getAllTimesheets() {
+    public LiveData<List<Timesheet>> getAllTimesheets() {
         try {
-            CompletionService<List<Timesheet>> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
+            CompletionService<LiveData<List<Timesheet>>> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
             service.submit(timesheetDao::getAllTimesheets);
-            Future<List<Timesheet>> future = service.take();
+            Future<LiveData<List<Timesheet>>> future = service.take();
             return future != null ? future.get() : null;
         } catch (InterruptedException | ExecutionException e) {
             // Something crashed, therefore restore interrupted state before leaving.
@@ -184,6 +184,12 @@ public class TimesheetRepository {
         return future != null ? future.get() : null;
     }
 
+    public void deleteTimesheet(Timesheet timesheet) {
+        AppDatabase.databaseExecutor.execute(() -> {
+            timesheetDao.delete(timesheet);
+            Log.d("TimesheetRepository.delete", "deleted, id=" + timesheet.getId());
+        });
+    }
 
     public TimesheetEntry getTimesheetEntry(Long timesheetId, LocalDate workDayDate) throws InterruptedException, ExecutionException {
         CompletionService<TimesheetEntry> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);

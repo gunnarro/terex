@@ -19,6 +19,7 @@ import com.gunnarro.android.terex.ui.fragment.AdminFragment;
 import com.gunnarro.android.terex.ui.fragment.InvoiceListFragment;
 import com.gunnarro.android.terex.ui.fragment.TimesheetAddEntryFragment;
 import com.gunnarro.android.terex.ui.fragment.TimesheetCustomCalendarFragment;
+import com.gunnarro.android.terex.ui.fragment.TimesheetFragment;
 import com.gunnarro.android.terex.ui.fragment.TimesheetListFragment;
 import com.gunnarro.android.terex.ui.fragment.TimesheetNewFragment;
 import com.gunnarro.android.terex.utility.Utility;
@@ -47,6 +48,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     TimesheetListFragment timesheetListFragment;
 
     @Inject
+    TimesheetFragment timesheetFragment;
+
+    @Inject
     TimesheetAddEntryFragment timesheetAddEntryFragment;
 
     @Inject
@@ -63,10 +67,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public MainActivity() {
         this.adminFragment = new AdminFragment();
         this.timesheetListFragment = new TimesheetListFragment();
-        this.timesheetAddEntryFragment = new TimesheetAddEntryFragment();
+        //this.timesheetAddEntryFragment = new TimesheetAddEntryFragment();
         this.invoiceListFragment = new InvoiceListFragment();
-        this.timesheetCalendarFragment = new TimesheetCustomCalendarFragment();
-        this.timesheetNewFragment = new TimesheetNewFragment();
+        //this.timesheetCalendarFragment = new TimesheetCustomCalendarFragment();
+        //this.timesheetNewFragment = new TimesheetNewFragment();
+        this.timesheetFragment = new TimesheetFragment();
     }
 
     @Override
@@ -101,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setCheckedItem(R.id.nav_timesheet_list);
 
         if (savedInstanceState == null) {
-            viewFragment(timesheetListFragment);
+            viewFragment(timesheetFragment);
         }
         // Finally, check and grant or deny permissions
         checkPermissions();
@@ -126,8 +131,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Log.d("MainActivity.onNavigationItemSelected", "selected: " + menuItem.getItemId());
             int id = menuItem.getItemId();
             if (id == R.id.nav_timesheet_list) {
-                viewFragment(timesheetListFragment);
-                setTitle(R.string.title_timesheet);
+                viewFragment(timesheetFragment);
+                setTitle(R.string.title_timesheets);
             } else if (id == R.id.nav_invoice_list) {
                 viewFragment(invoiceListFragment);
                 setTitle(R.string.title_invoice);

@@ -12,17 +12,16 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
 import com.gunnarro.android.terex.R;
-import com.gunnarro.android.terex.domain.entity.Timesheet;
-import com.gunnarro.android.terex.ui.fragment.TimesheetFragment;
+import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.ui.fragment.TimesheetListFragment;
-import com.gunnarro.android.terex.ui.view.TimesheetViewHolder;
+import com.gunnarro.android.terex.ui.view.TimesheetEntryViewHolder;
 import com.gunnarro.android.terex.utility.Utility;
 
-public class TimesheetListAdapter extends ListAdapter<Timesheet, TimesheetViewHolder> implements AdapterView.OnItemClickListener {
+public class TimesheetEntryListAdapter extends ListAdapter<TimesheetEntry, TimesheetEntryViewHolder> implements AdapterView.OnItemClickListener {
 
     private final FragmentManager fragmentManager;
 
-    public TimesheetListAdapter(@NonNull FragmentManager fragmentManager, @NonNull DiffUtil.ItemCallback<Timesheet> diffCallback) {
+    public TimesheetEntryListAdapter(@NonNull FragmentManager fragmentManager, @NonNull DiffUtil.ItemCallback<TimesheetEntry> diffCallback) {
         super(diffCallback);
         this.fragmentManager = fragmentManager;
         Log.d("TimesheetListAdapter", "init");
@@ -30,18 +29,18 @@ public class TimesheetListAdapter extends ListAdapter<Timesheet, TimesheetViewHo
 
     @NonNull
     @Override
-    public TimesheetViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        TimesheetViewHolder th = TimesheetViewHolder.create(parent);
-        th.itemView.findViewById(R.id.ic_timesheet_row_delete).setOnClickListener(v -> {
+    public TimesheetEntryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        TimesheetEntryViewHolder th = TimesheetEntryViewHolder.create(parent);
+        th.itemView.findViewById(R.id.ic_timesheet_entry_row_delete).setOnClickListener(v -> {
             Bundle actionBundle = new Bundle();
-            actionBundle.putString(TimesheetFragment.TIMESHEET_JSON_INTENT_KEY, toJson(getItem(th.getBindingAdapterPosition())));
-            actionBundle.putString(TimesheetFragment.TIMESHEET_ACTION_KEY, TimesheetFragment.TIMESHEET_ACTION_DELETE);
-            fragmentManager.setFragmentResult(TimesheetFragment.TIMESHEET_REQUEST_KEY, actionBundle);
+            actionBundle.putString(TimesheetListFragment.TIMESHEET_ENTRY_JSON_INTENT_KEY, toJson(getItem(th.getBindingAdapterPosition())));
+            actionBundle.putString(TimesheetListFragment.TIMESHEET_ENTRY_ACTION_KEY, TimesheetListFragment.TIMESHEET_ENTRY_ACTION_DELETE);
+            fragmentManager.setFragmentResult(TimesheetListFragment.TIMESHEET_ENTRY_REQUEST_KEY, actionBundle);
         });
         return th;
     }
 
-    private String toJson(Timesheet timesheet) {
+    private String toJson(TimesheetEntry timesheet) {
         try {
             return Utility.gsonMapper().toJson(timesheet);
         } catch (Exception e) {
@@ -51,7 +50,7 @@ public class TimesheetListAdapter extends ListAdapter<Timesheet, TimesheetViewHo
     }
 
     @Override
-    public void onBindViewHolder(TimesheetViewHolder holder, int position) {
+    public void onBindViewHolder(TimesheetEntryViewHolder holder, int position) {
         holder.bindListLine(getItem(position));
     }
 
@@ -64,14 +63,14 @@ public class TimesheetListAdapter extends ListAdapter<Timesheet, TimesheetViewHo
     /**
      *
      */
-    public static class TimesheetDiff extends DiffUtil.ItemCallback<Timesheet> {
+    public static class TimesheetEntryDiff extends DiffUtil.ItemCallback<TimesheetEntry> {
         @Override
-        public boolean areItemsTheSame(@NonNull Timesheet oldItem, @NonNull Timesheet newItem) {
+        public boolean areItemsTheSame(@NonNull TimesheetEntry oldItem, @NonNull TimesheetEntry newItem) {
             return oldItem == newItem;
         }
 
         @Override
-        public boolean areContentsTheSame(@NonNull Timesheet oldItem, @NonNull Timesheet newItem) {
+        public boolean areContentsTheSame(@NonNull TimesheetEntry oldItem, @NonNull TimesheetEntry newItem) {
             return oldItem.equals(newItem);
         }
     }

@@ -23,10 +23,10 @@ import lombok.Setter;
 /**
  * typically there is one timesheet per month.
  * A timesheet contains time sheet entries.
- *
+ * <p>
  * A timesheet is unique based on client name, project code, year and mount.
  * This model is basically based upon one timesheet per month.
- *
+ * <p>
  * When status is set equal to BILLED, the is is no possible to change the timesheet or any assigned timesheet entry.
  */
 @Getter
@@ -147,7 +147,6 @@ public class Timesheet {
     }
 
     /**
-     *
      * @return 1 - 12
      */
     public Integer getMonth() {
@@ -196,6 +195,18 @@ public class Timesheet {
         this.description = description;
     }
 
+    @NotNull
+    public String getTimesheetRef() {
+        return timesheetRef;
+    }
+
+    /**
+     * unique reference for this timesheet
+     */
+    public void createTimesheetRef() {
+        timesheetRef = year + ":" + month + ":" + clientName + ":" + projectCode;
+    }
+
     public static Timesheet createDefault(String clientName, String projectCode) {
         LocalDate now = LocalDate.now();
         Timesheet timesheet = new Timesheet();
@@ -206,6 +217,7 @@ public class Timesheet {
         timesheet.setMonth(now.getMonthValue());
         timesheet.setFromDate(Utility.getFirstDayOfMonth(now));
         timesheet.setToDate(Utility.getLastDayOfMonth(now));
+        timesheet.createTimesheetRef();
         return timesheet;
     }
 
