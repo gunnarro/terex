@@ -14,12 +14,14 @@ import com.gunnarro.android.terex.domain.dbview.TimesheetView;
 import com.gunnarro.android.terex.domain.entity.Company;
 import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.InvoiceSummary;
+import com.gunnarro.android.terex.domain.entity.Project;
 import com.gunnarro.android.terex.domain.entity.RecruitmentCompany;
 import com.gunnarro.android.terex.domain.entity.RegisterWork;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.repository.InvoiceDao;
 import com.gunnarro.android.terex.repository.InvoiceSummaryDao;
+import com.gunnarro.android.terex.repository.ProjectDao;
 import com.gunnarro.android.terex.repository.TimesheetDao;
 import com.gunnarro.android.terex.repository.TimesheetEntryDao;
 
@@ -29,7 +31,13 @@ import java.util.concurrent.Executors;
 /**
  * Thread safe database instance.
  */
-@Database(entities = {Timesheet.class, TimesheetEntry.class, Invoice.class, InvoiceSummary.class}, version = 39, views = {TimesheetView.class})
+@Database(entities = {
+        Timesheet.class,
+        TimesheetEntry.class,
+        Invoice.class,
+        InvoiceSummary.class,
+        Project.class
+}, version = 41, views = {TimesheetView.class})
 public abstract class AppDatabase extends RoomDatabase {
     // marking the instance as volatile to ensure atomic access to the variable
     private static volatile AppDatabase INSTANCE;
@@ -60,6 +68,9 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract InvoiceDao invoiceDao();
 
     public abstract InvoiceSummaryDao invoiceSummaryDao();
+
+    public abstract ProjectDao projectDao();
+
 
     //public abstract RecruitmentDao recruitmentDao();
 

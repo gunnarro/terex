@@ -4,13 +4,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
@@ -19,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
+import com.google.android.material.navigation.NavigationView;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.Address;
 import com.gunnarro.android.terex.domain.entity.Company;
@@ -39,7 +37,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
@@ -88,7 +85,7 @@ public class InvoiceNewFragment extends Fragment {
         timesheetSpinner.setAdapter(timesheetAdapter);
         timesheetSpinner.setListSelection(1);
 
-        view.findViewById(R.id.btn_invoice_create).setOnClickListener(v -> {
+        view.findViewById(R.id.btn_invoice_new_create).setOnClickListener(v -> {
             try {
                 String selectedTimesheet = timesheetSpinner.getText().toString();
                 SpinnerItem item = timesheetItems.stream().filter(i -> i.name().equals(selectedTimesheet)).findFirst().orElse(null);
@@ -103,8 +100,8 @@ public class InvoiceNewFragment extends Fragment {
                 showInfoDialog("Error creating invoice!", requireContext());
             }
         });
-
-        view.findViewById(R.id.btn_invoice_send_email).setOnClickListener(v -> {
+/*
+        view.findViewById(R.id.btn_invoice_new_send_email).setOnClickListener(v -> {
             try {
                 File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
                 File pdfFile = new File(path.getPath() + "/invoice_attachment_" + LocalDate.now().format(DateTimeFormatter.ISO_DATE) + ".pdf");
@@ -112,6 +109,14 @@ public class InvoiceNewFragment extends Fragment {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        });
+*/
+        view.findViewById(R.id.btn_invoice_new_cancel).setOnClickListener(v -> {
+            view.findViewById(R.id.btn_invoice_new_cancel).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
+            // Simply return back to credential list
+            NavigationView navigationView = requireActivity().findViewById(R.id.navigationView);
+            requireActivity().onOptionsItemSelected(navigationView.getMenu().findItem(R.id.nav_invoice_list));
+            returnToInvoiceList();
         });
 
         Log.d(Utility.buildTag(getClass(), "onCreateView"), "");
@@ -285,4 +290,13 @@ public class InvoiceNewFragment extends Fragment {
         client.setContactInfo(contactInfo);
         return client;
     }
+
+    private void returnToInvoiceList() {
+        requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content_frame, InvoiceListFragment.class, null)
+                .setReorderingAllowed(true)
+                .commit();
+    }
+
 }

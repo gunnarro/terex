@@ -32,7 +32,7 @@ public class UtilityTest {
         LocalDateTime d1 = LocalDateTime.now(ZoneId.systemDefault()).withHour(8).withMinute(0).withSecond(0).withNano(0);
         assertEquals("08:00", d1.toLocalTime().toString());
         LocalDateTime d2 = d1.plusHours(7).plusMinutes(30);
-        assertEquals("7.5", Utility.getDateDiffInHours(d1.toLocalTime(),d2.toLocalTime()));
+        assertEquals("7.5", Utility.getDateDiffInHours(d1.toLocalTime(), d2.toLocalTime()));
     }
 
     @Test
@@ -59,10 +59,10 @@ public class UtilityTest {
 
     @Test
     public void mapToMonthName() {
-        assertEquals(13, Utility.getMonths().length);
-        assertEquals("January", Utility.getMonths()[0]);
-        assertEquals("December", Utility.getMonths()[Utility.getMonths().length - 2]);
+        assertEquals(13, Utility.getMonthNames().length);
+        assertEquals("December", Utility.getMonthNames()[Utility.getMonthNames().length - 2]);
         assertEquals("January", Utility.mapMonthNumberToName(0));
-        assertEquals(0, Utility.mapMonthNameToNumber("January").intValue());
+        assertEquals(LocalDate.of(2023, 1, 1).getMonth().name(), Utility.getMonthNames()[0].toUpperCase());
+        assertEquals(LocalDate.of(2023, 1, 1).getMonth().getValue(), Utility.mapMonthNameToNumber("January").intValue());
     }
 }

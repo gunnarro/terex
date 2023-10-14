@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.room.Embedded;
 import androidx.room.Relation;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 /**
@@ -11,6 +13,7 @@ import java.util.List;
  */
 public class TimesheetWithEntries {
 
+    @NotNull
     @Embedded
     private Timesheet timesheet;
 

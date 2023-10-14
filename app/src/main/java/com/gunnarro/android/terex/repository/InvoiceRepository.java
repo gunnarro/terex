@@ -113,7 +113,7 @@ public class InvoiceRepository {
     public Long saveInvoice(@NotNull final Invoice invoice) {
         try {
             Invoice invoiceExisting = findInvoice(invoice.getReference());
-            Log.d("TimesheetRepository.saveTimesheetEntry", String.format("%s", invoiceExisting));
+            Log.d("InvoiceRepository.saveInvoice", String.format("%s", invoiceExisting));
             Long id = null;
             if (invoiceExisting == null) {
                 invoice.setCreatedDate(LocalDateTime.now());

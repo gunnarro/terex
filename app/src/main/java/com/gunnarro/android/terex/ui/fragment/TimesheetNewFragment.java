@@ -81,7 +81,7 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
 
         final AutoCompleteTextView projectSpinner = view.findViewById(R.id.timesheet_new_project_spinner);
         ArrayAdapter<String> projectAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, projects);
-        projectSpinner.setAdapter(clientAdapter);
+        projectSpinner.setAdapter(projectAdapter);
         projectSpinner.setListSelection(0);
 
         // create timesheet status spinner
@@ -94,19 +94,20 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
         final AutoCompleteTextView yearSpinner = view.findViewById(R.id.timesheet_new_year_spinner);
         ArrayAdapter<CharSequence> yearAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, Utility.getYears());
         yearSpinner.setAdapter(yearAdapter);
-        yearSpinner.setListSelection(1);
+        yearSpinner.setListSelection(0);
         yearSpinner.setOnItemClickListener((parent, view12, position, id) -> Log.d("yearSpinner", "selected: " + yearAdapter.getItem(position)));
 
         // create timesheet month spinner
         final AutoCompleteTextView monthSpinner = view.findViewById(R.id.timesheet_new_month_spinner);
-        ArrayAdapter<CharSequence> monthAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, Utility.getMonths());
+        ArrayAdapter<CharSequence> monthAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, Utility.getMonthNames());
         monthSpinner.setAdapter(monthAdapter);
         monthSpinner.setListSelection(0);
 
         monthSpinner.setOnItemClickListener((parent, view1, position, id) -> {
             Log.d("monthSpinner", "selected: " + monthAdapter.getItem(position));
             AutoCompleteTextView year = requireView().findViewById(R.id.timesheet_new_year_spinner);
-            updateFromToDate(LocalDate.of(Integer.parseInt(year.getText().toString()), (int) monthAdapter.getItemId(position) + 1, 1));
+            Log.d("monthSpinner", String.format("selected, year=%s, mount=%s", year.getText(),  monthAdapter.getItem(position)));
+            updateFromToDate(Utility.toLocalDate(year.getText().toString(), monthAdapter.getItem(position).toString(), 1));
         });
 
         // disable save button as default
@@ -179,7 +180,7 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
         statusSpinner.setText(timesheet.getStatus());
 
         AutoCompleteTextView yearSpinner = view.findViewById(R.id.timesheet_new_year_spinner);
-        yearSpinner.setText(timesheet.getYear().toString());
+        yearSpinner.setText(String.format("%s",timesheet.getYear().toString()));
 
         AutoCompleteTextView monthSpinner = view.findViewById(R.id.timesheet_new_month_spinner);
         monthSpinner.setText(Utility.mapMonthNumberToName(timesheet.getMonth() -1));
@@ -253,7 +254,7 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
         timesheet.setYear(Integer.parseInt(yearSpinner.getText().toString()));
 
         AutoCompleteTextView monthSpinner = requireView().findViewById(R.id.timesheet_new_month_spinner);
-        timesheet.setMonth(Utility.mapMonthNameToNumber(monthSpinner.getText().toString())); // must add one because the month in the spinner go from 0 - 11
+        timesheet.setMonth(Utility.mapMonthNameToNumber(monthSpinner.getText().toString()));
 
         TextView fromDateView = requireView().findViewById(R.id.timesheet_new_from_date);
         timesheet.setFromDate(Utility.toLocalDate(fromDateView.getText().toString()));

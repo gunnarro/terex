@@ -31,7 +31,7 @@ import lombok.Setter;
 @Entity(tableName = "timesheet", indices = {@Index(value = {"client_name", "project_code", "year", "month"},
         unique = true)})
 public class Timesheet {
-    @NotNull
+
     @PrimaryKey(autoGenerate = true)
     public Long id;
     @ColumnInfo(name = "invoice_number")
@@ -42,6 +42,15 @@ public class Timesheet {
     @NonNull
     @ColumnInfo(name = "last_modified_date")
     private LocalDateTime lastModifiedDate;
+
+    /**
+     * Must be unique, typically one timesheet per month.
+     * the ref is composed with: clientName_projectCode_year_month
+     */
+    @NotNull
+    @ColumnInfo(name = "timesheet_ref")
+    private String timesheetRef;
+
     @NotNull
     @ColumnInfo(name = "client_name")
     private String clientName;
@@ -64,7 +73,6 @@ public class Timesheet {
     @ColumnInfo(name = "description")
     private String description;
 
-    @NotNull
     public Long getId() {
         return id;
     }
@@ -77,7 +85,7 @@ public class Timesheet {
         this.invoiceNumber = invoiceNumber;
     }
 
-    public void setId(@NotNull Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -125,10 +133,17 @@ public class Timesheet {
         this.year = year;
     }
 
+    /**
+     *
+     * @return 1 - 12
+     */
     public Integer getMonth() {
         return month;
     }
 
+    /**
+     * @param month 1 to 12
+     */
     public void setMonth(Integer month) {
         this.month = month;
     }

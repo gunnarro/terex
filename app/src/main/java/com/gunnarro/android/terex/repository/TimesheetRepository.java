@@ -4,13 +4,13 @@ import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
+import androidx.room.Transaction;
 
 import com.gunnarro.android.terex.config.AppDatabase;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetWithEntries;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
-import com.gunnarro.android.terex.utility.Utility;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -48,9 +48,11 @@ public class TimesheetRepository {
     }
 
 
+    @Transaction
     public TimesheetWithEntries getCurrentTimesheetWithEntries() {
         try {
             CompletionService<TimesheetWithEntries> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
+            Log.d("getCurrentTimesheetWithEntries", String.format("%s - %s",LocalDate.now().getYear(), LocalDate.now().getMonthValue()));
             service.submit(() -> timesheetDao.getCurrentTimesheetWithEntries(LocalDate.now().getYear(), LocalDate.now().getMonthValue()));
             Future<TimesheetWithEntries> future = service.take();
             return future != null ? future.get() : null;
@@ -72,19 +74,6 @@ public class TimesheetRepository {
             Thread.currentThread().interrupt();
             throw new TerexApplicationException("Error getting timesheet with entries list", e.getMessage(), e.getCause());
         }
-    }
-
-    public Timesheet createTimesheet(@NotNull String clientName, @NotNull String projectCode, @NotNull LocalDate timesheetDate) {
-        Timesheet timesheet = new Timesheet();
-        timesheet.setStatus(TimesheetStatusEnum.OPEN.name());
-        timesheet.setClientName(clientName);
-        timesheet.setProjectCode(projectCode);
-        timesheet.setFromDate(Utility.getFirstDayOfMonth(timesheetDate));
-        timesheet.setToDate(Utility.getLastDayOfMonth(timesheetDate));
-        timesheet.setMonth(timesheetDate.getMonthValue());
-        timesheet.setYear(timesheetDate.getYear());
-        Long id = timesheetDao.insert(timesheet);
-        return timesheetDao.getTimesheetById(id);
     }
 
     public Timesheet getTimesheet(Long id) {
@@ -115,15 +104,6 @@ public class TimesheetRepository {
         }
     }
 
-    /**
-     * Get timesheet for current month
-     *
-     * @return timesheet for current month
-     */
-    public Timesheet getCurrentTimesheet() {
-        return timesheetDao.getTimesheet("*", "*", LocalDate.now().getYear(), LocalDate.now().getMonthValue());
-    }
-
     public List<Timesheet> getTimesheets(String status) {
         try {
             CompletionService<List<Timesheet>> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
@@ -151,11 +131,6 @@ public class TimesheetRepository {
         }
     }
 
-    public Long getCurrentTimesheetId(String clientName, String projectCode) {
-        Timesheet timesheet = timesheetDao.getTimesheet(clientName, projectCode, LocalDate.now().getYear(), LocalDate.now().getMonthValue());
-        return timesheet != null ? timesheet.getId() : null;
-    }
-
     public List<TimesheetEntry> getTimesheetEntryList(Long timesheetId) {
         try {
             CompletionService<List<TimesheetEntry>> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
@@ -174,10 +149,10 @@ public class TimesheetRepository {
      * Return a clone of data for the last added timesheet or from the timesheet marked as uses as default.
      * Note! all data is not returned, such as id, created and last modified date, for example.
      */
-    public TimesheetEntry getMostRecentTimeSheetEntry() {
+    public TimesheetEntry getMostRecentTimeSheetEntry(Long timesheetId) {
         try {
             CompletionService<TimesheetEntry> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
-            service.submit(timesheetEntryDao::getMostRecent);
+            service.submit(() -> timesheetEntryDao.getMostRecent(timesheetId));
             Future<TimesheetEntry> future = service.take();
             return TimesheetEntry.clone(future.get());
         } catch (InterruptedException | ExecutionException e) {

@@ -17,17 +17,18 @@
             android:id="@+id/nav_timesheet_new"
             android:icon="@drawable/baseline_settings_applications_black_24dp"
             android:title="@string/title_timesheet_new" />
-
+<!--
         <item
             android:id="@+id/nav_timesheet_register_work"
             android:icon="@drawable/baseline_settings_applications_black_24dp"
             android:title="@string/title_register_work" />
-
+-->
         <item
             android:id="@+id/nav_invoice_list"
             android:icon="@drawable/baseline_settings_applications_black_24dp"
             android:title="@string/title_invoice_overview" />
 
+<!--
         <item
             android:id="@+id/nav_invoice"
             android:icon="@drawable/baseline_settings_applications_black_24dp"
@@ -37,7 +38,7 @@
             android:id="@+id/nav_timesheet_calendar"
             android:icon="@drawable/baseline_settings_applications_black_24dp"
             android:title="@string/title_timesheet_calendar" />
-
+-->
     </group>
 
 </menu>

@@ -86,19 +86,20 @@
             tools:ignore="UselessParent">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/timesheet_entry_timesheet_spinner_layout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:id="@+id/timesheet_entry_timesheet_name_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:hint="@string/lbl_timesheet">
+                android:hint="@string/lbl_timesheet_name">
 
-                <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                    android:id="@+id/timesheet_entry_timesheet_spinner"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/timesheet_entry_timesheet_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
-                    tools:ignore="KeyboardInaccessibleWidget" />
+                    android:inputType="text"
+                    android:maxLength="50"
+                    android:enabled="true"
+                    android:text="" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout

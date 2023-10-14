@@ -3,26 +3,41 @@ package com.gunnarro.android.terex.domain.entity;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
-import java.util.List;
+import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
+import com.gunnarro.android.terex.domain.converter.LocalDateTimeConverter;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
+@TypeConverters({LocalDateConverter.class, LocalDateTimeConverter.class})
 @Entity(tableName = "project")
-public class Project {
+public class Project extends BaseEntity {
 
     @PrimaryKey(autoGenerate = true)
     public Long id;
 
     @ColumnInfo(name = "project_contract_id")
-    private Integer project_contract_id;
+    private Integer projectContractId;
 
+    @NotNull
     @ColumnInfo(name = "company_name")
-    private String company_name;
+    private String companyName;
 
+    @NotNull
     @ColumnInfo(name = "project_name")
     private String name;
+
+    @ColumnInfo(name = "project_description")
+    private String description;
+
+    @ColumnInfo(name = "project_status")
+    private String status;
 
     public Long getId() {
         return id;
@@ -32,20 +47,20 @@ public class Project {
         this.id = id;
     }
 
-    public Integer getProject_contract_id() {
-        return project_contract_id;
+    public Integer getProjectContractId() {
+        return projectContractId;
     }
 
-    public void setProject_contract_id(Integer project_contract_id) {
-        this.project_contract_id = project_contract_id;
+    public void setProjectContractId(Integer projectContractId) {
+        this.projectContractId = projectContractId;
     }
 
-    public String getCompany_name() {
-        return company_name;
+    public String getCompanyName() {
+        return companyName;
     }
 
-    public void setCompany_name(String company_name) {
-        this.company_name = company_name;
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 
     public String getName() {
@@ -72,12 +87,16 @@ public class Project {
         this.status = status;
     }
 
-    @ColumnInfo(name = "project_description")
-    private String description;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Project project = (Project) o;
+        return companyName.equals(project.companyName) && name.equals(project.name);
+    }
 
-    @ColumnInfo(name = "project_status")
-    private String status;
-
-
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(companyName, name);
+    }
 }

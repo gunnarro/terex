@@ -42,7 +42,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/tbl_invoice_buttons"
+            android:id="@+id/tbl_invoice_new_buttons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/invoice_spinner_layout"
@@ -52,7 +52,17 @@
             android:orientation="horizontal">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_invoice_create"
+                android:id="@+id/btn_invoice_new_cancel"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:text="@string/btn_cancel"
+                app:iconTint="@color/color_btn_bg_cancel" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_invoice_new_create"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -61,14 +71,6 @@
                 android:text="@string/btn_create"
                 app:iconTint="@color/color_btn_bg_add" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_invoice_send_email"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/btn_email"
-                app:iconTint="@color/color_btn_bg_add" />
         </LinearLayout>
     </RelativeLayout>
 </FrameLayout>

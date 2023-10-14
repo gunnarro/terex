@@ -1,14 +1,17 @@
 <resources>
     <string name="app_name">TeRex</string>
+    <!-- titles -->
     <string name="title_admin">Administration</string>
     <string name="title_timesheet">Timesheet</string>
     <string name="title_register_work">Register Work</string>
     <string name="title_invoice_overview">Invoice Overview</string>
     <string name="title_invoice">Invoice</string>
+    <string name="title_project">Project</string>
     <string name="title_credential">Credential Store</string>
     <string name="title_credential_register">Credential Store</string>
     <string name="title_timesheet_calendar">Timesheet calendar</string>
     <string name="title_timesheet_new">New timesheet</string>
+    <!-- labels -->
     <string name="lbl_description">Description</string>
     <string name="lbl_timesheet">Timesheet</string>
     <string name="lbl_invoice">Invoice</string>
@@ -26,6 +29,9 @@
     <string name="lbl_username">Username</string>
     <string name="lbl_password">Password</string>
     <string name="lbl_url">Url</string>
+    <string name="lbl_project_name">Project name</string>
+    <string name="lbl_timesheet_name">Timesheet name</string>
+    <!-- button names -->
     <string name="btn_save">Save</string>
     <string name="btn_cancel">Cancel</string>
     <string name="btn_add">Add</string>

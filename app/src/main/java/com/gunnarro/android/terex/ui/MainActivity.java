@@ -130,28 +130,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         try {
             Log.d("MainActivity.onNavigationItemSelected", "selected: " + menuItem.getItemId());
             int id = menuItem.getItemId();
-            if (id == R.id.nav_timesheet_register_work) {
-                viewFragment(timesheetAddEntryFragment);
-                setTitle(R.string.title_register_work);
-            } else if (id == R.id.nav_timesheet_list) {
+            if (id == R.id.nav_timesheet_list) {
                 viewFragment(timesheetListFragment);
                 setTitle(R.string.title_timesheet);
             } else if (id == R.id.nav_invoice_list) {
                 viewFragment(invoiceListFragment);
                 setTitle(R.string.title_invoice);
-            } else if (id == R.id.nav_invoice) {
-                viewFragment(invoiceFragment);
-                setTitle(R.string.title_invoice_overview);
             } else if (id == R.id.nav_admin) {
                 viewFragment(adminFragment);
                 setTitle(R.string.title_admin);
-            } else if (id == R.id.nav_timesheet_calendar) {
-                viewFragment(timesheetCalendarFragment);
-                setTitle(R.string.title_timesheet_calendar);
             } else if (id == R.id.nav_timesheet_new) {
                 viewFragment(timesheetNewFragment);
                 setTitle(R.string.title_timesheet_new);
             }
+            /*else if (id == R.id.nav_invoice) {
+                viewFragment(invoiceFragment);
+                setTitle(R.string.title_invoice_overview);
+            } else if (id == R.id.nav_timesheet_calendar) {
+                viewFragment(timesheetCalendarFragment);
+                setTitle(R.string.title_timesheet_calendar);
+            }   else if (id == R.id.nav_timesheet_register_work) {
+                viewFragment(timesheetAddEntryFragment);
+                setTitle(R.string.title_register_work);
+            } */
             // close drawer after clicking the menu item
             DrawerLayout drawer = findViewById(R.id.drawer_layout);
             drawer.closeDrawer(GravityCompat.START);

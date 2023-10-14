@@ -20,6 +20,7 @@ import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
+import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.repository.TimesheetRepository;
 import com.gunnarro.android.terex.utility.Utility;
 
@@ -37,7 +38,6 @@ import javax.inject.Inject;
  */
 public class TimesheetCustomCalendarFragment extends Fragment {
 
-    private TimesheetEntry lastAddedTimesheet;
     private LocalDate selectedLocalDate;
 
     private TimesheetRepository timesheetRepository;
@@ -54,7 +54,6 @@ public class TimesheetCustomCalendarFragment extends Fragment {
         requireActivity().setTitle(R.string.title_timesheet_calendar);
         setHasOptionsMenu(true);
         timesheetRepository = new TimesheetRepository(getContext());
-        lastAddedTimesheet = timesheetRepository.getMostRecentTimeSheetEntry();
         Log.d(Utility.buildTag(getClass(), "onCreate"), "");
     }
 
@@ -114,8 +113,25 @@ public class TimesheetCustomCalendarFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
+    private TimesheetEntry readTimesheetEntryFromBundle() {
+        String timesheetJson = getArguments() != null ? getArguments().getString(TimesheetListFragment.TIMESHEET_ENTRY_JSON_INTENT_KEY) : null;
+        Log.d("receives timesheet", "" + timesheetJson);
+        if (timesheetJson != null && !timesheetJson.isEmpty()) {
+            try {
+                TimesheetEntry timesheetEntry = Utility.gsonMapper().fromJson(timesheetJson, TimesheetEntry.class);
+                Log.d(Utility.buildTag(getClass(), "onFragmentResult"), String.format("timesheet: %s", timesheetEntry));
+                return timesheetEntry;
+            } catch (Exception e) {
+                Log.e("", e.toString());
+                throw new TerexApplicationException("Application Error!", "5000", e);
+            }
+        } else {
+            // no recent timesheet entry found, should not happen
+            throw new TerexApplicationException("Timesheet entry not found!", "55023", null);
+        }
+    }
 
-    private  List<EventDay> createEventDays(Long timesheetId) {
+    private List<EventDay> createEventDays(Long timesheetId) {
         List<EventDay> eventDays = new ArrayList<>();
         List<TimesheetEntry> timesheetEntryList = timesheetRepository.getTimesheetEntryList(timesheetId);
         timesheetEntryList.forEach(t -> {
@@ -139,27 +155,11 @@ public class TimesheetCustomCalendarFragment extends Fragment {
         return selectedDates;
     }
 
-    private String getTimesheetAsJson() {
-        if (lastAddedTimesheet == null) {
-            return null;
-        }
-        // need only update the work day date because we all other data is read from the last added timesheet.
-        lastAddedTimesheet.setWorkdayDate(selectedLocalDate);
-        try {
-            return Utility.gsonMapper().toJson(lastAddedTimesheet);
-        } catch (Exception e) {
-            Log.e("getTimesheetAsJson", e.toString());
-            throw new RuntimeException("unable to parse object to json! " + e);
-        }
-    }
-
     private TimesheetEntry getTimesheetEntry() {
-        if (lastAddedTimesheet == null) {
-            return null;
-        }
+        TimesheetEntry timesheetEntry = readTimesheetEntryFromBundle();
         // need only update the work day date because we all other data is read from the last added timesheet.
-        lastAddedTimesheet.setWorkdayDate(selectedLocalDate);
-        return lastAddedTimesheet;
+        timesheetEntry.setWorkdayDate(selectedLocalDate);
+        return timesheetEntry;
     }
 
     private void returnToTimesheetList() {
@@ -194,11 +194,6 @@ public class TimesheetCustomCalendarFragment extends Fragment {
      * When button save is click and new timesheet entry event is sent in order to insert it into the database
      */
     private void handleButtonSaveClick(CalendarView calendarView) {
-        String timesheetJsonStr = getTimesheetAsJson();
-        if (timesheetJsonStr == null) {
-            showInfoDialog("You are directed back to register timesheet page, because there are no timesheet entry to copy! The must at least exist one timesheet entry before you can use the timesheet calendar view.", getContext());
-            goToAddTimesheet();
-        }
         timesheetRepository.saveTimesheetEntry(getTimesheetEntry());
         showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_add_msg_format), selectedLocalDate), R.color.color_snackbar_text_add);
     }

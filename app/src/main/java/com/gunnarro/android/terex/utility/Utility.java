@@ -25,7 +25,7 @@ public class Utility {
 
     public static final Integer DEFAULT_DAILY_BREAK_IN_MINUTES = 30;
     public static final Long DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES = 8 * 60L - DEFAULT_DAILY_BREAK_IN_MINUTES;
-    public static final Integer DEFAULT_HOURLY_RATE = 1075;
+    public static final Integer DEFAULT_HOURLY_RATE = 1250;
     private static final SimpleDateFormat dateFormatter;
     private static final String DATE_TIME_PATTERN = "dd-MM-yyyy HH:mm";
     public static final String WORKDAY_DATE_PATTERN = "EEE d MMM";
@@ -100,6 +100,10 @@ public class Utility {
 
     public static DateTimeFormatter getTimeFormatter() {
         return DateTimeFormatter.ofPattern(TIME_PATTERN, Locale.getDefault());
+    }
+
+    public static LocalDate toLocalDate(String year, String mountName, Integer dayOfMount) {
+        return LocalDate.of(Integer.parseInt(year), mapMonthNameToNumber(mountName), dayOfMount);
     }
 
     public static LocalDate toLocalDate(String dateStr) {
@@ -237,7 +241,7 @@ public class Utility {
         return new String[]{"2023", "2024"};
     }
 
-    public static String[] getMonths() {
+    public static String[] getMonthNames() {
         return new DateFormatSymbols().getMonths();
     }
 
@@ -245,13 +249,12 @@ public class Utility {
      * go from 0 - 11
      */
     public static String mapMonthNumberToName(Integer monthNumber) {
-        return getMonths()[monthNumber];
+        return getMonthNames()[monthNumber];
     }
 
     public static Integer mapMonthNameToNumber(String monthName) {
-        String[] months = getMonths();
-        for (int i = 0; i < months.length; i++) {
-            if (months[i].equalsIgnoreCase(monthName)) {
+        for (int i = 1; i <= 12; i++) {
+            if (LocalDate.of(2023, i, 1).getMonth().name().equalsIgnoreCase(monthName)) {
                 return i;
             }
         }

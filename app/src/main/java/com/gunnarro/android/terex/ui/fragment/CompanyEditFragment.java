@@ -99,7 +99,7 @@ public class CompanyEditFragment extends Fragment implements View.OnClickListene
 
         // create timesheet month spinner
         final AutoCompleteTextView monthSpinner = view.findViewById(R.id.timesheet_new_month_spinner);
-        ArrayAdapter<CharSequence> monthAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, Utility.getMonths());
+        ArrayAdapter<CharSequence> monthAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, Utility.getMonthNames());
         monthSpinner.setAdapter(monthAdapter);
         monthSpinner.setListSelection(0);
 
