@@ -120,21 +120,21 @@ public class TimesheetEntryAddFragment extends Fragment implements View.OnClickL
         view.findViewById(R.id.btn_timesheet_entry_save).setOnClickListener(v -> {
             view.findViewById(R.id.btn_timesheet_entry_save).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
             Bundle result = new Bundle();
-            result.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_INTENT_KEY, getTimesheetAsJson());
+            result.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_KEY, getTimesheetAsJson());
             result.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_KEY, TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_SAVE);
             getParentFragmentManager().setFragmentResult(TimesheetEntryListFragment.TIMESHEET_ENTRY_REQUEST_KEY, result);
             Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new timesheet entry intent: " + getTimesheetAsJson());
-            returnToTimesheetList();
+            returnToTimesheetEntryList(getArguments().getLong(TimesheetFragment.TIMESHEET_ID_KEY));
         });
 
         view.findViewById(R.id.btn_timesheet_entry_delete).setOnClickListener(v -> {
             view.findViewById(R.id.btn_timesheet_entry_delete).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
             Bundle result = new Bundle();
-            result.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_INTENT_KEY, getTimesheetAsJson());
+            result.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_KEY, getTimesheetAsJson());
             result.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_KEY, TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_DELETE);
             getParentFragmentManager().setFragmentResult(TimesheetEntryListFragment.TIMESHEET_ENTRY_REQUEST_KEY, result);
             Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new delete item intent");
-            returnToTimesheetList();
+            returnToTimesheetEntryList(getArguments().getLong(TimesheetFragment.TIMESHEET_ID_KEY));
         });
 
         view.findViewById(R.id.btn_timesheet_entry_cancel).setOnClickListener(v -> {
@@ -142,15 +142,15 @@ public class TimesheetEntryAddFragment extends Fragment implements View.OnClickL
             // Simply return back to credential list
             NavigationView navigationView = requireActivity().findViewById(R.id.navigationView);
             requireActivity().onOptionsItemSelected(navigationView.getMenu().findItem(R.id.nav_timesheet_list));
-            returnToTimesheetList();
+            returnToTimesheetEntryList(getArguments().getLong(TimesheetFragment.TIMESHEET_ID_KEY));
         });
 
-        updateTimesheetAddView(view, readTimesheetEntryFromBundle());
+        updateTimesheetEntryAddView(view, readTimesheetEntryFromBundle());
         return view;
     }
 
     private TimesheetEntry readTimesheetEntryFromBundle() {
-        String timesheetJson = getArguments() != null ? getArguments().getString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_INTENT_KEY) : null;
+        String timesheetJson = getArguments() != null ? getArguments().getString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_KEY) : null;
         Log.d("receives timesheet", "" + timesheetJson);
         if (timesheetJson != null && !timesheetJson.isEmpty()) {
             try {
@@ -171,15 +171,17 @@ public class TimesheetEntryAddFragment extends Fragment implements View.OnClickL
         }
     }
 
-    private void returnToTimesheetList() {
+    private void returnToTimesheetEntryList(Long timesheetId) {
+        Bundle bundle = new Bundle();
+        bundle.putLong(TimesheetFragment.TIMESHEET_ID_KEY, timesheetId);
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_frame, TimesheetEntryListFragment.class, null)
+                .replace(R.id.content_frame, TimesheetEntryListFragment.class, bundle)
                 .setReorderingAllowed(true)
                 .commit();
     }
 
-    private void updateTimesheetAddView(View view, @NotNull TimesheetEntry timesheetEntry) {
+    private void updateTimesheetEntryAddView(View view, @NotNull TimesheetEntry timesheetEntry) {
         Log.d("update timesheet add view", timesheetEntry.toString());
         if (timesheetEntry.getTimesheetId() == null) {
             throw new TerexApplicationException("timesheetId is null!", "timesheetId is null!", null);

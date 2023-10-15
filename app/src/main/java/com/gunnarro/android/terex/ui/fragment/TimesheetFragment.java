@@ -147,7 +147,7 @@ public class TimesheetFragment extends Fragment {
             } else if (TIMESHEET_ACTION_VIEW.equals(action)) {
                 // redirect to timesheet entry list fragment
                 Bundle bundle = new Bundle();
-                bundle.putString(TimesheetFragment.TIMESHEET_ID_KEY, timesheet.getId().toString());
+                bundle.putLong(TimesheetFragment.TIMESHEET_ID_KEY, timesheet.getId());
                 goToTimesheetEntryView(bundle);
             } else {
                 Log.w(Utility.buildTag(getClass(), "handleTimesheetActions"), "unknown action: " + action);

@@ -34,7 +34,7 @@ public class TimesheetEntryListAdapter extends ListAdapter<TimesheetEntry, Times
         TimesheetEntryViewHolder viewHolder = TimesheetEntryViewHolder.create(parent);
         viewHolder.itemView.findViewById(R.id.ic_timesheet_entry_row_delete).setOnClickListener(v -> {
             Bundle actionBundle = new Bundle();
-            actionBundle.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_INTENT_KEY, toJson(getItem(viewHolder.getBindingAdapterPosition())));
+            actionBundle.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_KEY, toJson(getItem(viewHolder.getBindingAdapterPosition())));
             actionBundle.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_KEY, TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_DELETE);
             fragmentManager.setFragmentResult(TimesheetEntryListFragment.TIMESHEET_ENTRY_REQUEST_KEY, actionBundle);
         });

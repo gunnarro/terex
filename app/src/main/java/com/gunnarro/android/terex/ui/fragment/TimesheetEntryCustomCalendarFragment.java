@@ -1,7 +1,5 @@
 package com.gunnarro.android.terex.ui.fragment;
 
-import android.app.AlertDialog;
-import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
@@ -96,7 +94,7 @@ public class TimesheetEntryCustomCalendarFragment extends Fragment {
             // Simply return back to credential list
             NavigationView navigationView = requireActivity().findViewById(R.id.navigationView);
             requireActivity().onOptionsItemSelected(navigationView.getMenu().findItem(R.id.nav_timesheet_list));
-            returnToTimesheetList();
+            returnToTimesheetEntryList(getArguments().getLong(TimesheetFragment.TIMESHEET_ID_KEY));
         });
 
         Log.d(Utility.buildTag(getClass(), "onCreateView"), "");
@@ -112,7 +110,7 @@ public class TimesheetEntryCustomCalendarFragment extends Fragment {
     }
 
     private TimesheetEntry readTimesheetEntryFromBundle() {
-        String timesheetJson = getArguments() != null ? getArguments().getString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_INTENT_KEY) : null;
+        String timesheetJson = getArguments() != null ? getArguments().getString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_KEY) : null;
         Log.d("receives timesheet", "" + timesheetJson);
         if (timesheetJson != null && !timesheetJson.isEmpty()) {
             try {
@@ -148,7 +146,7 @@ public class TimesheetEntryCustomCalendarFragment extends Fragment {
             Calendar cal = Calendar.getInstance();
             cal.set(t.getWorkdayDate().getYear(), t.getWorkdayDate().getMonth().getValue() - 1, t.getWorkdayDate().getDayOfMonth());
             selectedDates.add(cal);
-            Log.d("TimesheetCustomCalendarFragment", "ADD SELECTED DATE: " + t.getWorkdayDate().toString());
+            Log.d("TimesheetCustomCalendarFragment", "ADD SELECTED DATE: " + t.getWorkdayDate());
         });
         return selectedDates;
     }
@@ -160,32 +158,14 @@ public class TimesheetEntryCustomCalendarFragment extends Fragment {
         return timesheetEntry;
     }
 
-    private void returnToTimesheetList() {
+    private void returnToTimesheetEntryList(Long timesheetId) {
+        Bundle bundle = new Bundle();
+        bundle.putLong(TimesheetFragment.TIMESHEET_ID_KEY, timesheetId);
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_frame, TimesheetEntryListFragment.class, null)
+                .replace(R.id.content_frame, TimesheetEntryListFragment.class, bundle)
                 .setReorderingAllowed(true)
                 .commit();
-    }
-
-    private void goToAddTimesheet() {
-        requireActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.content_frame, TimesheetEntryAddFragment.class, null)
-                .setReorderingAllowed(true)
-                .commit();
-    }
-
-    private void showInfoDialog(String infoMessage, Context context) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Info");
-        builder.setMessage(infoMessage);
-        // Set Cancelable false for when the user clicks on the outside the Dialog Box then it will remain show
-        builder.setCancelable(false);
-        // Set the positive button with yes name Lambda OnClickListener method is use of DialogInterface interface.
-        builder.setPositiveButton("Ok", (dialog, which) -> dialog.cancel());
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
     }
 
     /**

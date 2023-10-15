@@ -13,7 +13,6 @@ import java.util.List;
  */
 public class TimesheetWithEntries {
 
-    @NotNull
     @Embedded
     private Timesheet timesheet;
 
@@ -23,6 +22,7 @@ public class TimesheetWithEntries {
     )
     private List<TimesheetEntry> timesheetEntryList;
 
+    @NotNull
     public Timesheet getTimesheet() {
         return timesheet;
     }
