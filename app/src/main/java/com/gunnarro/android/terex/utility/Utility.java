@@ -13,13 +13,21 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.WeekFields;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.TimeZone;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Utility {
 
@@ -259,5 +267,19 @@ public class Utility {
             }
         }
         return null;
+    }
+
+    public static Integer countBusinessDaysInMonth(LocalDate month) {
+        LocalDate startDate = getFirstDayOfMonth(month);
+        LocalDate endDate = getLastDayOfMonth(month);
+        // Predicate 2: Is a given date is a weekday
+        Predicate<LocalDate> isWeekend = date -> date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY;
+        // Get all days between two dates
+        long daysBetween = ChronoUnit.DAYS.between(startDate, endDate);
+        // Iterate over stream of all dates and check each day against any weekday or
+        return Stream.iterate(startDate, date -> date.plusDays(1))
+                .limit(daysBetween)
+                .filter((isWeekend).negate())
+                .collect(Collectors.toList()).size();
     }
 }

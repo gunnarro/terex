@@ -17,6 +17,7 @@ public class InvoiceListAdapter extends ListAdapter<Invoice, InvoiceViewHolder> 
 
     public InvoiceListAdapter(@NonNull DiffUtil.ItemCallback<Invoice> diffCallback) {
         super(diffCallback);
+        this.setHasStableIds(true);
         Log.d("InvoiceListAdapter", "init");
     }
 

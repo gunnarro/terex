@@ -68,7 +68,6 @@ public class InvoiceNewFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requireActivity().setTitle(R.string.title_invoice);
-        setHasOptionsMenu(true);
         invoiceService = new InvoiceService(requireActivity().getApplicationContext());
         Log.d(Utility.buildTag(getClass(), "onCreate"), "");
     }
@@ -77,7 +76,8 @@ public class InvoiceNewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_invoice_new, container, false);
-        List<Timesheet> timesheetList = invoiceService.getTimesheets(Timesheet.TimesheetStatusEnum.OPEN.name());
+        // only completed time sheets can be used a attachment to a invoice.
+        List<Timesheet> timesheetList = invoiceService.getTimesheets(Timesheet.TimesheetStatusEnum.COMPLETED.name());
         List<SpinnerItem> timesheetItems = timesheetList.stream().map(t -> new SpinnerItem(t.id, t.getProjectCode())).collect(Collectors.toList());
         final AutoCompleteTextView timesheetSpinner = view.findViewById(R.id.invoice_timesheet_spinner);
         ArrayAdapter<SpinnerItem> timesheetAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, timesheetItems);
@@ -118,6 +118,13 @@ public class InvoiceNewFragment extends Fragment {
             returnToInvoiceList();
         });
 
+        if (timesheetList == null || timesheetList.isEmpty()) {
+            // disable dropdown and create button
+            view.findViewById(R.id.invoice_timesheet_spinner).setEnabled(false);
+            view.findViewById(R.id.btn_invoice_new_create).setEnabled(false);
+            showInfoDialog("No timesheet ready for billing. Please fulfill the timesheet and try again.", requireContext());
+        }
+
         Log.d(Utility.buildTag(getClass(), "onCreateView"), "");
         return view;
     }
@@ -137,10 +144,13 @@ public class InvoiceNewFragment extends Fragment {
      * @return id of the invoice
      */
     private Invoice createInvoice(Long timesheetId) {
+
         Long invoiceId = invoiceService.createInvoice(getCompany(), getClient(), timesheetId);
         if (invoiceId == null) {
             showInfoDialog("No timesheet found! timesheetId=" + timesheetId, requireContext());
         }
+        // finally close the timesheet
+
         return invoiceService.getInvoice(invoiceId);
     }
 

@@ -37,12 +37,15 @@ import lombok.Setter;
 public class Timesheet {
 
     /**
-     * OPEN: Created but not in use, i.e, the timesheet is empty. When first timesheet entry is added the status changes to ACTIVE.
-     * ACTIVE: Open and have work registered, i.e, timesheet entries. When attached to a invoice the status changes to BILLED.
-     * BILLED: Added as attachment to a invoice. Not possible to change or delete the timesheet or any assigned timesheet entries.
+     * <ul>
+     *  <li>OPEN     : Created but not in use, i.e, the timesheet is empty. When first timesheet entry is added the status changes to ACTIVE.</li>
+     *  <li>ACTIVE   : Open and have work registered, i.e, timesheet entries. When attached to a invoice the status changes to BILLED.</li>
+     *  <li>COMPLETED: Ready for billing, i.e, to be used as attachment for the invoice. In this state you are still able to edit the timesheet by flip the status back to ACTIVE.</li>
+     *  <li>BILLED   : Have been added as attachment to a invoice. Not possible to change or delete the timesheet or any assigned timesheet entries.</li>
+     * </u>
      */
     public enum TimesheetStatusEnum {
-        OPEN, ACTIVE, BILLED;
+        OPEN, ACTIVE, COMPLETED, BILLED;
     }
 
     @PrimaryKey(autoGenerate = true)

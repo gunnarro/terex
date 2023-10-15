@@ -30,7 +30,6 @@ public class InvoiceViewFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requireActivity().setTitle(R.string.title_invoice);
-        setHasOptionsMenu(true);
         Log.d(Utility.buildTag(getClass(), "onCreate"), "");
     }
 

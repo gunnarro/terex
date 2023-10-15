@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -16,10 +15,8 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.navigation.NavigationView;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
-import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.service.RecruitmentService;
 import com.gunnarro.android.terex.utility.Utility;
 
@@ -154,7 +151,7 @@ public class CompanyEditFragment extends Fragment implements View.OnClickListene
     private void returnToTimesheetList() {
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_frame, TimesheetListFragment.class, null)
+                .replace(R.id.content_frame, TimesheetEntryListFragment.class, null)
                 .setReorderingAllowed(true)
                 .commit();
     }

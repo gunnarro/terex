@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import android.content.Context;
 
+import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 
 import org.junit.Before;
@@ -43,7 +44,7 @@ public class TimesheetEntryTest {
         timesheetEntry1.setLastModifiedDate(LocalDateTime.now());
         timesheetEntry1.setWorkdayDate(LocalDate.now());
         timesheetEntry1.setHourlyRate(1075);
-        timesheetEntry1.setStatus("OPEN");
+        timesheetEntry1.setStatus(Timesheet.TimesheetStatusEnum.OPEN.name());
         timesheetEntry1.setBreakInMin(30);
         timesheetEntry1.setWorkdayDate(LocalDate.of(2023, 9, 9));
 

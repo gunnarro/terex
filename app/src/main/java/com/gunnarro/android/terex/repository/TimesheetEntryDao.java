@@ -39,7 +39,7 @@ public interface TimesheetEntryDao {
     @Query("SELECT * FROM timesheet_entry WHERE timesheet_id = :timesheetId ORDER BY workday_date ASC")
     List<TimesheetEntry> getTimesheetEntryList(Long timesheetId);
 
-    @Query("SELECT * FROM timesheet_entry WHERE timesheet_id > :timesheetId ORDER BY workday_date ASC")
+    @Query("SELECT * FROM timesheet_entry WHERE timesheet_id = :timesheetId ORDER BY workday_date ASC")
     LiveData<List<TimesheetEntry>> getTimesheetEntryListLiveData(Long timesheetId);
 
     @Query("SELECT * FROM timesheet_entry WHERE strftime('%Y', workday_date) = :week")

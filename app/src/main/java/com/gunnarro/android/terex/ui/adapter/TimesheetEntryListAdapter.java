@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.ListAdapter;
 
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
-import com.gunnarro.android.terex.ui.fragment.TimesheetListFragment;
+import com.gunnarro.android.terex.ui.fragment.TimesheetEntryListFragment;
 import com.gunnarro.android.terex.ui.view.TimesheetEntryViewHolder;
 import com.gunnarro.android.terex.utility.Utility;
 
@@ -23,6 +23,7 @@ public class TimesheetEntryListAdapter extends ListAdapter<TimesheetEntry, Times
 
     public TimesheetEntryListAdapter(@NonNull FragmentManager fragmentManager, @NonNull DiffUtil.ItemCallback<TimesheetEntry> diffCallback) {
         super(diffCallback);
+        this.setHasStableIds(true);
         this.fragmentManager = fragmentManager;
         Log.d("TimesheetListAdapter", "init");
     }
@@ -30,14 +31,14 @@ public class TimesheetEntryListAdapter extends ListAdapter<TimesheetEntry, Times
     @NonNull
     @Override
     public TimesheetEntryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        TimesheetEntryViewHolder th = TimesheetEntryViewHolder.create(parent);
-        th.itemView.findViewById(R.id.ic_timesheet_entry_row_delete).setOnClickListener(v -> {
+        TimesheetEntryViewHolder viewHolder = TimesheetEntryViewHolder.create(parent);
+        viewHolder.itemView.findViewById(R.id.ic_timesheet_entry_row_delete).setOnClickListener(v -> {
             Bundle actionBundle = new Bundle();
-            actionBundle.putString(TimesheetListFragment.TIMESHEET_ENTRY_JSON_INTENT_KEY, toJson(getItem(th.getBindingAdapterPosition())));
-            actionBundle.putString(TimesheetListFragment.TIMESHEET_ENTRY_ACTION_KEY, TimesheetListFragment.TIMESHEET_ENTRY_ACTION_DELETE);
-            fragmentManager.setFragmentResult(TimesheetListFragment.TIMESHEET_ENTRY_REQUEST_KEY, actionBundle);
+            actionBundle.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_INTENT_KEY, toJson(getItem(viewHolder.getBindingAdapterPosition())));
+            actionBundle.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_KEY, TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_DELETE);
+            fragmentManager.setFragmentResult(TimesheetEntryListFragment.TIMESHEET_ENTRY_REQUEST_KEY, actionBundle);
         });
-        return th;
+        return viewHolder;
     }
 
     private String toJson(TimesheetEntry timesheet) {

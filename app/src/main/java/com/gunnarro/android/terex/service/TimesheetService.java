@@ -105,8 +105,8 @@ public class TimesheetService {
         return timesheetRepository.getMostRecentTimeSheetEntry(timesheetId);
     }
 
-    public TimesheetWithEntries getCurrentTimesheetWithEntries() {
-        return timesheetRepository.getCurrentTimesheetWithEntries(LocalDate.now().getYear(), LocalDate.now().getMonthValue());
+    public TimesheetWithEntries getTimesheetWithEntries(Long timesheetId) {
+        return timesheetRepository.getTimesheetWithEntries(timesheetId);
     }
 
     public LiveData<List<TimesheetEntry>> getTimesheetEntryListLiveData(Long timesheetId) {

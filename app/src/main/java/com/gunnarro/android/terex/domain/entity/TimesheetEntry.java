@@ -264,7 +264,7 @@ public class TimesheetEntry {
     @NonNull
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("Timesheet{");
+        final StringBuffer sb = new StringBuffer("TimesheetEntry{");
         sb.append("id=").append(id);
         sb.append(", timesheetId=").append(timesheetId);
         sb.append(", createdDate=").append(createdDate);

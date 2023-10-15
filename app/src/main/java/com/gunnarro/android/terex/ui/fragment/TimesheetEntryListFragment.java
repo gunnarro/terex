@@ -27,7 +27,6 @@ import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetWithEntries;
-import com.gunnarro.android.terex.observable.RxBus;
 import com.gunnarro.android.terex.observable.event.TimesheetEvent;
 import com.gunnarro.android.terex.ui.adapter.TimesheetEntryListAdapter;
 import com.gunnarro.android.terex.ui.view.TimesheetEntryViewModel;
@@ -42,7 +41,7 @@ import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
 @AndroidEntryPoint
-public class TimesheetListFragment extends Fragment {
+public class TimesheetEntryListFragment extends Fragment {
     public static final String TIMESHEET_ENTRY_REQUEST_KEY = "200";
     public static final String TIMESHEET_ENTRY_JSON_INTENT_KEY = "timesheet_entry_as_json";
     public static final String TIMESHEET_ENTRY_ACTION_KEY = "211";
@@ -55,7 +54,6 @@ public class TimesheetListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requireActivity().setTitle(R.string.title_timesheets);
-        setHasOptionsMenu(true);
         // Get a new or existing ViewModel from the ViewModelProvider.
         try {
             timesheetEntryViewModel = new ViewModelProvider(this).get(TimesheetEntryViewModel.class);
@@ -81,11 +79,12 @@ public class TimesheetListFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Update the cached copy of the timesheet entries in the adapter.
-        timesheetEntryViewModel.getTimesheetLiveData().observe(requireActivity(), adapter::submitList);
+        Long timesheetId = getArguments().getString(TimesheetFragment.TIMESHEET_ID_KEY) != null ? Long.valueOf(getArguments().getString(TimesheetFragment.TIMESHEET_ID_KEY)) : null;
 
-        //  TimesheetWithEntries timesheetWithEntries = timesheetViewModel.getTimesheetWithEntries(1L);
-        TimesheetWithEntries timesheetWithEntries = timesheetEntryViewModel.getCurrentTimesheetWithEntries();
+        // Update the cached copy of the timesheet entries in the adapter.
+        timesheetEntryViewModel.getTimesheetLiveData(timesheetId).observe(requireActivity(), adapter::submitList);
+
+        TimesheetWithEntries timesheetWithEntries = timesheetEntryViewModel.getTimesheetWithEntries(timesheetId);
         Log.d("all timesheets", "timesheet with entries: " + timesheetWithEntries);
 
         TextView listHeaderView = view.findViewById(R.id.timesheet_entry_list_header);
@@ -98,7 +97,7 @@ public class TimesheetListFragment extends Fragment {
         addButton.setOnClickListener(v -> {
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.content_frame, TimesheetAddEntryFragment.class, createTimesheetEntryBundle(timesheetWithEntries.getTimesheet().getId()))
+                    .replace(R.id.content_frame, TimesheetEntryAddFragment.class, createTimesheetEntryBundle(timesheetWithEntries.getTimesheet().getId()))
                     .setReorderingAllowed(true)
                     .commit();
         });
@@ -107,7 +106,7 @@ public class TimesheetListFragment extends Fragment {
         calendarButton.setOnClickListener(v -> {
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.content_frame, TimesheetCustomCalendarFragment.class, createTimesheetEntryBundle(timesheetWithEntries.getTimesheet().getId()))
+                    .replace(R.id.content_frame, TimesheetEntryCustomCalendarFragment.class, createTimesheetEntryBundle(timesheetWithEntries.getTimesheet().getId()))
                     .setReorderingAllowed(true)
                     .commit();
         });
@@ -130,7 +129,7 @@ public class TimesheetListFragment extends Fragment {
         }
         String timesheetJson = Utility.gsonMapper().toJson(mostRecentTimesheetEntry, TimesheetEntry.class);
         Bundle bundle = new Bundle();
-        bundle.putString(TimesheetListFragment.TIMESHEET_ENTRY_JSON_INTENT_KEY, timesheetJson);
+        bundle.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_INTENT_KEY, timesheetJson);
         return bundle;
     }
 
@@ -223,7 +222,7 @@ public class TimesheetListFragment extends Fragment {
                 if (obj instanceof TimesheetEvent event) {
                     Log.d(Utility.buildTag(getClass(), "getInputObserver.onNext"), String.format("handle event: %s", event));
                     if (event.isAdd()) {
-                       // timesheetEntryViewModel.saveTimesheetEntry(event.getTimesheetEntry());
+                        // timesheetEntryViewModel.saveTimesheetEntry(event.getTimesheetEntry());
                     } else if (event.isDelete()) {
                         // not implemented
                     }

@@ -17,10 +17,10 @@ import com.google.android.material.navigation.NavigationView;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.ui.fragment.AdminFragment;
 import com.gunnarro.android.terex.ui.fragment.InvoiceListFragment;
-import com.gunnarro.android.terex.ui.fragment.TimesheetAddEntryFragment;
-import com.gunnarro.android.terex.ui.fragment.TimesheetCustomCalendarFragment;
+import com.gunnarro.android.terex.ui.fragment.TimesheetEntryAddFragment;
+import com.gunnarro.android.terex.ui.fragment.TimesheetEntryCustomCalendarFragment;
 import com.gunnarro.android.terex.ui.fragment.TimesheetFragment;
-import com.gunnarro.android.terex.ui.fragment.TimesheetListFragment;
+import com.gunnarro.android.terex.ui.fragment.TimesheetEntryListFragment;
 import com.gunnarro.android.terex.ui.fragment.TimesheetNewFragment;
 import com.gunnarro.android.terex.utility.Utility;
 
@@ -45,16 +45,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     AdminFragment adminFragment;
 
     @Inject
-    TimesheetListFragment timesheetListFragment;
+    TimesheetEntryListFragment timesheetListFragment;
 
     @Inject
     TimesheetFragment timesheetFragment;
 
     @Inject
-    TimesheetAddEntryFragment timesheetAddEntryFragment;
+    TimesheetEntryAddFragment timesheetAddEntryFragment;
 
     @Inject
-    TimesheetCustomCalendarFragment timesheetCalendarFragment;
+    TimesheetEntryCustomCalendarFragment timesheetCalendarFragment;
 
     @Inject
     TimesheetNewFragment timesheetNewFragment;
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public MainActivity() {
         this.adminFragment = new AdminFragment();
-        this.timesheetListFragment = new TimesheetListFragment();
+        this.timesheetListFragment = new TimesheetEntryListFragment();
         //this.timesheetAddEntryFragment = new TimesheetAddEntryFragment();
         this.invoiceListFragment = new InvoiceListFragment();
         //this.timesheetCalendarFragment = new TimesheetCustomCalendarFragment();
@@ -111,6 +111,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Finally, check and grant or deny permissions
         checkPermissions();
     }
+    
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {

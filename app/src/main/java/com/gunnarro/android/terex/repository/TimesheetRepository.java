@@ -40,24 +40,11 @@ public class TimesheetRepository {
 
 
     @Transaction
-    public TimesheetWithEntries getCurrentTimesheetWithEntries(Integer year, Integer month) {
-        try {
-            CompletionService<TimesheetWithEntries> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
-            Log.d("getCurrentTimesheetWithEntries", String.format("%s - %s", year, month));
-            service.submit(() -> timesheetDao.getCurrentTimesheetWithEntries(year, month));
-            Future<TimesheetWithEntries> future = service.take();
-            return future != null ? future.get() : null;
-        } catch (InterruptedException | ExecutionException e) {
-            // Something crashed, therefore restore interrupted state before leaving.
-            Thread.currentThread().interrupt();
-            throw new TerexApplicationException("Error getting timesheet with entries list", e.getMessage(), e.getCause());
-        }
-    }
-
     public TimesheetWithEntries getTimesheetWithEntries(Long timesheetId) {
         try {
             CompletionService<TimesheetWithEntries> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
-            service.submit(() -> timesheetDao.getTimesheetWithEntriesById(timesheetId));
+            Log.d("getCurrentTimesheetWithEntries", String.format("timesheetId=%s", timesheetId));
+            service.submit(() -> timesheetDao.getTimesheetWithEntries(timesheetId));
             Future<TimesheetWithEntries> future = service.take();
             return future != null ? future.get() : null;
         } catch (InterruptedException | ExecutionException e) {

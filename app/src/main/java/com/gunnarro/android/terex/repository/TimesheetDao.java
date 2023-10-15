@@ -22,8 +22,8 @@ public interface TimesheetDao {
     @Query("SELECT * FROM timesheet WHERE id = :id")
     TimesheetWithEntries getTimesheetWithEntriesById(Long id);
 
-    @Query("SELECT * FROM timesheet WHERE year = :year AND month = :month")
-    TimesheetWithEntries getCurrentTimesheetWithEntries(Integer year, Integer month);
+    @Query("SELECT * FROM timesheet WHERE id = :timesheetId")
+    TimesheetWithEntries getTimesheetWithEntries(Long timesheetId);
 
     @Query("SELECT * FROM timesheet WHERE client_name = :clientName AND project_code = :projectCode AND year = :year AND month = :month")
     Timesheet getTimesheet(String clientName, String projectCode, Integer year, Integer month);

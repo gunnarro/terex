@@ -24,24 +24,24 @@ public class TimesheetEntryViewModel extends AndroidViewModel {
     // Using LiveData and caching what getAlphabetizedWords returns has several benefits:
     // - We can put an observer on the data (instead of polling for changes) and only update the
     //   the UI when the data actually changes.
-    private final LiveData<List<TimesheetEntry>> timesheetEntryList;
+    private LiveData<List<TimesheetEntry>> timesheetEntryList;
 
     public TimesheetEntryViewModel(@NonNull Application application) {
         super(application);
         timesheetService = new TimesheetService(application);
-        timesheetEntryList = timesheetService.getTimesheetEntryListLiveData(0L);
     }
 
-    public LiveData<List<TimesheetEntry>> getTimesheetLiveData() {
-        return timesheetEntryList;
+    public LiveData<List<TimesheetEntry>> getTimesheetLiveData(Long timesheetId) {
+        return timesheetService.getTimesheetEntryListLiveData(timesheetId);
     }
 
     public TimesheetEntry getMostRecentTimesheetEntry(Long timesheetId) {
         return timesheetService.getMostRecentTimeSheetEntry(timesheetId);
     }
 
-    public TimesheetWithEntries getCurrentTimesheetWithEntries() {
-        return timesheetService.getCurrentTimesheetWithEntries();
+    public TimesheetWithEntries getTimesheetWithEntries(Long timesheetId) {
+        if (timesheetId == null) { return null; };
+        return timesheetService.getTimesheetWithEntries(timesheetId);
     }
 
     public void saveTimesheet(Timesheet timesheet) {

@@ -42,7 +42,6 @@ public class ProjectNewFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requireActivity().setTitle(R.string.title_project);
-        setHasOptionsMenu(true);
         projectService = new ProjectService(requireActivity().getApplicationContext());
         Log.d(Utility.buildTag(getClass(), "onCreate"), "");
     }

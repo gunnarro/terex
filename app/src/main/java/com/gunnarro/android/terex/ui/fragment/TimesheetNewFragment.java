@@ -60,7 +60,7 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
         Timesheet timesheet = Timesheet.createDefault(clients[0], projects[0]);
 
         // check if this is an existing or a new timesheet
-        String timesheetJson = getArguments() != null ? getArguments().getString(TimesheetFragment.TIMESHEET_JSON_INTENT_KEY) : null;
+        String timesheetJson = getArguments() != null ? getArguments().getString(TimesheetFragment.TIMESHEET_JSON_KEY) : null;
         if (timesheetJson != null && !timesheetJson.isEmpty()) {
             try {
                 timesheet = Utility.gsonMapper().fromJson(timesheetJson, Timesheet.class);
@@ -113,9 +113,10 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
         // disable save button as default
         view.findViewById(R.id.btn_timesheet_new_save).setEnabled(true);
         view.findViewById(R.id.btn_timesheet_new_save).setOnClickListener(v -> {
+            validateInputData();
             view.findViewById(R.id.btn_timesheet_new_save).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
             Bundle result = new Bundle();
-            result.putString(TimesheetFragment.TIMESHEET_JSON_INTENT_KEY, getTimesheetAsJson());
+            result.putString(TimesheetFragment.TIMESHEET_JSON_KEY, getTimesheetAsJson());
             result.putString(TimesheetFragment.TIMESHEET_ACTION_KEY, TimesheetFragment.TIMESHEET_ACTION_SAVE);
             getParentFragmentManager().setFragmentResult(TimesheetFragment.TIMESHEET_REQUEST_KEY, result);
             Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new timesheet intent: " + getTimesheetAsJson());
@@ -125,7 +126,7 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
         view.findViewById(R.id.btn_timesheet_new_delete).setOnClickListener(v -> {
             view.findViewById(R.id.btn_timesheet_new_delete).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
             Bundle result = new Bundle();
-            result.putString(TimesheetFragment.TIMESHEET_JSON_INTENT_KEY, getTimesheetAsJson());
+            result.putString(TimesheetFragment.TIMESHEET_JSON_KEY, getTimesheetAsJson());
             result.putString(TimesheetFragment.TIMESHEET_ACTION_KEY, TimesheetFragment.TIMESHEET_ACTION_DELETE);
             getParentFragmentManager().setFragmentResult(TimesheetFragment.TIMESHEET_REQUEST_KEY, result);
             Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new delete item intent");
@@ -202,6 +203,11 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
         } else {
             // change button icon to from add new to save
             ((MaterialButton) view.findViewById(R.id.btn_timesheet_new_save)).setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_check_black_24dp));
+            // not allowed to change a timesheet with status set equal to BILLED
+            if (timesheet.getStatus().equals(Timesheet.TimesheetStatusEnum.BILLED.name())) {
+                view.findViewById(R.id.btn_timesheet_new_delete).setVisibility(View.GONE);
+                view.findViewById(R.id.btn_timesheet_new_save).setVisibility(View.GONE);
+            }
         }
         Log.d(Utility.buildTag(getClass(), "updateTimesheetNewView"), String.format("updated %s ", timesheet));
     }
@@ -274,8 +280,8 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
         }
     }
 
-
-    private boolean isInputFormDataValid() {
+    private boolean validateInputData() {
+        // simply check if the timesheet already exist
         return true;
     }
 

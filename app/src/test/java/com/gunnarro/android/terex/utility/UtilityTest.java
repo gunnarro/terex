@@ -1,8 +1,10 @@
 package com.gunnarro.android.terex.utility;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -64,5 +66,10 @@ public class UtilityTest {
         assertEquals("January", Utility.mapMonthNumberToName(0));
         assertEquals(LocalDate.of(2023, 1, 1).getMonth().name(), Utility.getMonthNames()[0].toUpperCase());
         assertEquals(LocalDate.of(2023, 1, 1).getMonth().getValue(), Utility.mapMonthNameToNumber("January").intValue());
+    }
+
+    @Test
+    public void numberOfBusinessDaysInMonth() {
+        Assertions.assertEquals(21, (int) Utility.countBusinessDaysInMonth(LocalDate.of(2023, 10, 1)));
     }
 }

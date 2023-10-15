@@ -10,7 +10,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
@@ -25,8 +24,6 @@ import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
-import com.gunnarro.android.terex.observable.RxBus;
-import com.gunnarro.android.terex.observable.event.TimesheetEvent;
 import com.gunnarro.android.terex.ui.adapter.TimesheetListAdapter;
 import com.gunnarro.android.terex.ui.view.TimesheetViewModel;
 import com.gunnarro.android.terex.utility.Utility;
@@ -34,16 +31,16 @@ import com.gunnarro.android.terex.utility.Utility;
 import org.jetbrains.annotations.NotNull;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
 
 @AndroidEntryPoint
 public class TimesheetFragment extends Fragment {
     public static final String TIMESHEET_REQUEST_KEY = "100";
-    public static final String TIMESHEET_JSON_INTENT_KEY = "timesheet_as_json";
+    public static final String TIMESHEET_JSON_KEY = "timesheet_as_json";
+    public static final String TIMESHEET_ID_KEY = "timesheet_id";
     public static final String TIMESHEET_ACTION_KEY = "11";
     public static final String TIMESHEET_ACTION_SAVE = "timesheet_save";
     public static final String TIMESHEET_ACTION_DELETE = "timesheet_delete";
+    public static final String TIMESHEET_ACTION_VIEW = "timesheet_view";
 
     private TimesheetViewModel timesheetViewModel;
 
@@ -51,13 +48,13 @@ public class TimesheetFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requireActivity().setTitle(R.string.title_timesheets);
-        setHasOptionsMenu(true);
         // Get a new or existing ViewModel from the ViewModelProvider.
         try {
             timesheetViewModel = new ViewModelProvider(this).get(TimesheetViewModel.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        // register listener for add, update and delete timesheet events
         getParentFragmentManager().setFragmentResultListener(TIMESHEET_REQUEST_KEY, this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
@@ -84,13 +81,11 @@ public class TimesheetFragment extends Fragment {
         addButton.setOnClickListener(v -> {
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.content_frame, TimesheetNewFragment.class, createTimesheetBundle( adapter.getItemId(0)))
+                    .replace(R.id.content_frame, TimesheetNewFragment.class, createTimesheetBundle(adapter.getItemId(0)))
                     .setReorderingAllowed(true)
                     .commit();
         });
 
-        // listen after timesheet add and delete events
-        //RxBus.getInstance().listen().subscribe(getInputObserver());
         Log.d(Utility.buildTag(getClass(), "onCreateView"), "");
         return view;
     }
@@ -98,11 +93,11 @@ public class TimesheetFragment extends Fragment {
     private Bundle createTimesheetBundle(Long timesheetId) {
         Timesheet timesheet = timesheetViewModel.getTimesheet(timesheetId);
         if (timesheet == null) {
-            //fixme timesheet = createDefaultTimesheetEntry(timesheetId);
+            timesheet = createDefaultTimesheet(timesheetId);
         }
         String timesheetJson = Utility.gsonMapper().toJson(timesheet, Timesheet.class);
         Bundle bundle = new Bundle();
-        bundle.putString(TimesheetFragment.TIMESHEET_JSON_INTENT_KEY, timesheetJson);
+        bundle.putString(TimesheetFragment.TIMESHEET_JSON_KEY, timesheetJson);
         return bundle;
     }
 
@@ -129,7 +124,7 @@ public class TimesheetFragment extends Fragment {
             return;
         }
         if (bundle.getString(TIMESHEET_ACTION_KEY) != null) {
-            handleTimesheetActions(bundle.getString(TIMESHEET_JSON_INTENT_KEY), bundle.getString(TIMESHEET_ACTION_KEY));
+            handleTimesheetActions(bundle.getString(TIMESHEET_JSON_KEY), bundle.getString(TIMESHEET_ACTION_KEY));
         } else {
             Log.w("unknown action!", "unknown action: " + bundle);
         }
@@ -142,12 +137,18 @@ public class TimesheetFragment extends Fragment {
             if (TIMESHEET_ACTION_SAVE.equals(action)) {
                 if (timesheet.getId() == null) {
                     timesheetViewModel.saveTimesheet(timesheet);
-                    showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_add_msg_format), timesheet.toString()), R.color.color_snackbar_text_add);
+                    showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_add_msg_format), timesheet.getTimesheetRef()), R.color.color_snackbar_text_add);
                 } else {
-                    showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_update_msg_format), timesheet), R.color.color_snackbar_text_update);
+                    showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_update_msg_format), timesheet.getTimesheetRef()), R.color.color_snackbar_text_update);
                 }
             } else if (TIMESHEET_ACTION_DELETE.equals(action)) {
-                showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_delete_msg_format), timesheet.toString()), R.color.color_snackbar_text_delete);
+                timesheetViewModel.deleteTimesheet(timesheet);
+                showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_delete_msg_format), timesheet.getTimesheetRef()), R.color.color_snackbar_text_delete);
+            } else if (TIMESHEET_ACTION_VIEW.equals(action)) {
+                // redirect to timesheet entry list fragment
+                Bundle bundle = new Bundle();
+                bundle.putString(TimesheetFragment.TIMESHEET_ID_KEY, timesheet.getId().toString());
+                goToTimesheetEntryView(bundle);
             } else {
                 Log.w(Utility.buildTag(getClass(), "handleTimesheetActions"), "unknown action: " + action);
                 showInfoDialog(String.format("Application error!%s Unknown action: %s%s Please report.", action, System.lineSeparator(), System.lineSeparator()), getActivity());
@@ -159,8 +160,17 @@ public class TimesheetFragment extends Fragment {
     }
 
     private Timesheet createDefaultTimesheet(Long timesheetId) {
-        return null;//Timesheet.createDefault(timesheetId, Timesheet.TimesheetStatusEnum.OPEN.name(), Utility.DEFAULT_DAILY_BREAK_IN_MINUTES, LocalDate.now(), Utility.DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES, Utility.DEFAULT_HOURLY_RATE);
+        return Timesheet.createDefault(null, null);
     }
+
+    private void goToTimesheetEntryView(Bundle bundle) {
+        requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content_frame, TimesheetEntryListFragment.class, bundle)
+                .setReorderingAllowed(true)
+                .commit();
+    }
+
 
     private void showSnackbar(String msg, @ColorRes int bgColor) {
         Resources.Theme theme = getResources().newTheme();
@@ -179,37 +189,5 @@ public class TimesheetFragment extends Fragment {
         builder.setPositiveButton("Ok", (dialog, which) -> dialog.cancel());
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
-    }
-
-    // listen for timesheet add and delete events
-    private Observer<Object> getInputObserver() {
-        return new Observer<Object>() {
-            @Override
-            public void onSubscribe(@NotNull Disposable d) {
-                Log.d(Utility.buildTag(getClass(), "getInputObserver.onSubscribe"), "");
-            }
-
-            @Override
-            public void onNext(@NotNull Object obj) {
-                if (obj instanceof TimesheetEvent event) {
-                    Log.d(Utility.buildTag(getClass(), "getInputObserver.onNext"), String.format("handle event: %s", event));
-                    if (event.isAdd()) {
-                        timesheetViewModel.saveTimesheet(event.getTimesheet());
-                    } else if (event.isDelete()) {
-                        // not implemented
-                    }
-                }
-            }
-
-            @Override
-            public void onError(@NotNull Throwable e) {
-                Log.e(Utility.buildTag(getClass(), "getInputObserver.onError"), String.format("%s", e.getMessage()));
-            }
-
-            @Override
-            public void onComplete() {
-                Log.d(Utility.buildTag(getClass(), "getInputObserver.onComplete"), "");
-            }
-        };
     }
 }

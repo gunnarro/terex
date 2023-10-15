@@ -36,14 +36,14 @@ import javax.inject.Inject;
 /**
  * <a href="https://github.com/Applandeo/Material-Calendar-View">Material-Calendar-View</a>
  */
-public class TimesheetCustomCalendarFragment extends Fragment {
+public class TimesheetEntryCustomCalendarFragment extends Fragment {
 
     private LocalDate selectedWorkDayDate;
 
     private TimesheetService timesheetService;
 
     @Inject
-    public TimesheetCustomCalendarFragment() {
+    public TimesheetEntryCustomCalendarFragment() {
         Log.d("TimesheetCalendarFragment", "");
     }
 
@@ -51,7 +51,6 @@ public class TimesheetCustomCalendarFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requireActivity().setTitle(R.string.title_timesheet_calendar);
-        setHasOptionsMenu(true);
         timesheetService = new TimesheetService(getContext());
         Log.d(Utility.buildTag(getClass(), "onCreate"), "");
     }
@@ -113,7 +112,7 @@ public class TimesheetCustomCalendarFragment extends Fragment {
     }
 
     private TimesheetEntry readTimesheetEntryFromBundle() {
-        String timesheetJson = getArguments() != null ? getArguments().getString(TimesheetListFragment.TIMESHEET_ENTRY_JSON_INTENT_KEY) : null;
+        String timesheetJson = getArguments() != null ? getArguments().getString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_INTENT_KEY) : null;
         Log.d("receives timesheet", "" + timesheetJson);
         if (timesheetJson != null && !timesheetJson.isEmpty()) {
             try {
@@ -164,7 +163,7 @@ public class TimesheetCustomCalendarFragment extends Fragment {
     private void returnToTimesheetList() {
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_frame, TimesheetListFragment.class, null)
+                .replace(R.id.content_frame, TimesheetEntryListFragment.class, null)
                 .setReorderingAllowed(true)
                 .commit();
     }
@@ -172,7 +171,7 @@ public class TimesheetCustomCalendarFragment extends Fragment {
     private void goToAddTimesheet() {
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_frame, TimesheetAddEntryFragment.class, null)
+                .replace(R.id.content_frame, TimesheetEntryAddFragment.class, null)
                 .setReorderingAllowed(true)
                 .commit();
     }

@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.ListAdapter;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.ui.fragment.TimesheetFragment;
-import com.gunnarro.android.terex.ui.fragment.TimesheetListFragment;
 import com.gunnarro.android.terex.ui.view.TimesheetViewHolder;
 import com.gunnarro.android.terex.utility.Utility;
 
@@ -24,6 +23,7 @@ public class TimesheetListAdapter extends ListAdapter<Timesheet, TimesheetViewHo
 
     public TimesheetListAdapter(@NonNull FragmentManager fragmentManager, @NonNull DiffUtil.ItemCallback<Timesheet> diffCallback) {
         super(diffCallback);
+        this.setHasStableIds(true);
         this.fragmentManager = fragmentManager;
         Log.d("TimesheetListAdapter", "init");
     }
@@ -31,14 +31,22 @@ public class TimesheetListAdapter extends ListAdapter<Timesheet, TimesheetViewHo
     @NonNull
     @Override
     public TimesheetViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        TimesheetViewHolder th = TimesheetViewHolder.create(parent);
-        th.itemView.findViewById(R.id.ic_timesheet_row_delete).setOnClickListener(v -> {
+        TimesheetViewHolder viewHolder = TimesheetViewHolder.create(parent);
+        /**
+         viewHolder.itemView.findViewById(R.id.ic_timesheet_row_delete).setOnClickListener(v -> {
             Bundle actionBundle = new Bundle();
-            actionBundle.putString(TimesheetFragment.TIMESHEET_JSON_INTENT_KEY, toJson(getItem(th.getBindingAdapterPosition())));
+            actionBundle.putString(TimesheetFragment.TIMESHEET_JSON_INTENT_KEY, toJson(getItem(viewHolder.getBindingAdapterPosition())));
             actionBundle.putString(TimesheetFragment.TIMESHEET_ACTION_KEY, TimesheetFragment.TIMESHEET_ACTION_DELETE);
             fragmentManager.setFragmentResult(TimesheetFragment.TIMESHEET_REQUEST_KEY, actionBundle);
         });
-        return th;
+        */
+        viewHolder.itemView.findViewById(R.id.ic_timesheet_row_view).setOnClickListener(v -> {
+            Bundle actionBundle = new Bundle();
+            actionBundle.putString(TimesheetFragment.TIMESHEET_JSON_KEY, toJson(getItem(viewHolder.getBindingAdapterPosition())));
+            actionBundle.putString(TimesheetFragment.TIMESHEET_ACTION_KEY, TimesheetFragment.TIMESHEET_ACTION_VIEW);
+            fragmentManager.setFragmentResult(TimesheetFragment.TIMESHEET_REQUEST_KEY, actionBundle);
+        });
+        return viewHolder;
     }
 
     private String toJson(Timesheet timesheet) {

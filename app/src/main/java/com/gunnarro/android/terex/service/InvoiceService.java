@@ -52,7 +52,6 @@ public class InvoiceService {
     /**
      * default constructor
      */
-
     @Inject
     public InvoiceService(Context applicationContext) {
         timesheetService = new TimesheetService(applicationContext);
@@ -70,7 +69,7 @@ public class InvoiceService {
         invoice.setInvoiceNumber(Random.Default.nextInt(100, 10000));
         invoice.setClientId(client.getId());
         // ensure that a timesheet is only billed once.
-        invoice.setReference(String.format("invoice-timesheet-ref_%s", timesheetId));
+        invoice.setReference(String.format("%s-%s-%s", client.getName(), timesheetId));
         invoice.setStatus(InvoiceRepository.InvoiceStatusEnum.OPEN.name());
         // fixme, should be unique for a timesheet
         invoice.setBillingDate(LocalDate.now());
@@ -93,9 +92,6 @@ public class InvoiceService {
         return invoiceId;
     }
 
-    /**
-     *
-     */
     private List<InvoiceSummary> createInvoiceSummary(Long invoiceId, Long timesheetId) {
         // check timesheet status
         Timesheet timesheet = timesheetService.getTimesheet(timesheetId);

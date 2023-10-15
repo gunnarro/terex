@@ -40,10 +40,10 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 
 @AndroidEntryPoint
-public class TimesheetAddEntryFragment extends Fragment implements View.OnClickListener {
+public class TimesheetEntryAddFragment extends Fragment implements View.OnClickListener {
 
     @Inject
-    public TimesheetAddEntryFragment() {
+    public TimesheetEntryAddFragment() {
     }
 
     @Override
@@ -120,9 +120,9 @@ public class TimesheetAddEntryFragment extends Fragment implements View.OnClickL
         view.findViewById(R.id.btn_timesheet_entry_save).setOnClickListener(v -> {
             view.findViewById(R.id.btn_timesheet_entry_save).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
             Bundle result = new Bundle();
-            result.putString(TimesheetListFragment.TIMESHEET_ENTRY_JSON_INTENT_KEY, getTimesheetAsJson());
-            result.putString(TimesheetListFragment.TIMESHEET_ENTRY_ACTION_KEY, TimesheetListFragment.TIMESHEET_ENTRY_ACTION_SAVE);
-            getParentFragmentManager().setFragmentResult(TimesheetListFragment.TIMESHEET_ENTRY_REQUEST_KEY, result);
+            result.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_INTENT_KEY, getTimesheetAsJson());
+            result.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_KEY, TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_SAVE);
+            getParentFragmentManager().setFragmentResult(TimesheetEntryListFragment.TIMESHEET_ENTRY_REQUEST_KEY, result);
             Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new timesheet entry intent: " + getTimesheetAsJson());
             returnToTimesheetList();
         });
@@ -130,9 +130,9 @@ public class TimesheetAddEntryFragment extends Fragment implements View.OnClickL
         view.findViewById(R.id.btn_timesheet_entry_delete).setOnClickListener(v -> {
             view.findViewById(R.id.btn_timesheet_entry_delete).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
             Bundle result = new Bundle();
-            result.putString(TimesheetListFragment.TIMESHEET_ENTRY_JSON_INTENT_KEY, getTimesheetAsJson());
-            result.putString(TimesheetListFragment.TIMESHEET_ENTRY_ACTION_KEY, TimesheetListFragment.TIMESHEET_ENTRY_ACTION_DELETE);
-            getParentFragmentManager().setFragmentResult(TimesheetListFragment.TIMESHEET_ENTRY_REQUEST_KEY, result);
+            result.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_INTENT_KEY, getTimesheetAsJson());
+            result.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_KEY, TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_DELETE);
+            getParentFragmentManager().setFragmentResult(TimesheetEntryListFragment.TIMESHEET_ENTRY_REQUEST_KEY, result);
             Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new delete item intent");
             returnToTimesheetList();
         });
@@ -150,7 +150,7 @@ public class TimesheetAddEntryFragment extends Fragment implements View.OnClickL
     }
 
     private TimesheetEntry readTimesheetEntryFromBundle() {
-        String timesheetJson = getArguments() != null ? getArguments().getString(TimesheetListFragment.TIMESHEET_ENTRY_JSON_INTENT_KEY) : null;
+        String timesheetJson = getArguments() != null ? getArguments().getString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_INTENT_KEY) : null;
         Log.d("receives timesheet", "" + timesheetJson);
         if (timesheetJson != null && !timesheetJson.isEmpty()) {
             try {
@@ -174,7 +174,7 @@ public class TimesheetAddEntryFragment extends Fragment implements View.OnClickL
     private void returnToTimesheetList() {
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_frame, TimesheetListFragment.class, null)
+                .replace(R.id.content_frame, TimesheetEntryListFragment.class, null)
                 .setReorderingAllowed(true)
                 .commit();
     }
