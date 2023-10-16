@@ -32,7 +32,7 @@ public class InvoiceRepository {
      * CANCELLED: the invoice have been cancelled.
      */
     public enum InvoiceStatusEnum {
-        OPEN, CREATED, SENT, CANCELLED;
+        OPEN, COMPLETED, SENT, CANCELLED;
     }
 
     private final InvoiceDao invoiceDao;

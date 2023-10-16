@@ -40,7 +40,14 @@ public class InvoiceService {
 
     @Transaction
     public Long createInvoice(Company company, Company client, Long timesheetId) {
-        // create the invoice
+        // first accumulate timesheet entries
+        List<TimesheetSummary> timesheetSummaries = timesheetService.createTimesheetSummary(timesheetId);
+        // save the invoice summaries
+        timesheetSummaries.forEach(i -> {
+            timesheetService.saveTimesheetSummary(i);
+            Log.d("saved timesheet summary", "" + i);
+        });
+        // there after create the invoice
         Invoice invoice = new Invoice();
         invoice.setInvoiceNumber(Random.Default.nextInt(100, 10000));
         invoice.setTimesheetId(timesheetId);
@@ -48,25 +55,13 @@ public class InvoiceService {
         // ensure that a timesheet is only billed once.
         invoice.setReference(String.format("%s-%s", client.getName(), timesheetId));
         invoice.setStatus(InvoiceRepository.InvoiceStatusEnum.OPEN.name());
-        // fixme, should be unique for a timesheet
         invoice.setBillingDate(LocalDate.now());
         // defaulted to 10 days after billing date
         invoice.setDueDate(invoice.getBillingDate().plusDays(10));
-        Long invoiceId = invoiceRepository.saveInvoice(invoice);
-        Log.d("createInvoice", "created invoice=" + invoiceId);
-        // then accumulate timesheet entries
-        List<TimesheetSummary> timesheetSummaries = timesheetService.createTimesheetSummary(timesheetId);
-        // save the invoice summaries
-        timesheetSummaries.forEach(i -> {
-            timesheetService.saveTimesheetSummary(i);
-            Log.d("saved timesheet summary", "" + i);
-        });
-
         double sumAmount = timesheetSummaries.stream().mapToDouble(TimesheetSummary::getSumBilledWork).sum();
         invoice.setAmount(sumAmount);
-        invoice.setStatus(InvoiceRepository.InvoiceStatusEnum.CREATED.name());
-        invoiceRepository.saveInvoice(invoice);
-        return invoiceId;
+        invoice.setStatus(InvoiceRepository.InvoiceStatusEnum.COMPLETED.name());
+        return invoiceRepository.saveInvoice(invoice);
     }
 
 }

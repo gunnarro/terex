@@ -167,7 +167,7 @@ public class TimesheetService {
         Log.d("createInvoiceSummary", String.format("timesheetId=%s", timesheetId));
         List<TimesheetEntry> timesheetEntryList = getTimesheetEntryList(timesheetId);
         if (timesheetEntryList == null || timesheetEntryList.isEmpty()) {
-            return null;
+            throw new TerexApplicationException("Application error, timesheet not ready for billing, no entries found!", "50023", null);
         }
         Log.d("createInvoiceSummary", "timesheet entries: " + timesheetEntryList);
         // accumulate timesheet by week for the mount
