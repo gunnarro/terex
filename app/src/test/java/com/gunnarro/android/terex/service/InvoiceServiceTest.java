@@ -7,8 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.gunnarro.android.terex.domain.entity.InvoiceSummary;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
+import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -29,8 +29,8 @@ public class InvoiceServiceTest {
 
     @Test
     void generateTimesheet() {
-        InvoiceService invoiceService = new InvoiceService(applicationContextMock);
-        List<TimesheetEntry> timesheets = invoiceService.generateTimesheet(2023, 2);
+        TimesheetService timesheetService = new TimesheetService(applicationContextMock);
+        List<TimesheetEntry> timesheets = timesheetService.generateTimesheet(2023, 2);
         assertEquals(19, timesheets.size());
         assertEquals(30, timesheets.get(0).getBreakInMin());
         assertEquals(1075, timesheets.get(0).getHourlyRate());
@@ -45,30 +45,20 @@ public class InvoiceServiceTest {
 
     @Test
     void buildInvoiceSummary() {
-        InvoiceService invoiceService = new InvoiceService(applicationContextMock);
-        List<InvoiceSummary> invoiceSummaries = invoiceService.buildInvoiceSummaryByWeek(2023, 2);
-        assertEquals(5, invoiceSummaries.size());
-        assertEquals(0, invoiceSummaries.get(0).getInvoiceId());
-        assertEquals(24187.5, invoiceSummaries.get(0).getSumBilledWork());
-        assertEquals(3, invoiceSummaries.get(0).getSumWorkedDays());
-        assertEquals(1350, invoiceSummaries.get(0).getSumWorkedHours());
-    }
-
-
-    @Test
-    public void buildInvoiceSummaryByWeek() {
-        InvoiceService invoiceService = new InvoiceService(applicationContextMock);
-        List<InvoiceSummary> list = invoiceService.buildInvoiceSummaryByWeek(2022, 3);
-        list.forEach(t -> {
-            System.out.println(t);
-        });
+        TimesheetService timesheetService = new TimesheetService(applicationContextMock);
+        List<TimesheetSummary> timesheetSummaries = timesheetService.buildTimesheetSummaryByWeek(2023, 2);
+        assertEquals(5, timesheetSummaries.size());
+        assertEquals(0, timesheetSummaries.get(0).getTimesheetId());
+        assertEquals(24187.5, timesheetSummaries.get(0).getSumBilledWork());
+        assertEquals(3, timesheetSummaries.get(0).getTotalWorkedDays());
+        assertEquals(1350, timesheetSummaries.get(0).getTotalWorkedHours());
     }
 
 
     @Test
     public void jsonToTimesheet() {
-        InvoiceService invoiceService = new InvoiceService(applicationContextMock);
-        List<TimesheetEntry> timesheets = invoiceService.generateTimesheet(2022, 3);
+        TimesheetService timesheetService = new TimesheetService(applicationContextMock);
+        List<TimesheetEntry> timesheets = timesheetService.generateTimesheet(2022, 3);
         String jsonStr = null;
         try {
             jsonStr = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(timesheets);

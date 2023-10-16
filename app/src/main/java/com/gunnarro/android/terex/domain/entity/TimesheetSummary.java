@@ -1,6 +1,5 @@
 package com.gunnarro.android.terex.domain.entity;
 
-import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Index;
@@ -10,34 +9,47 @@ import androidx.room.TypeConverters;
 import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
 import com.gunnarro.android.terex.domain.converter.LocalDateTimeConverter;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.time.LocalDate;
 import java.util.Objects;
 
+/**
+ * Used to hold weekly summary for a timesheet.
+ */
 @TypeConverters({LocalDateConverter.class, LocalDateTimeConverter.class})
-@Entity(tableName = "invoice_summary", indices = {@Index(value = {"invoice_id", "year", "week_in_year"},
+@Entity(tableName = "timesheet_summary", indices = {@Index(value = {"timesheet_id", "year", "week_in_year"},
         unique = true)})
-public class InvoiceSummary extends BaseEntity {
+public class TimesheetSummary extends BaseEntity {
 
+    @NotNull
     @PrimaryKey(autoGenerate = true)
     public Long id;
-    @ColumnInfo(name = "invoice_id")
-    public Long invoiceId;
+    @NotNull
+    @ColumnInfo(name = "timesheet_id")
+    public Long timesheetId;
+    @NotNull
     @ColumnInfo(name = "year")
     private Integer year;
+    @NotNull
     @ColumnInfo(name = "week_in_year")
     private Integer weekInYear;
     @ColumnInfo(name = "from_date")
     private LocalDate fromDate;
     @ColumnInfo(name = "to_date")
     private LocalDate toDate;
-    @ColumnInfo(name = "sum_worked_days")
-    private Integer sumWorkedDays = 0;
-    @ColumnInfo(name = "sum_worked_hours")
-    private double sumWorkedHours = 0;
+    @ColumnInfo(name = "total_worked_days")
+    private Integer totalWorkedDays = 0;
+    @ColumnInfo(name = "total_days_off")
+    private Integer totalDaysOff = 0;
+    @ColumnInfo(name = "total_sick_leave_days")
+    private Integer totalSickLeaveDays = 0;
+    @ColumnInfo(name = "total_worked_hours")
+    private double totalWorkedHours = 0;
     @ColumnInfo(name = "sum_billed_work")
     private double sumBilledWork = 0;
 
-    public InvoiceSummary() {
+    public TimesheetSummary() {
     }
 
     public Long getId() {
@@ -48,12 +60,12 @@ public class InvoiceSummary extends BaseEntity {
         this.id = id;
     }
 
-    public Long getInvoiceId() {
-        return invoiceId;
+    public Long getTimesheetId() {
+        return timesheetId;
     }
 
-    public void setInvoiceId(Long invoiceId) {
-        this.invoiceId = invoiceId;
+    public void setTimesheetId(Long timesheetId) {
+        this.timesheetId = timesheetId;
     }
 
     public Integer getYear() {
@@ -88,20 +100,36 @@ public class InvoiceSummary extends BaseEntity {
         this.toDate = toDate;
     }
 
-    public Integer getSumWorkedDays() {
-        return sumWorkedDays;
+    public Integer getTotalWorkedDays() {
+        return totalWorkedDays;
     }
 
-    public void setSumWorkedDays(Integer sumWorkedDays) {
-        this.sumWorkedDays = sumWorkedDays;
+    public void setTotalWorkedDays(Integer totalWorkedDays) {
+        this.totalWorkedDays = totalWorkedDays;
     }
 
-    public double getSumWorkedHours() {
-        return sumWorkedHours;
+    public Integer getTotalDaysOff() {
+        return totalDaysOff;
     }
 
-    public void setSumWorkedHours(double sumWorkedHours) {
-        this.sumWorkedHours = sumWorkedHours;
+    public void setTotalDaysOff(Integer totalDaysOff) {
+        this.totalDaysOff = totalDaysOff;
+    }
+
+    public Integer getTotalSickLeaveDays() {
+        return totalSickLeaveDays;
+    }
+
+    public void setTotalSickLeaveDays(Integer totalSickLeaveDays) {
+        this.totalSickLeaveDays = totalSickLeaveDays;
+    }
+
+    public double getTotalWorkedHours() {
+        return totalWorkedHours;
+    }
+
+    public void setTotalWorkedHours(double totalWorkedHours) {
+        this.totalWorkedHours = totalWorkedHours;
     }
 
     public double getSumBilledWork() {
@@ -116,29 +144,12 @@ public class InvoiceSummary extends BaseEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        InvoiceSummary that = (InvoiceSummary) o;
-        return invoiceId.equals(that.invoiceId) && year.equals(that.year) && weekInYear.equals(that.weekInYear);
+        TimesheetSummary that = (TimesheetSummary) o;
+        return timesheetId.equals(that.timesheetId) && year.equals(that.year) && weekInYear.equals(that.weekInYear);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(invoiceId, year, weekInYear);
-    }
-
-    @NonNull
-    @Override
-    public String toString() {
-        final StringBuffer sb = new StringBuffer("InvoiceSummary{");
-        sb.append("id=").append(id);
-        sb.append(", invoiceId=").append(invoiceId);
-        sb.append(", year=").append(year);
-        sb.append(", weekInYear=").append(weekInYear);
-        sb.append(", fromDate=").append(fromDate);
-        sb.append(", toDate=").append(toDate);
-        sb.append(", sumWorkedDays=").append(sumWorkedDays);
-        sb.append(", sumWorkedHours=").append(sumWorkedHours);
-        sb.append(", sumBilledWork=").append(sumBilledWork);
-        sb.append('}');
-        return sb.toString();
+        return Objects.hash(timesheetId, year, weekInYear);
     }
 }

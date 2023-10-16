@@ -9,6 +9,7 @@ import androidx.room.Transaction;
 import com.gunnarro.android.terex.config.AppDatabase;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
+import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
 import com.gunnarro.android.terex.domain.entity.TimesheetWithEntries;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 
@@ -26,6 +27,7 @@ public class TimesheetRepository {
 
     private final TimesheetDao timesheetDao;
     private final TimesheetEntryDao timesheetEntryDao;
+    private final TimesheetSummaryDao timesheetSummaryDao;
     // private final LiveData<List<TimesheetEntry>> timesheetEntryList;
 
     // Note that in order to unit test the WordRepository, you have to remove the Application
@@ -35,9 +37,14 @@ public class TimesheetRepository {
     public TimesheetRepository(Context applicationContext) {
         timesheetDao = AppDatabase.getDatabase(applicationContext).timesheetDao();
         timesheetEntryDao = AppDatabase.getDatabase(applicationContext).timesheetEntryDao();
+        timesheetSummaryDao = AppDatabase.getDatabase(applicationContext).timesheetSummaryDao();
         //   timesheetEntryList = timesheetEntryDao.getTimesheetEntryListLiveData(1L);
     }
 
+
+    public long saveTimesheetSummary(TimesheetSummary timesheetSummary) {
+        return timesheetSummaryDao.insert(timesheetSummary);
+    }
 
     @Transaction
     public TimesheetWithEntries getTimesheetWithEntries(Long timesheetId) {

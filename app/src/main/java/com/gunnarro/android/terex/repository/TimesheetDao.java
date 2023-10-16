@@ -6,6 +6,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Transaction;
 import androidx.room.Update;
 
 import com.gunnarro.android.terex.domain.entity.Timesheet;
@@ -19,9 +20,17 @@ public interface TimesheetDao {
     @Query("SELECT * FROM timesheet WHERE id = :id")
     Timesheet getTimesheetById(Long id);
 
+    /**
+     * use transactions since this method return a aggregate object
+     */
+    @Transaction
     @Query("SELECT * FROM timesheet WHERE id = :id")
     TimesheetWithEntries getTimesheetWithEntriesById(Long id);
 
+    /**
+     * use transactions since this method return a aggregate object
+     */
+    @Transaction
     @Query("SELECT * FROM timesheet WHERE id = :timesheetId")
     TimesheetWithEntries getTimesheetWithEntries(Long timesheetId);
 

@@ -3,14 +3,12 @@ package com.gunnarro.android.terex.utility;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
-import com.gunnarro.android.terex.domain.entity.InvoiceSummary;
+import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
 
 import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.Reader;
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,7 +23,7 @@ public class HtmlTemplateTest {
         String resourceRoot = "";
         MustacheFactory mf = new DefaultMustacheFactory();
         Mustache m = mf.compile(mustacheTemplateFile,"");
-        List<InvoiceSummary> invoiceSummaryList = new ArrayList<>();
+        List<TimesheetSummary> invoiceSummaryList = new ArrayList<>();
         Map<String, Object> context = new HashMap<>();
         context.put("invoiceSummaryList", invoiceSummaryList);
         context.put("sunBilledHours", "192,5");

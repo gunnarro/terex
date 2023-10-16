@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData;
 
 import com.gunnarro.android.terex.config.AppDatabase;
 import com.gunnarro.android.terex.domain.entity.Invoice;
-import com.gunnarro.android.terex.domain.entity.InvoiceSummary;
+import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 
 import org.jetbrains.annotations.NotNull;
@@ -36,7 +36,7 @@ public class InvoiceRepository {
     }
 
     private final InvoiceDao invoiceDao;
-    private final InvoiceSummaryDao invoiceSummaryDao;
+    private final TimesheetSummaryDao timesheetSummaryDao;
     private final LiveData<List<Invoice>> allInvoices;
 
     // Note that in order to unit test the WordRepository, you have to remove the Application
@@ -45,22 +45,22 @@ public class InvoiceRepository {
     // https://github.com/googlesamples
     public InvoiceRepository(Context applicationContext) {
         invoiceDao = AppDatabase.getDatabase(applicationContext).invoiceDao();
-        invoiceSummaryDao = AppDatabase.getDatabase(applicationContext).invoiceSummaryDao();
+        timesheetSummaryDao = AppDatabase.getDatabase(applicationContext).timesheetSummaryDao();
         allInvoices = invoiceDao.getAll();
     }
-
-    public Map<Invoice, List<InvoiceSummary>> getInvoiceAndSummaryById(Long invoiceId) {
+/*
+    public Map<Invoice, List<TimesheetSummary>> getInvoiceAndSummaryById(Long invoiceId) {
         try {
-            CompletionService<Map<Invoice, List<InvoiceSummary>>> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
+            CompletionService<Map<Invoice, List<TimesheetSummary>>> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
             service.submit(() -> invoiceDao.getInvoiceById(invoiceId));
-            Future<Map<Invoice, List<InvoiceSummary>>> future = service.take();
+            Future<Map<Invoice, List<TimesheetSummary>>> future = service.take();
             return future != null ? future.get() : null;
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
             return null;
         }
     }
-
+*/
     // Room executes all queries on a separate thread.
     // Observed LiveData will notify the observer when the data has changed.
     public LiveData<List<Invoice>> getAllInvoices() {
@@ -72,7 +72,7 @@ public class InvoiceRepository {
             CompletionService<Invoice> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
             service.submit(() -> {
                 Invoice invoice = invoiceDao.getInvoice(invoiceId);
-                invoice.setInvoiceSummaryList(invoiceSummaryDao.getInvoiceSummaries(invoiceId));
+                invoice.setTimesheetSummaryList(timesheetSummaryDao.getTimesheetSummaries(invoice.getTimesheetId()));
                 return invoice;
             });
             Future<Invoice> future = service.take();
@@ -95,11 +95,11 @@ public class InvoiceRepository {
         }
     }
 
-    public Long insertInvoiceSummary(InvoiceSummary invoiceSummary) {
-        Log.d("updateInvoice", "invoiceSummery: " + invoiceSummary);
+    public Long insertTimesheetSummary(TimesheetSummary timesheetSummary) {
+        Log.d("updateInvoice", "timesheetSummary: " + timesheetSummary);
         try {
             CompletionService<Long> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
-            service.submit(() -> invoiceSummaryDao.insert(invoiceSummary));
+            service.submit(() -> timesheetSummaryDao.insert(timesheetSummary));
             Future<Long> future = service.take();
             return future != null ? future.get() : null;
         } catch (InterruptedException | ExecutionException e) {

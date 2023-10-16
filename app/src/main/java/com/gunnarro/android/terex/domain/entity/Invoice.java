@@ -1,6 +1,5 @@
 package com.gunnarro.android.terex.domain.entity;
 
-import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Index;
@@ -10,9 +9,10 @@ import androidx.room.TypeConverters;
 import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
 import com.gunnarro.android.terex.domain.converter.LocalDateTimeConverter;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,14 +22,19 @@ import lombok.Setter;
 @Setter
 @Getter
 @TypeConverters({LocalDateConverter.class, LocalDateTimeConverter.class})
-@Entity(tableName = "invoice", indices = {@Index(value = {"client_id", "reference"},
+@Entity(tableName = "invoice", indices = {@Index(value = {"client_id", "timesheet_id", "reference"},
         unique = true)})
 public class Invoice extends BaseEntity {
 
     @PrimaryKey(autoGenerate = true)
-    public Long id;
+    private Long id;
+    @NotNull
+    @ColumnInfo(name = "timesheet_id")
+    private Long timesheetId;
+    @NotNull
     @ColumnInfo(name = "invoice_number")
-    public Integer invoiceNumber;
+    private Integer invoiceNumber;
+    @NotNull
     @ColumnInfo(name = "client_id")
     private Long clientId;
     @ColumnInfo(name = "reference")
@@ -45,7 +50,7 @@ public class Invoice extends BaseEntity {
     @ColumnInfo(name = "amount")
     private double amount;
 
-    private transient List<InvoiceSummary> invoiceSummaryList;
+    private transient List<TimesheetSummary> timesheetSummaryList;
 
     public Long getId() {
         return id;
@@ -53,6 +58,14 @@ public class Invoice extends BaseEntity {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getTimesheetId() {
+        return timesheetId;
+    }
+
+    public void setTimesheetId(Long timesheetId) {
+        this.timesheetId = timesheetId;
     }
 
     public Integer getInvoiceNumber() {
@@ -119,42 +132,11 @@ public class Invoice extends BaseEntity {
         this.amount = amount;
     }
 
-    public List<InvoiceSummary> getInvoiceSummaryList() {
-        return invoiceSummaryList;
+    public List<TimesheetSummary> getTimesheetSummaryList() {
+        return timesheetSummaryList;
     }
 
-    public void setInvoiceSummaryList(List<InvoiceSummary> invoiceSummaryList) {
-        this.invoiceSummaryList = invoiceSummaryList;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Invoice invoice = (Invoice) o;
-        return clientId.equals(invoice.clientId) && reference.equals(invoice.reference);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(clientId, reference);
-    }
-
-    @NonNull
-    @Override
-    public String toString() {
-        final StringBuffer sb = new StringBuffer("Invoice{");
-        sb.append("id=").append(id);
-        sb.append(", invoiceNumber=").append(invoiceNumber);
-        sb.append(", clientId=").append(clientId);
-        sb.append(", reference=").append(reference);
-        sb.append(", status='").append(status).append('\'');
-        sb.append(", billingDate=").append(billingDate);
-        sb.append(", dueDate=").append(dueDate);
-        sb.append(", vat=").append(vat);
-        sb.append(", amount=").append(amount);
-        sb.append(", invoiceSummaryList=").append(invoiceSummaryList);
-        sb.append('}');
-        return sb.toString();
+    public void setTimesheetSummaryList(List<TimesheetSummary> timesheetSummaryList) {
+        this.timesheetSummaryList = timesheetSummaryList;
     }
 }

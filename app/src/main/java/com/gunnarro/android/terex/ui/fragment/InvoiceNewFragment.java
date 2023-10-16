@@ -22,13 +22,14 @@ import com.gunnarro.android.terex.domain.entity.Address;
 import com.gunnarro.android.terex.domain.entity.Company;
 import com.gunnarro.android.terex.domain.entity.Contact;
 import com.gunnarro.android.terex.domain.entity.Invoice;
-import com.gunnarro.android.terex.domain.entity.InvoiceSummary;
 import com.gunnarro.android.terex.domain.entity.Person;
 import com.gunnarro.android.terex.domain.entity.SpinnerItem;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
+import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.service.InvoiceService;
+import com.gunnarro.android.terex.service.TimesheetService;
 import com.gunnarro.android.terex.utility.PdfUtility;
 import com.gunnarro.android.terex.utility.Utility;
 
@@ -59,6 +60,7 @@ public class InvoiceNewFragment extends Fragment {
     private final static String RECRUITMENT_TIMESHEET_TEMPLATE = "html/template/norway-consulting-timesheet-template.mustache";
     // @Inject
     private InvoiceService invoiceService;
+    private TimesheetService timesheetService;
 
     @Inject
     public InvoiceNewFragment() {
@@ -69,6 +71,7 @@ public class InvoiceNewFragment extends Fragment {
         super.onCreate(savedInstanceState);
         requireActivity().setTitle(R.string.title_invoice);
         invoiceService = new InvoiceService(requireActivity().getApplicationContext());
+        timesheetService = new TimesheetService(requireActivity().getApplicationContext());
         Log.d(Utility.buildTag(getClass(), "onCreate"), "");
     }
 
@@ -77,7 +80,7 @@ public class InvoiceNewFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_invoice_new, container, false);
         // only completed time sheets can be used a attachment to a invoice.
-        List<Timesheet> timesheetList = invoiceService.getTimesheets(Timesheet.TimesheetStatusEnum.COMPLETED.name());
+        List<Timesheet> timesheetList = timesheetService.getTimesheets(Timesheet.TimesheetStatusEnum.COMPLETED.name());
         List<SpinnerItem> timesheetItems = timesheetList.stream().map(t -> new SpinnerItem(t.id, t.getProjectCode())).collect(Collectors.toList());
         final AutoCompleteTextView timesheetSpinner = view.findViewById(R.id.invoice_timesheet_spinner);
         ArrayAdapter<SpinnerItem> timesheetAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, timesheetItems);
@@ -92,7 +95,7 @@ public class InvoiceNewFragment extends Fragment {
                     showInfoDialog("Please select a timesheet!", requireContext());
                 } else {
                     Invoice invoice = createInvoice(item.id());
-                    createInvoiceSummaryAttachment(invoice.id);
+                    createTimesheetSummaryAttachment(invoice.getId());
                     createTimesheetAttachment(item.id());
                 }
             } catch (TerexApplicationException e) {
@@ -144,20 +147,18 @@ public class InvoiceNewFragment extends Fragment {
      * @return id of the invoice
      */
     private Invoice createInvoice(Long timesheetId) {
-
         Long invoiceId = invoiceService.createInvoice(getCompany(), getClient(), timesheetId);
         if (invoiceId == null) {
             showInfoDialog("No timesheet found! timesheetId=" + timesheetId, requireContext());
         }
         // finally close the timesheet
-
         return invoiceService.getInvoice(invoiceId);
     }
 
-    private boolean createInvoiceSummaryAttachment(Long invoiceId) {
+    private boolean createTimesheetSummaryAttachment(Long invoiceId) {
         try {
             Invoice invoice = invoiceService.getInvoice(invoiceId);
-            Log.d("createInvoiceSummaryAttachment", "invoiceSummary week: " + invoice.getInvoiceSummaryList());
+            Log.d("createInvoiceSummaryAttachment", "invoiceSummary week: " + invoice.getTimesheetSummaryList());
             StringBuilder mustacheTemplateStr = new StringBuilder();
             // first read the invoice summary mustache html template
             try (InputStream fis = requireContext().getAssets().open(INVOICE_TIMESHEET_SUMMARY_ATTACHMENT_TEMPLATE);
@@ -167,15 +168,15 @@ public class InvoiceNewFragment extends Fragment {
                 br.lines().forEach(mustacheTemplateStr::append);
             }
 
-            Double sumBilledAmount = invoice.getInvoiceSummaryList().stream()
-                    .mapToDouble(InvoiceSummary::getSumBilledWork)
+            Double sumBilledAmount = invoice.getTimesheetSummaryList().stream()
+                    .mapToDouble(TimesheetSummary::getSumBilledWork)
                     .sum();
 
-            Double sumBilledHours = invoice.getInvoiceSummaryList().stream()
-                    .mapToDouble(InvoiceSummary::getSumWorkedHours)
+            Double sumBilledHours = invoice.getTimesheetSummaryList().stream()
+                    .mapToDouble(TimesheetSummary::getTotalWorkedHours)
                     .sum();
 
-            String invoiceSummaryHtml = createInvoiceSummaryHtml(mustacheTemplateStr.toString(), invoice.getInvoiceSummaryList(), sumBilledHours.toString(), sumBilledAmount.toString());
+            String invoiceSummaryHtml = createInvoiceSummaryHtml(mustacheTemplateStr.toString(), invoice.getTimesheetSummaryList(), sumBilledHours.toString(), sumBilledAmount.toString());
             Log.d("createInvoiceSummaryAttachment", "" + invoiceSummaryHtml);
             return PdfUtility.htmlToPdf(invoiceSummaryHtml, "invoice_attachment");
         } catch (Exception e) {
@@ -183,7 +184,7 @@ public class InvoiceNewFragment extends Fragment {
         }
     }
 
-    private String createInvoiceSummaryHtml(String mustacheTemplateStr, List<InvoiceSummary> invoiceSummaryList, String sumBilledHours, String sumBilledAmount) {
+    private String createInvoiceSummaryHtml(String mustacheTemplateStr, List<TimesheetSummary> timesheetSummaryList, String sumBilledHours, String sumBilledAmount) {
         MustacheFactory mf = new DefaultMustacheFactory();
         Mustache mustache = mf.compile(new StringReader(mustacheTemplateStr), "");
         Map<String, Object> context = new HashMap<>();
@@ -191,7 +192,7 @@ public class InvoiceNewFragment extends Fragment {
         context.put("company", getCompany());
         context.put("client", getClient());
         context.put("timesheetProjectCode", "techlead-catalystone-solution-as");
-        context.put("invoiceSummaryList", invoiceSummaryList);
+        context.put("timesheetSummaryList", timesheetSummaryList);
         context.put("sunBilledHours", sumBilledHours);
         context.put("sumBilledAmount", sumBilledAmount);
         StringWriter writer = new StringWriter();
@@ -202,8 +203,7 @@ public class InvoiceNewFragment extends Fragment {
 
     private boolean createTimesheetAttachment(Long timesheetId) {
         try {
-            List<TimesheetEntry> timesheetEntryList = invoiceService.getTimesheetEntryList(timesheetId);
-
+            List<TimesheetEntry> timesheetEntryList = timesheetService.getTimesheetEntryList(timesheetId);
             StringBuilder mustacheTemplateStr = new StringBuilder();
             // first read the invoice summary mustache html template
             try (InputStream fis = requireContext().getAssets().open(RECRUITMENT_TIMESHEET_TEMPLATE);
