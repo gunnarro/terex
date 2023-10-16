@@ -13,7 +13,6 @@ import com.gunnarro.android.terex.repository.TimesheetRepository;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.WeekFields;
 import java.util.List;
@@ -34,13 +33,14 @@ public class TimesheetService {
     }
 
     public Long saveTimesheet(Timesheet timesheet) {
+        Timesheet timesheetExisting = timesheetRepository.getTimesheet(timesheet.getClientName(), timesheet.getProjectCode(), timesheet.getYear(), timesheet.getMonth());
+
         // first of all, check status
-        if (timesheet.getStatus().equals(Timesheet.TimesheetStatusEnum.BILLED.name())) {
-            Log.d("", "timesheet is closed, no changes is allowed. timesheetId=" + timesheet.getId());
+        if (timesheetExisting.getStatus().equals(Timesheet.TimesheetStatusEnum.BILLED.name())) {
+            Log.d("", "timesheet is already billed, no changes is allowed. timesheetId=" + timesheetExisting.getId() + " " + timesheetExisting.getStatus());
             return null;
         }
         try {
-            Timesheet timesheetExisting = timesheetRepository.getTimesheet(timesheet.getClientName(), timesheet.getProjectCode(), timesheet.getYear(), timesheet.getMonth());
             Log.d("TimesheetRepository.saveTimesheet", String.format("%s", timesheetExisting));
             Long id = null;
             if (timesheetExisting == null) {

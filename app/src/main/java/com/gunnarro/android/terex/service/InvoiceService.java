@@ -69,7 +69,7 @@ public class InvoiceService {
         invoice.setInvoiceNumber(Random.Default.nextInt(100, 10000));
         invoice.setClientId(client.getId());
         // ensure that a timesheet is only billed once.
-        invoice.setReference(String.format("%s-%s-%s", client.getName(), timesheetId));
+        invoice.setReference(String.format("%s-%s", client.getName(), timesheetId));
         invoice.setStatus(InvoiceRepository.InvoiceStatusEnum.OPEN.name());
         // fixme, should be unique for a timesheet
         invoice.setBillingDate(LocalDate.now());
