@@ -146,7 +146,7 @@ public class InvoiceNewFragment extends Fragment {
      * @param timesheetId to be created invoice for
      * @return id of the invoice
      */
-    private Invoice createInvoice(Long timesheetId) {
+    private Invoice createInvoice(@NotNull Long timesheetId) {
         Long invoiceId = invoiceService.createInvoice(getCompany(), getClient(), timesheetId);
         if (invoiceId == null) {
             showInfoDialog("No timesheet found! timesheetId=" + timesheetId, requireContext());
@@ -158,7 +158,7 @@ public class InvoiceNewFragment extends Fragment {
     private boolean createTimesheetSummaryAttachment(Long invoiceId) {
         try {
             Invoice invoice = invoiceService.getInvoice(invoiceId);
-            Log.d("createInvoiceSummaryAttachment", "invoiceSummary week: " + invoice.getTimesheetSummaryList());
+            Log.d("createTimesheetSummaryAttachment", "timesheetSummary week: " + invoice.getTimesheetSummaryList());
             StringBuilder mustacheTemplateStr = new StringBuilder();
             // first read the invoice summary mustache html template
             try (InputStream fis = requireContext().getAssets().open(INVOICE_TIMESHEET_SUMMARY_ATTACHMENT_TEMPLATE);

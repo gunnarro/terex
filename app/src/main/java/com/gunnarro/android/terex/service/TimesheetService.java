@@ -158,7 +158,7 @@ public class TimesheetService {
     // timesheet summary
     // ----------------------------------------
 
-    public List<TimesheetSummary> createTimesheetSummary(Long timesheetId) {
+    public List<TimesheetSummary> createTimesheetSummary(@NotNull Long timesheetId) {
         // check timesheet status
         Timesheet timesheet = getTimesheet(timesheetId);
         if (timesheet.getStatus().equals(Timesheet.TimesheetStatusEnum.BILLED.name())) {
@@ -189,7 +189,7 @@ public class TimesheetService {
         return timesheetRepository.saveTimesheetSummary(timesheetSummary);
     }
 
-    private TimesheetSummary buildTimesheetSummaryForWeek(Long timesheetId, Integer week, List<TimesheetEntry> timesheetEntryList) {
+    private TimesheetSummary buildTimesheetSummaryForWeek(@NotNull Long timesheetId, @NotNull Integer week, @NotNull List<TimesheetEntry> timesheetEntryList) {
         TimesheetSummary timesheetSummary = new TimesheetSummary();
         timesheetSummary.setCreatedDate(LocalDateTime.now());
         timesheetSummary.setLastModifiedDate(LocalDateTime.now());

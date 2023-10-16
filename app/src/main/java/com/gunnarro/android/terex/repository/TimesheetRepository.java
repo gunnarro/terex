@@ -42,8 +42,17 @@ public class TimesheetRepository {
     }
 
 
-    public long saveTimesheetSummary(TimesheetSummary timesheetSummary) {
-        return timesheetSummaryDao.insert(timesheetSummary);
+    public Long saveTimesheetSummary(TimesheetSummary timesheetSummary) {
+        try {
+            CompletionService<Long> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
+            service.submit(() -> timesheetSummaryDao.insert(timesheetSummary));
+            Future<Long> future = service.take();
+            return future != null ? future.get() : null;
+        } catch (InterruptedException | ExecutionException e) {
+            // Something crashed, therefore restore interrupted state before leaving.
+            Thread.currentThread().interrupt();
+            throw new TerexApplicationException("Error getting timesheet with entries list", e.getMessage(), e.getCause());
+        }
     }
 
     @Transaction
