@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,7 +23,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @TypeConverters({LocalDateConverter.class, LocalDateTimeConverter.class})
-@Entity(tableName = "invoice", indices = {@Index(value = {"client_id", "timesheet_id", "reference"},
+@Entity(tableName = "invoice", indices = {@Index(value = {"client_id", "timesheet_id"},
         unique = true)})
 public class Invoice extends BaseEntity {
 
@@ -31,6 +32,8 @@ public class Invoice extends BaseEntity {
     @NotNull
     @ColumnInfo(name = "timesheet_id")
     private Long timesheetId;
+    @ColumnInfo(name = "invoice_file_id")
+    private Long invoiceFileId;
     @NotNull
     @ColumnInfo(name = "invoice_number")
     private Integer invoiceNumber;
@@ -66,6 +69,15 @@ public class Invoice extends BaseEntity {
 
     public void setTimesheetId(Long timesheetId) {
         this.timesheetId = timesheetId;
+    }
+
+    @NotNull
+    public Long getInvoiceFileId() {
+        return invoiceFileId;
+    }
+
+    public void setInvoiceFileId(@NotNull Long invoiceFileId) {
+        this.invoiceFileId = invoiceFileId;
     }
 
     public Integer getInvoiceNumber() {
@@ -138,5 +150,18 @@ public class Invoice extends BaseEntity {
 
     public void setTimesheetSummaryList(List<TimesheetSummary> timesheetSummaryList) {
         this.timesheetSummaryList = timesheetSummaryList;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Invoice invoice = (Invoice) o;
+        return timesheetId.equals(invoice.timesheetId) && clientId.equals(invoice.clientId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(timesheetId, clientId);
     }
 }

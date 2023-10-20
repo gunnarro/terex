@@ -12,6 +12,7 @@ import com.gunnarro.android.terex.domain.converter.LocalDateTimeConverter;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 /**
@@ -46,8 +47,8 @@ public class TimesheetSummary extends BaseEntity {
     private Integer totalSickLeaveDays = 0;
     @ColumnInfo(name = "total_worked_hours")
     private double totalWorkedHours = 0;
-    @ColumnInfo(name = "sum_billed_work")
-    private double sumBilledWork = 0;
+    @ColumnInfo(name = "sum_billed_amount")
+    private double totalBilledAmount = 0;
 
     public TimesheetSummary() {
     }
@@ -88,12 +89,24 @@ public class TimesheetSummary extends BaseEntity {
         return fromDate;
     }
 
+    public String getFromDateDDMM() {
+        return fromDate.format(DateTimeFormatter.ofPattern("dd.MM"));
+    }
+
+    public String getFromDateMM() {
+        return fromDate.format(DateTimeFormatter.ofPattern("MM"));
+    }
+
     public void setFromDate(LocalDate fromDate) {
         this.fromDate = fromDate;
     }
 
     public LocalDate getToDate() {
         return toDate;
+    }
+
+    public String getToDateDDMM() {
+        return toDate.format(DateTimeFormatter.ofPattern("dd.MM"));
     }
 
     public void setToDate(LocalDate toDate) {
@@ -132,12 +145,12 @@ public class TimesheetSummary extends BaseEntity {
         this.totalWorkedHours = totalWorkedHours;
     }
 
-    public double getSumBilledWork() {
-        return sumBilledWork;
+    public double getTotalBilledAmount() {
+        return totalBilledAmount;
     }
 
-    public void setSumBilledWork(double sumBilledWork) {
-        this.sumBilledWork = sumBilledWork;
+    public void setTotalBilledAmount(double totalBilledAmount) {
+        this.totalBilledAmount = totalBilledAmount;
     }
 
     @Override

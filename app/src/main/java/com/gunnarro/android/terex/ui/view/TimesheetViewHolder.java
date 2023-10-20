@@ -12,6 +12,9 @@ import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.utility.Utility;
 
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+
 public class TimesheetViewHolder extends RecyclerView.ViewHolder {
     private final TextView timesheetLineHeaderView;
     private final View timesheetLine1StatusView;
@@ -40,7 +43,7 @@ public class TimesheetViewHolder extends RecyclerView.ViewHolder {
 
 
     public void bindListLine(Timesheet timesheet) {
-        timesheetLineHeaderView.setText(timesheet.getTimesheetRef());
+        timesheetLineHeaderView.setText(timesheet.getFromDate().format(DateTimeFormatter.ofPattern(Utility.INVOICE_DATE_PATTERN, Locale.getDefault())));
         if (timesheet.getStatus().equals(Timesheet.TimesheetStatusEnum.OPEN.name())) {
             timesheetLine1StatusView.setBackgroundColor(Color.parseColor("#0100f6"));
             timesheetLine2StatusView.setBackgroundColor(Color.parseColor("#0100f6"));
@@ -51,9 +54,9 @@ public class TimesheetViewHolder extends RecyclerView.ViewHolder {
             timesheetLine1StatusView.setBackgroundColor(Color.parseColor("#f5f600"));
             timesheetLine2StatusView.setBackgroundColor(Color.parseColor("#f5f600"));
         }
-        timesheetLine1LabelView.setText(String.format("%s - %s", Utility.formatDate(timesheet.getFromDate()), Utility.formatDate(timesheet.getToDate())));
-        timesheetLine1ValueView.setText(timesheet.getStatus());
-        timesheetLine2LabelView.setText("Invoice");
-        timesheetLine2ValueView.setText(timesheet.getInvoiceNumber() != null ? timesheet.getInvoiceNumber().toString() : "");
+        timesheetLine1LabelView.setText(R.string.lbl_worked_days);
+        timesheetLine1ValueView.setText(String.format("%s of %s days", "x", timesheet.getWorkingDaysInMonth()));
+        timesheetLine2LabelView.setText(R.string.lbl_worked_hours);
+        timesheetLine2ValueView.setText(String.format("%s of %s hours", "x", timesheet.getWorkingHoursInMonth()));
     }
 }

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -94,9 +95,10 @@ public class InvoiceNewFragment extends Fragment {
                 if (item == null) {
                     showInfoDialog("Please select a timesheet!", requireContext());
                 } else {
+                    // item id is equal to selected timesheet id
                     Invoice invoice = createInvoice(item.id());
                     createTimesheetSummaryAttachment(invoice.getId());
-                    createTimesheetAttachment(item.id());
+                    createTimesheetAttachment(invoice.getTimesheetId());
                 }
             } catch (TerexApplicationException e) {
                 showInfoDialog("Error creating invoice!", requireContext());
@@ -169,32 +171,42 @@ public class InvoiceNewFragment extends Fragment {
             }
 
             Double sumBilledAmount = invoice.getTimesheetSummaryList().stream()
-                    .mapToDouble(TimesheetSummary::getSumBilledWork)
+                    .mapToDouble(TimesheetSummary::getTotalBilledAmount)
                     .sum();
 
             Double sumBilledHours = invoice.getTimesheetSummaryList().stream()
                     .mapToDouble(TimesheetSummary::getTotalWorkedHours)
                     .sum();
 
-            String invoiceSummaryHtml = createInvoiceSummaryHtml(mustacheTemplateStr.toString(), invoice.getTimesheetSummaryList(), sumBilledHours.toString(), sumBilledAmount.toString());
+            Double totalVat = sumBilledAmount * 0.25;
+            Double totalBilledAmountWithVat = sumBilledAmount + totalVat;
+
+            String invoiceSummaryHtml = createTimesheetSummaryAttachmentHtml(mustacheTemplateStr.toString(), invoice.getTimesheetSummaryList(), sumBilledHours.toString(), sumBilledAmount.toString(), totalBilledAmountWithVat.toString(), totalVat.toString());
             Log.d("createInvoiceSummaryAttachment", "" + invoiceSummaryHtml);
-            return PdfUtility.htmlToPdf(invoiceSummaryHtml, "invoice_attachment");
+            String invoiceFileName = "invoice_attachment_" + LocalDate.now().format(DateTimeFormatter.ISO_DATE);
+            File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+            return PdfUtility.saveFile(invoiceSummaryHtml, path.getPath() + "/" + invoiceFileName + ".pdf")
+                    && PdfUtility.saveFile(invoiceSummaryHtml, path.getPath() + "/" + invoiceFileName + ".html");
         } catch (Exception e) {
             throw new TerexApplicationException(String.format("Error crating invoice attachment, invoice ref=%s", invoiceId), "50023", e);
         }
     }
 
-    private String createInvoiceSummaryHtml(String mustacheTemplateStr, List<TimesheetSummary> timesheetSummaryList, String sumBilledHours, String sumBilledAmount) {
+    private String createTimesheetSummaryAttachmentHtml(String mustacheTemplateStr, List<TimesheetSummary> timesheetSummaryList, String totalBilledHours, String totalBilledAmount, String totalBilledAmountWithVat, String totalVat) {
         MustacheFactory mf = new DefaultMustacheFactory();
         Mustache mustache = mf.compile(new StringReader(mustacheTemplateStr), "");
         Map<String, Object> context = new HashMap<>();
-        context.put("title", "Vedlegg til faktura " + LocalDate.now().format(DateTimeFormatter.ISO_DATE));
+        context.put("invoiceAttachmentTitle", "Vedlegg til faktura");
+        context.put("invoiceBillingPeriod", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM")));
         context.put("company", getCompany());
         context.put("client", getClient());
         context.put("timesheetProjectCode", "techlead-catalystone-solution-as");
         context.put("timesheetSummaryList", timesheetSummaryList);
-        context.put("sunBilledHours", sumBilledHours);
-        context.put("sumBilledAmount", sumBilledAmount);
+        context.put("totalBilledHours", totalBilledHours);
+        context.put("totalBilledAmount", totalBilledAmount);
+        context.put("vatInPercent", "25%");
+        context.put("totalVat", totalVat);
+        context.put("totalBilledAmountWithVat", totalBilledAmountWithVat);
         StringWriter writer = new StringWriter();
         mustache.execute(writer, context);
         return writer.toString();
@@ -218,7 +230,10 @@ public class InvoiceNewFragment extends Fragment {
                     .sum() / 60;
 
             String timesheetHtml = createTimesheetListHtml(mustacheTemplateStr.toString(), timesheetEntryList, sumBilledHours.toString());
-            return PdfUtility.htmlToPdf(timesheetHtml, "timesheet_attachment");
+            String invoiceFileName = "timesheet_attachment" + LocalDate.now().format(DateTimeFormatter.ISO_DATE);
+            File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+            return PdfUtility.saveFile(timesheetHtml, path.getPath() + "/" + invoiceFileName + ".pdf")
+                    && PdfUtility.saveFile(timesheetHtml, path.getPath() + "/" + invoiceFileName + ".html");
         } catch (Exception e) {
             throw new TerexApplicationException(String.format("Error crating timesheet attachment, timesheetId=%s", timesheetId), "50023", e);
         }
@@ -231,13 +246,12 @@ public class InvoiceNewFragment extends Fragment {
         context.put("title", "Timeliste for konsulentbistand");
         context.put("timesheetPeriod", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM")));
         context.put("timesheetList", timesheetList);
-        context.put("sunWorkDays", timesheetList.size());
+        context.put("totalWorkDays", timesheetList.size());
         context.put("sunBilledHours", sumBilledHours);
         StringWriter writer = new StringWriter();
         mustache.execute(writer, context);
         return writer.toString();
     }
-
 
     private void sendInvoiceToClient(String toEmailAddress, String subject, String message, File pdfFile) {
         Intent email = new Intent(Intent.ACTION_SEND);

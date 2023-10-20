@@ -58,7 +58,7 @@ public class InvoiceService {
         invoice.setBillingDate(LocalDate.now());
         // defaulted to 10 days after billing date
         invoice.setDueDate(invoice.getBillingDate().plusDays(10));
-        double sumAmount = timesheetSummaries.stream().mapToDouble(TimesheetSummary::getSumBilledWork).sum();
+        double sumAmount = timesheetSummaries.stream().mapToDouble(TimesheetSummary::getTotalBilledAmount).sum();
         invoice.setAmount(sumAmount);
         invoice.setStatus(InvoiceRepository.InvoiceStatusEnum.COMPLETED.name());
         return invoiceRepository.saveInvoice(invoice);

@@ -13,6 +13,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import com.gunnarro.android.terex.domain.dbview.TimesheetView;
 import com.gunnarro.android.terex.domain.entity.Company;
 import com.gunnarro.android.terex.domain.entity.Invoice;
+import com.gunnarro.android.terex.domain.entity.InvoiceFile;
 import com.gunnarro.android.terex.domain.entity.Project;
 import com.gunnarro.android.terex.domain.entity.RecruitmentCompany;
 import com.gunnarro.android.terex.domain.entity.RegisterWork;
@@ -36,8 +37,9 @@ import java.util.concurrent.Executors;
         TimesheetEntry.class,
         Invoice.class,
         TimesheetSummary.class,
-        Project.class
-}, version = 2, views = {TimesheetView.class})
+        Project.class,
+        InvoiceFile.class
+}, version = 8, views = {TimesheetView.class})
 public abstract class AppDatabase extends RoomDatabase {
     // marking the instance as volatile to ensure atomic access to the variable
     private static volatile AppDatabase INSTANCE;

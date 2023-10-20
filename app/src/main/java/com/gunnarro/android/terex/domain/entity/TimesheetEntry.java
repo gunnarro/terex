@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
@@ -122,6 +123,10 @@ public class TimesheetEntry {
         return workdayDate;
     }
 
+    public String getWorkdayDateDay() {
+        return workdayDate.format(DateTimeFormatter.ofPattern("dd"));
+    }
+
     public void setWorkdayDate(@NonNull LocalDate workdayDate) {
         this.workdayDate = workdayDate;
     }
@@ -146,6 +151,10 @@ public class TimesheetEntry {
 
     public Integer getWorkedMinutes() {
         return workedMinutes;
+    }
+
+    public String getWorkedHours() {
+        return Double.valueOf((double)workedMinutes/60).toString();
     }
 
     public void setWorkedMinutes(Integer workedMinutes) {

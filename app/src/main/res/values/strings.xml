@@ -23,7 +23,6 @@
     <string name="lbl_from_date_time">From</string>
     <string name="lbl_to_date_time">To</string>
     <string name="lbl_break">Break</string>
-    <string name="lbl_worked_hours">Worked hours</string>
     <string name="lbl_status">Status</string>
     <string name="lbl_comment">Comment</string>
     <string name="lbl_system">System</string>
@@ -32,6 +31,10 @@
     <string name="lbl_url">Url</string>
     <string name="lbl_project_name">Project name</string>
     <string name="lbl_timesheet_name">Timesheet name</string>
+    <string name="lbl_worked_days">Worked days</string>
+    <string name="lbl_worked_hours">Worked hours</string>
+    <string name="lbl_of">of</string>
+
     <!-- button names -->
     <string name="btn_save">Save</string>
     <string name="btn_cancel">Cancel</string>

@@ -43,7 +43,7 @@
             </div>
             <hr>
             <div class="invoice-title">
-                <h2>Vedlegg faktura</h2><h3 class="pull-right">September 2023</h3>
+                <h2>{{invoiceAttachmentTitle}}</h2><h3 class="pull-right">{{invoiceBillingPeriod}}</h3>
             </div>
             <hr>
             <div class="row">
@@ -105,31 +105,31 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {{#invoiceSummaryList}}
+                                {{#timesheetSummaryList}}
                                     <tr>
                                         <td align="center">{{year}}</td>
-                                        <td align="center">{{month}}</td>
+                                        <td align="center">{{fromDateMM}}</td>
                                         <td align="center">{{weekInYear}}</td>
                                         <td align="center">{{fromDateDDMM}} - {{toDateDDMM}}</td>
-                                        <td align="right">{{sumWorkedHours}}</td>
-                                        <td align="right">{{sumBilledWork}}</td>
+                                        <td align="right">{{totalWorkedHours}}</td>
+                                        <td align="right">{{totalBilledAmount}}</td>
                                     </tr>
-                                {{/invoiceSummaryList}}
+                                {{/timesheetSummaryList}}
                                 <tr>
                                     <td class="thick-line"></td>
                                     <td class="thick-line"></td>
                                     <td class="thick-line"></td>
                                     <td class="thick-line text-center"><strong>Sum</strong></td>
-                                    <td class="thick-line text-right">{{sunBilledHours}}</td>
-                                    <td class="thick-line text-right">{{sumBilledAmount}}</td>
+                                    <td class="thick-line text-right">{{totalBilledHours}}</td>
+                                    <td class="thick-line text-right">{{totalBilledAmount}}</td>
                                 </tr>
                                 <tr>
                                     <td class="no-line"></td>
                                     <td class="no-line"></td>
                                     <td class="no-line"></td>
                                     <td class="no-line text-center"><strong>Moms</strong></td>
-                                    <td class="no-line text-right">25%</td>
-                                    <td class="no-line text-right"></td>
+                                    <td class="no-line text-right">{{vatInPercent}}</td>
+                                    <td class="no-line text-right">{{totalVat}}</td>
                                 </tr>
                                 <tr>
                                     <td class="no-line"></td>
@@ -137,7 +137,7 @@
                                     <td class="no-line"></td>
                                     <td class="no-line text-center"><strong>Total</strong></td>
                                     <td class="no-line text-right"></td>
-                                    <td class="no-line text-right"></td>
+                                    <td class="no-line text-right">{{totalBilledAmountWithVat}}</td>
                                 </tr>
                             </tbody>
                         </table>

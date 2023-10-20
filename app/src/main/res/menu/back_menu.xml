@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/back_menu"
+        android:id="@+id/back_menu_item"
         android:checkable="true"
         android:title="back"
         app:showAsAction="never" />

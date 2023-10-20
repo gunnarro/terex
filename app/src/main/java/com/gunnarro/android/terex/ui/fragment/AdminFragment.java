@@ -93,21 +93,6 @@ public class AdminFragment extends Fragment {
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
     }
-/*
-    private void generateTimesheet() {
-        int month = ((Spinner) requireView().findViewById(R.id.admin_invoice_month_spinner)).getSelectedItemPosition();
-        List<TimesheetEntry> timesheets = invoiceService.generateTimesheet(2023, month + 1);
-        timesheets.forEach(t -> Log.i("generateTimesheet", t.toString()));
-        Toast.makeText(requireContext(), "Generate timesheet for " + month, Toast.LENGTH_SHORT).show();
-    }
-
-    private void createInvoice() {
-        int month = ((Spinner) requireView().findViewById(R.id.admin_invoice_month_spinner)).getSelectedItemPosition();
-        Toast.makeText(requireContext(), "Create invoice for " + month, Toast.LENGTH_SHORT).show();
-        List<InvoiceSummary> invoiceSummaries = invoiceService.buildInvoiceSummaryByWeek(2022, month);
-        invoiceSummaries.forEach(i -> Log.i("generateInvoiceSummary", i.toString()));
-    }
-*/
 
     private void showInfoDialog(String infoMessage, Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);

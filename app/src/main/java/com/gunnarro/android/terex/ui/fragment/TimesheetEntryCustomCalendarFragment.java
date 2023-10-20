@@ -58,7 +58,7 @@ public class TimesheetEntryCustomCalendarFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_timesheet_entry_custom_calendar, container, false);
         CalendarView calendarView = view.findViewById(R.id.view_timesheet_custom_calendar);
-        Long timesheetId = 1L;
+        Long timesheetId = getArguments().getLong(TimesheetFragment.TIMESHEET_ID_KEY);
         // calendarView.setSelectedDates(selectedDates);
         calendarView.setDisabledDays(createSelectedDates(timesheetId));
         calendarView.setEvents(createEventDays(timesheetId));

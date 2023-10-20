@@ -49,7 +49,7 @@ public class InvoiceServiceTest {
         List<TimesheetSummary> timesheetSummaries = timesheetService.buildTimesheetSummaryByWeek(2023, 2);
         assertEquals(5, timesheetSummaries.size());
         assertEquals(0, timesheetSummaries.get(0).getTimesheetId());
-        assertEquals(24187.5, timesheetSummaries.get(0).getSumBilledWork());
+        assertEquals(24187.5, timesheetSummaries.get(0).getTotalBilledAmount());
         assertEquals(3, timesheetSummaries.get(0).getTotalWorkedDays());
         assertEquals(1350, timesheetSummaries.get(0).getTotalWorkedHours());
     }

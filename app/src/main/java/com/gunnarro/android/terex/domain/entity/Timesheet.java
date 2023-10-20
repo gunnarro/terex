@@ -80,6 +80,12 @@ public class Timesheet {
     @NotNull
     @ColumnInfo(name = "from_date")
     private LocalDate fromDate;
+    @ColumnInfo(name = "working_days_in_month")
+    private Integer workingDaysInMonth;
+
+    @ColumnInfo(name = "working_hours_in_month")
+    private Integer workingHoursInMonth;
+
     @NotNull
     @ColumnInfo(name = "to_date")
     private LocalDate toDate;
@@ -201,6 +207,22 @@ public class Timesheet {
     @NotNull
     public String getTimesheetRef() {
         return timesheetRef;
+    }
+
+    public Integer getWorkingDaysInMonth() {
+        return workingDaysInMonth;
+    }
+
+    public void setWorkingDaysInMonth(Integer workingDaysInMonth) {
+        this.workingDaysInMonth = workingDaysInMonth;
+    }
+
+    public Integer getWorkingHoursInMonth() {
+        return workingHoursInMonth;
+    }
+
+    public void setWorkingHoursInMonth(Integer workingHoursInMonth) {
+        this.workingHoursInMonth = workingHoursInMonth;
     }
 
     /**
