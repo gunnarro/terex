@@ -25,21 +25,12 @@ public class TimesheetListAdapter extends ListAdapter<Timesheet, TimesheetViewHo
         super(diffCallback);
         this.setHasStableIds(true);
         this.fragmentManager = fragmentManager;
-        Log.d("TimesheetListAdapter", "init");
     }
 
     @NonNull
     @Override
     public TimesheetViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         TimesheetViewHolder viewHolder = TimesheetViewHolder.create(parent);
-        /**
-         viewHolder.itemView.findViewById(R.id.ic_timesheet_row_delete).setOnClickListener(v -> {
-            Bundle actionBundle = new Bundle();
-            actionBundle.putString(TimesheetFragment.TIMESHEET_JSON_INTENT_KEY, toJson(getItem(viewHolder.getBindingAdapterPosition())));
-            actionBundle.putString(TimesheetFragment.TIMESHEET_ACTION_KEY, TimesheetFragment.TIMESHEET_ACTION_DELETE);
-            fragmentManager.setFragmentResult(TimesheetFragment.TIMESHEET_REQUEST_KEY, actionBundle);
-        });
-        */
         viewHolder.itemView.findViewById(R.id.ic_timesheet_row_view).setOnClickListener(v -> {
             Bundle actionBundle = new Bundle();
             actionBundle.putString(TimesheetFragment.TIMESHEET_JSON_KEY, toJson(getItem(viewHolder.getBindingAdapterPosition())));
@@ -65,7 +56,6 @@ public class TimesheetListAdapter extends ListAdapter<Timesheet, TimesheetViewHo
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Log.d(Utility.buildTag(getClass(), "onItemClick"), "position: " + position + ", id: " + id);
         notifyItemRangeRemoved(position, 1);
     }
 

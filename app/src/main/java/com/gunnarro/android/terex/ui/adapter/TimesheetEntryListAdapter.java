@@ -25,7 +25,6 @@ public class TimesheetEntryListAdapter extends ListAdapter<TimesheetEntry, Times
         super(diffCallback);
         this.setHasStableIds(true);
         this.fragmentManager = fragmentManager;
-        Log.d("TimesheetListAdapter", "init");
     }
 
     @NonNull
@@ -46,7 +45,7 @@ public class TimesheetEntryListAdapter extends ListAdapter<TimesheetEntry, Times
             return Utility.gsonMapper().toJson(timesheet);
         } catch (Exception e) {
             Log.e("getTimesheetAsJson", e.toString());
-            throw new RuntimeException("unable to parse object to json! " + e);
+            throw new RuntimeException("unable to parse timesheetEntry to json! " + e);
         }
     }
 
@@ -57,7 +56,6 @@ public class TimesheetEntryListAdapter extends ListAdapter<TimesheetEntry, Times
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Log.d(Utility.buildTag(getClass(), "onItemClick"), "position: " + position + ", id: " + id);
         notifyItemRangeRemoved(position, 1);
     }
 
