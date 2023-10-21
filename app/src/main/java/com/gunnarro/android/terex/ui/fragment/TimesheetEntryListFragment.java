@@ -114,7 +114,7 @@ public class TimesheetEntryListFragment extends Fragment {
         });
 
         // if timesheet has status closed, it is not possible to do any kind of changes
-        if (timesheetWithEntries != null && timesheetWithEntries.getTimesheet().getStatus().equals(Timesheet.TimesheetStatusEnum.BILLED.name())) {
+        if (timesheetWithEntries != null && timesheetWithEntries.getTimesheet().isBilled()) {
             addButton.setVisibility(View.INVISIBLE);
             calendarButton.setVisibility(View.INVISIBLE);
         }

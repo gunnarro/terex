@@ -25,6 +25,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Timesheet entry is the time entries that holds your actual working hours.
+ * And is added to a specific timesheet.
+ */
 //@Builder
 // default constructor, Room accepts only one
 @NoArgsConstructor
@@ -39,6 +43,9 @@ public class TimesheetEntry {
     @PrimaryKey(autoGenerate = true)
     private Long id;
 
+    /**
+     * Hold a unique reference to the timesheet that is entry is assigned to.
+     */
     @NonNull
     @ColumnInfo(name = "timesheet_id")
     private Long timesheetId;
@@ -78,6 +85,10 @@ public class TimesheetEntry {
     @ColumnInfo(name = "hourly_rate")
     private Integer hourlyRate;
 
+    /**
+     * Status can only be OPEN of CLOSED. When CLOSED is is not possible to change or delete the entry.
+     * The status is automatically set equal to CLOSED when a timesheet have been completed and billed.
+     */
     @NonNull
     @ColumnInfo(name = "status", defaultValue = "OPEN")
     private String status;
@@ -154,7 +165,7 @@ public class TimesheetEntry {
     }
 
     public String getWorkedHours() {
-        return Double.valueOf((double)workedMinutes/60).toString();
+        return Double.valueOf((double) workedMinutes / 60).toString();
     }
 
     public void setWorkedMinutes(Integer workedMinutes) {
@@ -224,6 +235,13 @@ public class TimesheetEntry {
         this.lastModifiedDate = lastModifiedDate;
     }
 
+    public boolean isOpen() {
+        return status.equals(Timesheet.TimesheetStatusEnum.OPEN.name());
+    }
+
+    public boolean isBilled() {
+        return status.equals(Timesheet.TimesheetStatusEnum.BILLED.name());
+    }
 
     public static TimesheetEntry createDefault(Long timesheetId, String status, Integer dailyBreakMin, LocalDate workDayDate, Long workingHoursMin, Integer hourlyRate) {
         TimesheetEntry timesheetEntry = new TimesheetEntry();

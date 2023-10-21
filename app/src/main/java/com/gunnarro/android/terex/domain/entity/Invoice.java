@@ -29,6 +29,9 @@ public class Invoice extends BaseEntity {
 
     @PrimaryKey(autoGenerate = true)
     private Long id;
+    /**
+     * Hold a unique reference to the timesheet that is used as the basis for the invoice
+     */
     @NotNull
     @ColumnInfo(name = "timesheet_id")
     private Long timesheetId;
@@ -40,18 +43,30 @@ public class Invoice extends BaseEntity {
     @NotNull
     @ColumnInfo(name = "client_id")
     private Long clientId;
+
     @ColumnInfo(name = "reference")
     private String reference;
-    @ColumnInfo(name = "invoice_status")
+    @NotNull
+    @ColumnInfo(name = "invoice_status", defaultValue = "OPEN")
     private String status;
+    @NotNull
     @ColumnInfo(name = "billing_date")
     private LocalDate billingDate;
+    @NotNull
     @ColumnInfo(name = "due_date")
     private LocalDate dueDate;
+    @NotNull
     @ColumnInfo(name = "vat")
     private double vat;
-    @ColumnInfo(name = "amount")
+    @NotNull
+    @ColumnInfo(name = "amount", defaultValue = "0")
     private double amount;
+    /**
+     * ISO 427 currency code
+     */
+    @NotNull
+    @ColumnInfo(name = "currency", defaultValue = "NOK")
+    private String currency;
 
     private transient List<TimesheetSummary> timesheetSummaryList;
 
@@ -150,6 +165,15 @@ public class Invoice extends BaseEntity {
 
     public void setTimesheetSummaryList(List<TimesheetSummary> timesheetSummaryList) {
         this.timesheetSummaryList = timesheetSummaryList;
+    }
+
+    @NotNull
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(@NotNull String currency) {
+        this.currency = currency;
     }
 
     @Override

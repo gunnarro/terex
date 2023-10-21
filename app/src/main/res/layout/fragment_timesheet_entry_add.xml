@@ -93,12 +93,14 @@
                 android:hint="@string/lbl_timesheet_name">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/timesheet_entry_timesheet_name"
+                    android:id="@+id/timesheet_entry_timesheet_spinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
                     android:maxLength="50"
                     android:enabled="true"
+                    android:autofillHints="false"
+                    android:importantForAutofill="no"
                     android:text="" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -114,6 +116,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clickable="true"
+                    android:autofillHints="false"
+                    android:importantForAutofill="no"
                     tools:ignore="KeyboardInaccessibleWidget" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>

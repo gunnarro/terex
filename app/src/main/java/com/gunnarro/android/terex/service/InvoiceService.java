@@ -60,6 +60,7 @@ public class InvoiceService {
         invoice.setDueDate(invoice.getBillingDate().plusDays(10));
         double sumAmount = timesheetSummaries.stream().mapToDouble(TimesheetSummary::getTotalBilledAmount).sum();
         invoice.setAmount(sumAmount);
+        invoice.setCurrency("NOK");
         invoice.setStatus(InvoiceRepository.InvoiceStatusEnum.COMPLETED.name());
         return invoiceRepository.saveInvoice(invoice);
     }

@@ -208,17 +208,37 @@ public class TimesheetRepository {
         return future != null ? future.get() : null;
     }
 
-    public Integer updateTimesheetEntry(TimesheetEntry timesheetEntry) throws InterruptedException, ExecutionException {
-        CompletionService<Integer> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
-        service.submit(() -> timesheetEntryDao.update(timesheetEntry));
-        Future<Integer> future = service.take();
-        return future != null ? future.get() : null;
+    public int updateTimesheetEntry(TimesheetEntry timesheetEntry) throws InterruptedException, ExecutionException {
+        if (timesheetEntry.isOpen()) {
+            CompletionService<Integer> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
+            service.submit(() -> timesheetEntryDao.update(timesheetEntry));
+            Future<Integer> future = service.take();
+            return future != null ? future.get() : null;
+        } else {
+            Log.e("", String.format("not allowed to update timesheet entry in this status! status=%s", timesheetEntry.getStatus()));
+            return 0;
+        }
     }
 
-    public void deleteTimesheetEntry(TimesheetEntry timesheetEntry) {
+    public boolean closeTimesheetEntry(Long timesheetEntryId) {
         AppDatabase.databaseExecutor.execute(() -> {
-            timesheetEntryDao.delete(timesheetEntry);
-            Log.d("TimesheetRepository.delete", "deleted, id=" + timesheetEntry.getId());
+            timesheetEntryDao.closeTimesheetEntry(timesheetEntryId);
         });
+        return true;
+    }
+
+    /**
+     * Not allowed to delete if timesheet entry status is equal to BILLED
+     */
+    public int deleteTimesheetEntry(TimesheetEntry timesheetEntry) {
+        if (timesheetEntry.isOpen()) {
+            AppDatabase.databaseExecutor.execute(() -> {
+                timesheetEntryDao.delete(timesheetEntry);
+            });
+        } else {
+            Log.d("", "not allowed to delete in this status!");
+            return 0;
+        }
+        return 1;
     }
 }

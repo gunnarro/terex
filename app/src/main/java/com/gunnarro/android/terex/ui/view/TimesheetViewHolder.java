@@ -44,10 +44,10 @@ public class TimesheetViewHolder extends RecyclerView.ViewHolder {
 
     public void bindListLine(Timesheet timesheet) {
         timesheetLineHeaderView.setText(timesheet.getFromDate().format(DateTimeFormatter.ofPattern(Utility.INVOICE_DATE_PATTERN, Locale.getDefault())));
-        if (timesheet.getStatus().equals(Timesheet.TimesheetStatusEnum.OPEN.name())) {
+        if (timesheet.isCompleted()) {
             timesheetLine1StatusView.setBackgroundColor(Color.parseColor("#0100f6"));
             timesheetLine2StatusView.setBackgroundColor(Color.parseColor("#0100f6"));
-        } else if (timesheet.getStatus().equals(Timesheet.TimesheetStatusEnum.BILLED.name())) {
+        } else if (timesheet.isBilled()) {
             timesheetLine1StatusView.setBackgroundColor(Color.parseColor("#54aa00"));
             timesheetLine2StatusView.setBackgroundColor(Color.parseColor("#54aa00"));
         } else {

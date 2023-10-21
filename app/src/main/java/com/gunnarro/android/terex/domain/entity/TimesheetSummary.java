@@ -26,6 +26,9 @@ public class TimesheetSummary extends BaseEntity {
     @NotNull
     @PrimaryKey(autoGenerate = true)
     public Long id;
+    /**
+     * Hold a unique reference to the timesheet that is used as the basis for the summary
+     */
     @NotNull
     @ColumnInfo(name = "timesheet_id")
     public Long timesheetId;
@@ -39,16 +42,21 @@ public class TimesheetSummary extends BaseEntity {
     private LocalDate fromDate;
     @ColumnInfo(name = "to_date")
     private LocalDate toDate;
-    @ColumnInfo(name = "total_worked_days")
+    @ColumnInfo(name = "total_worked_days", defaultValue = "0")
     private Integer totalWorkedDays = 0;
-    @ColumnInfo(name = "total_days_off")
+    @ColumnInfo(name = "total_days_off", defaultValue = "0")
     private Integer totalDaysOff = 0;
-    @ColumnInfo(name = "total_sick_leave_days")
+    @ColumnInfo(name = "total_sick_leave_days", defaultValue = "0")
     private Integer totalSickLeaveDays = 0;
-    @ColumnInfo(name = "total_worked_hours")
+    @ColumnInfo(name = "total_worked_hours", defaultValue = "0")
     private double totalWorkedHours = 0;
-    @ColumnInfo(name = "sum_billed_amount")
+    @ColumnInfo(name = "total_billed_amount", defaultValue = "0")
     private double totalBilledAmount = 0;
+    /**
+     * ISO 427 currency code
+     */
+    @ColumnInfo(name = "currency", defaultValue = "NOK")
+    private String currency;
 
     public TimesheetSummary() {
     }
@@ -151,6 +159,14 @@ public class TimesheetSummary extends BaseEntity {
 
     public void setTotalBilledAmount(double totalBilledAmount) {
         this.totalBilledAmount = totalBilledAmount;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 
     @Override

@@ -4,19 +4,21 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gunnarro.android.terex.R;
-import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
+import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.utility.Utility;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 public class TimesheetEntryViewHolder extends RecyclerView.ViewHolder {
+    private final ImageView timesheetEntryDeleteIconBtn;
     private final TextView timesheetEntryLineHeaderView;
     private final View timesheetEntryLine1StatusView;
     private final TextView timesheetEntryLine1LabelView;
@@ -28,6 +30,7 @@ public class TimesheetEntryViewHolder extends RecyclerView.ViewHolder {
 
     private TimesheetEntryViewHolder(View itemView) {
         super(itemView);
+        timesheetEntryDeleteIconBtn = itemView.findViewById(R.id.ic_timesheet_entry_row_delete);
         timesheetEntryLineHeaderView = itemView.findViewById(R.id.timesheet_entry_line_header);
         timesheetEntryLine1StatusView = itemView.findViewById(R.id.timesheet_entry_line_1_status);
         timesheetEntryLine1LabelView = itemView.findViewById(R.id.timesheet_entry_line_1_label);
@@ -45,15 +48,16 @@ public class TimesheetEntryViewHolder extends RecyclerView.ViewHolder {
 
     public void bindListLine(TimesheetEntry timesheetEntry) {
         timesheetEntryLineHeaderView.setText(timesheetEntry.getWorkdayDate().format(DateTimeFormatter.ofPattern(Utility.WORKDAY_DATE_PATTERN, Locale.getDefault())));
-        if (timesheetEntry.getStatus().equals(Timesheet.TimesheetStatusEnum.OPEN.name())) {
+        // can have status OPEN or BILLED
+        if (timesheetEntry.isOpen()) {
             timesheetEntryLine1StatusView.setBackgroundColor(Color.parseColor("#0100f6"));
             timesheetEntryLine2StatusView.setBackgroundColor(Color.parseColor("#0100f6"));
-        } else if (timesheetEntry.getStatus().equals(Timesheet.TimesheetStatusEnum.BILLED.name())) {
+        } else if (timesheetEntry.isBilled()) {
             timesheetEntryLine1StatusView.setBackgroundColor(Color.parseColor("#54aa00"));
             timesheetEntryLine2StatusView.setBackgroundColor(Color.parseColor("#54aa00"));
+            timesheetEntryDeleteIconBtn.setVisibility(View.INVISIBLE);
         } else {
-            timesheetEntryLine1StatusView.setBackgroundColor(Color.parseColor("#f5f600"));
-            timesheetEntryLine2StatusView.setBackgroundColor(Color.parseColor("#f5f600"));
+            throw new TerexApplicationException(String.format("Application error, unknown timesheet entry status! status=%s, timesheetEntryId=%s", timesheetEntry.getStatus(),timesheetEntry.getId()), "50034", null);
         }
         timesheetEntryLine1LabelView.setText(String.format("%s - %s", Utility.formatTime(timesheetEntry.getFromTime()), Utility.formatTime(timesheetEntry.getToTime())));
         timesheetEntryLine1ValueView.setText(Utility.getDateDiffInHours(timesheetEntry.getFromTime(), timesheetEntry.getToTime()));

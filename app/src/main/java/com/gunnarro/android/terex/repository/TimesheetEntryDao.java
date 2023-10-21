@@ -45,6 +45,9 @@ public interface TimesheetEntryDao {
     @Query("SELECT * FROM timesheet_entry WHERE strftime('%Y', workday_date) = :week")
     LiveData<List<TimesheetEntry>> getByWeek(int week);
 
+    @Query("UPDATE timesheet_entry SET status = 'BILLED' WHERE id = :timesheetEntryId")
+    int closeTimesheetEntry(Long timesheetEntryId);
+
     /**
      *
      * @param timesheetEntry timesheet to be inserted
@@ -64,8 +67,8 @@ public interface TimesheetEntryDao {
     /**
      *
      * @param timesheetEntry to be deleted
+     * @return number of deleted row(S), should only be one for this method.
      */
     @Delete
-    void delete(TimesheetEntry timesheetEntry);
-
+    int delete(TimesheetEntry timesheetEntry);
 }

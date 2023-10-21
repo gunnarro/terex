@@ -77,7 +77,7 @@ public class TimesheetService {
         Timesheet timesheetExisting = timesheetRepository.getTimesheet(timesheet.getClientName(), timesheet.getProjectCode(), timesheet.getYear(), timesheet.getMonth());
 
         // first of all, check status
-        if (timesheetExisting != null && timesheetExisting.getStatus().equals(Timesheet.TimesheetStatusEnum.BILLED.name())) {
+        if (timesheetExisting != null && timesheetExisting.isBilled()) {
             Log.d("", "timesheet is already billed, no changes is allowed. timesheetId=" + timesheetExisting.getId() + " " + timesheetExisting.getStatus());
             return null;
         }
@@ -88,7 +88,7 @@ public class TimesheetService {
                 timesheet.setCreatedDate(LocalDateTime.now());
                 timesheet.setLastModifiedDate(LocalDateTime.now());
                 timesheet.setWorkingDaysInMonth(Utility.countBusinessDaysInMonth(timesheet.getFromDate()));
-                timesheet.setWorkingHoursInMonth((int)(timesheet.getWorkingDaysInMonth()*7.5));
+                timesheet.setWorkingHoursInMonth((int) (timesheet.getWorkingDaysInMonth() * 7.5));
                 id = timesheetRepository.insertTimesheet(timesheet);
                 Log.d("", "insert new timesheet: " + id + " - " + timesheet);
             } else {
@@ -96,7 +96,7 @@ public class TimesheetService {
                 timesheet.setCreatedDate(timesheetExisting.getCreatedDate());
                 timesheet.setLastModifiedDate(LocalDateTime.now());
                 timesheet.setWorkingDaysInMonth(Utility.countBusinessDaysInMonth(timesheet.getFromDate()));
-                timesheet.setWorkingHoursInMonth((int)(timesheet.getWorkingDaysInMonth()*7.5));
+                timesheet.setWorkingHoursInMonth((int) (timesheet.getWorkingDaysInMonth() * 7.5));
                 timesheetRepository.updateTimesheet(timesheet);
                 id = timesheet.getId();
                 Log.d("", "update timesheet: " + id + " - " + timesheet);
@@ -180,8 +180,8 @@ public class TimesheetService {
     public List<TimesheetSummary> createTimesheetSummary(@NotNull Long timesheetId) {
         // check timesheet status
         Timesheet timesheet = getTimesheet(timesheetId);
-        if (timesheet.getStatus().equals(Timesheet.TimesheetStatusEnum.BILLED.name())) {
-            throw new TerexApplicationException("Application error, timesheet is closed", "50023", null);
+        if (!timesheet.isCompleted()) {
+            throw new TerexApplicationException("Application error, timesheet have status COMPLETED", "50023", null);
         }
         Log.d("createInvoiceSummary", String.format("timesheetId=%s", timesheetId));
         List<TimesheetEntry> timesheetEntryList = getTimesheetEntryList(timesheetId);
@@ -199,6 +199,11 @@ public class TimesheetService {
         // close the timesheet after invoice have been generated, is not possible to do any form of changes on the time list.
         timesheet.setStatus(Timesheet.TimesheetStatusEnum.BILLED.name());
         saveTimesheet(timesheet);
+
+        // then close all timesheet entries
+        timesheetEntryList.forEach(e -> {
+            timesheetRepository.closeTimesheetEntry(e.getId());
+        });
 
         invoiceSummaryByWeek.sort(Comparator.comparing(TimesheetSummary::getWeekInYear));
         return invoiceSummaryByWeek;

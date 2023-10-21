@@ -86,7 +86,7 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
 
         // create timesheet status spinner
         final AutoCompleteTextView statusSpinner = view.findViewById(R.id.timesheet_new_status_spinner);
-        ArrayAdapter<CharSequence> statusAdapter = ArrayAdapter.createFromResource(requireContext(), R.array.timesheet_statuses, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> statusAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, Timesheet.TimesheetStatusEnum.names());
         statusSpinner.setAdapter(statusAdapter);
         statusSpinner.setListSelection(0);
 
@@ -204,7 +204,7 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
             // change button icon to from add new to save
             ((MaterialButton) view.findViewById(R.id.btn_timesheet_new_save)).setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_check_black_24dp));
             // not allowed to change a timesheet with status set equal to BILLED
-            if (timesheet.getStatus().equals(Timesheet.TimesheetStatusEnum.BILLED.name())) {
+            if (timesheet.isBilled()) {
                 view.findViewById(R.id.btn_timesheet_new_delete).setVisibility(View.GONE);
                 view.findViewById(R.id.btn_timesheet_new_save).setVisibility(View.GONE);
             }

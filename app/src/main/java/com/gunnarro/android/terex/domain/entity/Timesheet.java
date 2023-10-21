@@ -21,6 +21,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
+ * Timesheet is the top level class used to track the time a particular employee has worked during a certain period.
  * typically there is one timesheet per month.
  * A timesheet contains time sheet entries.
  * <p>
@@ -46,6 +47,10 @@ public class Timesheet {
      */
     public enum TimesheetStatusEnum {
         OPEN, ACTIVE, COMPLETED, BILLED;
+
+        public static String[] names() {
+            return new String[]{OPEN.name(), ACTIVE.name(), COMPLETED.name()};
+        }
     }
 
     @PrimaryKey(autoGenerate = true)
@@ -90,7 +95,7 @@ public class Timesheet {
     @ColumnInfo(name = "to_date")
     private LocalDate toDate;
     @NotNull
-    @ColumnInfo(name = "status")
+    @ColumnInfo(name = "status", defaultValue = "OPEN")
     private String status;
     @ColumnInfo(name = "description")
     private String description;
@@ -223,6 +228,14 @@ public class Timesheet {
 
     public void setWorkingHoursInMonth(Integer workingHoursInMonth) {
         this.workingHoursInMonth = workingHoursInMonth;
+    }
+
+    public boolean isBilled() {
+        return status.equals(TimesheetStatusEnum.BILLED.name());
+    }
+
+    public boolean isCompleted() {
+        return status.equals(TimesheetStatusEnum.COMPLETED.name());
     }
 
     /**

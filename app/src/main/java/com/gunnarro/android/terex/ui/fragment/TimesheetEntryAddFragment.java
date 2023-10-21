@@ -199,7 +199,7 @@ public class TimesheetEntryAddFragment extends Fragment implements View.OnClickL
         EditText lastModifiedDateView = view.findViewById(R.id.timesheet_entry_last_modified_date);
         lastModifiedDateView.setText(Utility.formatDateTime(timesheetEntry.getLastModifiedDate()));
 
-        EditText timesheetNameView = view.findViewById(R.id.timesheet_entry_timesheet_name);
+        EditText timesheetNameView = view.findViewById(R.id.timesheet_entry_timesheet_spinner);
         timesheetNameView.setText(timesheetEntry.getTimesheetId().toString());
 
         AutoCompleteTextView statusSpinner = view.findViewById(R.id.timesheet_entry_status_spinner);
@@ -274,9 +274,6 @@ public class TimesheetEntryAddFragment extends Fragment implements View.OnClickL
         if (lastModifiedDateTime != null) {
             timesheet.setLastModifiedDate(lastModifiedDateTime);
         }
-
-        AutoCompleteTextView timesheetSpinner = requireView().findViewById(R.id.timesheet_entry_timesheet_spinner);
-        //timesheet.setStatus(timesheetSpinner.getText().toString());
 
         AutoCompleteTextView statusSpinner = requireView().findViewById(R.id.timesheet_entry_status_spinner);
         timesheet.setStatus(statusSpinner.getText().toString());
