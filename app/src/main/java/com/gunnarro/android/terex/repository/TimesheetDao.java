@@ -24,13 +24,6 @@ public interface TimesheetDao {
      * use transactions since this method return a aggregate object
      */
     @Transaction
-    @Query("SELECT * FROM timesheet WHERE id = :id")
-    TimesheetWithEntries getTimesheetWithEntriesById(Long id);
-
-    /**
-     * use transactions since this method return a aggregate object
-     */
-    @Transaction
     @Query("SELECT * FROM timesheet WHERE id = :timesheetId")
     TimesheetWithEntries getTimesheetWithEntries(Long timesheetId);
 

@@ -42,9 +42,6 @@ public interface TimesheetEntryDao {
     @Query("SELECT * FROM timesheet_entry WHERE timesheet_id = :timesheetId ORDER BY workday_date ASC")
     LiveData<List<TimesheetEntry>> getTimesheetEntryListLiveData(Long timesheetId);
 
-    @Query("SELECT * FROM timesheet_entry WHERE strftime('%Y', workday_date) = :week")
-    LiveData<List<TimesheetEntry>> getByWeek(int week);
-
     @Query("UPDATE timesheet_entry SET status = 'BILLED' WHERE id = :timesheetEntryId")
     int closeTimesheetEntry(Long timesheetEntryId);
 

@@ -7,14 +7,12 @@ import androidx.lifecycle.LiveData;
 
 import com.gunnarro.android.terex.config.AppDatabase;
 import com.gunnarro.android.terex.domain.entity.Invoice;
-import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
@@ -48,19 +46,7 @@ public class InvoiceRepository {
         timesheetSummaryDao = AppDatabase.getDatabase(applicationContext).timesheetSummaryDao();
         allInvoices = invoiceDao.getAll();
     }
-/*
-    public Map<Invoice, List<TimesheetSummary>> getInvoiceAndSummaryById(Long invoiceId) {
-        try {
-            CompletionService<Map<Invoice, List<TimesheetSummary>>> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
-            service.submit(() -> invoiceDao.getInvoiceById(invoiceId));
-            Future<Map<Invoice, List<TimesheetSummary>>> future = service.take();
-            return future != null ? future.get() : null;
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-*/
+
     // Room executes all queries on a separate thread.
     // Observed LiveData will notify the observer when the data has changed.
     public LiveData<List<Invoice>> getAllInvoices() {
@@ -95,18 +81,6 @@ public class InvoiceRepository {
         }
     }
 
-    public Long insertTimesheetSummary(TimesheetSummary timesheetSummary) {
-        Log.d("updateInvoice", "timesheetSummary: " + timesheetSummary);
-        try {
-            CompletionService<Long> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
-            service.submit(() -> timesheetSummaryDao.insert(timesheetSummary));
-            Future<Long> future = service.take();
-            return future != null ? future.get() : null;
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures
     // that you're not doing any long running operations on the main thread, blocking the UI.

@@ -28,7 +28,6 @@ public class TimesheetRepository {
     private final TimesheetDao timesheetDao;
     private final TimesheetEntryDao timesheetEntryDao;
     private final TimesheetSummaryDao timesheetSummaryDao;
-    // private final LiveData<List<TimesheetEntry>> timesheetEntryList;
 
     // Note that in order to unit test the WordRepository, you have to remove the Application
     // dependency. This adds complexity and much more code, and this sample is not about testing.
@@ -38,7 +37,6 @@ public class TimesheetRepository {
         timesheetDao = AppDatabase.getDatabase(applicationContext).timesheetDao();
         timesheetEntryDao = AppDatabase.getDatabase(applicationContext).timesheetEntryDao();
         timesheetSummaryDao = AppDatabase.getDatabase(applicationContext).timesheetSummaryDao();
-        //   timesheetEntryList = timesheetEntryDao.getTimesheetEntryListLiveData(1L);
     }
 
 
