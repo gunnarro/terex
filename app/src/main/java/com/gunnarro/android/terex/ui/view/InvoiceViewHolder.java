@@ -60,7 +60,7 @@ public class InvoiceViewHolder extends RecyclerView.ViewHolder {
             invoiceLine2StatusView.setBackgroundColor(Color.parseColor("#f5f600"));
         }
         invoiceLine1LabelView.setText(String.format("%s - %s", invoice.getClientId(), invoice.getReference()));
-        invoiceLine1ValueView.setText(invoice.getInvoiceNumber().toString());
+        invoiceLine1ValueView.setText(String.format("%s", invoice.getInvoiceNumber().toString()));
         invoiceLine2LabelView.setText(String.format("%s", invoice.getBillingDate()));
         invoiceLine2ValueView.setText(String.format("%s", invoice.getAmount()));
     }

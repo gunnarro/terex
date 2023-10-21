@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetWithEntries;
 import com.gunnarro.android.terex.service.TimesheetService;
@@ -21,10 +20,6 @@ import java.util.List;
 public class TimesheetEntryViewModel extends AndroidViewModel {
 
     private final TimesheetService timesheetService;
-    // Using LiveData and caching what getAlphabetizedWords returns has several benefits:
-    // - We can put an observer on the data (instead of polling for changes) and only update the
-    //   the UI when the data actually changes.
-    private LiveData<List<TimesheetEntry>> timesheetEntryList;
 
     public TimesheetEntryViewModel(@NonNull Application application) {
         super(application);
@@ -40,12 +35,8 @@ public class TimesheetEntryViewModel extends AndroidViewModel {
     }
 
     public TimesheetWithEntries getTimesheetWithEntries(Long timesheetId) {
-        if (timesheetId == null) { return null; };
+        if (timesheetId == null) { return null; }
         return timesheetService.getTimesheetWithEntries(timesheetId);
-    }
-
-    public void saveTimesheet(Timesheet timesheet) {
-        timesheetService.saveTimesheet(timesheet);
     }
 
     public void saveTimesheetEntry(TimesheetEntry timesheet) {
