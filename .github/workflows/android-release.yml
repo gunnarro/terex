@@ -17,14 +17,6 @@ jobs:
           java-version: '19'
           distribution: 'temurin'
           cache: gradle 
-       
-       - name: Cache Gradle and wrapper
-         uses: actions/cache@v2
-         with:
-           path: |
-             ~/.gradle/caches
-             ~/.gradle/wrapper
-           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
       
       #1     
        - name: Decode Keystore
