@@ -1,11 +1,13 @@
+# ref https://www.droidcon.com/2023/04/04/securely-create-android-release-using-github-actions/
 name: Android Release
 on:
   push:
-    branches: master
-    tags:
-      - v*
-
-release_build:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+    
+jobs:
+  build:
      runs-on: ubuntu-latest
      if: startsWith(github.ref, 'refs/tags/')
  
