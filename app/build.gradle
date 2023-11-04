@@ -14,6 +14,15 @@ sonarqube {
 android {
     compileSdk 34
 
+    signingConfigs {
+        release {
+            storeFile file("android-app-release-key-store.jks")
+            storePassword System.getenv("ANDROID_APP_KEY_STORE_PASSWORD")
+            keyAlias System.getenv("ANDROID_APP_KEY_ALIAS")
+            keyPassword System.getenv("ANDROID_APP_KEY_PASSWORD")
+        }
+    }
+
     defaultConfig {
         applicationId "com.gunnarro.android.terex"
         minSdk 29
