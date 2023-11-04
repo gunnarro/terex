@@ -20,15 +20,6 @@ plugins {
     id "jacoco"
 }
 
- signingConfigs {
-        release {
-            storeFile file("android-app-release-key-store.jks")
-            storePassword System.getenv("ANDROID_APP_KEY_STORE_PASSWORD")
-            keyAlias System.getenv("ANDROID_APP_KEY_ALIAS")
-            keyPassword System.getenv("ANDROID_APP_KEY_PASSWORD")
-        }
-    }
-
 java {
     sourceCompatibility = JavaVersion.VERSION_19
     targetCompatibility = JavaVersion.VERSION_19
