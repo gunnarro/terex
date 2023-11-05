@@ -38,27 +38,10 @@ jobs:
            SIGNING_KEY_PASSWORD: ${{ secrets.ANDROID_APP_KEY_PASSWORD }}
            SIGNING_STORE_PASSWORD: ${{ secrets.ANDROID_APP_STORE_PASSWORD }}
          run: ./gradlew assembleRelease
-
-       - name: Build Release bundle
-         env:
-           SIGNING_KEY_STORE_PATH: ${{ secrets.ANDROID_APP_KEY_STORE_PATH }}
-           SIGNING_KEY_ALIAS: ${{ secrets.ANDROID_APP_KEY_ALIAS }}
-           SIGNING_KEY_PASSWORD: ${{ secrets.ANDROID_APP_KEY_PASSWORD }}
-           SIGNING_STORE_PASSWORD: ${{ secrets.ANDROID_APP_STORE_PASSWORD }}
-         run: ./gradlew bundleRelease
          
        - name: Upload Release Build to Artifacts
          uses: actions/upload-artifact@v3
          with:
            name: release-artifacts
            path: app/build/outputs/apk/release/
-
-       - name: Create Github Release
-         uses: softprops/action-gh-release@v1
-         with:
-           generate_release_notes: true
-           prerelease: true
-           files: |
-             app/build/outputs/apk/release/app-release.apk
-             app/build/outputs/bundle/release/app-release.aab
-             
+      
