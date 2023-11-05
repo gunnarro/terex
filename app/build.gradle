@@ -59,7 +59,7 @@ android {
         }
         
         beta {
-            signingConfig signingConfigs.release
+            // signingConfig signingConfigs.release
             applicationIdSuffix ".beta"
             versionNameSuffix "-beta"
         }
