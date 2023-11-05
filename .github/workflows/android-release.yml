@@ -39,7 +39,7 @@ jobs:
            SIGNING_KEY_ALIAS: ${{ secrets.ANDROID_APP_KEY_ALIAS }}
            SIGNING_KEY_PASSWORD: ${{ secrets.ANDROID_APP_KEY_PASSWORD }}
            SIGNING_STORE_PASSWORD: ${{ secrets.ANDROID_APP_KEY_STORE_PASSWORD }}
-         run: ./gradlew assembleRelease
+         run: ./gradlew assembleRelease --info
 
        - name: Build Debug apk
          env:
@@ -47,7 +47,7 @@ jobs:
            SIGNING_KEY_ALIAS: ${{ secrets.ANDROID_APP_KEY_ALIAS }}
            SIGNING_KEY_PASSWORD: ${{ secrets.ANDROID_APP_KEY_PASSWORD }}
            SIGNING_STORE_PASSWORD: ${{ secrets.ANDROID_APP_KEY_STORE_PASSWORD }}
-         run: ./gradlew assembleDebug
+         run: ./gradlew assembleDebug --info
          
        - name: Upload Release Build to Artifacts
          uses: actions/upload-artifact@v3
