@@ -17,9 +17,9 @@ android {
     signingConfigs {
         release {
             storeFile file("android-app-release-key-store.jks")
-            storePassword "ABcd-2o1o" //System.getenv("ANDROID_APP_KEY_STORE_PASSWORD")
-            keyAlias "android-release" // System.getenv("ANDROID_APP_KEY_ALIAS")
-            keyPassword "ABcd-2o1o" // System.getenv("ANDROID_APP_KEY_PASSWORD")
+            storePassword System.getenv("ANDROID_APP_KEY_STORE_PASSWORD")
+            keyAlias System.getenv("ANDROID_APP_KEY_ALIAS")
+            keyPassword System.getenv("ANDROID_APP_KEY_PASSWORD")
         }
     }
 
@@ -48,7 +48,7 @@ android {
 
     buildTypes {
         release {
-            signingConfig signingConfigs.release
+            // signingConfig signingConfigs.release
             minifyEnabled false
             // proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
