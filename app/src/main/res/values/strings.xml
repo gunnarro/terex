@@ -57,7 +57,7 @@
 
     <string name="txt_colon">:</string>
     <string name="txt_empty"></string>
-    <string name="lbl_workday_date">Workday date</string>
+    <string name="lbl_workday_date">Date</string>
     <string name="lbl_to_time">To time</string>
     <string name="lbl_from_time">From time</string>
     <string name="lbl_from_date">From date</string>
