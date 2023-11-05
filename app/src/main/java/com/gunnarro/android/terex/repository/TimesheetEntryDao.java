@@ -36,7 +36,7 @@ public interface TimesheetEntryDao {
      * strftime('%d',start_date) as "Day"
      * FROM job_history;
      */
-    @Query("SELECT * FROM timesheet_entry WHERE timesheet_id = :timesheetId ORDER BY workday_date ASC")
+    @Query("SELECT * FROM timesheetEntry WHERE id = :timesheetId ORDER BY workdayDate ASC")
     List<TimesheetEntry> getTimesheetEntryList(Long timesheetId);
 
     @Query("SELECT * FROM timesheet_entry WHERE timesheet_id = :timesheetId ORDER BY workday_date ASC")
