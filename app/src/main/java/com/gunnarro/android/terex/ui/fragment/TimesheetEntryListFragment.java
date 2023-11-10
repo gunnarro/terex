@@ -26,7 +26,6 @@ import com.google.android.material.snackbar.Snackbar;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
-import com.gunnarro.android.terex.domain.entity.TimesheetWithEntries;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.ui.adapter.TimesheetEntryListAdapter;
 import com.gunnarro.android.terex.ui.view.TimesheetEntryViewModel;
@@ -72,34 +71,35 @@ public class TimesheetEntryListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_recycler_timesheet_entry_list, container, false);
-        RecyclerView recyclerView = view.findViewById(R.id.timesheet_entry_recyclerview);
+        RecyclerView recyclerView = view.findViewById(R.id.timesheet_entry_list_recyclerview);
         final TimesheetEntryListAdapter adapter = new TimesheetEntryListAdapter(getParentFragmentManager(), new TimesheetEntryListAdapter.TimesheetEntryDiff());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        if (getArguments() == null || getArguments().getLong(TimesheetFragment.TIMESHEET_ID_KEY) == 0) {
+        if (getArguments() == null || getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY) == 0) {
             // timesheet id must be provided, if not, return
             throw new TerexApplicationException("Missing timesheet id!", "50023", null);
         }
-        Long timesheetId = getArguments().getLong(TimesheetFragment.TIMESHEET_ID_KEY);
+        Long timesheetId = getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY);
 
         // Update the cached copy of the timesheet entries in the adapter.
         timesheetEntryViewModel.getTimesheetLiveData(timesheetId).observe(requireActivity(), adapter::submitList);
 
-        TimesheetWithEntries timesheetWithEntries = timesheetEntryViewModel.getTimesheetWithEntries(timesheetId);
-        Log.d("all timesheets", "timesheet with entries: " + timesheetWithEntries);
+        // TimesheetWithEntries timesheetWithEntries = timesheetEntryViewModel.getTimesheetWithEntries(timesheetId);
+        // Log.d("all timesheets", "timesheet with entries: " + timesheetWithEntries);
 
         TextView listHeaderView = view.findViewById(R.id.timesheet_entry_list_header);
-        if (timesheetWithEntries != null && timesheetWithEntries.getTimesheet() != null) {
-            listHeaderView.setText(String.format("[%s-%s] %s - %s %S", timesheetWithEntries.getTimesheet().getMonth(), timesheetWithEntries.getTimesheet().getYear(), timesheetWithEntries.getTimesheet().getClientName(), timesheetWithEntries.getTimesheet().getProjectCode(),
-                    timesheetWithEntries.getTimesheet().getStatus()));
-        }
+        // if (timesheetWithEntries != null && timesheetWithEntries.getTimesheet() != null) {
+        //     listHeaderView.setText(String.format("[%s-%s] %s - %s %S", timesheetWithEntries.getTimesheet().getMonth(), timesheetWithEntries.getTimesheet().getYear(), timesheetWithEntries.getTimesheet().getClientName(), timesheetWithEntries.getTimesheet().getProjectCode(),
+        //             timesheetWithEntries.getTimesheet().getStatus()));
+        // }
+        listHeaderView.setText(String.format("timesheetId=%s", timesheetId));
 
         FloatingActionButton addButton = view.findViewById(R.id.timesheet_entry_add_btn);
         addButton.setOnClickListener(v -> {
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.content_frame, TimesheetEntryAddFragment.class, createTimesheetEntryBundle(timesheetWithEntries.getTimesheet().getId()))
+                    .replace(R.id.content_frame, TimesheetEntryAddFragment.class, createTimesheetEntryBundle(timesheetId))
                     .setReorderingAllowed(true)
                     .commit();
         });
@@ -108,16 +108,17 @@ public class TimesheetEntryListFragment extends Fragment {
         calendarButton.setOnClickListener(v -> {
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.content_frame, TimesheetEntryCustomCalendarFragment.class, createTimesheetEntryBundle(timesheetWithEntries.getTimesheet().getId()))
+                    .replace(R.id.content_frame, TimesheetEntryCustomCalendarFragment.class, createTimesheetEntryBundle(timesheetId))
                     .setReorderingAllowed(true)
                     .commit();
         });
 
         // if timesheet has status closed, it is not possible to do any kind of changes
-        if (timesheetWithEntries != null && timesheetWithEntries.getTimesheet().isBilled()) {
+        // fixme
+        /*if (timesheetWithEntries != null && timesheetWithEntries.getTimesheet().isBilled()) {
             addButton.setVisibility(View.INVISIBLE);
             calendarButton.setVisibility(View.INVISIBLE);
-        }
+        }*/
         // listen after timesheet add and delete events
         //RxBus.getInstance().listen().subscribe(getInputObserver());
         Log.d(Utility.buildTag(getClass(), "onCreateView"), "");
@@ -131,7 +132,7 @@ public class TimesheetEntryListFragment extends Fragment {
         }
         String timesheetJson = Utility.gsonMapper().toJson(mostRecentTimesheetEntry, TimesheetEntry.class);
         Bundle bundle = new Bundle();
-        bundle.putLong(TimesheetFragment.TIMESHEET_ID_KEY, timesheetId);
+        bundle.putLong(TimesheetListFragment.TIMESHEET_ID_KEY, timesheetId);
         bundle.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_KEY, timesheetJson);
         return bundle;
     }
@@ -176,7 +177,6 @@ public class TimesheetEntryListFragment extends Fragment {
                 } else {
                     showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_update_msg_format), timesheetEntry.getWorkdayDate()), R.color.color_snackbar_text_update);
                 }
-
             } else if (TIMESHEET_ENTRY_ACTION_DELETE.equals(action)) {
                 timesheetEntryViewModel.deleteTimesheetEntry(timesheetEntry);
                 showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_delete_msg_format), timesheetEntry.getWorkdayDate()), R.color.color_snackbar_text_delete);

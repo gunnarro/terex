@@ -259,24 +259,6 @@ public class Timesheet {
         return timesheet;
     }
 
-    public static TimesheetEntry clone(TimesheetEntry timesheet) {
-        if (timesheet == null) {
-            return null;
-        }
-        TimesheetEntry clone = new TimesheetEntry();
-        clone.setTimesheetId(timesheet.getTimesheetId());
-        clone.setBreakInMin(timesheet.getBreakInMin());
-        clone.setWorkedMinutes(timesheet.getWorkedMinutes());
-        clone.setStatus(timesheet.getStatus());
-        clone.setHourlyRate(timesheet.getHourlyRate());
-        clone.setWorkdayWeek(timesheet.getWorkdayWeek());
-        clone.setBreakInMin(timesheet.getBreakInMin());
-        clone.setFromTime(timesheet.getFromTime());
-        clone.setToTime(timesheet.getToTime());
-        clone.setComment(timesheet.getComment());
-        return clone;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

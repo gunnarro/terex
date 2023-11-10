@@ -19,19 +19,19 @@ import java.util.List;
 public class TimesheetViewModel extends AndroidViewModel {
 
     private final TimesheetService timesheetService;
-    // Using LiveData and caching what getAlphabetizedWords returns has several benefits:
+    // Using LiveData and caching what getTimesheetListLiveData returns has several benefits:
     // - We can put an observer on the data (instead of polling for changes) and only update the
     //   the UI when the data actually changes.
-    private final LiveData<List<Timesheet>> timesheetList;
+    private LiveData<List<Timesheet>> timesheetList;
 
     public TimesheetViewModel(@NonNull Application application) {
         super(application);
         timesheetService = new TimesheetService(application);
-        timesheetList = timesheetService.getTimesheetListLiveData();
+       // timesheetList = timesheetService.getTimesheetListLiveData();
     }
 
     public LiveData<List<Timesheet>> getTimesheetLiveData() {
-        return timesheetList;
+        return timesheetService.getTimesheetListLiveData();
     }
 
     public void saveTimesheet(Timesheet timesheet) {

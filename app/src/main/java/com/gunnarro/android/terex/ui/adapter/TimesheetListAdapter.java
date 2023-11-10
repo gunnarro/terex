@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.ListAdapter;
 
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
-import com.gunnarro.android.terex.ui.fragment.TimesheetFragment;
+import com.gunnarro.android.terex.ui.fragment.TimesheetListFragment;
 import com.gunnarro.android.terex.ui.view.TimesheetViewHolder;
 import com.gunnarro.android.terex.utility.Utility;
 
@@ -33,9 +33,9 @@ public class TimesheetListAdapter extends ListAdapter<Timesheet, TimesheetViewHo
         TimesheetViewHolder viewHolder = TimesheetViewHolder.create(parent);
         viewHolder.itemView.findViewById(R.id.ic_timesheet_row_view).setOnClickListener(v -> {
             Bundle actionBundle = new Bundle();
-            actionBundle.putString(TimesheetFragment.TIMESHEET_JSON_KEY, toJson(getItem(viewHolder.getBindingAdapterPosition())));
-            actionBundle.putString(TimesheetFragment.TIMESHEET_ACTION_KEY, TimesheetFragment.TIMESHEET_ACTION_VIEW);
-            fragmentManager.setFragmentResult(TimesheetFragment.TIMESHEET_REQUEST_KEY, actionBundle);
+            actionBundle.putString(TimesheetListFragment.TIMESHEET_JSON_KEY, toJson(getItem(viewHolder.getBindingAdapterPosition())));
+            actionBundle.putString(TimesheetListFragment.TIMESHEET_ACTION_KEY, TimesheetListFragment.TIMESHEET_ACTION_VIEW);
+            fragmentManager.setFragmentResult(TimesheetListFragment.TIMESHEET_REQUEST_KEY, actionBundle);
         });
         return viewHolder;
     }

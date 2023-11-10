@@ -58,7 +58,7 @@ public class TimesheetEntryCustomCalendarFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_timesheet_entry_custom_calendar, container, false);
         CalendarView calendarView = view.findViewById(R.id.view_timesheet_custom_calendar);
-        Long timesheetId = getArguments().getLong(TimesheetFragment.TIMESHEET_ID_KEY);
+        Long timesheetId = getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY);
         // calendarView.setSelectedDates(selectedDates);
         calendarView.setDisabledDays(createSelectedDates(timesheetId));
         calendarView.setEvents(createEventDays(timesheetId));
@@ -76,6 +76,13 @@ public class TimesheetEntryCustomCalendarFragment extends Fragment {
         now.setTimeInMillis(System.currentTimeMillis());
         try {
             calendarView.setDate(now);
+            Calendar firstDayOfMonth = Calendar.getInstance();
+            firstDayOfMonth.setTimeInMillis(Utility.getFirstDayOfMonth(LocalDate.now()).toEpochDay());
+            Calendar lastDayOfMonth = Calendar.getInstance();
+            lastDayOfMonth.setTimeInMillis(Utility.getLastDayOfMonth(LocalDate.now()).toEpochDay());
+            // fixme
+            //   calendarView.setMinimumDate(firstDayOfMonth);
+            //   calendarView.setMaximumDate(lastDayOfMonth);
         } catch (OutOfDateRangeException e) {
             throw new RuntimeException(e);
         }
@@ -94,7 +101,7 @@ public class TimesheetEntryCustomCalendarFragment extends Fragment {
             // Simply return back to credential list
             NavigationView navigationView = requireActivity().findViewById(R.id.navigationView);
             requireActivity().onOptionsItemSelected(navigationView.getMenu().findItem(R.id.nav_timesheet_list));
-            returnToTimesheetEntryList(getArguments().getLong(TimesheetFragment.TIMESHEET_ID_KEY));
+            returnToTimesheetEntryList(getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY));
         });
 
         Log.d(Utility.buildTag(getClass(), "onCreateView"), "");
@@ -160,7 +167,7 @@ public class TimesheetEntryCustomCalendarFragment extends Fragment {
 
     private void returnToTimesheetEntryList(Long timesheetId) {
         Bundle bundle = new Bundle();
-        bundle.putLong(TimesheetFragment.TIMESHEET_ID_KEY, timesheetId);
+        bundle.putLong(TimesheetListFragment.TIMESHEET_ID_KEY, timesheetId);
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.content_frame, TimesheetEntryListFragment.class, bundle)

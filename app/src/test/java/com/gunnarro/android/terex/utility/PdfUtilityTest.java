@@ -22,6 +22,6 @@ public class PdfUtilityTest {
     @Test
     void htmlToPdf() {
         String htmlStr = "<h1>Html to pdf test</h1>";
-        assertTrue(PdfUtility.htmlToPdf(htmlStr, "htmlToPdfTest.pdf"));
+        assertTrue(PdfUtility.saveFile(htmlStr, "htmlToPdfTest.pdf"));
     }
 }

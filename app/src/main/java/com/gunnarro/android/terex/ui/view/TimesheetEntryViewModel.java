@@ -27,7 +27,9 @@ public class TimesheetEntryViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<TimesheetEntry>> getTimesheetLiveData(Long timesheetId) {
-        return timesheetService.getTimesheetEntryListLiveData(timesheetId);
+        LiveData<List<TimesheetEntry>> listLiveData = timesheetService.getTimesheetEntryListLiveData(timesheetId);
+        Log.d("getTimesheetLiveData", String.format("timesheetId=%s, timesheetEntries=%s", timesheetId, listLiveData.getValue()));
+        return listLiveData;
     }
 
     public TimesheetEntry getMostRecentTimesheetEntry(Long timesheetId) {
@@ -45,7 +47,7 @@ public class TimesheetEntryViewModel extends AndroidViewModel {
     }
 
     public void deleteTimesheetEntry(TimesheetEntry timesheet) {
-        Log.d("TimesheetViewModel.deleteTimesheetEntry", "save: " + timesheet);
+        Log.d("TimesheetViewModel.deleteTimesheetEntry", "delete: " + timesheet);
         timesheetService.deleteTimesheetEntry(timesheet);
     }
 }

@@ -60,7 +60,7 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
         Timesheet timesheet = Timesheet.createDefault(clients[0], projects[0]);
 
         // check if this is an existing or a new timesheet
-        String timesheetJson = getArguments() != null ? getArguments().getString(TimesheetFragment.TIMESHEET_JSON_KEY) : null;
+        String timesheetJson = getArguments() != null ? getArguments().getString(TimesheetListFragment.TIMESHEET_JSON_KEY) : null;
         if (timesheetJson != null && !timesheetJson.isEmpty()) {
             try {
                 timesheet = Utility.gsonMapper().fromJson(timesheetJson, Timesheet.class);
@@ -116,9 +116,9 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
             validateInputData();
             view.findViewById(R.id.btn_timesheet_new_save).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
             Bundle result = new Bundle();
-            result.putString(TimesheetFragment.TIMESHEET_JSON_KEY, getTimesheetAsJson());
-            result.putString(TimesheetFragment.TIMESHEET_ACTION_KEY, TimesheetFragment.TIMESHEET_ACTION_SAVE);
-            getParentFragmentManager().setFragmentResult(TimesheetFragment.TIMESHEET_REQUEST_KEY, result);
+            result.putString(TimesheetListFragment.TIMESHEET_JSON_KEY, getTimesheetAsJson());
+            result.putString(TimesheetListFragment.TIMESHEET_ACTION_KEY, TimesheetListFragment.TIMESHEET_ACTION_SAVE);
+            getParentFragmentManager().setFragmentResult(TimesheetListFragment.TIMESHEET_REQUEST_KEY, result);
             Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new timesheet intent: " + getTimesheetAsJson());
             returnToTimesheetList();
         });
@@ -126,9 +126,9 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
         view.findViewById(R.id.btn_timesheet_new_delete).setOnClickListener(v -> {
             view.findViewById(R.id.btn_timesheet_new_delete).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
             Bundle result = new Bundle();
-            result.putString(TimesheetFragment.TIMESHEET_JSON_KEY, getTimesheetAsJson());
-            result.putString(TimesheetFragment.TIMESHEET_ACTION_KEY, TimesheetFragment.TIMESHEET_ACTION_DELETE);
-            getParentFragmentManager().setFragmentResult(TimesheetFragment.TIMESHEET_REQUEST_KEY, result);
+            result.putString(TimesheetListFragment.TIMESHEET_JSON_KEY, getTimesheetAsJson());
+            result.putString(TimesheetListFragment.TIMESHEET_ACTION_KEY, TimesheetListFragment.TIMESHEET_ACTION_DELETE);
+            getParentFragmentManager().setFragmentResult(TimesheetListFragment.TIMESHEET_REQUEST_KEY, result);
             Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new delete item intent");
             returnToTimesheetList();
         });
@@ -155,7 +155,7 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
     private void returnToTimesheetList() {
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_frame, TimesheetFragment.class, null)
+                .replace(R.id.content_frame, TimesheetListFragment.class, null)
                 .setReorderingAllowed(true)
                 .commit();
     }

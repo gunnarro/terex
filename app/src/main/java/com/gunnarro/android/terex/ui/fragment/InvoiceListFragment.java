@@ -15,12 +15,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.gunnarro.android.terex.R;
-import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.ui.adapter.InvoiceListAdapter;
 import com.gunnarro.android.terex.ui.view.InvoiceViewModel;
 import com.gunnarro.android.terex.utility.Utility;
@@ -31,8 +29,10 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class InvoiceListFragment extends Fragment {
-    public static final String NEW_INVOICE_REQUEST_KEY = "2";
-    private static final String INVOICE_JSON_INTENT_KEY = "222";
+    public static final String INVOICE_REQUEST_KEY = "300";
+    public static final String INVOICE_ID_KEY = "invoice_id";
+    public static final String INVOICE_ACTION_VIEW = "invoice_view";
+    private static final String INVOICE_JSON_KEY = "311";
     private InvoiceViewModel invoiceViewModel;
 
     private final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
@@ -44,19 +44,11 @@ public class InvoiceListFragment extends Fragment {
         // Get a new or existing ViewModel from the ViewModelProvider.
         invoiceViewModel = new ViewModelProvider(this).get(InvoiceViewModel.class);
 
-        getParentFragmentManager().setFragmentResultListener(NEW_INVOICE_REQUEST_KEY, this, new FragmentResultListener() {
+        getParentFragmentManager().setFragmentResultListener(INVOICE_REQUEST_KEY, this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
                 Log.d(Utility.buildTag(getClass(), "onFragmentResult"), "requestKey: " + requestKey + ", bundle: " + bundle);
-                Invoice invoice;
-                try {
-                    invoice = mapper.readValue(bundle.getString(InvoiceListFragment.INVOICE_JSON_INTENT_KEY), Invoice.class);
-                } catch (JsonProcessingException e) {
-                    Log.e("", e.toString());
-                    throw new RuntimeException("Application Error: " + e);
-                }
-                invoiceViewModel.saveInvoice(invoice);
-                Log.d(Utility.buildTag(getClass(), "onCreateView"), "added new item, " + invoice.getInvoiceNumber());
+                handleFragmentResult(bundle);
             }
         });
         Log.d(Utility.buildTag(getClass(), "onCreate"), "");
@@ -66,8 +58,8 @@ public class InvoiceListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_recycler_invoice_list, container, false);
-        RecyclerView recyclerView = view.findViewById(R.id.invoice_recyclerview);
-        final InvoiceListAdapter adapter = new InvoiceListAdapter(new InvoiceListAdapter.InvoiceDiff());
+        RecyclerView recyclerView = view.findViewById(R.id.invoice_list_recyclerview);
+        final InvoiceListAdapter adapter = new InvoiceListAdapter(getParentFragmentManager(), new InvoiceListAdapter.InvoiceDiff());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         // Add an observer on the LiveData returned by getAlphabetizedWords.
@@ -97,5 +89,18 @@ public class InvoiceListFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    private void handleFragmentResult(Bundle bundle) {
+        if (bundle == null) {
+            return;
+        }
+      if (bundle.getString(INVOICE_ID_KEY) != null) {
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.content_frame, InvoiceViewFragment.class, bundle)
+                    .setReorderingAllowed(true)
+                    .commit();
+        }
     }
 }

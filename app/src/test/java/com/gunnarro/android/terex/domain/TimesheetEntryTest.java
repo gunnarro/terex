@@ -1,10 +1,7 @@
 package com.gunnarro.android.terex.domain;
 
-import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import android.content.Context;
 
@@ -13,6 +10,7 @@ import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.mockito.Mock;
 
 import java.time.LocalDate;
@@ -59,24 +57,30 @@ public class TimesheetEntryTest {
     @Test
     public void timesheetEntryAreEqual() {
         TimesheetEntry timesheetEntry1 = new TimesheetEntry();
+        timesheetEntry1.setId(1L);
         timesheetEntry1.setTimesheetId(23L);
         timesheetEntry1.setWorkdayDate(LocalDate.of(2023, 9, 9));
+
         TimesheetEntry timesheetEntry2 = new TimesheetEntry();
+        timesheetEntry2.setId(2L);
         timesheetEntry2.setTimesheetId(23L);
         timesheetEntry2.setWorkdayDate(LocalDate.of(2023, 9, 9));
-        assertTrue(timesheetEntry1.equals(timesheetEntry2));
+
+        Assertions.assertTrue(timesheetEntry1.equals(timesheetEntry2));
     }
 
     @Test
     public void timesheetEntryNotEqual() {
         TimesheetEntry timesheetEntry1 = new TimesheetEntry();
+        timesheetEntry1.setId(1L);
         timesheetEntry1.setTimesheetId(23L);
         timesheetEntry1.setWorkdayDate(LocalDate.of(2023, 9, 9));
 
         TimesheetEntry timesheetEntry2 = new TimesheetEntry();
+        timesheetEntry2.setId(2L);
         timesheetEntry2.setTimesheetId(23L);
         timesheetEntry2.setWorkdayDate(LocalDate.of(2023, 9, 10));
 
-        assertTrue(!timesheetEntry1.equals(timesheetEntry2));
+        Assertions.assertFalse(timesheetEntry1.equals(timesheetEntry2));
     }
 }

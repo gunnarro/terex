@@ -52,6 +52,13 @@ public class Invoice extends BaseEntity {
     @NotNull
     @ColumnInfo(name = "billing_date")
     private LocalDate billingDate;
+
+    @ColumnInfo(name = "billing_period_start_date")
+    private LocalDate billingPeriodStartDate;
+
+    @ColumnInfo(name = "billing_period_end_date")
+    private LocalDate billingPeriodSEndDate;
+
     @NotNull
     @ColumnInfo(name = "due_date")
     private LocalDate dueDate;

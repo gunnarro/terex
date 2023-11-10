@@ -39,9 +39,11 @@
     <string name="btn_save">Save</string>
     <string name="btn_cancel">Cancel</string>
     <string name="btn_add">Add</string>
+    <string name="btn_back">Back</string>
     <string name="btn_create">Create</string>
     <string name="btn_calendar">Calendar</string>
     <string name="btn_email">Send email</string>
+    <string name="btn_view">View</string>
 
     <!-- invoice -->
     <string name="lbl_company_name">Firma</string>
@@ -60,7 +62,7 @@
 
     <string name="txt_colon">:</string>
     <string name="txt_empty"></string>
-    <string name="lbl_workday_date">Workday date</string>
+    <string name="lbl_workday_date">Date</string>
     <string name="lbl_to_time">To time</string>
     <string name="lbl_from_time">From time</string>
     <string name="lbl_from_date">From date</string>

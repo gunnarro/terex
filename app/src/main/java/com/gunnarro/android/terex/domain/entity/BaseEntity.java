@@ -2,9 +2,6 @@ package com.gunnarro.android.terex.domain.entity;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
-import androidx.room.TypeConverters;
-
-import com.gunnarro.android.terex.domain.converter.LocalDateTimeConverter;
 
 import java.time.LocalDateTime;
 

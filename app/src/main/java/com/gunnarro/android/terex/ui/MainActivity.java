@@ -19,7 +19,7 @@ import com.gunnarro.android.terex.ui.fragment.AdminFragment;
 import com.gunnarro.android.terex.ui.fragment.InvoiceListFragment;
 import com.gunnarro.android.terex.ui.fragment.TimesheetEntryAddFragment;
 import com.gunnarro.android.terex.ui.fragment.TimesheetEntryCustomCalendarFragment;
-import com.gunnarro.android.terex.ui.fragment.TimesheetFragment;
+import com.gunnarro.android.terex.ui.fragment.TimesheetListFragment;
 import com.gunnarro.android.terex.ui.fragment.TimesheetEntryListFragment;
 import com.gunnarro.android.terex.ui.fragment.TimesheetNewFragment;
 import com.gunnarro.android.terex.utility.Utility;
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     TimesheetEntryListFragment timesheetListFragment;
 
     @Inject
-    TimesheetFragment timesheetFragment;
+    TimesheetListFragment timesheetFragment;
 
     @Inject
     TimesheetEntryAddFragment timesheetAddEntryFragment;
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.invoiceListFragment = new InvoiceListFragment();
         //this.timesheetCalendarFragment = new TimesheetCustomCalendarFragment();
         //this.timesheetNewFragment = new TimesheetNewFragment();
-        this.timesheetFragment = new TimesheetFragment();
+        this.timesheetFragment = new TimesheetListFragment();
     }
 
     @Override

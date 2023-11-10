@@ -23,7 +23,8 @@ public class TimesheetEntryListAdapter extends ListAdapter<TimesheetEntry, Times
 
     public TimesheetEntryListAdapter(@NonNull FragmentManager fragmentManager, @NonNull DiffUtil.ItemCallback<TimesheetEntry> diffCallback) {
         super(diffCallback);
-        this.setHasStableIds(true);
+        // do not have stable id's, since items can be deleted and inserted into the list. Can be with the same timesheet id and and workday date, but the id have changed.
+        this.setHasStableIds(false);
         this.fragmentManager = fragmentManager;
     }
 
@@ -40,15 +41,6 @@ public class TimesheetEntryListAdapter extends ListAdapter<TimesheetEntry, Times
         return viewHolder;
     }
 
-    private String toJson(TimesheetEntry timesheet) {
-        try {
-            return Utility.gsonMapper().toJson(timesheet);
-        } catch (Exception e) {
-            Log.e("getTimesheetAsJson", e.toString());
-            throw new RuntimeException("unable to parse timesheetEntry to json! " + e);
-        }
-    }
-
     @Override
     public void onBindViewHolder(TimesheetEntryViewHolder holder, int position) {
         holder.bindListLine(getItem(position));
@@ -59,18 +51,31 @@ public class TimesheetEntryListAdapter extends ListAdapter<TimesheetEntry, Times
         notifyItemRangeRemoved(position, 1);
     }
 
+    private String toJson(TimesheetEntry timesheet) {
+        try {
+            return Utility.gsonMapper().toJson(timesheet);
+        } catch (Exception e) {
+            Log.e("getTimesheetAsJson", e.toString());
+            throw new RuntimeException("unable to parse timesheetEntry to json! " + e);
+        }
+    }
+
     /**
-     *
+     * User to check is list items are equal or not
      */
     public static class TimesheetEntryDiff extends DiffUtil.ItemCallback<TimesheetEntry> {
         @Override
         public boolean areItemsTheSame(@NonNull TimesheetEntry oldItem, @NonNull TimesheetEntry newItem) {
+            // User properties may have changed if reloaded from the DB, but ID is fixed
             return oldItem == newItem;
         }
 
         @Override
         public boolean areContentsTheSame(@NonNull TimesheetEntry oldItem, @NonNull TimesheetEntry newItem) {
+            // NOTE: if you use equals, your object must properly override Object#equals()
+            // Incorrectly returning false here will result in too many animations.
             return oldItem.equals(newItem);
         }
     }
+
 }

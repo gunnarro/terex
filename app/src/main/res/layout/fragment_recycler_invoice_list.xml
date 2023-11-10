@@ -5,16 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.fragment.TimesheetFragment"
+    tools:context=".ui.fragment.InvoiceListFragment"
     tools:ignore="ExtraText">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/invoice_list_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ui.fragment.InvoiceListFragment">
+        android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/invoice_recyclerview"
+            android:id="@+id/invoice_list_recyclerview"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"

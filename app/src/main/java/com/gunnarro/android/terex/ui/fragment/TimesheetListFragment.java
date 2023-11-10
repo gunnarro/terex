@@ -33,11 +33,11 @@ import org.jetbrains.annotations.NotNull;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class TimesheetFragment extends Fragment {
+public class TimesheetListFragment extends Fragment {
     public static final String TIMESHEET_REQUEST_KEY = "100";
     public static final String TIMESHEET_JSON_KEY = "timesheet_as_json";
     public static final String TIMESHEET_ID_KEY = "timesheet_id";
-    public static final String TIMESHEET_ACTION_KEY = "11";
+    public static final String TIMESHEET_ACTION_KEY = "111";
     public static final String TIMESHEET_ACTION_SAVE = "timesheet_save";
     public static final String TIMESHEET_ACTION_DELETE = "timesheet_delete";
     public static final String TIMESHEET_ACTION_VIEW = "timesheet_view";
@@ -69,7 +69,7 @@ public class TimesheetFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_recycler_timesheet_list, container, false);
-        RecyclerView recyclerView = view.findViewById(R.id.timesheet_recyclerview);
+        RecyclerView recyclerView = view.findViewById(R.id.timesheet_list_recyclerview);
         final TimesheetListAdapter adapter = new TimesheetListAdapter(getParentFragmentManager(), new TimesheetListAdapter.TimesheetDiff());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -97,7 +97,7 @@ public class TimesheetFragment extends Fragment {
         }
         String timesheetJson = Utility.gsonMapper().toJson(timesheet, Timesheet.class);
         Bundle bundle = new Bundle();
-        bundle.putString(TimesheetFragment.TIMESHEET_JSON_KEY, timesheetJson);
+        bundle.putString(TimesheetListFragment.TIMESHEET_JSON_KEY, timesheetJson);
         return bundle;
     }
 
@@ -147,7 +147,7 @@ public class TimesheetFragment extends Fragment {
             } else if (TIMESHEET_ACTION_VIEW.equals(action)) {
                 // redirect to timesheet entry list fragment
                 Bundle bundle = new Bundle();
-                bundle.putLong(TimesheetFragment.TIMESHEET_ID_KEY, timesheet.getId());
+                bundle.putLong(TimesheetListFragment.TIMESHEET_ID_KEY, timesheet.getId());
                 goToTimesheetEntryView(bundle);
             } else {
                 Log.w(Utility.buildTag(getClass(), "handleTimesheetActions"), "unknown action: " + action);

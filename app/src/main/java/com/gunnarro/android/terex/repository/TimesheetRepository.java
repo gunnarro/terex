@@ -162,7 +162,9 @@ public class TimesheetRepository {
             CompletionService<LiveData<List<TimesheetEntry>>> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
             service.submit(() -> timesheetEntryDao.getTimesheetEntryListLiveData(timesheetId));
             Future<LiveData<List<TimesheetEntry>>> future = service.take();
-            return future != null ? future.get() : null;
+            LiveData<List<TimesheetEntry>> liveDate = future != null ? future.get() : null;
+            Log.d("TimesheetRepository.getTimesheetEntryListLiveData", String.format("timesheetId=%s, data=%s", timesheetId, liveDate.getValue()));
+            return liveDate;
         } catch (InterruptedException | ExecutionException e) {
             // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();

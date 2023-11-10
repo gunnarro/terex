@@ -73,7 +73,6 @@ public class InvoiceNewFragment extends Fragment {
         requireActivity().setTitle(R.string.title_invoice);
         invoiceService = new InvoiceService(requireActivity().getApplicationContext());
         timesheetService = new TimesheetService(requireActivity().getApplicationContext());
-        Log.d(Utility.buildTag(getClass(), "onCreate"), "");
     }
 
     @Override
@@ -160,6 +159,7 @@ public class InvoiceNewFragment extends Fragment {
     private boolean createTimesheetSummaryAttachment(Long invoiceId) {
         try {
             Invoice invoice = invoiceService.getInvoice(invoiceId);
+
             Log.d("createTimesheetSummaryAttachment", "timesheetSummary week: " + invoice.getTimesheetSummaryList());
             StringBuilder mustacheTemplateStr = new StringBuilder();
             // first read the invoice summary mustache html template
@@ -183,10 +183,10 @@ public class InvoiceNewFragment extends Fragment {
 
             String invoiceSummaryHtml = createTimesheetSummaryAttachmentHtml(mustacheTemplateStr.toString(), invoice.getTimesheetSummaryList(), sumBilledHours.toString(), sumBilledAmount.toString(), totalBilledAmountWithVat.toString(), totalVat.toString());
             Log.d("createInvoiceSummaryAttachment", "" + invoiceSummaryHtml);
-            String invoiceFileName = "invoice_attachment_" + LocalDate.now().format(DateTimeFormatter.ISO_DATE);
-            File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-            return PdfUtility.saveFile(invoiceSummaryHtml, path.getPath() + "/" + invoiceFileName + ".pdf")
-                    && PdfUtility.saveFile(invoiceSummaryHtml, path.getPath() + "/" + invoiceFileName + ".html");
+            String invoiceFileName = "invoice_attachment_" + invoice.getBillingDate().format(DateTimeFormatter.ofPattern("yyyy-MM"));
+            File path = Environment.getExternalStorageDirectory();
+            return PdfUtility.saveFile(invoiceSummaryHtml, PdfUtility.getLocalDir() + "/" + invoiceFileName + ".pdf")
+                    && PdfUtility.saveFile(invoiceSummaryHtml, PdfUtility.getLocalDir() + "/" + invoiceFileName + ".html");
         } catch (Exception e) {
             throw new TerexApplicationException(String.format("Error crating invoice attachment, invoice ref=%s", invoiceId), "50023", e);
         }
@@ -230,10 +230,9 @@ public class InvoiceNewFragment extends Fragment {
                     .sum() / 60;
 
             String timesheetHtml = createTimesheetListHtml(mustacheTemplateStr.toString(), timesheetEntryList, sumBilledHours.toString());
-            String invoiceFileName = "timesheet_attachment" + LocalDate.now().format(DateTimeFormatter.ISO_DATE);
-            File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-            return PdfUtility.saveFile(timesheetHtml, path.getPath() + "/" + invoiceFileName + ".pdf")
-                    && PdfUtility.saveFile(timesheetHtml, path.getPath() + "/" + invoiceFileName + ".html");
+            String invoiceFileName = "timesheet_attachment_" + LocalDate.now().format(DateTimeFormatter.ISO_DATE);
+            return PdfUtility.saveFile(timesheetHtml, PdfUtility.getLocalDir() + "/" + invoiceFileName + ".pdf")
+                    && PdfUtility.saveFile(timesheetHtml, PdfUtility.getLocalDir() + "/" + invoiceFileName + ".html");
         } catch (Exception e) {
             throw new TerexApplicationException(String.format("Error crating timesheet attachment, timesheetId=%s", timesheetId), "50023", e);
         }

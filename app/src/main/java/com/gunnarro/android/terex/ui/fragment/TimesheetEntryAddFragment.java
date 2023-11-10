@@ -76,6 +76,8 @@ public class TimesheetEntryAddFragment extends Fragment implements View.OnClickL
                     LocalDate.now().getMonthValue(),
                     LocalDate.now().getDayOfMonth());
             workdayDatePicker.setTitle(getResources().getString(R.string.title_select_workday_date));
+            workdayDatePicker.getDatePicker().setMinDate(Utility.getFirstDayOfMonth(LocalDate.now()).toEpochDay());
+            workdayDatePicker.getDatePicker().setMaxDate(Utility.getLastDayOfMonth(LocalDate.now()).toEpochDay());
             workdayDatePicker.show();
         });
 
@@ -124,7 +126,7 @@ public class TimesheetEntryAddFragment extends Fragment implements View.OnClickL
             result.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_KEY, TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_SAVE);
             getParentFragmentManager().setFragmentResult(TimesheetEntryListFragment.TIMESHEET_ENTRY_REQUEST_KEY, result);
             Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new timesheet entry intent: " + getTimesheetAsJson());
-            returnToTimesheetEntryList(getArguments().getLong(TimesheetFragment.TIMESHEET_ID_KEY));
+            returnToTimesheetEntryList(getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY));
         });
 
         view.findViewById(R.id.btn_timesheet_entry_delete).setOnClickListener(v -> {
@@ -134,7 +136,7 @@ public class TimesheetEntryAddFragment extends Fragment implements View.OnClickL
             result.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_KEY, TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_DELETE);
             getParentFragmentManager().setFragmentResult(TimesheetEntryListFragment.TIMESHEET_ENTRY_REQUEST_KEY, result);
             Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new delete item intent");
-            returnToTimesheetEntryList(getArguments().getLong(TimesheetFragment.TIMESHEET_ID_KEY));
+            returnToTimesheetEntryList(getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY));
         });
 
         view.findViewById(R.id.btn_timesheet_entry_cancel).setOnClickListener(v -> {
@@ -142,7 +144,7 @@ public class TimesheetEntryAddFragment extends Fragment implements View.OnClickL
             // Simply return back to credential list
             NavigationView navigationView = requireActivity().findViewById(R.id.navigationView);
             requireActivity().onOptionsItemSelected(navigationView.getMenu().findItem(R.id.nav_timesheet_list));
-            returnToTimesheetEntryList(getArguments().getLong(TimesheetFragment.TIMESHEET_ID_KEY));
+            returnToTimesheetEntryList(getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY));
         });
 
         updateTimesheetEntryAddView(view, readTimesheetEntryFromBundle());
@@ -173,7 +175,7 @@ public class TimesheetEntryAddFragment extends Fragment implements View.OnClickL
 
     private void returnToTimesheetEntryList(Long timesheetId) {
         Bundle bundle = new Bundle();
-        bundle.putLong(TimesheetFragment.TIMESHEET_ID_KEY, timesheetId);
+        bundle.putLong(TimesheetListFragment.TIMESHEET_ID_KEY, timesheetId);
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.content_frame, TimesheetEntryListFragment.class, bundle)
