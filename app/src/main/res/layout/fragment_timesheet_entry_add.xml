@@ -122,7 +122,7 @@
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
-        <!-- workday date -->
+        <!-- workday year, month day -->
         <LinearLayout
             android:id="@+id/timesheet_entry_work_date_layout"
             android:layout_width="match_parent"
@@ -134,21 +134,75 @@
             tools:ignore="UselessParent">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/timesheet_entry_workday_date_layout"
+                android:id="@+id/timesheet_entry_workday_year_layout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:layout_weight="1"
-                android:hint="@string/lbl_workday_date">
+                android:enabled="false"
+                android:hint="@string/lbl_year">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/timesheet_entry_workday_date"
+                    android:id="@+id/timesheet_entry_workday_year"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:maxLength="4"
+                    android:enabled="false"
+                    android:text="" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/timesheet_entry_workday_month_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:enabled="false"
+                android:hint="@string/lbl_month">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/timesheet_entry_workday_month"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:maxLength="2"
+                    android:enabled="false"
+                    android:text="" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/timesheet_entry_workday_day_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:hint="@string/lbl_day">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/timesheet_entry_workday_day"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="date"
-                    android:text="@string/dd_mm_yyyy" />
+                    android:maxLength="2"
+                    android:text="" />
             </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+            <!-- work day to and from time -->
+        <LinearLayout
+            android:id="@+id/timesheet_entry_work_time_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/timesheet_entry_work_date_layout"
+            android:layout_margin="10dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/timesheet_entry_from_time_layout"
@@ -191,7 +245,7 @@
             android:id="@+id/timesheet_entry_time_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/timesheet_entry_work_date_layout"
+            android:layout_below="@id/timesheet_entry_work_time_layout"
             android:layout_margin="10dp"
             android:baselineAligned="false"
             android:orientation="horizontal"

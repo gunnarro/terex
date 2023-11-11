@@ -49,9 +49,9 @@ public class TimesheetListFragment extends Fragment {
     public static final String TIMESHEET_ACTION_SAVE = "timesheet_save";
     public static final String TIMESHEET_ACTION_DELETE = "timesheet_delete";
     public static final String TIMESHEET_ACTION_VIEW = "timesheet_view";
-
     private TimesheetViewModel timesheetViewModel;
     private List<Integer> timesheetYears;
+    private Integer selectedYear = LocalDate.now().getYear();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -81,7 +81,7 @@ public class TimesheetListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_recycler_timesheet_list, container, false);
         setHasOptionsMenu(true);
         // todo get from db
-        timesheetYears = List.of(2023,2024,2025);
+        timesheetYears = List.of(2023, 2024, 2025);
         RecyclerView recyclerView = view.findViewById(R.id.timesheet_list_recyclerview);
         TimesheetListAdapter timesheetListAdapter = new TimesheetListAdapter(getParentFragmentManager(), new TimesheetListAdapter.TimesheetDiff());
         recyclerView.setAdapter(timesheetListAdapter);
@@ -94,7 +94,7 @@ public class TimesheetListFragment extends Fragment {
         addButton.setOnClickListener(v -> {
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.content_frame, TimesheetNewFragment.class, createTimesheetBundle(timesheetListAdapter.getItemId(0)))
+                    .replace(R.id.content_frame, TimesheetNewFragment.class, createTimesheetBundle(timesheetListAdapter.getItemId(0), selectedYear))
                     .setReorderingAllowed(true)
                     .commit();
         });
@@ -103,10 +103,10 @@ public class TimesheetListFragment extends Fragment {
         return view;
     }
 
-    private Bundle createTimesheetBundle(Long timesheetId) {
+    private Bundle createTimesheetBundle(Long timesheetId, Integer year) {
         Timesheet timesheet = timesheetViewModel.getTimesheet(timesheetId);
         if (timesheet == null) {
-            timesheet = createDefaultTimesheet(timesheetId);
+            timesheet = Timesheet.createDefault(null, null, year, LocalDate.now().getMonthValue());
         }
         String timesheetJson = Utility.gsonMapper().toJson(timesheet, Timesheet.class);
         Bundle bundle = new Bundle();
@@ -170,7 +170,7 @@ public class TimesheetListFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         Log.d(Utility.buildTag(getClass(), "onOptionsItemSelected"), "selected: " + item.getTitle());
-        handleOptionsMenuSelection(2023);
+        handleOptionsMenuSelection(selectedYear);
         return true;
     }
 
@@ -199,7 +199,8 @@ public class TimesheetListFragment extends Fragment {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                handleOptionsMenuSelection(timesheetYears.get(position));
+                selectedYear = timesheetYears.get(position);
+                handleOptionsMenuSelection(selectedYear);
             }
 
             @Override
@@ -212,13 +213,9 @@ public class TimesheetListFragment extends Fragment {
 
     private void reloadTimesheetData(Integer selectedYear) {
         RecyclerView recyclerView = requireView().findViewById(R.id.timesheet_list_recyclerview);
-        TimesheetListAdapter timesheetListAdapter = (TimesheetListAdapter)recyclerView.getAdapter();
+        TimesheetListAdapter timesheetListAdapter = (TimesheetListAdapter) recyclerView.getAdapter();
         timesheetViewModel.getTimesheetLiveData(selectedYear).observe(requireActivity(), timesheetListAdapter::submitList);
         timesheetListAdapter.notifyDataSetChanged();
-    }
-
-    private Timesheet createDefaultTimesheet(Long timesheetId) {
-        return Timesheet.createDefault(null, null);
     }
 
     private void goToTimesheetEntryView(Bundle bundle) {

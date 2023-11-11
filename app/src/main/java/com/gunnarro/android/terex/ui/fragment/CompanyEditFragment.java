@@ -54,7 +54,7 @@ public class CompanyEditFragment extends Fragment implements View.OnClickListene
         String[] clients = recruitmentService.getRecruitmentNames();
         String[] projects = recruitmentService.getProjectNames();
 
-        Timesheet timesheet = Timesheet.createDefault(clients[0], projects[0]);
+    //    Timesheet timesheet = Timesheet.createDefault(clients[0], projects[0]);
 /*
         // check if this is an existing or a new timesheet
         String timesheetJson = getArguments() != null ? getArguments().getString(TimesheetListFragment.TIMESHEET_JSON_INTENT_KEY) : null;

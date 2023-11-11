@@ -56,9 +56,7 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
 
         String[] clients = recruitmentService.getRecruitmentNames();
         String[] projects = recruitmentService.getProjectNames();
-
-        Timesheet timesheet = Timesheet.createDefault(clients[0], projects[0]);
-
+        Timesheet timesheet = Timesheet.createDefault(clients[0], projects[0], LocalDate.now().getYear(), LocalDate.now().getMonthValue());
         // check if this is an existing or a new timesheet
         String timesheetJson = getArguments() != null ? getArguments().getString(TimesheetListFragment.TIMESHEET_JSON_KEY) : null;
         if (timesheetJson != null && !timesheetJson.isEmpty()) {

@@ -245,16 +245,16 @@ public class Timesheet {
         timesheetRef = year + ":" + month + ":" + clientName + ":" + projectCode;
     }
 
-    public static Timesheet createDefault(String clientName, String projectCode) {
-        LocalDate now = LocalDate.now();
+    public static Timesheet createDefault(String clientName, String projectCode, Integer year, Integer month) {
+        LocalDate timesheetDate = LocalDate.of(year, month, 1);
         Timesheet timesheet = new Timesheet();
         timesheet.setClientName(clientName);
         timesheet.setProjectCode(projectCode);
         timesheet.setStatus(Timesheet.TimesheetStatusEnum.OPEN.name());
-        timesheet.setYear(now.getYear());
-        timesheet.setMonth(now.getMonthValue());
-        timesheet.setFromDate(Utility.getFirstDayOfMonth(now));
-        timesheet.setToDate(Utility.getLastDayOfMonth(now));
+        timesheet.setYear(timesheetDate.getYear());
+        timesheet.setMonth(timesheetDate.getMonthValue());
+        timesheet.setFromDate(Utility.getFirstDayOfMonth(timesheetDate));
+        timesheet.setToDate(Utility.getLastDayOfMonth(timesheetDate));
         timesheet.createTimesheetRef();
         return timesheet;
     }

@@ -64,14 +64,14 @@ public class TimesheetEntryAddFragment extends Fragment implements View.OnClickL
         statusSpinner.setListSelection(0);
 
         // workday date picker
-        TextInputEditText workdayDate = view.findViewById(R.id.timesheet_entry_workday_date);
+        TextInputEditText workdayDay = view.findViewById(R.id.timesheet_entry_workday_day);
         // turn off keyboard popup when clicked
-        workdayDate.setShowSoftInputOnFocus(false);
-        workdayDate.setOnClickListener(v -> {
+        workdayDay.setShowSoftInputOnFocus(false);
+        workdayDay.setOnClickListener(v -> {
             DatePickerDialog workdayDatePicker = new DatePickerDialog(
                     requireContext(),
                     R.style.DialogTheme,
-                    (view1, year, monthOfYear, dayOfMonth) -> workdayDate.setText(Utility.formatToDDMMYYYY(year, monthOfYear, dayOfMonth)),
+                    (dayView, year, monthOfYear, dayOfMonth) -> workdayDay.setText(dayOfMonth),
                     LocalDate.now().getYear(),
                     LocalDate.now().getMonthValue(),
                     LocalDate.now().getDayOfMonth());
@@ -210,8 +210,14 @@ public class TimesheetEntryAddFragment extends Fragment implements View.OnClickL
         EditText hourlyRateView = view.findViewById(R.id.timesheet_entry_hourly_rate);
         hourlyRateView.setText(String.format("%s", timesheetEntry.getHourlyRate()));
 
-        EditText workdayDateView = view.findViewById(R.id.timesheet_entry_workday_date);
-        workdayDateView.setText(Utility.formatDate(timesheetEntry.getWorkdayDate()));
+        EditText workdayYearView = view.findViewById(R.id.timesheet_entry_workday_year);
+        workdayYearView.setText(timesheetEntry.getWorkdayDate().getYear());
+
+        EditText workdayMonthView = view.findViewById(R.id.timesheet_entry_workday_month);
+        workdayMonthView.setText(timesheetEntry.getWorkdayDate().getMonthValue());
+
+        EditText workdayDayView = view.findViewById(R.id.timesheet_entry_workday_day);
+        workdayDayView.setText(timesheetEntry.getWorkdayDate().getDayOfMonth());
 
         EditText fromTimeView = view.findViewById(R.id.timesheet_entry_from_time);
         fromTimeView.setText(Utility.formatTime(timesheetEntry.getFromTime()));
@@ -280,8 +286,10 @@ public class TimesheetEntryAddFragment extends Fragment implements View.OnClickL
         TextView hourlyRateView = requireView().findViewById(R.id.timesheet_entry_hourly_rate);
         timesheetEntry.setHourlyRate(Integer.parseInt(hourlyRateView.getText().toString()));
 
-        TextView workdayDateView = requireView().findViewById(R.id.timesheet_entry_workday_date);
-        timesheetEntry.setWorkdayDate(Utility.toLocalDate(workdayDateView.getText().toString()));
+        TextView workdayYearView = requireView().findViewById(R.id.timesheet_entry_workday_year);
+        TextView workdayMonthView = requireView().findViewById(R.id.timesheet_entry_workday_month);
+        TextView workdayDayView = requireView().findViewById(R.id.timesheet_entry_workday_day);
+        timesheetEntry.setWorkdayDate(LocalDate.of(Integer.parseInt(workdayYearView.getText().toString()), Integer.parseInt(workdayMonthView.getText().toString()), Integer.parseInt(workdayDayView.getText().toString())));
 
         TextView fromTimeView = requireView().findViewById(R.id.timesheet_entry_from_time);
         timesheetEntry.setFromTime(Utility.toLocalTime(fromTimeView.getText().toString()));

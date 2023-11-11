@@ -70,6 +70,7 @@
     <string name="lbl_to_date">To date</string>
     <string name="lbl_year">Year</string>
     <string name="lbl_month">Month</string>
+    <string name="lbl_day">Day</string>
     <string name="hh_mm">HH:mm</string>
     <string name="dd_mm_yyyy">dd-MM-yyyy</string>
     <string name="btn_delete">Delete</string>
