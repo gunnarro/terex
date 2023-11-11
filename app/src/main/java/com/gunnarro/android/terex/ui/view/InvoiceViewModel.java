@@ -33,7 +33,6 @@ public class InvoiceViewModel extends AndroidViewModel {
     }
 
     public void saveInvoice(Invoice invoice) {
-        Log.d("InvoiceViewModel.insert", "save: " + invoice);
         invoiceRepository.saveInvoice(invoice);
     }
 }

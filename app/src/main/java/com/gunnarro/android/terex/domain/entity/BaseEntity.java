@@ -7,6 +7,13 @@ import java.time.LocalDateTime;
 
 public abstract class BaseEntity {
 
+    // used in ForeignKey onDelete attribute
+    public static final int NO_ACTION = 1;
+    public static final int RESTRICT = 2;
+    public static final int SET_NULL = 3;
+    public static final int SET_DEFAULT = 4;
+    public static final int CASCADE = 5;
+
     @NonNull
     @ColumnInfo(name = "created_date")
     private LocalDateTime createdDate;

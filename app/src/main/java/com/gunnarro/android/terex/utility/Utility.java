@@ -32,7 +32,7 @@ public class Utility {
     public static final Integer DEFAULT_HOURLY_RATE = 1250;
     private static final SimpleDateFormat dateFormatter;
     private static final String DATE_TIME_PATTERN = "dd-MM-yyyy HH:mm";
-    public static final String WORKDAY_DATE_PATTERN = "dd.MM.YYYY";
+    public static final String WORKDAY_DATE_PATTERN = "dd.MM.yyyy";
     public static final String INVOICE_DATE_PATTERN = " yyyy MMMM";
     private static final String DATE_PATTERN = "dd-MM-yyyy";
     private static final String TIME_PATTERN = "HH:mm";

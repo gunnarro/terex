@@ -56,5 +56,4 @@ public interface TimesheetDao {
     @Delete
     void delete(Timesheet timesheet);
 
-
 }

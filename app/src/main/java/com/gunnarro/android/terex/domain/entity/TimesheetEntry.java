@@ -3,6 +3,7 @@ package com.gunnarro.android.terex.domain.entity;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
@@ -36,9 +37,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @TypeConverters({LocalDateConverter.class, LocalTimeConverter.class, LocalDateTimeConverter.class})
-@Entity(tableName = "timesheet_entry", indices = {@Index(value = {"timesheet_id", "workday_date"},
-        unique = true)})
+@Entity(tableName = "timesheet_entry",
+        foreignKeys = {@ForeignKey(entity = Timesheet.class, parentColumns = "id", childColumns = "timesheet_id", onDelete = BaseEntity.CASCADE)},
+        indices = {@Index(value = {"timesheet_id", "workday_date"}, unique = true)})
 public class TimesheetEntry {
+
 
     @PrimaryKey(autoGenerate = true)
     private Long id;
