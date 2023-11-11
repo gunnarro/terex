@@ -18,8 +18,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @TypeConverters({LocalDateConverter.class})
-@Entity(tableName = "person", indices = {@Index(value = {"client_name", "project_code", "year", "month"},
-        unique = true)})
+@Entity(tableName = "person", primaryKeys = {"id", "social_security_number"}, indices = {@Index("idx_person"), @Index(value = {"id"})})
 public class Person {
     @NotNull
     @PrimaryKey(autoGenerate = true)
@@ -32,6 +31,7 @@ public class Person {
     String lastName;
     @ColumnInfo(name = "date_of_birth")
     LocalDate dateOfBirth;
+    @NotNull
     @ColumnInfo(name = "social_security_number")
     String socialSecurityNumber;
 
@@ -104,7 +104,6 @@ public class Person {
     String gender;
     @ColumnInfo(name = "marital_status")
     String maritalStatus;
-
 
 
 }

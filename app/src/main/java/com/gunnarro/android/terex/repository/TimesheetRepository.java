@@ -40,6 +40,14 @@ public class TimesheetRepository {
     }
 
 
+    public Integer getRegisteredWorkedDays(Long timesheetId) {
+        return timesheetEntryDao.getRegisteredWorkedDays(timesheetId);
+    }
+
+    public Integer getRegisteredWorkedHours(Long timesheetId) {
+        return timesheetEntryDao.getRegisteredWorkedHours(timesheetId);
+    }
+
     public Long saveTimesheetSummary(TimesheetSummary timesheetSummary) {
         try {
             CompletionService<Long> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
@@ -109,10 +117,10 @@ public class TimesheetRepository {
         }
     }
 
-    public LiveData<List<Timesheet>> getAllTimesheets() {
+    public LiveData<List<Timesheet>> getTimesheetByYear(final Integer year) {
         try {
             CompletionService<LiveData<List<Timesheet>>> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
-            service.submit(timesheetDao::getAllTimesheets);
+            service.submit(() -> timesheetDao.getTimesheetByYear(year));
             Future<LiveData<List<Timesheet>>> future = service.take();
             return future != null ? future.get() : null;
         } catch (InterruptedException | ExecutionException e) {

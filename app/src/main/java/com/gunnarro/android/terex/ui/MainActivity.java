@@ -111,7 +111,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Finally, check and grant or deny permissions
         checkPermissions();
     }
-    
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {

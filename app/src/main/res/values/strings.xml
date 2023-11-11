@@ -4,6 +4,7 @@
     <string name="title_admin">Administration</string>
     <string name="title_timesheets">Timesheets</string>
     <string name="title_timesheet">Timesheet</string>
+    <string name="title_timesheet_entries">Timesheet entries</string>
     <string name="title_register_work">Register Work</string>
     <string name="title_invoices">Invoices</string>
     <string name="title_invoice">Invoice</string>

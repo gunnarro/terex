@@ -30,8 +30,10 @@ public class TimesheetViewModel extends AndroidViewModel {
        // timesheetList = timesheetService.getTimesheetListLiveData();
     }
 
-    public LiveData<List<Timesheet>> getTimesheetLiveData() {
-        return timesheetService.getTimesheetListLiveData();
+    public LiveData<List<Timesheet>> getTimesheetLiveData(Integer year) {
+        LiveData<List<Timesheet>> listLiveData = timesheetService.getTimesheetListLiveData(year);
+        Log.d("getTimesheetLiveData", String.format("year=%s, data=%s", year, listLiveData.getValue()));
+        return listLiveData;
     }
 
     public void saveTimesheet(Timesheet timesheet) {

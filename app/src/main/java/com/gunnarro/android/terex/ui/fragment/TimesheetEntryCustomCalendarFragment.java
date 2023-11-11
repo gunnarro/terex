@@ -84,7 +84,7 @@ public class TimesheetEntryCustomCalendarFragment extends Fragment {
             //   calendarView.setMinimumDate(firstDayOfMonth);
             //   calendarView.setMaximumDate(lastDayOfMonth);
         } catch (OutOfDateRangeException e) {
-            throw new RuntimeException(e);
+            throw new TerexApplicationException("Error creating view!", "50051", e);
         }
 
         view.findViewById(R.id.btn_timesheet_calendar_save).setEnabled(true);
@@ -117,12 +117,12 @@ public class TimesheetEntryCustomCalendarFragment extends Fragment {
     }
 
     private TimesheetEntry readTimesheetEntryFromBundle() {
-        String timesheetJson = getArguments() != null ? getArguments().getString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_KEY) : null;
-        Log.d("receives timesheet", "" + timesheetJson);
-        if (timesheetJson != null && !timesheetJson.isEmpty()) {
+        String timesheetEntryJson = getArguments() != null ? getArguments().getString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_KEY) : null;
+        Log.d("receives timesheet", "" + timesheetEntryJson);
+        if (timesheetEntryJson != null && !timesheetEntryJson.isEmpty()) {
             try {
-                TimesheetEntry timesheetEntry = Utility.gsonMapper().fromJson(timesheetJson, TimesheetEntry.class);
-                Log.d(Utility.buildTag(getClass(), "onFragmentResult"), String.format("timesheet: %s", timesheetEntry));
+                TimesheetEntry timesheetEntry = Utility.gsonMapper().fromJson(timesheetEntryJson, TimesheetEntry.class);
+                Log.d(Utility.buildTag(getClass(), "onFragmentResult"), String.format("timesheetEntryJson: %s", timesheetEntry));
                 return timesheetEntry;
             } catch (Exception e) {
                 Log.e("", e.toString());

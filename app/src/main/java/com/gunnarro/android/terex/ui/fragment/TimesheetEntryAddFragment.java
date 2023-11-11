@@ -122,17 +122,17 @@ public class TimesheetEntryAddFragment extends Fragment implements View.OnClickL
         view.findViewById(R.id.btn_timesheet_entry_save).setOnClickListener(v -> {
             view.findViewById(R.id.btn_timesheet_entry_save).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
             Bundle result = new Bundle();
-            result.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_KEY, getTimesheetAsJson());
+            result.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_KEY, getTimesheetEntryAsJson());
             result.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_KEY, TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_SAVE);
             getParentFragmentManager().setFragmentResult(TimesheetEntryListFragment.TIMESHEET_ENTRY_REQUEST_KEY, result);
-            Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new timesheet entry intent: " + getTimesheetAsJson());
+            Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new timesheet entry intent: " + getTimesheetEntryAsJson());
             returnToTimesheetEntryList(getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY));
         });
 
         view.findViewById(R.id.btn_timesheet_entry_delete).setOnClickListener(v -> {
             view.findViewById(R.id.btn_timesheet_entry_delete).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
             Bundle result = new Bundle();
-            result.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_KEY, getTimesheetAsJson());
+            result.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_KEY, getTimesheetEntryAsJson());
             result.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_KEY, TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_DELETE);
             getParentFragmentManager().setFragmentResult(TimesheetEntryListFragment.TIMESHEET_ENTRY_REQUEST_KEY, result);
             Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new delete item intent");
@@ -152,11 +152,11 @@ public class TimesheetEntryAddFragment extends Fragment implements View.OnClickL
     }
 
     private TimesheetEntry readTimesheetEntryFromBundle() {
-        String timesheetJson = getArguments() != null ? getArguments().getString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_KEY) : null;
-        Log.d("receives timesheet", "" + timesheetJson);
-        if (timesheetJson != null && !timesheetJson.isEmpty()) {
+        String timesheetEntryJson = getArguments() != null ? getArguments().getString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_KEY) : null;
+        Log.d("receives timesheet", "" + timesheetEntryJson);
+        if (timesheetEntryJson != null && !timesheetEntryJson.isEmpty()) {
             try {
-                TimesheetEntry timesheetEntry = Utility.gsonMapper().fromJson(timesheetJson, TimesheetEntry.class);
+                TimesheetEntry timesheetEntry = Utility.gsonMapper().fromJson(timesheetEntryJson, TimesheetEntry.class);
                 // set workday date always to current date if not set
                 if (timesheetEntry.getWorkdayDate() == null) {
                     timesheetEntry.setWorkdayDate(LocalDate.now());
@@ -222,9 +222,6 @@ public class TimesheetEntryAddFragment extends Fragment implements View.OnClickL
         EditText breakView = view.findViewById(R.id.timesheet_entry_break);
         breakView.setText(String.format("%s", timesheetEntry.getBreakInMin()));
 
-        //TextView workedHoursView = view.findViewById(R.id.timesheet_worked_hours);
-        //workedHoursView.setText(String.format("%s", "0"));
-
         EditText commentView = view.findViewById(R.id.timesheet_entry_comment);
         commentView.setText(timesheetEntry.getComment());
 
@@ -256,54 +253,51 @@ public class TimesheetEntryAddFragment extends Fragment implements View.OnClickL
         }
     }
 
-    private String getTimesheetAsJson() {
-        TimesheetEntry timesheet = new TimesheetEntry();
+    private String getTimesheetEntryAsJson() {
+        TimesheetEntry timesheetEntry = new TimesheetEntry();
 
         TextView timesheetIdView = requireView().findViewById(R.id.timesheet_entry_timesheet_id);
-        timesheet.setTimesheetId(Utility.isInteger(timesheetIdView.getText().toString()) ? Long.parseLong(timesheetIdView.getText().toString()) : null);
+        timesheetEntry.setTimesheetId(Utility.isInteger(timesheetIdView.getText().toString()) ? Long.parseLong(timesheetIdView.getText().toString()) : null);
 
         TextView idView = requireView().findViewById(R.id.timesheet_entry_id);
-        timesheet.setId(Utility.isInteger(idView.getText().toString()) ? Long.parseLong(idView.getText().toString()) : null);
+        timesheetEntry.setId(Utility.isInteger(idView.getText().toString()) ? Long.parseLong(idView.getText().toString()) : null);
 
         EditText createdDateView = requireView().findViewById(R.id.timesheet_entry_created_date);
         LocalDateTime createdDateTime = Utility.toLocalDateTime(createdDateView.getText().toString());
         if (createdDateTime != null) {
-            timesheet.setCreatedDate(createdDateTime);
+            timesheetEntry.setCreatedDate(createdDateTime);
         }
 
         EditText lastModifiedDateView = requireView().findViewById(R.id.timesheet_entry_last_modified_date);
         LocalDateTime lastModifiedDateTime = Utility.toLocalDateTime(lastModifiedDateView.getText().toString());
         if (lastModifiedDateTime != null) {
-            timesheet.setLastModifiedDate(lastModifiedDateTime);
+            timesheetEntry.setLastModifiedDate(lastModifiedDateTime);
         }
 
         AutoCompleteTextView statusSpinner = requireView().findViewById(R.id.timesheet_entry_status_spinner);
-        timesheet.setStatus(statusSpinner.getText().toString());
+        timesheetEntry.setStatus(statusSpinner.getText().toString());
 
         TextView hourlyRateView = requireView().findViewById(R.id.timesheet_entry_hourly_rate);
-        timesheet.setHourlyRate(Integer.parseInt(hourlyRateView.getText().toString()));
+        timesheetEntry.setHourlyRate(Integer.parseInt(hourlyRateView.getText().toString()));
 
         TextView workdayDateView = requireView().findViewById(R.id.timesheet_entry_workday_date);
-        timesheet.setWorkdayDate(Utility.toLocalDate(workdayDateView.getText().toString()));
+        timesheetEntry.setWorkdayDate(Utility.toLocalDate(workdayDateView.getText().toString()));
 
         TextView fromTimeView = requireView().findViewById(R.id.timesheet_entry_from_time);
-        timesheet.setFromTime(Utility.toLocalTime(fromTimeView.getText().toString()));
+        timesheetEntry.setFromTime(Utility.toLocalTime(fromTimeView.getText().toString()));
 
         TextView toTimeView = requireView().findViewById(R.id.timesheet_entry_to_time);
-        timesheet.setToTime(Utility.toLocalTime(toTimeView.getText().toString()));
+        timesheetEntry.setToTime(Utility.toLocalTime(toTimeView.getText().toString()));
 
         TextView breakView = requireView().findViewById(R.id.timesheet_entry_break);
-        timesheet.setBreakInMin(Integer.parseInt(breakView.getText().toString()));
-
-        // TextView workedHoursView = requireView().findViewById(R.id.timesheet_worked_hours);
-        // timesheet.setWorkedMinutes((int) (Double.parseDouble(workedHoursView.getText().toString())*60));
+        timesheetEntry.setBreakInMin(Integer.parseInt(breakView.getText().toString()));
 
         TextView commentView = requireView().findViewById(R.id.timesheet_entry_comment);
-        timesheet.setComment(commentView.getText().toString());
+        timesheetEntry.setComment(commentView.getText().toString());
         // determine and set worked minutes
-        timesheet.setWorkedMinutes(Long.valueOf(ChronoUnit.MINUTES.between(timesheet.getFromTime(), timesheet.getToTime())).intValue());
+        timesheetEntry.setWorkedMinutes(Long.valueOf(ChronoUnit.MINUTES.between(timesheetEntry.getFromTime(), timesheetEntry.getToTime())).intValue());
         try {
-            return Utility.gsonMapper().toJson(timesheet);
+            return Utility.gsonMapper().toJson(timesheetEntry);
         } catch (Exception e) {
             Log.e("getTimesheetAsJson", e.toString());
             throw new RuntimeException("unable to parse object to json! " + e);

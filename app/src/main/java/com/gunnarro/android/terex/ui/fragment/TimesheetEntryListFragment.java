@@ -8,8 +8,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.ColorRes;
@@ -50,12 +54,13 @@ public class TimesheetEntryListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requireActivity().setTitle(R.string.title_timesheets);
+        super.setHasOptionsMenu(false);
+        requireActivity().setTitle(R.string.title_timesheet_entries);
         // Get a new or existing ViewModel from the ViewModelProvider.
         try {
             timesheetEntryViewModel = new ViewModelProvider(this).get(TimesheetEntryViewModel.class);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new TerexApplicationException("Error creating view!", "50051", e);
         }
         getParentFragmentManager().setFragmentResultListener(TIMESHEET_ENTRY_REQUEST_KEY, this, new FragmentResultListener() {
             @Override
@@ -143,11 +148,6 @@ public class TimesheetEntryListFragment extends Fragment {
     @Override
     public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override

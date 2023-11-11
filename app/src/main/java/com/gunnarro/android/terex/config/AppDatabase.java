@@ -39,7 +39,7 @@ import java.util.concurrent.Executors;
         TimesheetSummary.class,
         Project.class,
         InvoiceFile.class
-}, version = 10, views = {TimesheetView.class})
+}, version = 11, views = {TimesheetView.class})
 public abstract class AppDatabase extends RoomDatabase {
     // marking the instance as volatile to ensure atomic access to the variable
     private static volatile AppDatabase INSTANCE;
@@ -54,8 +54,8 @@ public abstract class AppDatabase extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                                     AppDatabase.class, "terex_database")
                             .fallbackToDestructiveMigration()
-                            //  .createFromAsset("database/terex_database_data.sqlite")
-                            //  .addCallback(roomCallback)
+                            //.createFromAsset("database/terex_database_data.sqlite")
+                           // .addCallback(roomCallback)
                             .build();
                 }
             }
@@ -106,7 +106,7 @@ public abstract class AppDatabase extends RoomDatabase {
             timesheet.setWorkdayDate(work.getWorkdayDate());
             timesheet.setFromTime(work.getFromTime());
             timesheet.setToTime(work.getToTime());
-            INSTANCE.timesheetEntryDao().insert(timesheet);
+         //   INSTANCE.timesheetEntryDao().insert(timesheet);
         }
     };
 
@@ -114,15 +114,15 @@ public abstract class AppDatabase extends RoomDatabase {
     private static class PopulateDbAsyncTask extends AsyncTask<Void, Void, Void> {
         PopulateDbAsyncTask(AppDatabase instance) {
             RegisterWork work = RegisterWork.buildDefault("MasterCard");
-            TimesheetEntry timesheet = new TimesheetEntry();
-            timesheet.setTimesheetId(1L);
-            timesheet.setStatus(work.getStatus());
-            timesheet.setHourlyRate(work.getHourlyRate());
-            timesheet.setBreakInMin(work.getBreakInMin());
-            timesheet.setWorkdayDate(work.getWorkdayDate());
-            timesheet.setFromTime(work.getFromTime());
-            timesheet.setToTime(work.getToTime());
-            instance.timesheetEntryDao().insert(timesheet);
+            TimesheetEntry timesheetEntry = new TimesheetEntry();
+            timesheetEntry.setTimesheetId(1L);
+            timesheetEntry.setStatus(work.getStatus());
+            timesheetEntry.setHourlyRate(work.getHourlyRate());
+            timesheetEntry.setBreakInMin(work.getBreakInMin());
+            timesheetEntry.setWorkdayDate(work.getWorkdayDate());
+            timesheetEntry.setFromTime(work.getFromTime());
+            timesheetEntry.setToTime(work.getToTime());
+            instance.timesheetEntryDao().insert(timesheetEntry);
         }
 
         @Override

@@ -8,8 +8,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
@@ -24,11 +28,15 @@ import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
+import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.ui.adapter.TimesheetListAdapter;
 import com.gunnarro.android.terex.ui.view.TimesheetViewModel;
 import com.gunnarro.android.terex.utility.Utility;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.time.LocalDate;
+import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -43,16 +51,18 @@ public class TimesheetListFragment extends Fragment {
     public static final String TIMESHEET_ACTION_VIEW = "timesheet_view";
 
     private TimesheetViewModel timesheetViewModel;
+    private List<Integer> timesheetYears;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        super.setAllowEnterTransitionOverlap(true);
         requireActivity().setTitle(R.string.title_timesheets);
         // Get a new or existing ViewModel from the ViewModelProvider.
         try {
             timesheetViewModel = new ViewModelProvider(this).get(TimesheetViewModel.class);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new TerexApplicationException("Error creating fragment!", "50051", e);
         }
         // register listener for add, update and delete timesheet events
         getParentFragmentManager().setFragmentResultListener(TIMESHEET_REQUEST_KEY, this, new FragmentResultListener() {
@@ -69,19 +79,22 @@ public class TimesheetListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_recycler_timesheet_list, container, false);
+        setHasOptionsMenu(true);
+        // todo get from db
+        timesheetYears = List.of(2023,2024,2025);
         RecyclerView recyclerView = view.findViewById(R.id.timesheet_list_recyclerview);
-        final TimesheetListAdapter adapter = new TimesheetListAdapter(getParentFragmentManager(), new TimesheetListAdapter.TimesheetDiff());
-        recyclerView.setAdapter(adapter);
+        TimesheetListAdapter timesheetListAdapter = new TimesheetListAdapter(getParentFragmentManager(), new TimesheetListAdapter.TimesheetDiff());
+        recyclerView.setAdapter(timesheetListAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // Update the cached copy of the timesheet entries in the adapter.
-        timesheetViewModel.getTimesheetLiveData().observe(requireActivity(), adapter::submitList);
+        timesheetViewModel.getTimesheetLiveData(LocalDate.now().getYear()).observe(requireActivity(), timesheetListAdapter::submitList);
 
         FloatingActionButton addButton = view.findViewById(R.id.timesheet_add_btn);
         addButton.setOnClickListener(v -> {
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.content_frame, TimesheetNewFragment.class, createTimesheetBundle(adapter.getItemId(0)))
+                    .replace(R.id.content_frame, TimesheetNewFragment.class, createTimesheetBundle(timesheetListAdapter.getItemId(0)))
                     .setReorderingAllowed(true)
                     .commit();
         });
@@ -107,11 +120,6 @@ public class TimesheetListFragment extends Fragment {
     @Override
     public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -157,6 +165,56 @@ public class TimesheetListFragment extends Fragment {
             ex.printStackTrace();
             showInfoDialog(String.format("Application error!%sError: %s%s Please report.", ex.getMessage(), System.lineSeparator(), System.lineSeparator()), getActivity());
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Log.d(Utility.buildTag(getClass(), "onOptionsItemSelected"), "selected: " + item.getTitle());
+        handleOptionsMenuSelection(2023);
+        return true;
+    }
+
+    private void handleOptionsMenuSelection(Integer selectedYear) {
+        // reload list with selected timesheet year
+        Log.d("handleOptionsMenuSelection", "selected year: " + selectedYear);
+        reloadTimesheetData(selectedYear);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        // keep a reference to options menu
+        //optionsMenu = menu;
+        // clear current menu items
+        menu.clear();
+        // set fragment specific menu items
+        inflater.inflate(R.menu.timesheet_menu, menu);
+        MenuItem m = menu.findItem(R.id.year_dropdown_menu);
+        Spinner spinner = (Spinner) m.getActionView();
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<Integer> adapter = new ArrayAdapter<>(requireActivity().getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, timesheetYears);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                handleOptionsMenuSelection(timesheetYears.get(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+        Log.d(Utility.buildTag(getClass(), "onCreateOptionsMenu"), "menu: " + menu);
+    }
+
+
+    private void reloadTimesheetData(Integer selectedYear) {
+        RecyclerView recyclerView = requireView().findViewById(R.id.timesheet_list_recyclerview);
+        TimesheetListAdapter timesheetListAdapter = (TimesheetListAdapter)recyclerView.getAdapter();
+        timesheetViewModel.getTimesheetLiveData(selectedYear).observe(requireActivity(), timesheetListAdapter::submitList);
+        timesheetListAdapter.notifyDataSetChanged();
     }
 
     private Timesheet createDefaultTimesheet(Long timesheetId) {

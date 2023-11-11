@@ -2,6 +2,8 @@ package com.gunnarro.android.terex.domain.dto;
 
 import java.time.LocalDate;
 
+import lombok.Builder;
+
 public class TimesheetEntryDto {
 
     private LocalDate workdayDate;

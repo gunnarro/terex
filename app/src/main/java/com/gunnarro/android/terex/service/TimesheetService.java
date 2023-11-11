@@ -6,7 +6,9 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.room.Transaction;
 
+import com.gunnarro.android.terex.domain.TimesheetMapper;
 import com.gunnarro.android.terex.domain.dto.TimesheetEntryDto;
+import com.gunnarro.android.terex.domain.dto.TimesheetInfoDto;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
@@ -58,6 +60,13 @@ public class TimesheetService {
     // timesheet
     // ----------------------------------------
 
+    public TimesheetInfoDto getTimesheetInfo(Long timesheetId) {
+        Timesheet timesheet = getTimesheet(timesheetId);
+        Integer sumDays = timesheetRepository.getRegisteredWorkedDays(timesheetId);
+        Integer sumHours = timesheetRepository.getRegisteredWorkedHours(timesheetId);
+        return TimesheetMapper.toTimesheetInfoDto(timesheet, sumDays, sumHours);
+    }
+
     public List<Timesheet> getTimesheets(String status) {
         return timesheetRepository.getTimesheets(status);
     }
@@ -66,8 +75,8 @@ public class TimesheetService {
         return timesheetRepository.getTimesheet(timesheetId);
     }
 
-    public LiveData<List<Timesheet>> getTimesheetListLiveData() {
-        return timesheetRepository.getAllTimesheets();
+    public LiveData<List<Timesheet>> getTimesheetListLiveData(Integer year) {
+        return timesheetRepository.getTimesheetByYear(year);
     }
 
     public void deleteTimesheet(Timesheet timesheet) {
@@ -115,6 +124,15 @@ public class TimesheetService {
     // timesheet entry
     // ----------------------------------------
 
+    /**
+     * Check timesheet, set status to completed if registered work day is equal to the months number of workdays.
+     * Called after save or delete of a timesheet entry.
+     *
+     * @param timesheetId
+     */
+    public void updateTimesheetStatus(Long timesheetId) {
+
+    }
 
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures
     // that you're not doing any long running operations on the main thread, blocking the UI.
@@ -209,6 +227,22 @@ public class TimesheetService {
 
         invoiceSummaryByWeek.sort(Comparator.comparing(TimesheetSummary::getWeekInYear));
         return invoiceSummaryByWeek;
+    }
+
+    private TimesheetSummary buildTimesheetSummaryForMonth(@NotNull Long timesheetId, @NotNull List<TimesheetEntry> timesheetEntryList) {
+        TimesheetSummary timesheetSummary = new TimesheetSummary();
+        timesheetSummary.setCreatedDate(LocalDateTime.now());
+        timesheetSummary.setLastModifiedDate(LocalDateTime.now());
+        timesheetSummary.setTimesheetId(timesheetId);
+        timesheetSummary.setYear(timesheetEntryList.get(0).getWorkdayDate().getYear());
+        timesheetSummary.setFromDate(Utility.getFirstDayOfMonth(timesheetEntryList.get(0).getWorkdayDate()));
+        timesheetSummary.setToDate(Utility.getLastDayOfMonth(timesheetEntryList.get(0).getWorkdayDate()));
+        timesheetSummary.setTotalWorkedDays(timesheetEntryList.size());
+        timesheetEntryList.forEach(t -> {
+            timesheetSummary.setTotalBilledAmount(timesheetSummary.getTotalBilledAmount() + (t.getHourlyRate() * ((double) t.getWorkedMinutes() / 60)));
+            timesheetSummary.setTotalWorkedHours(timesheetSummary.getTotalWorkedHours() + (double) t.getWorkedMinutes() / 60);
+        });
+        return timesheetSummary;
     }
 
     private TimesheetSummary buildTimesheetSummaryForWeek(@NotNull Long timesheetId, @NotNull Integer week, @NotNull List<TimesheetEntry> timesheetEntryList) {

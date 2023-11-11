@@ -26,9 +26,15 @@ public interface TimesheetEntryDao {
     @Query("SELECT * FROM timesheet_entry WHERE timesheet_id = :timesheetId ORDER BY workday_date DESC LIMIT 1")
     TimesheetEntry getMostRecent(Long timesheetId);
 
-
     @Query("SELECT * FROM timesheet_entry WHERE timesheet_id = :timesheetId AND workday_date = :workdayDate")
     TimesheetEntry getTimesheet(Long timesheetId, LocalDate workdayDate);
+
+    @Query("SELECT count(*) FROM timesheet_entry WHERE timesheet_id = :timesheetId")
+    Integer getRegisteredWorkedDays(Long timesheetId);
+
+    // https://www.sqlitetutorial.net/sqlite-sum/
+    @Query("SELECT sum(worked_in_min/60) FROM timesheet_entry WHERE timesheet_id = :timesheetId")
+    Integer getRegisteredWorkedHours(Long timesheetId);
 
     /**
      * SELECT start_date,strftime('%Y',start_date) as "Year",

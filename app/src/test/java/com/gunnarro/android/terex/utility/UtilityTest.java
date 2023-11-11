@@ -1,7 +1,6 @@
 package com.gunnarro.android.terex.utility;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -70,6 +69,8 @@ public class UtilityTest {
 
     @Test
     public void numberOfBusinessDaysInMonth() {
+        Assertions.assertEquals(19, (int) Utility.countBusinessDaysInMonth(LocalDate.of(2023, 2, 1)));
         Assertions.assertEquals(21, (int) Utility.countBusinessDaysInMonth(LocalDate.of(2023, 10, 1)));
+        Assertions.assertEquals(21, (int) Utility.countBusinessDaysInMonth(LocalDate.of(2023, 11, 1)));
     }
 }
