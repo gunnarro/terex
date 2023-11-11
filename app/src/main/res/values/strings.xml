@@ -45,6 +45,11 @@
     <string name="btn_calendar">Calendar</string>
     <string name="btn_email">Send email</string>
     <string name="btn_view">View</string>
+    <string name="btn_ok">Ok</string>
+
+    <!-- dialog messages -->
+    <string name="msg_delete_timesheet">Delete timesheet. Note that all registered hours will also be deleted. It is not possible to revert the deletion.</string>
+    <string name="msg_confirm_delete">Confirm delete timesheet.</string>
 
     <!-- invoice -->
     <string name="lbl_company_name">Firma</string>

@@ -17,6 +17,7 @@ import android.widget.Spinner;
 
 import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
 import androidx.lifecycle.ViewModelProvider;
@@ -30,6 +31,8 @@ import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.ui.adapter.TimesheetListAdapter;
+import com.gunnarro.android.terex.ui.dialog.ConfirmDialogFragment;
+import com.gunnarro.android.terex.ui.dialog.DialogActionListener;
 import com.gunnarro.android.terex.ui.view.TimesheetViewModel;
 import com.gunnarro.android.terex.utility.Utility;
 
@@ -41,7 +44,7 @@ import java.util.List;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class TimesheetListFragment extends Fragment {
+public class TimesheetListFragment extends Fragment implements DialogActionListener {
     public static final String TIMESHEET_REQUEST_KEY = "100";
     public static final String TIMESHEET_JSON_KEY = "timesheet_as_json";
     public static final String TIMESHEET_ID_KEY = "timesheet_id";
@@ -150,8 +153,12 @@ public class TimesheetListFragment extends Fragment {
                     showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_update_msg_format), timesheet.getTimesheetRef()), R.color.color_snackbar_text_update);
                 }
             } else if (TIMESHEET_ACTION_DELETE.equals(action)) {
-                timesheetViewModel.deleteTimesheet(timesheet);
-                showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_delete_msg_format), timesheet.getTimesheetRef()), R.color.color_snackbar_text_delete);
+                if (timesheet.getStatus().equals("BILLED")) {
+                    showInfoDialog("Can not delete timesheet with status BILLED", requireContext());
+                } else {
+                    DialogFragment confirmDialog = ConfirmDialogFragment.newInstance(getString(R.string.msg_delete_timesheet), getString(R.string.msg_confirm_delete), timesheet.getId());
+                    confirmDialog.show(getChildFragmentManager(), "dialog");
+                }
             } else if (TIMESHEET_ACTION_VIEW.equals(action)) {
                 // redirect to timesheet entry list fragment
                 Bundle bundle = new Bundle();
@@ -244,5 +251,18 @@ public class TimesheetListFragment extends Fragment {
         builder.setPositiveButton("Ok", (dialog, which) -> dialog.cancel());
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+
+    @Override
+    public void onDialogAction(int actionCode, Long entityId) {
+        if (actionCode == DialogActionListener.OK_ACTION) {
+            // the user confirmed the operation
+            Timesheet timesheet = timesheetViewModel.getTimesheet(entityId);
+            timesheetViewModel.deleteTimesheet(timesheet);
+            showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_delete_msg_format), timesheet.getTimesheetRef()), R.color.color_snackbar_text_delete);
+        } else {
+            // dismiss, do nothing, the user canceled the operation
+            Log.d(Utility.buildTag(getClass(), "onDialogAction"), "delete sms backup file action cancelled by user");
+        }
     }
 }
