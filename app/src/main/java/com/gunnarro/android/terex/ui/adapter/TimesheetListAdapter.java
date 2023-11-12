@@ -43,6 +43,12 @@ public class TimesheetListAdapter extends ListAdapter<Timesheet, TimesheetViewHo
             actionBundle.putString(TimesheetListFragment.TIMESHEET_ACTION_KEY, TimesheetListFragment.TIMESHEET_ACTION_DELETE);
             fragmentManager.setFragmentResult(TimesheetListFragment.TIMESHEET_REQUEST_KEY, actionBundle);
         });
+        viewHolder.itemView.findViewById(R.id.ic_timesheet_row_edit).setOnClickListener(v -> {
+            Bundle actionBundle = new Bundle();
+            actionBundle.putString(TimesheetListFragment.TIMESHEET_JSON_KEY, toJson(getItem(viewHolder.getBindingAdapterPosition())));
+            actionBundle.putString(TimesheetListFragment.TIMESHEET_ACTION_KEY, TimesheetListFragment.TIMESHEET_ACTION_EDIT);
+            fragmentManager.setFragmentResult(TimesheetListFragment.TIMESHEET_REQUEST_KEY, actionBundle);
+        });
         return viewHolder;
     }
 

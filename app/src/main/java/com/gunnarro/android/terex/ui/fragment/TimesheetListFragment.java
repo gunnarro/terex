@@ -51,6 +51,7 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
     public static final String TIMESHEET_ACTION_KEY = "111";
     public static final String TIMESHEET_ACTION_SAVE = "timesheet_save";
     public static final String TIMESHEET_ACTION_DELETE = "timesheet_delete";
+    public static final String TIMESHEET_ACTION_EDIT = "timesheet_edit";
     public static final String TIMESHEET_ACTION_VIEW = "timesheet_view";
     private TimesheetViewModel timesheetViewModel;
     private List<Integer> timesheetYears;
@@ -164,6 +165,11 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
                 Bundle bundle = new Bundle();
                 bundle.putLong(TimesheetListFragment.TIMESHEET_ID_KEY, timesheet.getId());
                 goToTimesheetEntryView(bundle);
+            } else if (TIMESHEET_ACTION_EDIT.equals(action)) {
+                // redirect to timesheet entry list fragment
+                Bundle bundle = new Bundle();
+                bundle.putLong(TimesheetListFragment.TIMESHEET_ID_KEY, timesheet.getId());
+                goToTimesheetView(bundle);
             } else {
                 Log.w(Utility.buildTag(getClass(), "handleTimesheetActions"), "unknown action: " + action);
                 showInfoDialog(String.format("Application error!%s Unknown action: %s%s Please report.", action, System.lineSeparator(), System.lineSeparator()), getActivity());
@@ -233,6 +239,14 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
                 .commit();
     }
 
+
+    private void goToTimesheetView(Bundle bundle) {
+        requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content_frame, TimesheetNewFragment.class, bundle)
+                .setReorderingAllowed(true)
+                .commit();
+    }
 
     private void showSnackbar(String msg, @ColorRes int bgColor) {
         Resources.Theme theme = getResources().newTheme();

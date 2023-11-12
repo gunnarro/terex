@@ -15,7 +15,6 @@ import com.gunnarro.android.terex.domain.converter.LocalTimeConverter;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -40,8 +39,7 @@ import lombok.Setter;
 @Entity(tableName = "timesheet_entry",
         foreignKeys = {@ForeignKey(entity = Timesheet.class, parentColumns = "id", childColumns = "timesheet_id", onDelete = BaseEntity.CASCADE)},
         indices = {@Index(value = {"timesheet_id", "workday_date"}, unique = true)})
-public class TimesheetEntry {
-
+public class TimesheetEntry extends BaseEntity {
 
     @PrimaryKey(autoGenerate = true)
     private Long id;
@@ -52,15 +50,6 @@ public class TimesheetEntry {
     @NonNull
     @ColumnInfo(name = "timesheet_id")
     private Long timesheetId;
-
-    @NonNull
-    @ColumnInfo(name = "created_date")
-    private LocalDateTime createdDate;
-
-    @NonNull
-    @ColumnInfo(name = "last_modified_date")
-    private LocalDateTime lastModifiedDate;
-
     @NonNull
     @ColumnInfo(name = "workday_week")
     private Integer workdayWeek;
@@ -211,31 +200,12 @@ public class TimesheetEntry {
         this.comment = comment;
     }
 
-
-    @NonNull
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(@NonNull LocalDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    @NonNull
-    public LocalDateTime getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
     public Integer getUseAsDefault() {
         return useAsDefault;
     }
 
     public void setUseAsDefault(Integer useAsDefault) {
         this.useAsDefault = useAsDefault;
-    }
-
-    public void setLastModifiedDate(@NonNull LocalDateTime lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
     }
 
     public boolean isOpen() {
@@ -297,8 +267,8 @@ public class TimesheetEntry {
         final StringBuffer sb = new StringBuffer("TimesheetEntry{");
         sb.append("id=").append(id);
         sb.append(", timesheetId=").append(timesheetId);
-        sb.append(", createdDate=").append(createdDate);
-        sb.append(", lastModifiedDate=").append(lastModifiedDate);
+        sb.append(", createdDate=").append(getCreatedDate());
+        sb.append(", lastModifiedDate=").append(getLastModifiedDate());
         sb.append(", workdayWeek=").append(workdayWeek);
         sb.append(", workdayDate=").append(workdayDate);
         sb.append(", fromTime=").append(fromTime);

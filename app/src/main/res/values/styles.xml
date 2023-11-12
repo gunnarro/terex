@@ -170,4 +170,15 @@ The margin is a simple delimiter between the words. -->
         <item name="android:textAppearance">@android:style/TextAppearance.DeviceDefault</item>
     </style>
 
+    <style name="toolbar_popup_menu_style" parent="AppTheme.PopupOverlay">
+        <item name="android:background">@android:color/holo_blue_bright</item>
+        <item name="android:textAppearance">@android:style/TextAppearance.DeviceDefault</item>
+    </style>
+
+    <style name="toolbar_style" parent="Widget.MaterialComponents.Toolbar">
+        <item name="android:background">@android:color/holo_blue_bright</item>
+        <item name="android:textAppearance">@android:style/TextAppearance.DeviceDefault</item>
+    </style>
+
+
 </resources>

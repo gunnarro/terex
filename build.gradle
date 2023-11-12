@@ -65,8 +65,8 @@ ext {
     androidx_lifecycle_livedata_ktx = '2.6.1'
     androidx_lifecycle_viewmodel_ktx = '2.6.1'
     androidx_annotation = '1.6.0'
-    androidx_navigation_fragment = '2.7.1'
-    androidx_navigation_ui = '2.7.1'
+    androidx_navigation_fragment = '2.7.5'
+    androidx_navigation_ui = '2.7.5'
     // google
     google_android_material = '1.9.0'
     google_dagger_hilt_android = '2.48'

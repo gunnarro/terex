@@ -211,13 +211,13 @@ public class TimesheetEntryAddFragment extends Fragment implements View.OnClickL
         hourlyRateView.setText(String.format("%s", timesheetEntry.getHourlyRate()));
 
         EditText workdayYearView = view.findViewById(R.id.timesheet_entry_workday_year);
-        workdayYearView.setText(timesheetEntry.getWorkdayDate().getYear());
+        workdayYearView.setText(String.format("%s", timesheetEntry.getWorkdayDate().getYear()));
 
         EditText workdayMonthView = view.findViewById(R.id.timesheet_entry_workday_month);
-        workdayMonthView.setText(timesheetEntry.getWorkdayDate().getMonthValue());
+        workdayMonthView.setText(String.format("%s", timesheetEntry.getWorkdayDate().getMonthValue()));
 
         EditText workdayDayView = view.findViewById(R.id.timesheet_entry_workday_day);
-        workdayDayView.setText(timesheetEntry.getWorkdayDate().getDayOfMonth());
+        workdayDayView.setText(String.format("%s", timesheetEntry.getWorkdayDate().getDayOfMonth()));
 
         EditText fromTimeView = view.findViewById(R.id.timesheet_entry_from_time);
         fromTimeView.setText(Utility.formatTime(timesheetEntry.getFromTime()));

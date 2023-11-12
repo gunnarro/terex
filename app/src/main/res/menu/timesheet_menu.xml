@@ -4,9 +4,8 @@
     <group android:id="@+id/mobile_numbers_group">
         <item
             android:id="@+id/year_dropdown_menu"
-            android:checkable="true"
-            android:title="Mobile"
+            android:title="@string/lbl_year"
             app:actionViewClass="android.widget.Spinner"
-            app:showAsAction="ifRoom" />
+            app:showAsAction="always" />
     </group>
 </menu>

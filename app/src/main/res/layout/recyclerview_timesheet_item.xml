@@ -2,8 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp"
-    android:orientation="vertical">
+    android:layout_margin="10dp"
+    android:orientation="vertical"
+    android:background="@drawable/list_view_cell_shape">
 
     <TextView
         android:id="@+id/timesheet_id"
@@ -18,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="0dp"
-        android:background="@color/colorSmsReceived"
+        android:background="@color/colorBackground"
         android:text="Fre 6 April"
         android:textStyle="normal" />
 
@@ -44,6 +45,17 @@
         android:elevation="1dp"
         android:src="@drawable/ic_delete_red_24dp" />
 
+    <ImageView
+        android:id="@+id/ic_timesheet_row_edit"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="10dp"
+        android:layout_toStartOf="@+id/ic_timesheet_row_delete"
+        android:contentDescription="@string/btn_view"
+        android:elevation="1dp"
+        android:src="@drawable/ic_add_black_24dp" />
+
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -57,7 +69,6 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight=".1"
-                android:background="@color/design_default_color_secondary"
                 android:gravity="start"
                 android:minWidth="5dp" />
 
@@ -86,7 +97,6 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight=".1"
-                android:background="@color/colorAccent"
                 android:gravity="start"
                 android:minWidth="5dp" />
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorBackground">#ffffff</color>
+    <color name="colorBackgroundListItem">#dee1bb</color>
     <color name="colorLabel">#ffffff</color>
     <color name="colorText">#000000</color>
     <color name="colorPrimary">#3700B3</color>
