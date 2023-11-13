@@ -31,6 +31,7 @@ public class TimesheetListAdapter extends ListAdapter<Timesheet, TimesheetViewHo
     @Override
     public TimesheetViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         TimesheetViewHolder viewHolder = TimesheetViewHolder.create(parent);
+        /*
         viewHolder.itemView.findViewById(R.id.ic_timesheet_row_view).setOnClickListener(v -> {
             Bundle actionBundle = new Bundle();
             actionBundle.putString(TimesheetListFragment.TIMESHEET_JSON_KEY, toJson(getItem(viewHolder.getBindingAdapterPosition())));
@@ -49,6 +50,8 @@ public class TimesheetListAdapter extends ListAdapter<Timesheet, TimesheetViewHo
             actionBundle.putString(TimesheetListFragment.TIMESHEET_ACTION_KEY, TimesheetListFragment.TIMESHEET_ACTION_EDIT);
             fragmentManager.setFragmentResult(TimesheetListFragment.TIMESHEET_REQUEST_KEY, actionBundle);
         });
+
+         */
         return viewHolder;
     }
 

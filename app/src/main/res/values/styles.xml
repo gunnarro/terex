@@ -180,5 +180,8 @@ The margin is a simple delimiter between the words. -->
         <item name="android:textAppearance">@android:style/TextAppearance.DeviceDefault</item>
     </style>
 
+    <style name="list_item_status_font" parent="@android:style/TextAppearance.Small">
+
+    </style>
 
 </resources>
