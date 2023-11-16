@@ -26,7 +26,7 @@ public class TimesheetEntryViewModel extends AndroidViewModel {
         timesheetService = new TimesheetService(application);
     }
 
-    public LiveData<List<TimesheetEntry>> getTimesheetLiveData(Long timesheetId) {
+    public LiveData<List<TimesheetEntry>> getTimesheetEntryLiveData(Long timesheetId) {
         LiveData<List<TimesheetEntry>> listLiveData = timesheetService.getTimesheetEntryListLiveData(timesheetId);
         Log.d("getTimesheetLiveData", String.format("timesheetId=%s, timesheetEntries=%s", timesheetId, listLiveData.getValue()));
         return listLiveData;

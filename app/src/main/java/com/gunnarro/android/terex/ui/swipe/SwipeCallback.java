@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 public abstract class SwipeCallback extends ItemTouchHelper.Callback {
 
-    private static final float SWIPE_THRESHOLD = 0.8f;
+    private static final float SWIPE_THRESHOLD = 0.6f;
     private final Paint clearPaint;
     private final ColorDrawable background;
     private final Drawable swipeDrawable;

@@ -23,14 +23,15 @@ public class TimesheetViewModel extends AndroidViewModel {
     //   the UI when the data actually changes.
     private LiveData<List<Timesheet>> timesheetList;
 
-    public TimesheetViewModel(@NonNull Application application) {
+    public TimesheetViewModel(@NonNull Application application, Integer year) {
         super(application);
         timesheetService = new TimesheetService(application);
-        // timesheetList = timesheetService.getTimesheetListLiveData();
+        timesheetList = timesheetService.getTimesheetListLiveData(year);
     }
 
     public LiveData<List<Timesheet>> getTimesheetLiveData(Integer year) {
-        return timesheetService.getTimesheetListLiveData(year);
+      //  timesheetList = timesheetService.getTimesheetListLiveData(year);
+        return timesheetList;
     }
 
     public void saveTimesheet(Timesheet timesheet) {

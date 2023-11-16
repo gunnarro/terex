@@ -71,6 +71,7 @@ public class TimesheetListAdapter extends ListAdapter<Timesheet, TimesheetViewHo
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Log.d("onItemClick", "pos=" + position + ", id=" + id);
         notifyItemRangeRemoved(position, 1);
     }
 

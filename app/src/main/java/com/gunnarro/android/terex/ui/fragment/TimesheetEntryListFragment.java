@@ -14,7 +14,9 @@ import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,12 +28,14 @@ import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.ui.adapter.TimesheetEntryListAdapter;
+import com.gunnarro.android.terex.ui.swipe.SwipeCallback;
 import com.gunnarro.android.terex.ui.view.TimesheetEntryViewModel;
 import com.gunnarro.android.terex.utility.Utility;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -82,7 +86,7 @@ public class TimesheetEntryListFragment extends Fragment {
         Long timesheetId = getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY);
 
         // Update the cached copy of the timesheet entries in the adapter.
-        timesheetEntryViewModel.getTimesheetLiveData(timesheetId).observe(requireActivity(), adapter::submitList);
+        timesheetEntryViewModel.getTimesheetEntryLiveData(timesheetId).observe(requireActivity(), adapter::submitList);
 
         // TimesheetWithEntries timesheetWithEntries = timesheetEntryViewModel.getTimesheetWithEntries(timesheetId);
         // Log.d("all timesheets", "timesheet with entries: " + timesheetWithEntries);
@@ -120,6 +124,9 @@ public class TimesheetEntryListFragment extends Fragment {
         }*/
         // listen after timesheet add and delete events
         //RxBus.getInstance().listen().subscribe(getInputObserver());
+        // enable swipe
+        enableSwipeToLeftAndDeleteItem(recyclerView);
+        enableSwipeToRightAndViewItem(recyclerView);
         Log.d(Utility.buildTag(getClass(), "onCreateView"), "");
         return view;
     }
@@ -186,6 +193,39 @@ public class TimesheetEntryListFragment extends Fragment {
 
     private TimesheetEntry createDefaultTimesheetEntry(Long timesheetId) {
         return TimesheetEntry.createDefault(timesheetId, Timesheet.TimesheetStatusEnum.OPEN.name(), Utility.DEFAULT_DAILY_BREAK_IN_MINUTES, LocalDate.now(), Utility.DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES, Utility.DEFAULT_HOURLY_RATE);
+    }
+
+    private void enableSwipeToRightAndViewItem(RecyclerView recyclerView) {
+        SwipeCallback swipeToDeleteCallback = new SwipeCallback(requireContext(), ItemTouchHelper.RIGHT, getResources().getColor(R.color.color_bg_swipe_right, null), R.drawable.ic_add_black_24dp) {
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+                LiveData<List<TimesheetEntry>> listLiveData = timesheetEntryViewModel.getTimesheetEntryLiveData(1L);
+                int pos = viewHolder.getAbsoluteAdapterPosition();
+                List<TimesheetEntry> list = listLiveData.getValue();
+                //openTimesheetView(list.get(pos));
+
+                Bundle bundle = new Bundle();
+                bundle.putLong(TimesheetListFragment.TIMESHEET_ID_KEY, list.get(pos).getId());
+               // goToTimesheetEntryView(bundle);
+            }
+        };
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
+        itemTouchhelper.attachToRecyclerView(recyclerView);
+        Log.i(Utility.buildTag(getClass(), "enableSwipeToRightAndAdd"), "enabled swipe handler for timesheet entry list item");
+    }
+
+    private void enableSwipeToLeftAndDeleteItem(RecyclerView recyclerView) {
+        SwipeCallback swipeToDeleteCallback = new SwipeCallback(requireContext(), ItemTouchHelper.LEFT, getResources().getColor(R.color.color_bg_swipe_left, null), R.drawable.ic_delete_black_24dp) {
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+                final int position = viewHolder.getAbsoluteAdapterPosition();// FIXME
+                timesheetEntryViewModel.deleteTimesheetEntry(timesheetEntryViewModel.getTimesheetEntryLiveData(1L).getValue().get(position));
+                showSnackbar("Deleted timesheet", R.color.color_snackbar_text_delete);
+            }
+        };
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
+        itemTouchhelper.attachToRecyclerView(recyclerView);
+        Log.i(Utility.buildTag(getClass(), "enableSwipeToLeftAndDeleteItem"), "enabled swipe handler for delete timesheet entry list item");
     }
 
     private void showSnackbar(String msg, @ColorRes int bgColor) {

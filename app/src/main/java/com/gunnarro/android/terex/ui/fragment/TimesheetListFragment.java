@@ -21,7 +21,6 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -65,9 +64,12 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
         super.onCreate(savedInstanceState);
         super.setAllowEnterTransitionOverlap(true);
         requireActivity().setTitle(R.string.title_timesheets);
+        // todo get from db
+        timesheetYears = List.of(2023, 2024, 2025);
+        selectedYear = LocalDate.now().getYear();
         // Get a new or existing ViewModel from the ViewModelProvider.
         try {
-            timesheetViewModel = new ViewModelProvider(this).get(TimesheetViewModel.class);
+            timesheetViewModel = new TimesheetViewModel(getActivity().getApplication(), selectedYear);//new ViewModelProvider(this).get(TimesheetViewModel.class);
         } catch (Exception e) {
             throw new TerexApplicationException("Error creating fragment!", "50051", e);
         }
@@ -87,14 +89,10 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_recycler_timesheet_list, container, false);
         setHasOptionsMenu(true);
-        // todo get from db
-        timesheetYears = List.of(2023, 2024, 2025);
         RecyclerView recyclerView = view.findViewById(R.id.timesheet_list_recyclerview);
         TimesheetListAdapter timesheetListAdapter = new TimesheetListAdapter(getParentFragmentManager(), new TimesheetListAdapter.TimesheetDiff());
         recyclerView.setAdapter(timesheetListAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        selectedYear = LocalDate.now().getYear();
         // Update the cached copy of the timesheet entries in the adapter.
         timesheetViewModel.getTimesheetLiveData(selectedYear).observe(requireActivity(), timesheetListAdapter::submitList);
 
@@ -154,12 +152,8 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
         try {
             Timesheet timesheet = Utility.gsonMapper().fromJson(timesheetJson, Timesheet.class);
             if (TIMESHEET_ACTION_SAVE.equals(action)) {
-                if (timesheet.getId() == null) {
                     timesheetViewModel.saveTimesheet(timesheet);
-                    showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_add_msg_format), timesheet.getTimesheetRef()), R.color.color_snackbar_text_add);
-                } else {
-                    showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_update_msg_format), timesheet.getTimesheetRef()), R.color.color_snackbar_text_update);
-                }
+                    showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_saved_msg_format), timesheet.getTimesheetRef()), R.color.color_snackbar_text_add);
             } else if (TIMESHEET_ACTION_DELETE.equals(action)) {
                 if (timesheet.getStatus().equals("BILLED")) {
                     showInfoDialog("Can not delete timesheet with status BILLED", requireContext());
@@ -246,7 +240,6 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
                 .commit();
     }
 
-
     private void goToTimesheetView(Bundle bundle) {
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
@@ -274,20 +267,23 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
         alertDialog.show();
     }
 
-    /**
-     *
-     */
     private void enableSwipeToRightAndViewItem(RecyclerView recyclerView) {
         SwipeCallback swipeToDeleteCallback = new SwipeCallback(requireContext(), ItemTouchHelper.RIGHT, getResources().getColor(R.color.color_bg_swipe_right, null), R.drawable.ic_add_black_24dp) {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
                 LiveData<List<Timesheet>> listLiveData = timesheetViewModel.getTimesheetLiveData(selectedYear);
-                openTimesheetView(listLiveData.getValue().get(viewHolder.getAbsoluteAdapterPosition()));
+                int pos = viewHolder.getAbsoluteAdapterPosition();
+                List<Timesheet> list = listLiveData.getValue();
+                openTimesheetView(list.get(pos));
+
+                Bundle bundle = new Bundle();
+                bundle.putLong(TimesheetListFragment.TIMESHEET_ID_KEY, list.get(pos).getId());
+                goToTimesheetEntryView(bundle);
             }
         };
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
         itemTouchhelper.attachToRecyclerView(recyclerView);
-        Log.i(Utility.buildTag(getClass(), "enableSwipeToRightAndAdd"), "enabled swipe handler for view credential list item");
+        Log.i(Utility.buildTag(getClass(), "enableSwipeToRightAndAdd"), "enabled swipe handler for timesheet list item");
     }
 
     private void openTimesheetView(Timesheet timesheet) {
@@ -296,26 +292,28 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
                 .replace(R.id.content_frame, TimesheetNewFragment.class, createTimesheetBundle(timesheet.getId(), selectedYear))
                 .setReorderingAllowed(true)
                 .commit();
-
     }
 
-    /**
-     *
-     */
     private void enableSwipeToLeftAndDeleteItem(RecyclerView recyclerView) {
         SwipeCallback swipeToDeleteCallback = new SwipeCallback(requireContext(), ItemTouchHelper.LEFT, getResources().getColor(R.color.color_bg_swipe_left, null), R.drawable.ic_delete_black_24dp) {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
                 final int position = viewHolder.getAbsoluteAdapterPosition();
-                timesheetViewModel.deleteTimesheet(timesheetViewModel.getTimesheetLiveData(selectedYear).getValue().get(position));
-                showSnackbar("Deleted credential", R.color.color_snackbar_text_delete);
+                Timesheet timesheet = timesheetViewModel.getTimesheetLiveData(selectedYear).getValue().get(position);
+               // timesheetViewModel.deleteTimesheet(timesheet);
+               // showSnackbar("Deleted timesheet", R.color.color_snackbar_text_delete);
+                DialogFragment confirmDialog = ConfirmDialogFragment.newInstance(getString(R.string.msg_delete_timesheet), getString(R.string.msg_confirm_delete), timesheet.getId());
+                confirmDialog.show(getChildFragmentManager(), "dialog");
             }
         };
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
         itemTouchhelper.attachToRecyclerView(recyclerView);
-        Log.i(Utility.buildTag(getClass(), "enableSwipeToLeftAndDeleteItem"), "enabled swipe handler for delete credential list item");
+        Log.i(Utility.buildTag(getClass(), "enableSwipeToLeftAndDeleteItem"), "enabled swipe handler for delete timesheet list item");
     }
 
+    /**
+     * Pick up confirm dialog fragment events
+     */
     @Override
     public void onDialogAction(int actionCode, Long entityId) {
         if (actionCode == DialogActionListener.OK_ACTION) {

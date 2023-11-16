@@ -93,20 +93,15 @@ public class TimesheetService {
         }
         try {
             Log.d("TimesheetRepository.saveTimesheet", String.format("%s", timesheetExisting));
+            timesheet.setCreatedDate(LocalDateTime.now());
+            timesheet.setLastModifiedDate(LocalDateTime.now());
+            timesheet.setWorkingDaysInMonth(Utility.countBusinessDaysInMonth(timesheet.getFromDate()));
+            timesheet.setWorkingHoursInMonth((int) (timesheet.getWorkingDaysInMonth() * 7.5));
             Long id;
             if (timesheetExisting == null) {
-                timesheet.setCreatedDate(LocalDateTime.now());
-                timesheet.setLastModifiedDate(LocalDateTime.now());
-                timesheet.setWorkingDaysInMonth(Utility.countBusinessDaysInMonth(timesheet.getFromDate()));
-                timesheet.setWorkingHoursInMonth((int) (timesheet.getWorkingDaysInMonth() * 7.5));
                 id = timesheetRepository.insertTimesheet(timesheet);
                 Log.d("", "insert new timesheet: " + id + " - " + timesheet);
             } else {
-                timesheet.setId(timesheetExisting.getId());
-                timesheet.setCreatedDate(timesheetExisting.getCreatedDate());
-                timesheet.setLastModifiedDate(LocalDateTime.now());
-                timesheet.setWorkingDaysInMonth(Utility.countBusinessDaysInMonth(timesheet.getFromDate()));
-                timesheet.setWorkingHoursInMonth((int) (timesheet.getWorkingDaysInMonth() * 7.5));
                 timesheetRepository.updateTimesheet(timesheet);
                 id = timesheet.getId();
                 Log.d("", "update timesheet: " + id + " - " + timesheet);
