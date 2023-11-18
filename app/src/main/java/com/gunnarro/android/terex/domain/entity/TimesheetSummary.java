@@ -25,13 +25,13 @@ public class TimesheetSummary extends BaseEntity {
 
     @NotNull
     @PrimaryKey(autoGenerate = true)
-    public Long id;
+    private Long id;
     /**
      * Hold a unique reference to the timesheet that is used as the basis for the summary
      */
     @NotNull
     @ColumnInfo(name = "timesheet_id")
-    public Long timesheetId;
+    private Long timesheetId;
     @NotNull
     @ColumnInfo(name = "year")
     private Integer year;

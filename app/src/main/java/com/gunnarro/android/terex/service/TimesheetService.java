@@ -92,19 +92,24 @@ public class TimesheetService {
             return null;
         }
         try {
-            Log.d("TimesheetRepository.saveTimesheet", String.format("%s", timesheetExisting));
+            Log.d("TimesheetRepository.saveTimesheet", String.format("existingTimesheet: %s", timesheetExisting));
             timesheet.setCreatedDate(LocalDateTime.now());
             timesheet.setLastModifiedDate(LocalDateTime.now());
             timesheet.setWorkingDaysInMonth(Utility.countBusinessDaysInMonth(timesheet.getFromDate()));
             timesheet.setWorkingHoursInMonth((int) (timesheet.getWorkingDaysInMonth() * 7.5));
-            Long id;
+            Long id = null;
             if (timesheetExisting == null) {
+                // this is a new timesheet
                 id = timesheetRepository.insertTimesheet(timesheet);
-                Log.d("", "insert new timesheet: " + id + " - " + timesheet);
+                Log.d("TimesheetRepository.saveTimesheet", String.format("inserted new timesheetId=%s, %s", id, timesheet));
             } else {
+                // this is a update of existing timesheet
+                // FIXME should not happen
+                if (timesheet.getId() == null) {
+                    timesheet.setId(timesheetExisting.getId());
+                }
                 timesheetRepository.updateTimesheet(timesheet);
-                id = timesheet.getId();
-                Log.d("", "update timesheet: " + id + " - " + timesheet);
+                Log.d("TimesheetRepository.saveTimesheet", String.format("updated timesheet: %s", timesheet));
             }
             return id;
         } catch (InterruptedException | ExecutionException e) {
@@ -143,14 +148,14 @@ public class TimesheetService {
                 timesheetEntry.setCreatedDate(LocalDateTime.now());
                 timesheetEntry.setLastModifiedDate(LocalDateTime.now());
                 id = timesheetRepository.insertTimesheetEntry(timesheetEntry);
-                Log.d("", "insert new timesheet entry: " + id + " - " + timesheetEntry.getWorkdayDate());
+                Log.d("TimesheetRepository.saveTimesheetEntry", "insert new timesheet entry: " + id + " - " + timesheetEntry.getWorkdayDate());
             } else {
                 timesheetEntry.setId(timesheetEntryExisting.getId());
                 timesheetEntry.setCreatedDate(timesheetEntryExisting.getCreatedDate());
                 timesheetEntry.setLastModifiedDate(LocalDateTime.now());
                 timesheetRepository.updateTimesheetEntry(timesheetEntry);
                 id = timesheetEntry.getId();
-                Log.d("", "update timesheet entry: " + id + " - " + timesheetEntry.getWorkdayDate());
+                Log.d("TimesheetRepository.saveTimesheetEntry", "update timesheet entry: " + id + " - " + timesheetEntry.getWorkdayDate());
             }
             return id;
         } catch (InterruptedException | ExecutionException e) {

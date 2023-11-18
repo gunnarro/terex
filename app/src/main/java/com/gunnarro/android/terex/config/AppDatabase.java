@@ -39,7 +39,7 @@ import java.util.concurrent.Executors;
         TimesheetSummary.class,
         Project.class,
         InvoiceFile.class
-}, version = 15, views = {TimesheetView.class})
+}, version = 16, views = {TimesheetView.class})
 public abstract class AppDatabase extends RoomDatabase {
     // marking the instance as volatile to ensure atomic access to the variable
     private static volatile AppDatabase INSTANCE;

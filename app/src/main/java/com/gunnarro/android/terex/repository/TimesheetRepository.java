@@ -92,6 +92,7 @@ public class TimesheetRepository {
 
     public Timesheet getTimesheet(String clientName, String projectCode, Integer year, Integer mount) {
         try {
+            Log.d("TimesheetRepository.getTimesheet", String.format("%s, %s, %s, %s", clientName, projectCode, year, mount));
             CompletionService<Timesheet> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
             service.submit(() -> timesheetDao.getTimesheet(clientName, projectCode, year, mount));
             Future<Timesheet> future = service.take();
@@ -182,6 +183,7 @@ public class TimesheetRepository {
     }
 
     public Integer updateTimesheet(Timesheet timesheet) throws InterruptedException, ExecutionException {
+        Log.d("TimesheetRepository.updateTimesheet", String.format("%s", timesheet));
         CompletionService<Integer> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
         service.submit(() -> timesheetDao.update(timesheet));
         Future<Integer> future = service.take();
@@ -189,6 +191,7 @@ public class TimesheetRepository {
     }
 
     public Long insertTimesheet(Timesheet timesheet) throws InterruptedException, ExecutionException {
+        Log.d("TimesheetRepository.insertTimesheet", String.format("%s", timesheet));
         CompletionService<Long> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
         service.submit(() -> timesheetDao.insert(timesheet));
         Future<Long> future = service.take();

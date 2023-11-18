@@ -200,12 +200,22 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
             view.findViewById(R.id.btn_timesheet_new_delete).setVisibility(View.GONE);
         } else {
             // change button icon to from add new to save
-            ((MaterialButton) view.findViewById(R.id.btn_timesheet_new_save)).setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_check_black_24dp));
+            ((MaterialButton) view.findViewById(R.id.btn_timesheet_new_save)).setText(getResources().getString(R.string.btn_save));
             // not allowed to change a timesheet with status set equal to BILLED
             if (timesheet.isBilled()) {
                 view.findViewById(R.id.btn_timesheet_new_delete).setVisibility(View.GONE);
                 view.findViewById(R.id.btn_timesheet_new_save).setVisibility(View.GONE);
             }
+            // only allowed to update status
+            createdDateView.setEnabled(true);
+            lastModifiedDateView.setEnabled(true);
+            clientSpinner.setEnabled(false);
+            projectSpinner.setEnabled(false);
+            yearSpinner.setEnabled(false);
+            monthSpinner.setEnabled(false);
+            fromTimeView.setEnabled(false);
+            toTimeView.setEnabled(false);
+            descriptionView.setEnabled(false);
         }
         Log.d(Utility.buildTag(getClass(), "updateTimesheetNewView"), String.format("updated %s ", timesheet));
     }

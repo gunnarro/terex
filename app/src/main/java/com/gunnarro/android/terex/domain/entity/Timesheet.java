@@ -53,10 +53,11 @@ public class Timesheet {
         }
     }
 
+    @NotNull
     @PrimaryKey(autoGenerate = true)
-    public Long id;
+    private Long id;
     @ColumnInfo(name = "invoice_number")
-    public Long invoiceNumber;
+    private Long invoiceNumber;
     @NonNull
     @ColumnInfo(name = "created_date")
     private LocalDateTime createdDate;

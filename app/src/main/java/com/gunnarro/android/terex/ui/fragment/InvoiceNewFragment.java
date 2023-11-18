@@ -81,7 +81,7 @@ public class InvoiceNewFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_invoice_new, container, false);
         // only completed time sheets can be used a attachment to a invoice.
         List<Timesheet> timesheetList = timesheetService.getTimesheets(Timesheet.TimesheetStatusEnum.COMPLETED.name());
-        List<SpinnerItem> timesheetItems = timesheetList.stream().map(t -> new SpinnerItem(t.id, t.getProjectCode())).collect(Collectors.toList());
+        List<SpinnerItem> timesheetItems = timesheetList.stream().map(t -> new SpinnerItem(t.getId(), t.getProjectCode())).collect(Collectors.toList());
         final AutoCompleteTextView timesheetSpinner = view.findViewById(R.id.invoice_timesheet_spinner);
         ArrayAdapter<SpinnerItem> timesheetAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, timesheetItems);
         timesheetSpinner.setAdapter(timesheetAdapter);

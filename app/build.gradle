@@ -73,7 +73,7 @@ dependencies {
     // quickfix for kotlin duplicate class error message
     //  implementation "org.jetbrains.kotlin:kotlin-bom:1.8.0"
     //  runtimeOnly 'org.jetbrains.kotlin:kotlin-bom:1.8.10'
-    implementation(platform('org.jetbrains.kotlin:kotlin-bom:1.9.10'))
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom:$kotlin_kotlin_bom"))
 
     // Android
     implementation "android.arch.navigation:navigation-fragment:$android_arch_navigation"
@@ -118,26 +118,24 @@ dependencies {
     implementation "org.jasypt:jasypt:$jasypt"
 
     // for rx eventbus
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.9'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation "io.reactivex.rxjava2:rxjava:$reactivex_rxjava2_rxjava"
+    implementation "io.reactivex.rxjava2:rxandroid:$reactivex_rxjava2_rxandroid"
 
     // calendar
-    implementation 'com.applandeo:material-calendar-view:1.9.0-rc03'
+    implementation "com.applandeo:material-calendar-view:$material_calendar_view"
 
-    compileOnly 'org.projectlombok:lombok:1.18.28'
-    annotationProcessor 'org.projectlombok:lombok:1.18.28'
-
-
-    implementation 'com.fasterxml.jackson:jackson-bom:2.14.3'
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.14.3'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.3'
-    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.14.3'
-    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.3'
+    compileOnly "org.projectlombok:lombok:$projectlombok_lombok"
+    annotationProcessor "org.projectlombok:lombok:$projectlombok_lombok"
+  // changed to gson
+  //  implementation "com.fasterxml.jackson.core:jackson-core:$fasterxml_jackson"
+  //  implementation "com.fasterxml.jackson.core:jackson-databind:$fasterxml_jackson"
+  //  implementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$fasterxml_jackson"
+  //  implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$fasterxml_jackson"
 
     // html to pdf
     // https://mvnrepository.com/artifact/com.itextpdf/kernel
-    implementation("com.itextpdf:kernel:8.0.1")
-    implementation("com.itextpdf:html2pdf:5.0.1")
+    implementation("com.itextpdf:kernel:$itextpdf_kernel")
+    implementation("com.itextpdf:html2pdf:$itextpdf_html2pdf")
 
 
     // custom calendar library
@@ -158,26 +156,26 @@ dependencies {
     // for fingerprint login
     implementation "androidx.biometric:biometric:$rootProject.biometric_version"
     // for pdf
-    implementation 'org.jsoup:jsoup:1.16.1'
-    implementation 'org.xhtmlrenderer:flying-saucer-pdf-openpdf:9.2.2'
-    implementation 'org.xhtmlrenderer:flying-saucer-core:9.2.2'
+    implementation "org.jsoup:jsoup:$jsoup"
+    implementation "org.xhtmlrenderer:flying-saucer-pdf-openpdf:$xhtmlrenderer_flying_saucer"
+    implementation "org.xhtmlrenderer:flying-saucer-core:$xhtmlrenderer_flying_saucer"
 
     // html template engine
-    implementation 'com.github.spullara.mustache.java:compiler:0.9.4'
+    implementation "com.github.spullara.mustache.java:compiler:$spullara_mustache_java"
 
     // for unit tests
     testImplementation "org.junit.vintage:junit-vintage-engine:$junit_vintage_engine"
     testImplementation "org.junit.jupiter:junit-jupiter:$junit_jupiter"
     //noinspection GradleDependency
     testImplementation "org.mockito:mockito-inline:$mockito_inline"
-    testImplementation("org.mockito:mockito-junit-jupiter:$mockito_junit_jupiter")
+    testImplementation "org.mockito:mockito-junit-jupiter:$mockito_junit_jupiter"
     // for android instrumentation tests
     //noinspection GradleDependency
     androidTestImplementation "androidx.test.ext:junit:$androidx_junit"
     //noinspection GradleDependency
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidx_espresso_core"
     //noinspection GradleDependency
-    androidTestImplementation "androidx.room:room-testing:$rootProject.room_version"
+    androidTestImplementation "androidx.room:room-testing:$room_version"
 
     //noinspection GradleDependency
     debugImplementation "androidx.fragment:fragment-testing:$androidx_fragment_testing"

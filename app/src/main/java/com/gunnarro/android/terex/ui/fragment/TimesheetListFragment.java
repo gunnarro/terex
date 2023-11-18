@@ -275,7 +275,6 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
                 int pos = viewHolder.getAbsoluteAdapterPosition();
                 List<Timesheet> list = listLiveData.getValue();
                 openTimesheetView(list.get(pos));
-
                 Bundle bundle = new Bundle();
                 bundle.putLong(TimesheetListFragment.TIMESHEET_ID_KEY, list.get(pos).getId());
                 goToTimesheetEntryView(bundle);

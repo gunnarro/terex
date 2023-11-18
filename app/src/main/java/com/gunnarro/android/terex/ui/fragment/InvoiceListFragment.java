@@ -13,8 +13,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.ui.adapter.InvoiceListAdapter;
@@ -33,7 +31,6 @@ public class InvoiceListFragment extends Fragment {
     private static final String INVOICE_JSON_KEY = "311";
     private InvoiceViewModel invoiceViewModel;
 
-    private final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

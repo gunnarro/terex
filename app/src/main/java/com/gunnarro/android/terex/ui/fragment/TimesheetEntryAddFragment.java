@@ -237,7 +237,18 @@ public class TimesheetEntryAddFragment extends Fragment implements View.OnClickL
             view.findViewById(R.id.btn_timesheet_entry_delete).setVisibility(View.GONE);
         } else {
             // change button icon to from add new to save
-            ((MaterialButton) view.findViewById(R.id.btn_timesheet_entry_save)).setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_check_black_24dp));
+            ((MaterialButton) view.findViewById(R.id.btn_timesheet_entry_save)).setText(getResources().getString(R.string.btn_save));
+            if (timesheetEntry.isBilled()) {
+                view.findViewById(R.id.btn_timesheet_new_delete).setVisibility(View.GONE);
+                view.findViewById(R.id.btn_timesheet_new_save).setVisibility(View.GONE);
+            }
+            createdDateView.setEnabled(true);
+            lastModifiedDateView.setEnabled(true);
+            // disable input that is not allowed to edit
+            timesheetNameView.setEnabled(false);
+            hourlyRateView.setEnabled(false);
+            workdayYearView.setEnabled(false);
+            workdayMonthView.setEnabled(false);
         }
         Log.d(Utility.buildTag(getClass(), "updateTimesheetAddView"), String.format("updated %s ", timesheetEntry));
     }
