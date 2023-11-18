@@ -37,16 +37,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:enabled="false"
+                android:enabled="true"
                 android:hint="@string/prompt_created_date">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/timesheet_new_created_date"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:enabled="false"
                     android:inputType="text"
-                    android:text="" />
+                    android:text="11-11-2013" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -55,16 +55,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:enabled="false"
+                android:enabled="true"
                 android:hint="@string/prompt_last_modified_date">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/timesheet_new_last_modified_date"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:enabled="false"
                     android:inputType="date"
-                    android:text="" />
+                    android:text="18-11-2023" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 

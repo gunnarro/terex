@@ -66,6 +66,9 @@
     <string name="lbl_invoice_project_code">Prosjektkode</string>
     <string name="lbl_client_contact_person">Kontaktperson</string>
 
+    <string name="lbl_billing_date">Billing date</string>
+    <string name="lbl_billed_amount">Amount</string>
+
     <string name="txt_colon">:</string>
     <string name="txt_empty"></string>
     <string name="lbl_workday_date">Date</string>

@@ -28,7 +28,6 @@ public class InvoiceListFragment extends Fragment {
     public static final String INVOICE_REQUEST_KEY = "300";
     public static final String INVOICE_ID_KEY = "invoice_id";
     public static final String INVOICE_ACTION_VIEW = "invoice_view";
-    private static final String INVOICE_JSON_KEY = "311";
     private InvoiceViewModel invoiceViewModel;
 
 

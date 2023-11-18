@@ -152,11 +152,11 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
         try {
             Timesheet timesheet = Utility.gsonMapper().fromJson(timesheetJson, Timesheet.class);
             if (TIMESHEET_ACTION_SAVE.equals(action)) {
-                    timesheetViewModel.saveTimesheet(timesheet);
-                    showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_saved_msg_format), timesheet.getTimesheetRef()), R.color.color_snackbar_text_add);
+                timesheetViewModel.saveTimesheet(timesheet);
+                showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_saved_msg_format), timesheet.getTimesheetRef()), R.color.color_snackbar_text_add);
             } else if (TIMESHEET_ACTION_DELETE.equals(action)) {
                 if (timesheet.getStatus().equals("BILLED")) {
-                    showInfoDialog("Can not delete timesheet with status BILLED", requireContext());
+                    showInfoDialog("Info", "Can not delete timesheet with status BILLED", requireContext());
                 } else {
                     DialogFragment confirmDialog = ConfirmDialogFragment.newInstance(getString(R.string.msg_delete_timesheet), getString(R.string.msg_confirm_delete), timesheet.getId());
                     confirmDialog.show(getChildFragmentManager(), "dialog");
@@ -169,15 +169,15 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
             } else if (TIMESHEET_ACTION_EDIT.equals(action)) {
                 // redirect to timesheet entry list fragment
                 Bundle bundle = new Bundle();
-                bundle.putLong(TimesheetListFragment.TIMESHEET_ID_KEY, timesheet.getId());
+                bundle.putString(TimesheetListFragment.TIMESHEET_JSON_KEY, timesheetJson);
                 goToTimesheetView(bundle);
             } else {
                 Log.w(Utility.buildTag(getClass(), "handleTimesheetActions"), "unknown action: " + action);
-                showInfoDialog(String.format("Application error!%s Unknown action: %s%s Please report.", action, System.lineSeparator(), System.lineSeparator()), getActivity());
+                showInfoDialog("Info", String.format("Application error!%s Unknown action: %s%s Please report.", action, System.lineSeparator(), System.lineSeparator()), getActivity());
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            showInfoDialog(String.format("Application error!%sError: %s%s Please report.", ex.getMessage(), System.lineSeparator(), System.lineSeparator()), getActivity());
+            showInfoDialog("Error", String.format("Application error!%sError: %s%s Please report.", ex.getMessage(), System.lineSeparator(), System.lineSeparator()), getActivity());
         }
     }
 
@@ -255,9 +255,9 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
         snackbar.show();
     }
 
-    private void showInfoDialog(String infoMessage, Context context) {
+    private void showInfoDialog(String severity, String infoMessage, Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Info");
+        builder.setTitle(severity);
         builder.setMessage(infoMessage);
         // Set Cancelable false for when the user clicks on the outside the Dialog Box then it will remain show
         builder.setCancelable(false);
@@ -299,8 +299,8 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
                 final int position = viewHolder.getAbsoluteAdapterPosition();
                 Timesheet timesheet = timesheetViewModel.getTimesheetLiveData(selectedYear).getValue().get(position);
-               // timesheetViewModel.deleteTimesheet(timesheet);
-               // showSnackbar("Deleted timesheet", R.color.color_snackbar_text_delete);
+                // timesheetViewModel.deleteTimesheet(timesheet);
+                // showSnackbar("Deleted timesheet", R.color.color_snackbar_text_delete);
                 DialogFragment confirmDialog = ConfirmDialogFragment.newInstance(getString(R.string.msg_delete_timesheet), getString(R.string.msg_confirm_delete), timesheet.getId());
                 confirmDialog.show(getChildFragmentManager(), "dialog");
             }

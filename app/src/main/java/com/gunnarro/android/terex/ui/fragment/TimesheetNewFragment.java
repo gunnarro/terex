@@ -3,6 +3,8 @@ package com.gunnarro.android.terex.ui.fragment;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -111,7 +113,10 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
         // disable save button as default
         view.findViewById(R.id.btn_timesheet_new_save).setEnabled(true);
         view.findViewById(R.id.btn_timesheet_new_save).setOnClickListener(v -> {
-            validateInputData();
+            if (!isInputDataValid()) {
+                return;
+            }
+            ;
             view.findViewById(R.id.btn_timesheet_new_save).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
             Bundle result = new Bundle();
             result.putString(TimesheetListFragment.TIMESHEET_JSON_KEY, getTimesheetAsJson());
@@ -151,11 +156,7 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
     }
 
     private void returnToTimesheetList() {
-        requireActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.content_frame, TimesheetListFragment.class, null)
-                .setReorderingAllowed(true)
-                .commit();
+        requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, TimesheetListFragment.class, null).setReorderingAllowed(true).commit();
     }
 
     private void updateTimesheetNewView(View view, @NotNull Timesheet timesheet) {
@@ -288,9 +289,30 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
         }
     }
 
-    private boolean validateInputData() {
+    private boolean isInputDataValid() {
+        boolean hasValidationError = true;
+        AutoCompleteTextView clientSpinner = requireView().findViewById(R.id.timesheet_new_client_spinner);
+        if (clientSpinner.getText() == null) {
+            clientSpinner.setError("Required!");
+            hasValidationError = false;
+        }
+        AutoCompleteTextView projectSpinner = requireView().findViewById(R.id.timesheet_new_project_spinner);
+        if (projectSpinner.getText() == null) {
+            projectSpinner.setError("Required!");
+            hasValidationError = false;
+        }
+        AutoCompleteTextView statusSpinner = requireView().findViewById(R.id.timesheet_new_status_spinner);
+        if (statusSpinner.getText() == null) {
+            statusSpinner.setError("Required!");
+            hasValidationError = false;
+        }
+        AutoCompleteTextView monthSpinner = requireView().findViewById(R.id.timesheet_new_month_spinner);
+        if (monthSpinner.getText() == null) {
+            monthSpinner.setError("Required!");
+            hasValidationError = false;
+        }
         // simply check if the timesheet already exist
-        return true;
+        return hasValidationError;
     }
 
     private void updateFromToDate(LocalDate date) {
@@ -299,6 +321,30 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
 
         TextView toDateView = requireView().findViewById(R.id.timesheet_new_to_date);
         toDateView.setText(Utility.formatDate(Utility.getLastDayOfMonth(date)));
+    }
+
+    /**
+     *
+     */
+    private TextWatcher createEmptyTextValidator(EditText editText, String regexp, String validationErrorMsg) {
+        return new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // ignore
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // ignore
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!editText.getText().toString().matches(regexp)) {
+                    editText.setError(validationErrorMsg);
+                }
+            }
+        };
     }
 
 }

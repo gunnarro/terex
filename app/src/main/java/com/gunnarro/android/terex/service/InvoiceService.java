@@ -7,7 +7,9 @@ import androidx.room.Transaction;
 
 import com.gunnarro.android.terex.domain.entity.Company;
 import com.gunnarro.android.terex.domain.entity.Invoice;
+import com.gunnarro.android.terex.domain.entity.InvoiceAttachment;
 import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
+import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.repository.InvoiceRepository;
 
 import java.time.LocalDate;
@@ -38,6 +40,18 @@ public class InvoiceService {
         return invoiceRepository.getInvoice(invoiceId);
     }
 
+    public Long saveInvoiceAttachment(InvoiceAttachment invoiceAttachment) {
+        InvoiceAttachment invoiceAttachmentExisting = invoiceRepository.findInvoiceAttachment(invoiceAttachment.getInvoiceId(), invoiceAttachment.getAttachmentFileName(), invoiceAttachment.getAttachmentFileType());
+        if (invoiceAttachmentExisting != null) {
+            throw new TerexApplicationException(String.format("Attachment already exist. id=%s, file=%s, type=%s", invoiceAttachment.getId(), invoiceAttachment.getAttachmentFileName(), invoiceAttachment.getAttachmentFileType()), "50050", null);
+        }
+        return invoiceRepository.saveInvoiceAttachment(invoiceAttachment);
+    }
+
+    public InvoiceAttachment getInvoiceAttachment(Long invoiceId, String invoiceFileType) {
+        return invoiceRepository.getInvoiceAttachment(invoiceId, invoiceFileType);
+    }
+
     @Transaction
     public Long createInvoice(Company company, Company client, Long timesheetId) {
         // first accumulate timesheet entries
@@ -56,7 +70,7 @@ public class InvoiceService {
         invoice.setReference(String.format("%s-%s", client.getName(), timesheetId));
         invoice.setStatus(InvoiceRepository.InvoiceStatusEnum.OPEN.name());
         invoice.setBillingDate(LocalDate.now());
-        // defaulted to 10 days after billing date
+        // due date is defaulted to 10 days after billing date
         invoice.setDueDate(invoice.getBillingDate().plusDays(10));
         double sumAmount = timesheetSummaries.stream().mapToDouble(TimesheetSummary::getTotalBilledAmount).sum();
         invoice.setAmount(sumAmount);

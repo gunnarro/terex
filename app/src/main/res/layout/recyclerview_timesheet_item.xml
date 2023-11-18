@@ -1,83 +1,68 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
-    android:orientation="vertical"
-    android:background="@drawable/list_view_cell_shape">
+    android:layout_margin="5dp"
+    android:background="@drawable/list_view_cell_shape"
+    android:columnCount="2"
+    android:elevation="2dp"
+    android:rowCount="1"
+    tools:context="com.gunnarro.android.terex.ui.MainActivity">
 
+    <!-- first row, icon left aligned -->
     <TextView
-        android:id="@+id/timesheet_id"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:text=""
-        android:visibility="invisible" />
-
-    <TextView
-        android:id="@+id/timesheet_line_header"
-        style="@style/timesheet_list_header"
-        android:layout_width="match_parent"
+        android:id="@+id/timesheet_line_1_status"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="0dp"
-        android:background="@color/colorBackground"
-        android:text="Fre 6 April"
-        android:textStyle="normal" />
-
-    <ImageView
-        android:id="@+id/ic_timesheet_row_view"
-        android:layout_width="14dp"
-        android:layout_height="14dp"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="7dp"
-        android:contentDescription="@string/btn_create"
-        android:elevation="1dp"
-        android:src="@drawable/ic_check_black_24dp" />
-
-    <ImageView
-        android:id="@+id/ic_timesheet_row_delete"
-        android:layout_width="14dp"
-        android:layout_height="14dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="10dp"
-        android:layout_toStartOf="@+id/ic_timesheet_row_view"
-        android:contentDescription="@string/btn_delete"
-        android:elevation="1dp"
-        android:src="@drawable/ic_delete_red_24dp" />
-
-    <ImageView
-        android:id="@+id/ic_timesheet_row_edit"
-        android:layout_width="14dp"
-        android:layout_height="14dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="10dp"
-        android:layout_toStartOf="@+id/ic_timesheet_row_delete"
-        android:contentDescription="@string/btn_view"
-        android:elevation="1dp"
-        android:src="@drawable/ic_add_black_24dp" />
+        android:layout_marginTop="20dp"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:maxLines="3"
+        android:text="Nov"
+        android:textAlignment="center"
+        android:textColor="@color/timesheet_status_billed"
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
     <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/timesheet_line_header"
-        android:stretchColumns="0,1,1">
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_toEndOf="@id/timesheet_line_1_status"
+        android:stretchColumns="1,1">
 
         <TableRow>
 
-            <View
-                android:id="@+id/timesheet_line_1_status"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight=".1"
+            <TextView
+                android:id="@+id/timesheet_line_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_span="1"
                 android:gravity="start"
-                android:minWidth="5dp" />
+                android:text="Nnorway consultiong - catalystOne"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/ic_timesheet_row_view"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="7dp"
+                android:contentDescription="@string/btn_view"
+                android:elevation="1dp"
+                android:layout_gravity="end"
+                android:src="@drawable/ic_more_horiz_24px" />
+
+        </TableRow>
+
+        <TableRow>
 
             <TextView
                 android:id="@+id/timesheet_line_1_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:layout_weight="1"
                 android:gravity="start"
                 android:text="08:00 - 15:30" />
 
@@ -85,27 +70,17 @@
                 android:id="@+id/timesheet_line_1_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:gravity="end"
                 android:text="7,5 timer" />
         </TableRow>
 
         <TableRow>
 
-            <View
-                android:id="@+id/timesheet_line_2_status"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight=".1"
-                android:gravity="start"
-                android:minWidth="5dp" />
-
             <TextView
                 android:id="@+id/timesheet_line_2_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:layout_weight="1"
                 android:gravity="start"
                 android:text="Timepris" />
 
@@ -113,7 +88,6 @@
                 android:id="@+id/timesheet_line_2_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:gravity="end"
                 android:text="8.345,00 Kr" />
         </TableRow>

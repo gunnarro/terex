@@ -1,7 +1,6 @@
 package com.gunnarro.android.terex.utility;
 
 
-import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 
@@ -24,10 +23,10 @@ public class PdfUtility {
         File file = new File(filePath);
         try {
             FileOutputStream fos = new FileOutputStream(file);
-            fos.write(html.getBytes());
+            fos.write(html.getBytes(StandardCharsets.UTF_8));
             fos.close();
-            Log.d("saveFile", "saved file, org" + filePath);
-            Log.d("saveFile", "saved file, system" + file.getPath());
+            Log.d("saveFile", String.format("saved file, org, %s" + filePath));
+            Log.d("saveFile", String.format("saved file, system, %s" + file.getPath()));
             return true;
         } catch (IOException e) {
             Log.e("Error convert html to pdf!", e.getMessage());
@@ -43,7 +42,6 @@ public class PdfUtility {
      */
     public static String readFile(String filePath) {
         StringBuilder invoiceHtml = new StringBuilder();
-        ;
         Log.d("", "read html file, path=" + filePath);
         try (InputStream fis = new FileInputStream(filePath);
              InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);

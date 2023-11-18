@@ -29,6 +29,7 @@ public class Utility {
 
     public static final Integer DEFAULT_DAILY_BREAK_IN_MINUTES = 30;
     public static final Long DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES = 8 * 60L - DEFAULT_DAILY_BREAK_IN_MINUTES;
+    private static final Pattern POSITIVE_INTEGER_PATTERN = Pattern.compile("\\d+");
     public static final Integer DEFAULT_HOURLY_RATE = 1250;
     private static final SimpleDateFormat dateFormatter;
     private static final String DATE_TIME_PATTERN = "dd-MM-yyyy HH:mm";
@@ -166,8 +167,6 @@ public class Utility {
         return String.format("%s-%s-%s", dd, mm, year);
     }
 
-
-    private static final Pattern POSITIVE_INTEGER_PATTERN = Pattern.compile("\\d+");
 
     public static boolean isInteger(String value) {
         if (value == null) {

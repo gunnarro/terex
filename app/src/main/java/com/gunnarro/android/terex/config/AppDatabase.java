@@ -13,13 +13,14 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import com.gunnarro.android.terex.domain.dbview.TimesheetView;
 import com.gunnarro.android.terex.domain.entity.Company;
 import com.gunnarro.android.terex.domain.entity.Invoice;
-import com.gunnarro.android.terex.domain.entity.InvoiceFile;
+import com.gunnarro.android.terex.domain.entity.InvoiceAttachment;
 import com.gunnarro.android.terex.domain.entity.Project;
 import com.gunnarro.android.terex.domain.entity.RecruitmentCompany;
 import com.gunnarro.android.terex.domain.entity.RegisterWork;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
+import com.gunnarro.android.terex.repository.InvoiceAttachmentDao;
 import com.gunnarro.android.terex.repository.InvoiceDao;
 import com.gunnarro.android.terex.repository.ProjectDao;
 import com.gunnarro.android.terex.repository.TimesheetDao;
@@ -38,8 +39,8 @@ import java.util.concurrent.Executors;
         Invoice.class,
         TimesheetSummary.class,
         Project.class,
-        InvoiceFile.class
-}, version = 16, views = {TimesheetView.class})
+        InvoiceAttachment.class
+}, version = 18, views = {TimesheetView.class})
 public abstract class AppDatabase extends RoomDatabase {
     // marking the instance as volatile to ensure atomic access to the variable
     private static volatile AppDatabase INSTANCE;
@@ -72,6 +73,8 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract InvoiceDao invoiceDao();
 
     public abstract ProjectDao projectDao();
+
+    public abstract InvoiceAttachmentDao invoiceAttachmentDao();
 
 
     //public abstract RecruitmentDao recruitmentDao();

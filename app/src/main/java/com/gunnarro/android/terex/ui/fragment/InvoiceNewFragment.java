@@ -23,6 +23,7 @@ import com.gunnarro.android.terex.domain.entity.Address;
 import com.gunnarro.android.terex.domain.entity.Company;
 import com.gunnarro.android.terex.domain.entity.Contact;
 import com.gunnarro.android.terex.domain.entity.Invoice;
+import com.gunnarro.android.terex.domain.entity.InvoiceAttachment;
 import com.gunnarro.android.terex.domain.entity.Person;
 import com.gunnarro.android.terex.domain.entity.SpinnerItem;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
@@ -31,7 +32,6 @@ import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.service.InvoiceService;
 import com.gunnarro.android.terex.service.TimesheetService;
-import com.gunnarro.android.terex.utility.PdfUtility;
 import com.gunnarro.android.terex.utility.Utility;
 
 import org.jetbrains.annotations.NotNull;
@@ -97,7 +97,7 @@ public class InvoiceNewFragment extends Fragment {
                     // item id is equal to selected timesheet id
                     Invoice invoice = createInvoice(item.id());
                     createTimesheetSummaryAttachment(invoice.getId());
-                    createTimesheetAttachment(invoice.getTimesheetId());
+                    createTimesheetAttachment(invoice.getId(), invoice.getTimesheetId());
                 }
             } catch (TerexApplicationException e) {
                 showInfoDialog("Error creating invoice!", requireContext());
@@ -156,7 +156,7 @@ public class InvoiceNewFragment extends Fragment {
         return invoiceService.getInvoice(invoiceId);
     }
 
-    private boolean createTimesheetSummaryAttachment(Long invoiceId) {
+    private Long createTimesheetSummaryAttachment(Long invoiceId) {
         try {
             Invoice invoice = invoiceService.getInvoice(invoiceId);
 
@@ -183,10 +183,18 @@ public class InvoiceNewFragment extends Fragment {
 
             String invoiceSummaryHtml = createTimesheetSummaryAttachmentHtml(mustacheTemplateStr.toString(), invoice.getTimesheetSummaryList(), sumBilledHours.toString(), sumBilledAmount.toString(), totalBilledAmountWithVat.toString(), totalVat.toString());
             Log.d("createInvoiceSummaryAttachment", "" + invoiceSummaryHtml);
-            String invoiceFileName = "invoice_attachment_" + invoice.getBillingDate().format(DateTimeFormatter.ofPattern("yyyy-MM"));
+            String invoiceAttachmentFileName = "invoice_attachment_" + invoice.getBillingDate().format(DateTimeFormatter.ofPattern("yyyy-MM"));
             File path = Environment.getExternalStorageDirectory();
-            return PdfUtility.saveFile(invoiceSummaryHtml, PdfUtility.getLocalDir() + "/" + invoiceFileName + ".pdf")
-                    && PdfUtility.saveFile(invoiceSummaryHtml, PdfUtility.getLocalDir() + "/" + invoiceFileName + ".html");
+
+            InvoiceAttachment timesheetSummaryAttachment = new InvoiceAttachment();
+            timesheetSummaryAttachment.setInvoiceId(invoiceId);
+            timesheetSummaryAttachment.setAttachmentFileName(invoiceAttachmentFileName);
+            timesheetSummaryAttachment.setAttachmentFileType("html");
+            timesheetSummaryAttachment.setAttachmentFileContent(invoiceSummaryHtml.getBytes(StandardCharsets.UTF_8));
+            return invoiceService.saveInvoiceAttachment(timesheetSummaryAttachment);
+
+            //return PdfUtility.saveFile(invoiceSummaryHtml, PdfUtility.getLocalDir() + "/" + invoiceAttachmentFileName + ".pdf")
+            //        && PdfUtility.saveFile(invoiceSummaryHtml, PdfUtility.getLocalDir() + "/" + invoiceAttachmentFileName + ".html");
         } catch (Exception e) {
             throw new TerexApplicationException(String.format("Error crating invoice attachment, invoice ref=%s", invoiceId), "50023", e);
         }
@@ -213,7 +221,7 @@ public class InvoiceNewFragment extends Fragment {
     }
 
 
-    private boolean createTimesheetAttachment(Long timesheetId) {
+    private Long createTimesheetAttachment(Long invoiceId, Long timesheetId) {
         try {
             List<TimesheetEntry> timesheetEntryList = timesheetService.getTimesheetEntryList(timesheetId);
             StringBuilder mustacheTemplateStr = new StringBuilder();
@@ -229,10 +237,17 @@ public class InvoiceNewFragment extends Fragment {
                     .mapToDouble(TimesheetEntry::getWorkedMinutes)
                     .sum() / 60;
 
-            String timesheetHtml = createTimesheetListHtml(mustacheTemplateStr.toString(), timesheetEntryList, sumBilledHours.toString());
-            String invoiceFileName = "timesheet_attachment_" + LocalDate.now().format(DateTimeFormatter.ISO_DATE);
-            return PdfUtility.saveFile(timesheetHtml, PdfUtility.getLocalDir() + "/" + invoiceFileName + ".pdf")
-                    && PdfUtility.saveFile(timesheetHtml, PdfUtility.getLocalDir() + "/" + invoiceFileName + ".html");
+            String timesheetAttachmentHtml = createTimesheetListHtml(mustacheTemplateStr.toString(), timesheetEntryList, sumBilledHours.toString());
+            String timesheetAttachmentFileName = "timesheet_attachment_" + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
+            InvoiceAttachment timesheetSummaryAttachment = new InvoiceAttachment();
+            timesheetSummaryAttachment.setInvoiceId(invoiceId);
+            timesheetSummaryAttachment.setAttachmentFileName(timesheetAttachmentFileName);
+            timesheetSummaryAttachment.setAttachmentFileType("html");
+            timesheetSummaryAttachment.setAttachmentFileContent(timesheetAttachmentHtml.getBytes(StandardCharsets.UTF_8));
+            return invoiceService.saveInvoiceAttachment(timesheetSummaryAttachment);
+
+            //return PdfUtility.saveFile(timesheetHtml, PdfUtility.getLocalDir() + "/" + invoiceFileName + ".pdf")
+            //        && PdfUtility.saveFile(timesheetHtml, PdfUtility.getLocalDir() + "/" + invoiceFileName + ".html");
         } catch (Exception e) {
             throw new TerexApplicationException(String.format("Error crating timesheet attachment, timesheetId=%s", timesheetId), "50023", e);
         }
