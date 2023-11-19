@@ -30,6 +30,7 @@ import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
+import com.gunnarro.android.terex.repository.InvoiceRepository;
 import com.gunnarro.android.terex.service.InvoiceService;
 import com.gunnarro.android.terex.service.TimesheetService;
 import com.gunnarro.android.terex.utility.Utility;
@@ -95,9 +96,8 @@ public class InvoiceNewFragment extends Fragment {
                     showInfoDialog("Please select a timesheet!", requireContext());
                 } else {
                     // item id is equal to selected timesheet id
-                    Invoice invoice = createInvoice(item.id());
-                    createTimesheetSummaryAttachment(invoice.getId());
-                    createTimesheetAttachment(invoice.getId(), invoice.getTimesheetId());
+                    createInvoice(item.id());
+
                 }
             } catch (TerexApplicationException e) {
                 showInfoDialog("Error creating invoice!", requireContext());
@@ -145,15 +145,18 @@ public class InvoiceNewFragment extends Fragment {
      * Create a new invoice for the given timesheet.
      *
      * @param timesheetId to be created invoice for
-     * @return id of the invoice
      */
-    private Invoice createInvoice(@NotNull Long timesheetId) {
+    private void createInvoice(@NotNull Long timesheetId) {
         Long invoiceId = invoiceService.createInvoice(getCompany(), getClient(), timesheetId);
         if (invoiceId == null) {
             showInfoDialog("No timesheet found! timesheetId=" + timesheetId, requireContext());
         }
         // finally close the timesheet
-        return invoiceService.getInvoice(invoiceId);
+        Invoice invoice = invoiceService.getInvoice(invoiceId);
+        createTimesheetSummaryAttachment(invoice.getId());
+        createTimesheetAttachment(invoice.getId(), invoice.getTimesheetId());
+        invoice.setStatus(InvoiceRepository.InvoiceStatusEnum.COMPLETED.name());
+        invoiceService.saveInvoice(invoice);
     }
 
     private Long createTimesheetSummaryAttachment(Long invoiceId) {

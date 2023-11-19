@@ -20,7 +20,6 @@
         android:maxLines="3"
         android:text="Nov"
         android:textAlignment="center"
-        android:textColor="@color/invoice_status_open"
         android:textSize="24sp"
         android:textStyle="bold" />
 

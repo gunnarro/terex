@@ -5,11 +5,15 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.gunnarro.android.terex.R;
@@ -39,7 +43,7 @@ public class InvoiceViewFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requireActivity().setTitle(R.string.title_invoice);
+        requireActivity().setTitle(R.string.title_invoice_attachment);
         invoiceService = new InvoiceService(requireActivity().getApplicationContext());
     }
 
@@ -47,6 +51,7 @@ public class InvoiceViewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_invoice_view, container, false);
+        setHasOptionsMenu(true);
         String invoiceId = getArguments().getString(InvoiceListFragment.INVOICE_ID_KEY);
         byte[] invoiceHtml = null;
         byte[] invoicePdf = null;
@@ -64,10 +69,7 @@ public class InvoiceViewFragment extends Fragment {
         //webView.loadDataWithBaseURL(null, invoiceHtml, "text/html", "utf-8", null);
         Log.d("invoice timesheet attachment", String.format("%s", new String(invoiceHtml)));
         webView.loadDataWithBaseURL(null, new String(invoiceHtml), "text/html", "UTF-8", null);
-      //  webView.loadDataWithBaseURL(null, new String(invoicePdf), "application/pdf", "UTF-8", null);
-        view.findViewById(R.id.btn_invoice_view_back).setOnClickListener(v -> {
-            returnToInvoiceList();
-        });
+        //  webView.loadDataWithBaseURL(null, new String(invoicePdf), "application/pdf", "UTF-8", null);
         Log.d(Utility.buildTag(getClass(), "onCreateView"), "");
         return view;
     }
@@ -80,9 +82,23 @@ public class InvoiceViewFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        if (item.getItemId() == R.id.attachment_to_pdf) {
+            exportAttachment();
+        }
+        return true;
+    }
 
-    private void viewInvoiceAsHtml(String invoiceHtml) {
-
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        // clear current menu items
+        menu.clear();
+        // set fragment specific menu items
+        inflater.inflate(R.menu.invoice_attachment_menu, menu);
+        MenuItem m = menu.findItem(R.id.attachment_to_pdf);
+      //  Objects.requireNonNull(m.getActionView()).setOnClickListener(v -> exportAttachment());
+        Log.d(Utility.buildTag(getClass(), "onCreateOptionsMenu"), "menu: " + menu);
     }
 
     private void returnToInvoiceList() {
@@ -91,6 +107,12 @@ public class InvoiceViewFragment extends Fragment {
                 .replace(R.id.content_frame, InvoiceListFragment.class, null)
                 .setReorderingAllowed(true)
                 .commit();
+    }
+
+    private void exportAttachment() {
+        String invoiceAttachmentFileName = "invoice_attachment_" + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
+        //    PdfUtility.saveFile(timesheetHtml, PdfUtility.getLocalDir() + "/" + invoiceFileName + ".pdf") && PdfUtility.saveFile(timesheetHtml, PdfUtility.getLocalDir() + "/" + invoiceFileName + ".html");
+        showInfoDialog("Info", String.format("Exported to %s", invoiceAttachmentFileName), requireContext());
     }
 
     /**

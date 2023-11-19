@@ -20,7 +20,6 @@
         android:maxLines="3"
         android:text="Nov"
         android:textAlignment="center"
-        android:textColor="@color/timesheet_status_billed"
         android:textSize="24sp"
         android:textStyle="bold" />
 

@@ -224,7 +224,6 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
         Log.d(Utility.buildTag(getClass(), "onCreateOptionsMenu"), "menu: " + menu);
     }
 
-
     private void reloadTimesheetData(Integer selectedYear) {
         RecyclerView recyclerView = requireView().findViewById(R.id.timesheet_list_recyclerview);
         TimesheetListAdapter timesheetListAdapter = (TimesheetListAdapter) recyclerView.getAdapter();

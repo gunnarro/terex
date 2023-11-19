@@ -231,12 +231,21 @@ public class Timesheet {
         this.workingHoursInMonth = workingHoursInMonth;
     }
 
-    public boolean isBilled() {
-        return status.equals(TimesheetStatusEnum.BILLED.name());
+    public boolean isOpen() {
+        return status.equals(TimesheetStatusEnum.OPEN.name());
+    }
+
+    public boolean isActive() {
+        return status.equals(TimesheetStatusEnum.ACTIVE.name());
     }
 
     public boolean isCompleted() {
         return status.equals(TimesheetStatusEnum.COMPLETED.name());
+    }
+
+
+    public boolean isBilled() {
+        return status.equals(TimesheetStatusEnum.BILLED.name());
     }
 
     /**

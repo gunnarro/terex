@@ -1,6 +1,5 @@
 package com.gunnarro.android.terex.ui.view;
 
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,11 +44,11 @@ public class InvoiceViewHolder extends RecyclerView.ViewHolder {
         invoiceLine1StatusView.setText(invoice.getBillingDate().format(DateTimeFormatter.ofPattern("MMM", Locale.getDefault())));
 
         if (invoice.getStatus().equals(InvoiceRepository.InvoiceStatusEnum.OPEN.name())) {
-            invoiceLine1StatusView.setTextColor(Color.parseColor("#0100f6"));
+            invoiceLine1StatusView.setTextColor(invoiceLine1StatusView.getResources().getColor(R.color.invoice_status_open, null));
+        } else if (invoice.getStatus().equals(InvoiceRepository.InvoiceStatusEnum.COMPLETED.name())) {
+            invoiceLine1StatusView.setTextColor(invoiceLine1StatusView.getResources().getColor(R.color.invoice_status_completed, null));
         } else if (invoice.getStatus().equals(InvoiceRepository.InvoiceStatusEnum.SENT.name())) {
-            invoiceLine1StatusView.setTextColor(Color.parseColor("#54aa00"));
-        } else {
-            invoiceLine1StatusView.setTextColor(Color.parseColor("#f5f600"));
+            invoiceLine1StatusView.setTextColor(invoiceLine1StatusView.getResources().getColor(R.color.invoice_status_sent, null));
         }
         invoiceLine1LabelView.setText(R.string.lbl_billing_date);
         invoiceLine1ValueView.setText(String.format("%s", invoice.getBillingDate()));

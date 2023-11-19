@@ -12,6 +12,8 @@ import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.repository.InvoiceRepository;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -77,6 +79,10 @@ public class InvoiceService {
         invoice.setCurrency("NOK");
         invoice.setStatus(InvoiceRepository.InvoiceStatusEnum.COMPLETED.name());
         return invoiceRepository.saveInvoice(invoice);
+    }
+
+    public void saveInvoice(@NotNull Invoice invoice) {
+        invoiceRepository.saveInvoice(invoice);
     }
 
 }

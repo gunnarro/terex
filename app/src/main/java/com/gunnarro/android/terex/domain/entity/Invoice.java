@@ -35,8 +35,6 @@ public class Invoice extends BaseEntity {
     @NotNull
     @ColumnInfo(name = "timesheet_id")
     private Long timesheetId;
-    @ColumnInfo(name = "invoice_file_id")
-    private Long invoiceFileId;
     @NotNull
     @ColumnInfo(name = "invoice_number")
     private Integer invoiceNumber;
@@ -91,15 +89,6 @@ public class Invoice extends BaseEntity {
 
     public void setTimesheetId(Long timesheetId) {
         this.timesheetId = timesheetId;
-    }
-
-    @NotNull
-    public Long getInvoiceFileId() {
-        return invoiceFileId;
-    }
-
-    public void setInvoiceFileId(@NotNull Long invoiceFileId) {
-        this.invoiceFileId = invoiceFileId;
     }
 
     public Integer getInvoiceNumber() {

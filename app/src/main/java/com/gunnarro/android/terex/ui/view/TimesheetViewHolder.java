@@ -15,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 public class TimesheetViewHolder extends RecyclerView.ViewHolder {
+    private int TITLE_MAX_LENGTH = 35;
     private final TextView timesheetLineHeaderView;
     private final TextView timesheetLine1StatusView;
     private final TextView timesheetLine1LabelView;
@@ -40,15 +41,21 @@ public class TimesheetViewHolder extends RecyclerView.ViewHolder {
 
 
     public void bindListLine(Timesheet timesheet) {
-        timesheetLineHeaderView.setText(String.format("%s:%s:%s", timesheet.getId(), timesheet.getClientName(), timesheet.getProjectCode()));
+        String title = String.format("%s:%s:%s", timesheet.getId(), timesheet.getClientName(), timesheet.getProjectCode());
+        if (title.length() > TITLE_MAX_LENGTH) {
+            title = title.substring(0, TITLE_MAX_LENGTH) + "...";
+        }
+        timesheetLineHeaderView.setText(title);
         timesheetLine1StatusView.setText(timesheet.getFromDate().format(DateTimeFormatter.ofPattern("MMM", Locale.getDefault())));
 
-        if (timesheet.isCompleted()) {
-            timesheetLine1StatusView.setTextColor(Color.parseColor("#0100f6"));
+        if (timesheet.isOpen()) {
+            timesheetLine1StatusView.setTextColor(timesheetLine1StatusView.getResources().getColor(R.color.timesheet_status_open, null));
+        } else if (timesheet.isActive()) {
+            timesheetLine1StatusView.setTextColor(timesheetLine1StatusView.getResources().getColor(R.color.timesheet_status_active, null));
+        } else if (timesheet.isCompleted()) {
+            timesheetLine1StatusView.setTextColor(timesheetLine1StatusView.getResources().getColor(R.color.timesheet_status_completed, null));
         } else if (timesheet.isBilled()) {
-            timesheetLine1StatusView.setTextColor(Color.parseColor("#54aa00"));
-        } else {
-            timesheetLine1StatusView.setTextColor(Color.parseColor("#f5f600"));
+            timesheetLine1StatusView.setTextColor(timesheetLine1StatusView.getResources().getColor(R.color.timesheet_status_billed, null));
         }
         timesheetLine1LabelView.setText(R.string.lbl_worked_days);
         timesheetLine1ValueView.setText(String.format("%s of %s days", "x", timesheet.getWorkingDaysInMonth()));

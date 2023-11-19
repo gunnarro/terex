@@ -13,6 +13,8 @@
     <string name="title_credential_register">Credential Store</string>
     <string name="title_timesheet_calendar">Timesheet calendar</string>
     <string name="title_timesheet_new">New timesheet</string>
+    <string name="title_invoice_attachment">Invoice attachment</string>
+
     <!-- labels -->
     <string name="lbl_description">Description</string>
     <string name="lbl_timesheet">Timesheet</string>
@@ -35,6 +37,7 @@
     <string name="lbl_worked_days">Worked days</string>
     <string name="lbl_worked_hours">Worked hours</string>
     <string name="lbl_of">of</string>
+    <string name="lbl_export_to_pdf">Exprot to pdf</string>
 
     <!-- button names -->
     <string name="btn_save">Save</string>
