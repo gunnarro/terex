@@ -8,17 +8,6 @@
     tools:context=".ui.fragment.TimesheetEntryListFragment"
     tools:ignore="ExtraText">
 
-    <TextView
-        android:id="@+id/timesheet_entry_list_header"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/cardview_dark_background"
-        android:gravity="center_vertical"
-        android:padding="5dp"
-        android:text="@string/title_timesheet"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/colorSection" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/timesheet_entry_list_layout"
         android:layout_width="match_parent"

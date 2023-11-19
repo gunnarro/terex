@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
@@ -90,13 +89,6 @@ public class TimesheetEntryListFragment extends Fragment {
 
         // TimesheetWithEntries timesheetWithEntries = timesheetEntryViewModel.getTimesheetWithEntries(timesheetId);
         // Log.d("all timesheets", "timesheet with entries: " + timesheetWithEntries);
-
-        TextView listHeaderView = view.findViewById(R.id.timesheet_entry_list_header);
-        // if (timesheetWithEntries != null && timesheetWithEntries.getTimesheet() != null) {
-        //     listHeaderView.setText(String.format("[%s-%s] %s - %s %S", timesheetWithEntries.getTimesheet().getMonth(), timesheetWithEntries.getTimesheet().getYear(), timesheetWithEntries.getTimesheet().getClientName(), timesheetWithEntries.getTimesheet().getProjectCode(),
-        //             timesheetWithEntries.getTimesheet().getStatus()));
-        // }
-        listHeaderView.setText(String.format("timesheetId=%s", timesheetId));
 
         FloatingActionButton addButton = view.findViewById(R.id.timesheet_entry_add_btn);
         addButton.setOnClickListener(v -> {
