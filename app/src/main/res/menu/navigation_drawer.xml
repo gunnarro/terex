@@ -5,12 +5,12 @@
 
         <item
             android:id="@+id/nav_admin"
-            android:icon="@drawable/baseline_settings_applications_black_24dp"
+            android:icon="@drawable/ic_action_settings_24dp"
             android:title="@string/title_admin" />
 
         <item
             android:id="@+id/nav_timesheet_list"
-            android:icon="@drawable/baseline_settings_applications_black_24dp"
+            android:icon="@drawable/ic_list_24dp"
             android:title="@string/title_timesheets" />
 <!--
         <item
@@ -26,7 +26,7 @@
 -->
         <item
             android:id="@+id/nav_invoice_list"
-            android:icon="@drawable/baseline_settings_applications_black_24dp"
+            android:icon="@drawable/ic_list_24dp"
             android:title="@string/title_invoices" />
 
 <!--

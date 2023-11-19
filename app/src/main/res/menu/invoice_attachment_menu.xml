@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/attachment_to_pdf"
-        android:icon="@drawable/ic_more_horiz_24px"
+        android:icon="@drawable/ic_action_pdf_24dp"
         android:title="@string/lbl_export_to_pdf"
         app:showAsAction="always" />
 </menu>
