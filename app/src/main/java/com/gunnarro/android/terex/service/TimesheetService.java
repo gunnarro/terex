@@ -9,6 +9,10 @@ import androidx.room.Transaction;
 import com.gunnarro.android.terex.domain.TimesheetMapper;
 import com.gunnarro.android.terex.domain.dto.TimesheetEntryDto;
 import com.gunnarro.android.terex.domain.dto.TimesheetInfoDto;
+import com.gunnarro.android.terex.domain.entity.Address;
+import com.gunnarro.android.terex.domain.entity.Company;
+import com.gunnarro.android.terex.domain.entity.Contact;
+import com.gunnarro.android.terex.domain.entity.Person;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
@@ -335,5 +339,43 @@ public class TimesheetService {
         timesheetEntryDto.setToTime(timesheetEntry.getToTime().toString());
         timesheetEntryDto.setWorkdayDate(timesheetEntry.getWorkdayDate());
         return timesheetEntryDto;
+    }
+
+    public Company getCompany(Long timesheetId) {
+        Company company = new Company();
+        company.setId(10L);
+        company.setName("gunnarro:as");
+        company.setOrganizationNumber("828 707 922");
+        company.setBankAccountNumber("9230 26 98831");
+        Address address = new Address();
+        address.setStreetNumber("35");
+        address.setStreetName("Stavangergata");
+        address.setPostCode("0467");
+        address.setCity("Oslo");
+        address.setCountryCode("no");
+        company.setBusinessAddress(address);
+        return company;
+    }
+
+    public Company getClient(Long timesheetId) {
+        Company client = new Company();
+        client.setId(20L);
+        client.setName("Norway Consulting AS");
+        client.setOrganizationNumber("");
+        Address address = new Address();
+        address.setStreetNumber("16");
+        address.setStreetName("Grensen");
+        address.setPostCode("0159");
+        address.setCity("Oslo");
+        address.setCountryCode("no");
+        client.setBusinessAddress(address);
+        Person contactPerson = new Person();
+        contactPerson.setFirstName("Anita");
+        contactPerson.setLastName("Lundtveit");
+        client.setContactPerson(contactPerson);
+
+        Contact contactInfo = new Contact();
+        client.setContactInfo(contactInfo);
+        return client;
     }
 }

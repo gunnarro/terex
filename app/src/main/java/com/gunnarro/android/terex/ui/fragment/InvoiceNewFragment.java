@@ -58,8 +58,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class InvoiceNewFragment extends Fragment {
 
-    private final static String INVOICE_TIMESHEET_SUMMARY_ATTACHMENT_TEMPLATE = "html/template/invoice-attachment.mustache";
-    private final static String RECRUITMENT_TIMESHEET_TEMPLATE = "html/template/norway-consulting-timesheet-template.mustache";
     // @Inject
     private InvoiceService invoiceService;
     private TimesheetService timesheetService;
@@ -147,14 +145,14 @@ public class InvoiceNewFragment extends Fragment {
      * @param timesheetId to be created invoice for
      */
     private void createInvoice(@NotNull Long timesheetId) {
-        Long invoiceId = invoiceService.createInvoice(getCompany(), getClient(), timesheetId);
+        Long invoiceId = invoiceService.createInvoice(timesheetService.getCompany(timesheetId), timesheetService.getClient(timesheetId), timesheetId);
         if (invoiceId == null) {
             showInfoDialog("No timesheet found! timesheetId=" + timesheetId, requireContext());
         }
         // finally close the timesheet
         Invoice invoice = invoiceService.getInvoice(invoiceId);
         createTimesheetSummaryAttachment(invoice.getId());
-        createTimesheetAttachment(invoice.getId(), invoice.getTimesheetId());
+        createClientTimesheetAttachment(invoice.getId(), invoice.getTimesheetId());
         invoice.setStatus(InvoiceRepository.InvoiceStatusEnum.COMPLETED.name());
         invoiceService.saveInvoice(invoice);
     }
@@ -162,11 +160,10 @@ public class InvoiceNewFragment extends Fragment {
     private Long createTimesheetSummaryAttachment(Long invoiceId) {
         try {
             Invoice invoice = invoiceService.getInvoice(invoiceId);
-
             Log.d("createTimesheetSummaryAttachment", "timesheetSummary week: " + invoice.getTimesheetSummaryList());
             StringBuilder mustacheTemplateStr = new StringBuilder();
             // first read the invoice summary mustache html template
-            try (InputStream fis = requireContext().getAssets().open(INVOICE_TIMESHEET_SUMMARY_ATTACHMENT_TEMPLATE);
+            try (InputStream fis = requireContext().getAssets().open(InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getTemplate());
                  InputStreamReader isr = new InputStreamReader(fis,
                          StandardCharsets.UTF_8);
                  BufferedReader br = new BufferedReader(isr)) {
@@ -186,11 +183,12 @@ public class InvoiceNewFragment extends Fragment {
 
             String invoiceSummaryHtml = createTimesheetSummaryAttachmentHtml(mustacheTemplateStr.toString(), invoice.getTimesheetSummaryList(), sumBilledHours.toString(), sumBilledAmount.toString(), totalBilledAmountWithVat.toString(), totalVat.toString());
             Log.d("createInvoiceSummaryAttachment", "" + invoiceSummaryHtml);
-            String invoiceAttachmentFileName = "invoice_attachment_" + invoice.getBillingDate().format(DateTimeFormatter.ofPattern("yyyy-MM"));
+            String invoiceAttachmentFileName = InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.name().toLowerCase() + "_attachment_" + invoice.getBillingDate().format(DateTimeFormatter.ofPattern("yyyy-MM"));
             File path = Environment.getExternalStorageDirectory();
 
             InvoiceAttachment timesheetSummaryAttachment = new InvoiceAttachment();
             timesheetSummaryAttachment.setInvoiceId(invoiceId);
+            timesheetSummaryAttachment.setAttachmentType(InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.name());
             timesheetSummaryAttachment.setAttachmentFileName(invoiceAttachmentFileName);
             timesheetSummaryAttachment.setAttachmentFileType("html");
             timesheetSummaryAttachment.setAttachmentFileContent(invoiceSummaryHtml.getBytes(StandardCharsets.UTF_8));
@@ -209,8 +207,8 @@ public class InvoiceNewFragment extends Fragment {
         Map<String, Object> context = new HashMap<>();
         context.put("invoiceAttachmentTitle", "Vedlegg til faktura");
         context.put("invoiceBillingPeriod", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM")));
-        context.put("company", getCompany());
-        context.put("client", getClient());
+        context.put("company", timesheetService.getCompany(null));
+        context.put("client", timesheetService.getClient(null));
         context.put("timesheetProjectCode", "techlead-catalystone-solution-as");
         context.put("timesheetSummaryList", timesheetSummaryList);
         context.put("totalBilledHours", totalBilledHours);
@@ -224,12 +222,12 @@ public class InvoiceNewFragment extends Fragment {
     }
 
 
-    private Long createTimesheetAttachment(Long invoiceId, Long timesheetId) {
+    private Long createClientTimesheetAttachment(Long invoiceId, Long timesheetId) {
         try {
             List<TimesheetEntry> timesheetEntryList = timesheetService.getTimesheetEntryList(timesheetId);
             StringBuilder mustacheTemplateStr = new StringBuilder();
             // first read the invoice summary mustache html template
-            try (InputStream fis = requireContext().getAssets().open(RECRUITMENT_TIMESHEET_TEMPLATE);
+            try (InputStream fis = requireContext().getAssets().open(InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.getTemplate());
                  InputStreamReader isr = new InputStreamReader(fis,
                          StandardCharsets.UTF_8);
                  BufferedReader br = new BufferedReader(isr)) {
@@ -241,9 +239,10 @@ public class InvoiceNewFragment extends Fragment {
                     .sum() / 60;
 
             String timesheetAttachmentHtml = createTimesheetListHtml(mustacheTemplateStr.toString(), timesheetEntryList, sumBilledHours.toString());
-            String timesheetAttachmentFileName = "timesheet_attachment_" + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
+            String timesheetAttachmentFileName =  InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.name().toLowerCase() + "_attachment_" + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
             InvoiceAttachment timesheetSummaryAttachment = new InvoiceAttachment();
             timesheetSummaryAttachment.setInvoiceId(invoiceId);
+            timesheetSummaryAttachment.setAttachmentType(InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.name());
             timesheetSummaryAttachment.setAttachmentFileName(timesheetAttachmentFileName);
             timesheetSummaryAttachment.setAttachmentFileType("html");
             timesheetSummaryAttachment.setAttachmentFileContent(timesheetAttachmentHtml.getBytes(StandardCharsets.UTF_8));
@@ -291,44 +290,6 @@ public class InvoiceNewFragment extends Fragment {
         builder.setPositiveButton("Ok", (dialog, which) -> dialog.cancel());
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
-    }
-
-    private Company getCompany() {
-        Company company = new Company();
-        company.setId(10L);
-        company.setName("gunnarro:as");
-        company.setOrganizationNumber("828 707 922");
-        company.setBankAccountNumber("9230 26 98831");
-        Address address = new Address();
-        address.setStreetNumber("35");
-        address.setStreetName("Stavangergata");
-        address.setPostCode("0467");
-        address.setCity("Oslo");
-        address.setCountryCode("no");
-        company.setBusinessAddress(address);
-        return company;
-    }
-
-    private Company getClient() {
-        Company client = new Company();
-        client.setId(20L);
-        client.setName("Norway Consulting AS");
-        client.setOrganizationNumber("");
-        Address address = new Address();
-        address.setStreetNumber("16");
-        address.setStreetName("Grensen");
-        address.setPostCode("0159");
-        address.setCity("Oslo");
-        address.setCountryCode("no");
-        client.setBusinessAddress(address);
-        Person contactPerson = new Person();
-        contactPerson.setFirstName("Anita");
-        contactPerson.setLastName("Lundtveit");
-        client.setContactPerson(contactPerson);
-
-        Contact contactInfo = new Contact();
-        client.setContactInfo(contactInfo);
-        return client;
     }
 
     private void returnToInvoiceList() {

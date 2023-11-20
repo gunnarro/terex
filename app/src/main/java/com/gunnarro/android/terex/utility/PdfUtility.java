@@ -25,8 +25,8 @@ public class PdfUtility {
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(html.getBytes(StandardCharsets.UTF_8));
             fos.close();
-            Log.d("saveFile", String.format("saved file, org, %s" + filePath));
-            Log.d("saveFile", String.format("saved file, system, %s" + file.getPath()));
+            Log.d("saveFile", String.format("saved file, org, %s", filePath));
+            Log.d("saveFile", String.format("saved file, system, %s", file.getPath()));
             return true;
         } catch (IOException e) {
             Log.e("Error convert html to pdf!", e.getMessage());

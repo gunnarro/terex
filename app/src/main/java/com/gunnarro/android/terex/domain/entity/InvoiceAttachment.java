@@ -20,7 +20,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @TypeConverters({LocalDateTimeConverter.class})
-@Entity(tableName = "invoice_attachment", indices = {@Index(value = {"invoice_id", "attachment_file_name", "attachment_file_type"},
+@Entity(tableName = "invoice_attachment", indices = {@Index(value = {"invoice_id", "attachment_type", "attachment_file_name", "attachment_file_type"},
         unique = true)})
 public class InvoiceAttachment extends BaseEntity {
     @PrimaryKey(autoGenerate = true)
@@ -33,6 +33,9 @@ public class InvoiceAttachment extends BaseEntity {
     @NotNull
     @ColumnInfo(name = "attachment_file_name")
     private String attachmentFileName;
+
+    @ColumnInfo(name = "attachment_type")
+    private String attachmentType;
 
     @NotNull
     @ColumnInfo(name = "attachment_file_type")
@@ -68,6 +71,14 @@ public class InvoiceAttachment extends BaseEntity {
         this.attachmentFileName = attachmentFileName;
     }
 
+    public String getAttachmentType() {
+        return attachmentType;
+    }
+
+    public void setAttachmentType(String attachmentType) {
+        this.attachmentType = attachmentType;
+    }
+
     @NotNull
     public String getAttachmentFileType() {
         return attachmentFileType;
@@ -91,12 +102,12 @@ public class InvoiceAttachment extends BaseEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         InvoiceAttachment that = (InvoiceAttachment) o;
-        return invoiceId.equals(that.invoiceId) && attachmentFileName.equals(that.attachmentFileName) && attachmentFileType.equals(that.attachmentFileType);
+        return invoiceId.equals(that.invoiceId) && attachmentFileName.equals(that.attachmentFileName) && attachmentType.equals(that.attachmentType) && attachmentFileType.equals(that.attachmentFileType);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(invoiceId, attachmentFileName, attachmentFileType);
+        return Objects.hash(invoiceId, attachmentFileName, attachmentType, attachmentFileType);
     }
 
     @Override
@@ -105,6 +116,7 @@ public class InvoiceAttachment extends BaseEntity {
         sb.append("id=").append(id);
         sb.append(", invoiceId=").append(invoiceId);
         sb.append(", attachmentFileName='").append(attachmentFileName).append('\'');
+        sb.append(", attachmentType='").append(attachmentType).append('\'');
         sb.append(", attachmentFileType='").append(attachmentFileType).append('\'');
         sb.append('}');
         return sb.toString();

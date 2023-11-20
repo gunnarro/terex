@@ -4,9 +4,6 @@ package com.gunnarro.android.terex.service;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
 
@@ -22,10 +19,16 @@ import java.util.List;
 @ExtendWith(MockitoExtension.class)
 public class InvoiceServiceTest {
 
-    private final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
-
     @Mock
     android.content.Context applicationContextMock;
+
+    @Test
+    void invoiceTemplateEnum() {
+        assertEquals("html/template/norway-consulting-timesheet.mustache", InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.getTemplate());
+        assertEquals("html/template/invoice-timesheet-attachment.mustache", InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getTemplate());
+        assertEquals("norway-consulting-timesheet.pdf", InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.getPdfFileName());
+        assertEquals("invoice-timesheet-attachment.pdf", InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getPdfFileName());
+    }
 
     @Test
     void generateTimesheet() {
@@ -60,11 +63,11 @@ public class InvoiceServiceTest {
         TimesheetService timesheetService = new TimesheetService(applicationContextMock);
         List<TimesheetEntry> timesheets = timesheetService.generateTimesheet(2022, 3);
         String jsonStr = null;
-        try {
+        /*try {
             jsonStr = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(timesheets);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
-        }
+        }*/
         assertNotNull(jsonStr);
     }
 }

@@ -39,4 +39,5 @@ public class ProjectService {
     public List<Project> getProjects(String status) {
         return projectRepository.getProjects(status);
     }
+
 }

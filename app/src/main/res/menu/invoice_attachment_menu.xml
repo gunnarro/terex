@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    <group android:id="@+id/mobile_numbers_group">
+        <item
+            android:id="@+id/invoice_attachment_dropdown_menu"
+            android:title="@string/lbl_invoice_attachment"
+            app:actionViewClass="android.widget.Spinner"
+            app:showAsAction="always" />
+    </group>
     <item
         android:id="@+id/attachment_to_pdf"
         android:icon="@drawable/ic_action_pdf_24dp"

@@ -32,7 +32,7 @@ public class InvoiceListAdapter extends ListAdapter<Invoice, InvoiceViewHolder> 
         viewHolder.itemView.findViewById(R.id.ic_invoice_row_view).setOnClickListener(v -> {
             Bundle actionBundle = new Bundle();
             actionBundle.putString(InvoiceListFragment.INVOICE_ACTION_VIEW, "true");
-            actionBundle.putString(InvoiceListFragment.INVOICE_ID_KEY, getItem(viewHolder.getBindingAdapterPosition()).getId().toString());
+            actionBundle.putLong(InvoiceListFragment.INVOICE_ID_KEY, getItem(viewHolder.getBindingAdapterPosition()).getId());
             fragmentManager.setFragmentResult(InvoiceListFragment.INVOICE_REQUEST_KEY, actionBundle);
         });
         return viewHolder;

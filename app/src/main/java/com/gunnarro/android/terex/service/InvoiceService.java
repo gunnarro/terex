@@ -15,6 +15,7 @@ import com.gunnarro.android.terex.repository.InvoiceRepository;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -24,6 +25,22 @@ import kotlin.random.Random;
 
 @Singleton
 public class InvoiceService {
+
+    public enum InvoiceAttachmentTypesEnum {
+        CLIENT_TIMESHEET("html/template/norway-consulting-timesheet.mustache"), TIMESHEET_SUMMARY("html/template/invoice-timesheet-attachment.mustache");
+
+        private String template;
+        InvoiceAttachmentTypesEnum(String template) {
+            this.template = template;
+        }
+        public String getTemplate() {
+            return template;
+        }
+
+        public String getPdfFileName() {
+            return template.split("/")[2].replace("mustache", "pdf");
+        }
+    }
 
     private final TimesheetService timesheetService;
     private final InvoiceRepository invoiceRepository;
@@ -43,15 +60,15 @@ public class InvoiceService {
     }
 
     public Long saveInvoiceAttachment(InvoiceAttachment invoiceAttachment) {
-        InvoiceAttachment invoiceAttachmentExisting = invoiceRepository.findInvoiceAttachment(invoiceAttachment.getInvoiceId(), invoiceAttachment.getAttachmentFileName(), invoiceAttachment.getAttachmentFileType());
+        InvoiceAttachment invoiceAttachmentExisting = invoiceRepository.findInvoiceAttachment(invoiceAttachment.getInvoiceId(), invoiceAttachment.getAttachmentType(), invoiceAttachment.getAttachmentFileName(), invoiceAttachment.getAttachmentFileType());
         if (invoiceAttachmentExisting != null) {
-            throw new TerexApplicationException(String.format("Attachment already exist. id=%s, file=%s, type=%s", invoiceAttachment.getId(), invoiceAttachment.getAttachmentFileName(), invoiceAttachment.getAttachmentFileType()), "50050", null);
+            throw new TerexApplicationException(String.format("Attachment already exist. id=%s, type=%s, file=%s, type=%s", invoiceAttachment.getId(), invoiceAttachment.getAttachmentType(), invoiceAttachment.getAttachmentFileName(), invoiceAttachment.getAttachmentFileType()), "50050", null);
         }
         return invoiceRepository.saveInvoiceAttachment(invoiceAttachment);
     }
 
-    public InvoiceAttachment getInvoiceAttachment(Long invoiceId, String invoiceFileType) {
-        return invoiceRepository.getInvoiceAttachment(invoiceId, invoiceFileType);
+    public InvoiceAttachment getInvoiceAttachment(Long invoiceId, String attachmentType, String invoiceFileType) {
+        return invoiceRepository.getInvoiceAttachment(invoiceId, attachmentType, invoiceFileType);
     }
 
     @Transaction
@@ -83,6 +100,10 @@ public class InvoiceService {
 
     public void saveInvoice(@NotNull Invoice invoice) {
         invoiceRepository.saveInvoice(invoice);
+    }
+
+    public List<InvoiceAttachmentTypesEnum> getInvoiceAttachmentTypes() {
+        return Arrays.asList(InvoiceAttachmentTypesEnum.values());
     }
 
 }

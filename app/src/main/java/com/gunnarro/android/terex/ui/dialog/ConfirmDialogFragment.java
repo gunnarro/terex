@@ -11,6 +11,7 @@ import com.gunnarro.android.terex.R;
 
 import org.jetbrains.annotations.NotNull;
 
+@Deprecated
 public class ConfirmDialogFragment extends DialogFragment {
 
     private final static String TITLE_KEY = "title";

@@ -12,11 +12,11 @@ import com.gunnarro.android.terex.domain.entity.InvoiceAttachment;
 @Dao
 public interface InvoiceAttachmentDao {
 
-    @Query("SELECT * FROM invoice_attachment i WHERE i.invoice_id = :invoiceId AND i.attachment_file_name = :attachmentFileName AND i.attachment_file_type = :attachmentFileType")
-    InvoiceAttachment findInvoiceAttachment(Long invoiceId, String attachmentFileName, String attachmentFileType);
+    @Query("SELECT * FROM invoice_attachment i WHERE i.invoice_id = :invoiceId AND i.attachment_type = :attachmentType AND i.attachment_file_name = :attachmentFileName AND i.attachment_file_type = :attachmentFileType")
+    InvoiceAttachment findInvoiceAttachment(Long invoiceId, String attachmentType, String attachmentFileName, String attachmentFileType);
 
-    @Query("SELECT * FROM invoice_attachment i WHERE i.id = :invoiceAttachmentId AND i.attachment_file_type = :attachmentFileType")
-    InvoiceAttachment getInvoiceAttachment(Long invoiceAttachmentId, String attachmentFileType);
+    @Query("SELECT * FROM invoice_attachment i WHERE i.invoice_id = :invoiceId AND i.attachment_type = :attachmentType AND i.attachment_file_type = :attachmentFileType")
+    InvoiceAttachment getInvoiceAttachment(Long invoiceId, String attachmentType, String attachmentFileType);
 
     /**
      * @param invoiceAttachment invoice file to be inserted. Abort if conflict, i.e. silently drop the insert

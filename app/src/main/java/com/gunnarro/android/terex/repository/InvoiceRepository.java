@@ -137,10 +137,10 @@ public class InvoiceRepository {
     // invoice attachment
     // ----------------------------------------------------------
 
-    public InvoiceAttachment getInvoiceAttachment(Long invoiceId, String attachmentFileType) {
+    public InvoiceAttachment getInvoiceAttachment(Long invoiceId, String attachmentType, String attachmentFileType) {
         try {
             CompletionService<InvoiceAttachment> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
-            service.submit(() -> invoiceAttachmentDao.getInvoiceAttachment(invoiceId, attachmentFileType));
+            service.submit(() -> invoiceAttachmentDao.getInvoiceAttachment(invoiceId, attachmentType, attachmentFileType));
             Future<InvoiceAttachment> future = service.take();
             return future != null ? future.get() : null;
         } catch (InterruptedException | ExecutionException e) {
@@ -149,10 +149,10 @@ public class InvoiceRepository {
         }
     }
 
-    public InvoiceAttachment findInvoiceAttachment(Long invoiceId, String attachmentFileName, String attachmentFileType) {
+    public InvoiceAttachment findInvoiceAttachment(Long invoiceId, String attachmentType, String attachmentFileName, String attachmentFileType) {
         try {
             CompletionService<InvoiceAttachment> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
-            service.submit(() -> invoiceAttachmentDao.findInvoiceAttachment(invoiceId, attachmentFileName, attachmentFileType));
+            service.submit(() -> invoiceAttachmentDao.findInvoiceAttachment(invoiceId, attachmentType, attachmentFileName, attachmentFileType));
             Future<InvoiceAttachment> future = service.take();
             return future != null ? future.get() : null;
         } catch (InterruptedException | ExecutionException e) {

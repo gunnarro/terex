@@ -1,6 +1,5 @@
 package com.gunnarro.android.terex.ui.fragment;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -17,7 +16,6 @@ import android.widget.Spinner;
 
 import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
 import androidx.lifecycle.LiveData;
@@ -25,6 +23,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
@@ -32,7 +31,6 @@ import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.ui.adapter.TimesheetListAdapter;
-import com.gunnarro.android.terex.ui.dialog.ConfirmDialogFragment;
 import com.gunnarro.android.terex.ui.dialog.DialogActionListener;
 import com.gunnarro.android.terex.ui.swipe.SwipeCallback;
 import com.gunnarro.android.terex.ui.view.TimesheetViewModel;
@@ -112,17 +110,6 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
         return view;
     }
 
-    private Bundle createTimesheetBundle(Long timesheetId, Integer year) {
-        Timesheet timesheet = timesheetViewModel.getTimesheet(timesheetId);
-        if (timesheet == null) {
-            timesheet = Timesheet.createDefault(null, null, year, LocalDate.now().getMonthValue());
-        }
-        String timesheetJson = Utility.gsonMapper().toJson(timesheet, Timesheet.class);
-        Bundle bundle = new Bundle();
-        bundle.putString(TimesheetListFragment.TIMESHEET_JSON_KEY, timesheetJson);
-        return bundle;
-    }
-
     /**
      * Update backup info after view is successfully create
      */
@@ -134,6 +121,17 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+    }
+
+    private Bundle createTimesheetBundle(Long timesheetId, Integer year) {
+        Timesheet timesheet = timesheetViewModel.getTimesheet(timesheetId);
+        if (timesheet == null) {
+            timesheet = Timesheet.createDefault(null, null, year, LocalDate.now().getMonthValue());
+        }
+        String timesheetJson = Utility.gsonMapper().toJson(timesheet, Timesheet.class);
+        Bundle bundle = new Bundle();
+        bundle.putString(TimesheetListFragment.TIMESHEET_JSON_KEY, timesheetJson);
+        return bundle;
     }
 
     private void handleFragmentResult(Bundle bundle) {
@@ -158,8 +156,7 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
                 if (timesheet.getStatus().equals("BILLED")) {
                     showInfoDialog("Info", "Can not delete timesheet with status BILLED", requireContext());
                 } else {
-                    DialogFragment confirmDialog = ConfirmDialogFragment.newInstance(getString(R.string.msg_delete_timesheet), getString(R.string.msg_confirm_delete), timesheet.getId());
-                    confirmDialog.show(getChildFragmentManager(), "dialog");
+                    confirmDeleteTimesheetDialog(getString(R.string.msg_delete_timesheet), getString(R.string.msg_confirm_delete), timesheet.getId());
                 }
             } else if (TIMESHEET_ACTION_VIEW.equals(action)) {
                 // redirect to timesheet entry list fragment
@@ -247,6 +244,12 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
                 .commit();
     }
 
+    private void deleteTimesheet(Long timesheetId) {
+        Timesheet timesheet = timesheetViewModel.getTimesheet(timesheetId);
+        timesheetViewModel.deleteTimesheet(timesheet);
+        showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_delete_msg_format), timesheet.getTimesheetRef()), R.color.color_snackbar_text_delete);
+    }
+
     private void showSnackbar(String msg, @ColorRes int bgColor) {
         Resources.Theme theme = getResources().newTheme();
         Snackbar snackbar = Snackbar.make(requireView().findViewById(R.id.timesheet_list_layout), msg, BaseTransientBottomBar.LENGTH_LONG);
@@ -254,16 +257,14 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
         snackbar.show();
     }
 
-    private void showInfoDialog(String severity, String infoMessage, Context context) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(severity);
-        builder.setMessage(infoMessage);
-        // Set Cancelable false for when the user clicks on the outside the Dialog Box then it will remain show
-        builder.setCancelable(false);
-        // Set the positive button with yes name Lambda OnClickListener method is use of DialogInterface interface.
-        builder.setPositiveButton("Ok", (dialog, which) -> dialog.cancel());
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+    private void showInfoDialog(String severity, String message, Context context) {
+        new MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
+                .setTitle(severity)
+                .setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton("Ok", (dialog, which) -> dialog.cancel())
+                .create()
+                .show();
     }
 
     private void enableSwipeToRightAndViewItem(RecyclerView recyclerView) {
@@ -298,10 +299,7 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
                 final int position = viewHolder.getAbsoluteAdapterPosition();
                 Timesheet timesheet = timesheetViewModel.getTimesheetLiveData(selectedYear).getValue().get(position);
-                // timesheetViewModel.deleteTimesheet(timesheet);
-                // showSnackbar("Deleted timesheet", R.color.color_snackbar_text_delete);
-                DialogFragment confirmDialog = ConfirmDialogFragment.newInstance(getString(R.string.msg_delete_timesheet), getString(R.string.msg_confirm_delete), timesheet.getId());
-                confirmDialog.show(getChildFragmentManager(), "dialog");
+                confirmDeleteTimesheetDialog(getString(R.string.msg_delete_timesheet), getString(R.string.msg_confirm_delete), timesheet.getId());
             }
         };
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
@@ -316,12 +314,23 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
     public void onDialogAction(int actionCode, Long entityId) {
         if (actionCode == DialogActionListener.OK_ACTION) {
             // the user confirmed the operation
-            Timesheet timesheet = timesheetViewModel.getTimesheet(entityId);
-            timesheetViewModel.deleteTimesheet(timesheet);
-            showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_delete_msg_format), timesheet.getTimesheetRef()), R.color.color_snackbar_text_delete);
+            deleteTimesheet(entityId);
         } else {
             // dismiss, do nothing, the user canceled the operation
             Log.d(Utility.buildTag(getClass(), "onDialogAction"), "delete sms backup file action cancelled by user");
         }
+    }
+
+    private void confirmDeleteTimesheetDialog(final String title, final String message, final Long timesheetId) {
+        new MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(R.string.btn_ok, (dialogInterface, i) -> {
+                    deleteTimesheet(timesheetId);
+                })
+                .setNeutralButton(R.string.btn_cancel, (dialogInterface, i) -> {
+                    // nothing to do
+                })
+                .show();
     }
 }

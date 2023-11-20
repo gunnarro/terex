@@ -84,7 +84,7 @@ public class InvoiceListFragment extends Fragment {
         if (bundle == null) {
             return;
         }
-      if (bundle.getString(INVOICE_ID_KEY) != null) {
+      if (bundle.getLong(INVOICE_ID_KEY) > 0) {
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.content_frame, InvoiceViewFragment.class, bundle)
