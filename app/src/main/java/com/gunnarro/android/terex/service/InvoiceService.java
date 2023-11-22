@@ -29,7 +29,7 @@ public class InvoiceService {
     public enum InvoiceAttachmentTypesEnum {
         CLIENT_TIMESHEET("html/template/norway-consulting-timesheet.mustache"), TIMESHEET_SUMMARY("html/template/invoice-timesheet-attachment.mustache");
 
-        private String template;
+        private final String template;
         InvoiceAttachmentTypesEnum(String template) {
             this.template = template;
         }
@@ -88,7 +88,11 @@ public class InvoiceService {
         // ensure that a timesheet is only billed once.
         invoice.setReference(String.format("%s-%s", client.getName(), timesheetId));
         invoice.setStatus(InvoiceRepository.InvoiceStatusEnum.OPEN.name());
+        // The date when the customer is billed
         invoice.setBillingDate(LocalDate.now());
+        invoice.setInvoicePeriod("month");
+        invoice.setBillingPeriodStartDate(null);
+        invoice.setBillingPeriodEndDate(null);
         // due date is defaulted to 10 days after billing date
         invoice.setDueDate(invoice.getBillingDate().plusDays(10));
         double sumAmount = timesheetSummaries.stream().mapToDouble(TimesheetSummary::getTotalBilledAmount).sum();

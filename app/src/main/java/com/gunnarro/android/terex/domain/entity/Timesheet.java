@@ -1,6 +1,5 @@
 package com.gunnarro.android.terex.domain.entity;
 
-import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Index;
@@ -14,7 +13,6 @@ import com.gunnarro.android.terex.utility.Utility;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 import lombok.Getter;
@@ -35,63 +33,58 @@ import lombok.Setter;
 @TypeConverters({LocalDateConverter.class, LocalDateTimeConverter.class})
 @Entity(tableName = "timesheet", indices = {@Index(value = {"client_name", "project_code", "year", "month"},
         unique = true)})
-public class Timesheet {
+public class Timesheet extends BaseEntity {
 
     /**
      * <ul>
-     *  <li>OPEN     : Created but not in use, i.e, the timesheet is empty. When first timesheet entry is added the status changes to ACTIVE.</li>
+     *  <li>NEW     : Created but not in use, i.e, the timesheet is empty. When first timesheet entry is added the status changes to ACTIVE.</li>
      *  <li>ACTIVE   : Open and have work registered, i.e, timesheet entries. When attached to a invoice the status changes to BILLED.</li>
      *  <li>COMPLETED: Ready for billing, i.e, to be used as attachment for the invoice. In this state you are still able to edit the timesheet by flip the status back to ACTIVE.</li>
      *  <li>BILLED   : Have been added as attachment to a invoice. Not possible to change or delete the timesheet or any assigned timesheet entries.</li>
      * </u>
      */
     public enum TimesheetStatusEnum {
-        OPEN, ACTIVE, COMPLETED, BILLED;
+        NEW, ACTIVE, COMPLETED, BILLED;
 
         public static String[] names() {
-            return new String[]{OPEN.name(), ACTIVE.name(), COMPLETED.name()};
+            return new String[]{NEW.name(), ACTIVE.name(), COMPLETED.name()};
         }
     }
 
     @NotNull
     @PrimaryKey(autoGenerate = true)
     private Long id;
-    @ColumnInfo(name = "invoice_number")
-    private Long invoiceNumber;
-    @NonNull
-    @ColumnInfo(name = "created_date")
-    private LocalDateTime createdDate;
-    @NonNull
-    @ColumnInfo(name = "last_modified_date")
-    private LocalDateTime lastModifiedDate;
 
     /**
      * Must be unique, typically one timesheet per month.
      * the ref is composed with: clientName_projectCode_year_month
      */
-    @NotNull
+//    @NotNull
     @ColumnInfo(name = "timesheet_ref")
     private String timesheetRef;
-
     @NotNull
     @ColumnInfo(name = "client_name")
     private String clientName;
     @NotNull
     @ColumnInfo(name = "project_code")
     private String projectCode;
+    @NotNull
     @ColumnInfo(name = "year")
     private Integer year;
+    @NotNull
     @ColumnInfo(name = "month")
     private Integer month;
     @NotNull
     @ColumnInfo(name = "from_date")
     private LocalDate fromDate;
-    @ColumnInfo(name = "working_days_in_month")
-    private Integer workingDaysInMonth;
-
-    @ColumnInfo(name = "working_hours_in_month")
-    private Integer workingHoursInMonth;
-
+    @ColumnInfo(name = "working_days_in_month", defaultValue = "0")
+    private Integer workingDaysInMonth = 0;
+    @ColumnInfo(name = "working_hours_in_month", defaultValue = "0")
+    private Integer workingHoursInMonth = 0;
+    @ColumnInfo(name = "total_worked_days", defaultValue = "0")
+    private Integer totalWorkedDays = 0;
+    @ColumnInfo(name = "total_worked_minutes", defaultValue = "0")
+    private Integer totalWorkedMinutes = 0;
     @NotNull
     @ColumnInfo(name = "to_date")
     private LocalDate toDate;
@@ -101,38 +94,21 @@ public class Timesheet {
     @ColumnInfo(name = "description")
     private String description;
 
+    @NotNull
     public Long getId() {
         return id;
     }
 
-    public Long getInvoiceNumber() {
-        return invoiceNumber;
-    }
-
-    public void setInvoiceNumber(Long invoiceNumber) {
-        this.invoiceNumber = invoiceNumber;
-    }
-
-    public void setId(Long id) {
+    public void setId(@NotNull Long id) {
         this.id = id;
     }
 
-    @NonNull
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
+    public String getTimesheetRef() {
+        return timesheetRef;
     }
 
-    public void setCreatedDate(@NonNull LocalDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    @NonNull
-    public LocalDateTime getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(@NonNull LocalDateTime lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
+    public void setTimesheetRef(String timesheetRef) {
+        this.timesheetRef = timesheetRef;
     }
 
     @NotNull
@@ -153,25 +129,21 @@ public class Timesheet {
         this.projectCode = projectCode;
     }
 
+    @NotNull
     public Integer getYear() {
         return year;
     }
 
-    public void setYear(Integer year) {
+    public void setYear(@NotNull Integer year) {
         this.year = year;
     }
 
-    /**
-     * @return 1 - 12
-     */
+    @NotNull
     public Integer getMonth() {
         return month;
     }
 
-    /**
-     * @param month 1 to 12
-     */
-    public void setMonth(Integer month) {
+    public void setMonth(@NotNull Integer month) {
         this.month = month;
     }
 
@@ -182,6 +154,38 @@ public class Timesheet {
 
     public void setFromDate(@NotNull LocalDate fromDate) {
         this.fromDate = fromDate;
+    }
+
+    public Integer getWorkingDaysInMonth() {
+        return workingDaysInMonth;
+    }
+
+    public void setWorkingDaysInMonth(Integer workingDaysInMonth) {
+        this.workingDaysInMonth = workingDaysInMonth;
+    }
+
+    public Integer getWorkingHoursInMonth() {
+        return workingHoursInMonth;
+    }
+
+    public void setWorkingHoursInMonth(Integer workingHoursInMonth) {
+        this.workingHoursInMonth = workingHoursInMonth;
+    }
+
+    public Integer getTotalWorkedDays() {
+        return totalWorkedDays;
+    }
+
+    public void setTotalWorkedDays(Integer totalWorkedDays) {
+        this.totalWorkedDays = totalWorkedDays;
+    }
+
+    public Integer getTotalWorkedMinutes() {
+        return totalWorkedMinutes;
+    }
+
+    public void setTotalWorkedMinutes(Integer totalWorkedMinutes) {
+        this.totalWorkedMinutes = totalWorkedMinutes;
     }
 
     @NotNull
@@ -210,29 +214,10 @@ public class Timesheet {
         this.description = description;
     }
 
-    @NotNull
-    public String getTimesheetRef() {
-        return timesheetRef;
-    }
 
-    public Integer getWorkingDaysInMonth() {
-        return workingDaysInMonth;
-    }
 
-    public void setWorkingDaysInMonth(Integer workingDaysInMonth) {
-        this.workingDaysInMonth = workingDaysInMonth;
-    }
-
-    public Integer getWorkingHoursInMonth() {
-        return workingHoursInMonth;
-    }
-
-    public void setWorkingHoursInMonth(Integer workingHoursInMonth) {
-        this.workingHoursInMonth = workingHoursInMonth;
-    }
-
-    public boolean isOpen() {
-        return status.equals(TimesheetStatusEnum.OPEN.name());
+    public boolean isNew() {
+        return status.equals(TimesheetStatusEnum.NEW.name());
     }
 
     public boolean isActive() {
@@ -260,7 +245,7 @@ public class Timesheet {
         Timesheet timesheet = new Timesheet();
         timesheet.setClientName(clientName);
         timesheet.setProjectCode(projectCode);
-        timesheet.setStatus(Timesheet.TimesheetStatusEnum.OPEN.name());
+        timesheet.setStatus(Timesheet.TimesheetStatusEnum.NEW.name());
         timesheet.setYear(timesheetDate.getYear());
         timesheet.setMonth(timesheetDate.getMonthValue());
         timesheet.setFromDate(Utility.getFirstDayOfMonth(timesheetDate));
@@ -274,7 +259,7 @@ public class Timesheet {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Timesheet timesheet = (Timesheet) o;
-        return clientName.equals(timesheet.clientName) && projectCode.equals(timesheet.projectCode) && Objects.equals(year, timesheet.year) && Objects.equals(month, timesheet.month);
+        return clientName.equals(timesheet.clientName) && projectCode.equals(timesheet.projectCode) && year.equals(timesheet.year) && month.equals(timesheet.month);
     }
 
     @Override
@@ -282,19 +267,20 @@ public class Timesheet {
         return Objects.hash(clientName, projectCode, year, month);
     }
 
-    @NonNull
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("Timesheet{");
         sb.append("id=").append(id);
-        sb.append(", invoiceNumber=").append(invoiceNumber);
-        sb.append(", createdDate=").append(createdDate);
-        sb.append(", lastModifiedDate=").append(lastModifiedDate);
+        sb.append(", timesheetRef='").append(timesheetRef).append('\'');
         sb.append(", clientName='").append(clientName).append('\'');
         sb.append(", projectCode='").append(projectCode).append('\'');
         sb.append(", year=").append(year);
         sb.append(", month=").append(month);
         sb.append(", fromDate=").append(fromDate);
+        sb.append(", workingDaysInMonth=").append(workingDaysInMonth);
+        sb.append(", workingHoursInMonth=").append(workingHoursInMonth);
+        sb.append(", totalWorkedDays=").append(totalWorkedDays);
+        sb.append(", totalWorkedMinutes=").append(totalWorkedMinutes);
         sb.append(", toDate=").append(toDate);
         sb.append(", status='").append(status).append('\'');
         sb.append(", description='").append(description).append('\'');

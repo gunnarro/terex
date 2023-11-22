@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.gunnarro.android.terex.domain.dto.TimesheetInfoDto;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.service.TimesheetService;
 
@@ -40,6 +41,10 @@ public class TimesheetViewModel extends AndroidViewModel {
 
     public Timesheet getTimesheet(Long timesheetId) {
         return timesheetService.getTimesheet(timesheetId);
+    }
+
+    public TimesheetInfoDto getTimesheetInfoDto(Long timesheetId) {
+        return timesheetService.getTimesheetInfo(timesheetId);
     }
 
     public void deleteTimesheet(Timesheet timesheet) {

@@ -55,7 +55,7 @@ public class Invoice extends BaseEntity {
     private LocalDate billingPeriodStartDate;
 
     @ColumnInfo(name = "billing_period_end_date")
-    private LocalDate billingPeriodSEndDate;
+    private LocalDate billingPeriodEndDate;
 
     @NotNull
     @ColumnInfo(name = "due_date")
@@ -72,6 +72,14 @@ public class Invoice extends BaseEntity {
     @NotNull
     @ColumnInfo(name = "currency", defaultValue = "NOK")
     private String currency;
+
+    /**
+     * invoicing Period means weekly, every 14-day, monthly or annually as specified in the confirmation invoice from the Company.
+     * Fakturaperioden er alltid fra 01. til siste dag av måneden, og gjelder forbruk for måneden før du mottar faktura.
+     */
+    @NotNull
+    @ColumnInfo(name = "invoice_period", defaultValue = "monthly")
+    private String invoicePeriod;
 
     private transient List<TimesheetSummary> timesheetSummaryList;
 
@@ -163,6 +171,31 @@ public class Invoice extends BaseEntity {
         this.timesheetSummaryList = timesheetSummaryList;
     }
 
+    public LocalDate getBillingPeriodStartDate() {
+        return billingPeriodStartDate;
+    }
+
+    public void setBillingPeriodStartDate(LocalDate billingPeriodStartDate) {
+        this.billingPeriodStartDate = billingPeriodStartDate;
+    }
+
+    public LocalDate getBillingPeriodEndDate() {
+        return billingPeriodEndDate;
+    }
+
+    public void setBillingPeriodEndDate(LocalDate billingPeriodEndDate) {
+        this.billingPeriodEndDate = billingPeriodEndDate;
+    }
+
+    @NotNull
+    public String getInvoicePeriod() {
+        return invoicePeriod;
+    }
+
+    public void setInvoicePeriod(@NotNull String invoicePeriod) {
+        this.invoicePeriod = invoicePeriod;
+    }
+
     @NotNull
     public String getCurrency() {
         return currency;
@@ -171,6 +204,8 @@ public class Invoice extends BaseEntity {
     public void setCurrency(@NotNull String currency) {
         this.currency = currency;
     }
+
+
 
     @Override
     public boolean equals(Object o) {

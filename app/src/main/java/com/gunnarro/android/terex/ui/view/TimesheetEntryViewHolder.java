@@ -44,13 +44,12 @@ public class TimesheetEntryViewHolder extends RecyclerView.ViewHolder {
         timesheetEntryLineHeaderView.setText(timesheetEntry.getTimesheetId().toString());
         timesheetEntryLine1StatusView.setText(timesheetEntry.getWorkdayDate().format(DateTimeFormatter.ofPattern("dd", Locale.getDefault())));
         // can have status OPEN or BILLED
-        if (timesheetEntry.isOpen()) {
+        if (timesheetEntry.isNew()) {
             timesheetEntryLine1StatusView.setTextColor(timesheetEntryLine1StatusView.getResources().getColor(R.color.timesheet_status_open, null));
         } else if (timesheetEntry.isBilled()) {
             timesheetEntryLine1StatusView.setTextColor(timesheetEntryLine1StatusView.getResources().getColor(R.color.timesheet_status_billed, null));
-            //timesheetEntryDeleteIconBtn.setVisibility(View.INVISIBLE);
         } else {
-            throw new TerexApplicationException(String.format("Application error, unknown timesheet entry status! status=%s, timesheetEntryId=%s", timesheetEntry.getStatus(),timesheetEntry.getId()), "50034", null);
+            //throw new TerexApplicationException(String.format("Application error, unknown timesheet entry status! status=%s, timesheetEntryId=%s", timesheetEntry.getStatus(),timesheetEntry.getId()), "50034", null);
         }
         timesheetEntryLine1LabelView.setText(String.format("%s - %s", Utility.formatTime(timesheetEntry.getFromTime()), Utility.formatTime(timesheetEntry.getToTime())));
         timesheetEntryLine1ValueView.setText(Utility.getDateDiffInHours(timesheetEntry.getFromTime(), timesheetEntry.getToTime()));

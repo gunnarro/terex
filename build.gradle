@@ -105,6 +105,8 @@ ext {
     jsoup = "1.16.2"
     xhtmlrenderer_flying_saucer = "9.3.1"
     spullara_mustache_java = "0.9.11"
+    android_database_sqlcipher = "4.5.4"
+    security_crypto = "1.1.0-alpha06"
 }
 
 // default reportsDirectory $buildDir/reports/jacoco

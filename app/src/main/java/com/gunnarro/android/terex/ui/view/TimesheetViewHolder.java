@@ -1,6 +1,5 @@
 package com.gunnarro.android.terex.ui.view;
 
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 public class TimesheetViewHolder extends RecyclerView.ViewHolder {
-    private static final int TITLE_MAX_LENGTH = 35;
+    private static final int TITLE_MAX_LENGTH = 30;
     private final TextView timesheetLineHeaderView;
     private final TextView timesheetLine1StatusView;
     private final TextView timesheetLine1LabelView;
@@ -41,6 +40,9 @@ public class TimesheetViewHolder extends RecyclerView.ViewHolder {
 
 
     public void bindListLine(Timesheet timesheet) {
+        if (timesheet == null) {
+            return;
+        }
         String title = String.format("%s:%s:%s", timesheet.getId(), timesheet.getClientName(), timesheet.getProjectCode());
         if (title.length() > TITLE_MAX_LENGTH) {
             title = title.substring(0, TITLE_MAX_LENGTH) + "...";
@@ -48,7 +50,7 @@ public class TimesheetViewHolder extends RecyclerView.ViewHolder {
         timesheetLineHeaderView.setText(title);
         timesheetLine1StatusView.setText(timesheet.getFromDate().format(DateTimeFormatter.ofPattern("MMM", Locale.getDefault())));
 
-        if (timesheet.isOpen()) {
+        if (timesheet.isNew()) {
             timesheetLine1StatusView.setTextColor(timesheetLine1StatusView.getResources().getColor(R.color.timesheet_status_open, null));
         } else if (timesheet.isActive()) {
             timesheetLine1StatusView.setTextColor(timesheetLine1StatusView.getResources().getColor(R.color.timesheet_status_active, null));
@@ -58,8 +60,8 @@ public class TimesheetViewHolder extends RecyclerView.ViewHolder {
             timesheetLine1StatusView.setTextColor(timesheetLine1StatusView.getResources().getColor(R.color.timesheet_status_billed, null));
         }
         timesheetLine1LabelView.setText(R.string.lbl_worked_days);
-        timesheetLine1ValueView.setText(String.format("%s of %s days", "x", timesheet.getWorkingDaysInMonth()));
+        timesheetLine1ValueView.setText(String.format("%s of %s days", timesheet.getTotalWorkedDays(), timesheet.getWorkingDaysInMonth()));
         timesheetLine2LabelView.setText(R.string.lbl_worked_hours);
-        timesheetLine2ValueView.setText(String.format("%s of %s hours", "x", timesheet.getWorkingHoursInMonth()));
+        timesheetLine2ValueView.setText(String.format("%s of %s hours", timesheet.getTotalWorkedMinutes()/60, timesheet.getWorkingHoursInMonth()));
     }
 }

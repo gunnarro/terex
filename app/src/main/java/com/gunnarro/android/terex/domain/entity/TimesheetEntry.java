@@ -152,6 +152,7 @@ public class TimesheetEntry extends BaseEntity {
         this.toTime = toTime;
     }
 
+    @NonNull
     public Integer getWorkedMinutes() {
         return workedMinutes;
     }
@@ -160,7 +161,7 @@ public class TimesheetEntry extends BaseEntity {
         return Double.valueOf((double) workedMinutes / 60).toString();
     }
 
-    public void setWorkedMinutes(Integer workedMinutes) {
+    public void setWorkedMinutes(@NonNull Integer workedMinutes) {
         this.workedMinutes = workedMinutes;
     }
 
@@ -172,11 +173,12 @@ public class TimesheetEntry extends BaseEntity {
         this.breakInMin = breakInMin;
     }
 
+    @NonNull
     public Integer getHourlyRate() {
         return hourlyRate;
     }
 
-    public void setHourlyRate(Integer hourlyRate) {
+    public void setHourlyRate(@NonNull Integer hourlyRate) {
         this.hourlyRate = hourlyRate;
     }
 
@@ -208,8 +210,8 @@ public class TimesheetEntry extends BaseEntity {
         this.useAsDefault = useAsDefault;
     }
 
-    public boolean isOpen() {
-        return status.equals(Timesheet.TimesheetStatusEnum.OPEN.name());
+    public boolean isNew() {
+        return status.equals(Timesheet.TimesheetStatusEnum.NEW.name());
     }
 
     public boolean isBilled() {

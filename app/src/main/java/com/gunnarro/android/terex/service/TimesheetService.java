@@ -89,11 +89,14 @@ public class TimesheetService {
 
     public Long saveTimesheet(Timesheet timesheet) {
         Timesheet timesheetExisting = timesheetRepository.getTimesheet(timesheet.getClientName(), timesheet.getProjectCode(), timesheet.getYear(), timesheet.getMonth());
+        if (timesheetExisting != null && timesheet.isNew()) {
+            throw new TerexApplicationException("timesheet is already exist, timesheetId=" + timesheetExisting.getId() + " " + timesheetExisting.getStatus(), "40040", null);
 
+        }
         // first of all, check status
         if (timesheetExisting != null && timesheetExisting.isBilled()) {
             Log.d("", "timesheet is already billed, no changes is allowed. timesheetId=" + timesheetExisting.getId() + " " + timesheetExisting.getStatus());
-            return null;
+            throw new TerexApplicationException("timesheet is already billed, no changes is allowed. timesheetId=" + timesheetExisting.getId() + " " + timesheetExisting.getStatus(), "40040", null);
         }
         try {
             Log.d("TimesheetRepository.saveTimesheet", String.format("existingTimesheet: %s", timesheetExisting));
@@ -136,7 +139,25 @@ public class TimesheetService {
      * @param timesheetId
      */
     public void updateTimesheetStatus(Long timesheetId) {
+    }
 
+    public void updateTimesheetWorkedHoursAndDays(Long timesheetId) {
+        Timesheet timesheet = timesheetRepository.getTimesheet(timesheetId);
+        List<TimesheetEntry> timesheetEntries = timesheetRepository.getTimesheetEntryList(timesheetId);
+        int workedDays = 0;
+        int workedMinutes = 0;
+        for (TimesheetEntry e : timesheetEntries) {
+            workedDays++;
+            workedMinutes += e.getWorkedMinutes();
+        }
+        timesheet.setTotalWorkedDays(workedDays);
+        timesheet.setTotalWorkedMinutes(workedMinutes);
+        if (timesheet.isNew() || timesheet.isActive()) {
+            if (timesheet.getWorkingHoursInMonth() <= (timesheet.getTotalWorkedMinutes() / 60) || timesheet.getTotalWorkedDays() <= timesheet.getTotalWorkedDays()) {
+                timesheet.setStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
+            }
+            saveTimesheet(timesheet);
+        }
     }
 
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures
@@ -161,6 +182,7 @@ public class TimesheetService {
                 id = timesheetEntry.getId();
                 Log.d("TimesheetRepository.saveTimesheetEntry", "update timesheet entry: " + id + " - " + timesheetEntry.getWorkdayDate());
             }
+            updateTimesheetWorkedHoursAndDays(timesheetEntry.getTimesheetId());
             return id;
         } catch (InterruptedException | ExecutionException e) {
             // Something crashed, therefore restore interrupted state before leaving.
@@ -224,7 +246,7 @@ public class TimesheetService {
         timesheet.setStatus(Timesheet.TimesheetStatusEnum.BILLED.name());
         saveTimesheet(timesheet);
 
-        // then close all timesheet entries
+        // then close all timesheet entries by setting status to billed
         timesheetEntryList.forEach(e -> {
             timesheetRepository.closeTimesheetEntry(e.getId());
         });
@@ -233,7 +255,8 @@ public class TimesheetService {
         return invoiceSummaryByWeek;
     }
 
-    private TimesheetSummary buildTimesheetSummaryForMonth(@NotNull Long timesheetId, @NotNull List<TimesheetEntry> timesheetEntryList) {
+    private TimesheetSummary buildTimesheetSummaryForMonth(@NotNull Long
+                                                                   timesheetId, @NotNull List<TimesheetEntry> timesheetEntryList) {
         TimesheetSummary timesheetSummary = new TimesheetSummary();
         timesheetSummary.setCreatedDate(LocalDateTime.now());
         timesheetSummary.setLastModifiedDate(LocalDateTime.now());
@@ -249,7 +272,8 @@ public class TimesheetService {
         return timesheetSummary;
     }
 
-    private TimesheetSummary buildTimesheetSummaryForWeek(@NotNull Long timesheetId, @NotNull Integer week, @NotNull List<TimesheetEntry> timesheetEntryList) {
+    private TimesheetSummary buildTimesheetSummaryForWeek(@NotNull Long
+                                                                  timesheetId, @NotNull Integer week, @NotNull List<TimesheetEntry> timesheetEntryList) {
         TimesheetSummary timesheetSummary = new TimesheetSummary();
         timesheetSummary.setCreatedDate(LocalDateTime.now());
         timesheetSummary.setLastModifiedDate(LocalDateTime.now());
@@ -323,14 +347,13 @@ public class TimesheetService {
     }
 
     private TimesheetEntry createTimesheet(LocalDate day) {
-        return TimesheetEntry.createDefault(new java.util.Random().nextLong(), Timesheet.TimesheetStatusEnum.OPEN.name(), Utility.DEFAULT_DAILY_BREAK_IN_MINUTES, day, Utility.DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES, Utility.DEFAULT_HOURLY_RATE);
+        return TimesheetEntry.createDefault(new java.util.Random().nextLong(), Timesheet.TimesheetStatusEnum.NEW.name(), Utility.DEFAULT_DAILY_BREAK_IN_MINUTES, day, Utility.DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES, Utility.DEFAULT_HOURLY_RATE);
     }
 
     private static int getWeek(LocalDate date) {
         TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
         return date.get(woy);
     }
-
 
     private TimesheetEntryDto mapToTimesheetEntryDto(TimesheetEntry timesheetEntry) {
         TimesheetEntryDto timesheetEntryDto = new TimesheetEntryDto();

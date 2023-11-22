@@ -184,7 +184,7 @@ public class TimesheetEntryListFragment extends Fragment {
     }
 
     private TimesheetEntry createDefaultTimesheetEntry(Long timesheetId) {
-        return TimesheetEntry.createDefault(timesheetId, Timesheet.TimesheetStatusEnum.OPEN.name(), Utility.DEFAULT_DAILY_BREAK_IN_MINUTES, LocalDate.now(), Utility.DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES, Utility.DEFAULT_HOURLY_RATE);
+        return TimesheetEntry.createDefault(timesheetId, Timesheet.TimesheetStatusEnum.NEW.name(), Utility.DEFAULT_DAILY_BREAK_IN_MINUTES, LocalDate.now(), Utility.DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES, Utility.DEFAULT_HOURLY_RATE);
     }
 
     private void enableSwipeToRightAndViewItem(RecyclerView recyclerView) {

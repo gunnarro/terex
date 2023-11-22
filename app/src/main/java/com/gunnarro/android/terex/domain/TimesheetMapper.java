@@ -7,7 +7,6 @@ public class TimesheetMapper {
     public static TimesheetInfoDto toTimesheetInfoDto(Timesheet timesheet, Integer sumDays, Integer sumHours) {
         TimesheetInfoDto timesheetInfoDto = new TimesheetInfoDto();
         timesheetInfoDto.setTimesheetId(timesheet.getId());
-        timesheetInfoDto.setInvoiceNumber(timesheet.getInvoiceNumber());
         timesheetInfoDto.setClientName(timesheet.getClientName());
         timesheetInfoDto.setProjectCode(timesheet.getProjectCode());
         timesheetInfoDto.setYear(timesheet.getYear());

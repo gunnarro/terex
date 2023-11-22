@@ -1,7 +1,5 @@
 package com.gunnarro.android.terex.ui.fragment;
 
-import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
@@ -17,14 +15,11 @@ import androidx.fragment.app.Fragment;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
 import com.gunnarro.android.terex.R;
-import com.gunnarro.android.terex.domain.entity.Address;
-import com.gunnarro.android.terex.domain.entity.Company;
-import com.gunnarro.android.terex.domain.entity.Contact;
 import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.InvoiceAttachment;
-import com.gunnarro.android.terex.domain.entity.Person;
 import com.gunnarro.android.terex.domain.entity.SpinnerItem;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
@@ -91,14 +86,14 @@ public class InvoiceNewFragment extends Fragment {
                 String selectedTimesheet = timesheetSpinner.getText().toString();
                 SpinnerItem item = timesheetItems.stream().filter(i -> i.name().equals(selectedTimesheet)).findFirst().orElse(null);
                 if (item == null) {
-                    showInfoDialog("Please select a timesheet!", requireContext());
+                    showInfoDialog("Info", "Please select a timesheet!");
                 } else {
                     // item id is equal to selected timesheet id
                     createInvoice(item.id());
 
                 }
             } catch (TerexApplicationException e) {
-                showInfoDialog("Error creating invoice!", requireContext());
+                showInfoDialog("Info", "Error creating invoice!");
             }
         });
 /*
@@ -120,11 +115,11 @@ public class InvoiceNewFragment extends Fragment {
             returnToInvoiceList();
         });
 
-        if (timesheetList == null || timesheetList.isEmpty()) {
+        if (timesheetList.isEmpty()) {
             // disable dropdown and create button
             view.findViewById(R.id.invoice_timesheet_spinner).setEnabled(false);
             view.findViewById(R.id.btn_invoice_new_create).setEnabled(false);
-            showInfoDialog("No timesheet ready for billing. Please fulfill the timesheet and try again.", requireContext());
+            showInfoDialog("Info", "No timesheet ready for billing. Please fulfill the timesheet and try again.");
         }
 
         Log.d(Utility.buildTag(getClass(), "onCreateView"), "");
@@ -147,7 +142,7 @@ public class InvoiceNewFragment extends Fragment {
     private void createInvoice(@NotNull Long timesheetId) {
         Long invoiceId = invoiceService.createInvoice(timesheetService.getCompany(timesheetId), timesheetService.getClient(timesheetId), timesheetId);
         if (invoiceId == null) {
-            showInfoDialog("No timesheet found! timesheetId=" + timesheetId, requireContext());
+            showInfoDialog("Info", "No timesheet found! timesheetId=" + timesheetId);
         }
         // finally close the timesheet
         Invoice invoice = invoiceService.getInvoice(invoiceId);
@@ -164,24 +159,19 @@ public class InvoiceNewFragment extends Fragment {
             StringBuilder mustacheTemplateStr = new StringBuilder();
             // first read the invoice summary mustache html template
             try (InputStream fis = requireContext().getAssets().open(InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getTemplate());
-                 InputStreamReader isr = new InputStreamReader(fis,
-                         StandardCharsets.UTF_8);
+                 InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
                  BufferedReader br = new BufferedReader(isr)) {
                 br.lines().forEach(mustacheTemplateStr::append);
             }
 
-            Double sumBilledAmount = invoice.getTimesheetSummaryList().stream()
-                    .mapToDouble(TimesheetSummary::getTotalBilledAmount)
-                    .sum();
+            double sumBilledAmount = invoice.getTimesheetSummaryList().stream().mapToDouble(TimesheetSummary::getTotalBilledAmount).sum();
 
-            Double sumBilledHours = invoice.getTimesheetSummaryList().stream()
-                    .mapToDouble(TimesheetSummary::getTotalWorkedHours)
-                    .sum();
+            double sumBilledHours = invoice.getTimesheetSummaryList().stream().mapToDouble(TimesheetSummary::getTotalWorkedHours).sum();
 
-            Double totalVat = sumBilledAmount * 0.25;
-            Double totalBilledAmountWithVat = sumBilledAmount + totalVat;
+            double totalVat = sumBilledAmount * 0.25;
+            double totalBilledAmountWithVat = sumBilledAmount + totalVat;
 
-            String invoiceSummaryHtml = createTimesheetSummaryAttachmentHtml(mustacheTemplateStr.toString(), invoice.getTimesheetSummaryList(), sumBilledHours.toString(), sumBilledAmount.toString(), totalBilledAmountWithVat.toString(), totalVat.toString());
+            String invoiceSummaryHtml = createTimesheetSummaryAttachmentHtml(mustacheTemplateStr.toString(), invoice.getTimesheetSummaryList(), Double.toString(sumBilledHours), Double.toString(sumBilledAmount), Double.toString(totalBilledAmountWithVat), Double.toString(totalVat));
             Log.d("createInvoiceSummaryAttachment", "" + invoiceSummaryHtml);
             String invoiceAttachmentFileName = InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.name().toLowerCase() + "_attachment_" + invoice.getBillingDate().format(DateTimeFormatter.ofPattern("yyyy-MM"));
             File path = Environment.getExternalStorageDirectory();
@@ -227,19 +217,14 @@ public class InvoiceNewFragment extends Fragment {
             List<TimesheetEntry> timesheetEntryList = timesheetService.getTimesheetEntryList(timesheetId);
             StringBuilder mustacheTemplateStr = new StringBuilder();
             // first read the invoice summary mustache html template
-            try (InputStream fis = requireContext().getAssets().open(InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.getTemplate());
-                 InputStreamReader isr = new InputStreamReader(fis,
-                         StandardCharsets.UTF_8);
-                 BufferedReader br = new BufferedReader(isr)) {
+            try (InputStream fis = requireContext().getAssets().open(InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.getTemplate()); InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8); BufferedReader br = new BufferedReader(isr)) {
                 br.lines().forEach(mustacheTemplateStr::append);
             }
 
-            Double sumBilledHours = timesheetEntryList.stream()
-                    .mapToDouble(TimesheetEntry::getWorkedMinutes)
-                    .sum() / 60;
+            double sumBilledHours = timesheetEntryList.stream().mapToDouble(TimesheetEntry::getWorkedMinutes).sum() / 60;
 
-            String timesheetAttachmentHtml = createTimesheetListHtml(mustacheTemplateStr.toString(), timesheetEntryList, sumBilledHours.toString());
-            String timesheetAttachmentFileName =  InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.name().toLowerCase() + "_attachment_" + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
+            String timesheetAttachmentHtml = createTimesheetListHtml(mustacheTemplateStr.toString(), timesheetEntryList, Double.toString(sumBilledHours));
+            String timesheetAttachmentFileName = InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.name().toLowerCase() + "_attachment_" + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
             InvoiceAttachment timesheetSummaryAttachment = new InvoiceAttachment();
             timesheetSummaryAttachment.setInvoiceId(invoiceId);
             timesheetSummaryAttachment.setAttachmentType(InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.name());
@@ -280,24 +265,12 @@ public class InvoiceNewFragment extends Fragment {
         startActivity(Intent.createChooser(email, "Choose Email client:"));
     }
 
-    private void showInfoDialog(String infoMessage, Context context) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Info");
-        builder.setMessage(infoMessage);
-        // Set Cancelable false for when the user clicks on the outside the Dialog Box then it will remain show
-        builder.setCancelable(false);
-        // Set the positive button with yes name Lambda OnClickListener method is use of DialogInterface interface.
-        builder.setPositiveButton("Ok", (dialog, which) -> dialog.cancel());
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+    private void showInfoDialog(String severity, String message) {
+        new MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme).setTitle(severity).setMessage(message).setCancelable(false).setPositiveButton("Ok", (dialog, which) -> dialog.cancel()).create().show();
     }
 
     private void returnToInvoiceList() {
-        requireActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.content_frame, InvoiceListFragment.class, null)
-                .setReorderingAllowed(true)
-                .commit();
+        requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, InvoiceListFragment.class, null).setReorderingAllowed(true).commit();
     }
 
 }

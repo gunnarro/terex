@@ -219,8 +219,8 @@ public class TimesheetRepository {
         return future != null ? future.get() : null;
     }
 
-    public int updateTimesheetEntry(TimesheetEntry timesheetEntry) throws InterruptedException, ExecutionException {
-        if (timesheetEntry.isOpen()) {
+    public Integer updateTimesheetEntry(TimesheetEntry timesheetEntry) throws InterruptedException, ExecutionException {
+        if (timesheetEntry.isNew()) {
             CompletionService<Integer> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
             service.submit(() -> timesheetEntryDao.update(timesheetEntry));
             Future<Integer> future = service.take();
@@ -242,7 +242,7 @@ public class TimesheetRepository {
      * Not allowed to delete if timesheet entry status is equal to BILLED
      */
     public int deleteTimesheetEntry(TimesheetEntry timesheetEntry) {
-        if (timesheetEntry.isOpen()) {
+        if (timesheetEntry.isNew()) {
             AppDatabase.databaseExecutor.execute(() -> {
                 timesheetEntryDao.delete(timesheetEntry);
             });

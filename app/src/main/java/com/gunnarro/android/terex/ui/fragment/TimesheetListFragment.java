@@ -1,6 +1,5 @@
 package com.gunnarro.android.terex.ui.fragment;
 
-import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
@@ -126,7 +125,8 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
     private Bundle createTimesheetBundle(Long timesheetId, Integer year) {
         Timesheet timesheet = timesheetViewModel.getTimesheet(timesheetId);
         if (timesheet == null) {
-            timesheet = Timesheet.createDefault(null, null, year, LocalDate.now().getMonthValue());
+           // timesheet = Timesheet.createDefault(null, null, year, LocalDate.now().getMonthValue());
+            return new Bundle();
         }
         String timesheetJson = Utility.gsonMapper().toJson(timesheet, Timesheet.class);
         Bundle bundle = new Bundle();
@@ -154,7 +154,7 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
                 showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_saved_msg_format), timesheet.getTimesheetRef()), R.color.color_snackbar_text_add);
             } else if (TIMESHEET_ACTION_DELETE.equals(action)) {
                 if (timesheet.getStatus().equals("BILLED")) {
-                    showInfoDialog("Info", "Can not delete timesheet with status BILLED", requireContext());
+                    showInfoDialog("Info", "Can not delete timesheet with status BILLED");
                 } else {
                     confirmDeleteTimesheetDialog(getString(R.string.msg_delete_timesheet), getString(R.string.msg_confirm_delete), timesheet.getId());
                 }
@@ -170,11 +170,11 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
                 goToTimesheetView(bundle);
             } else {
                 Log.w(Utility.buildTag(getClass(), "handleTimesheetActions"), "unknown action: " + action);
-                showInfoDialog("Info", String.format("Application error!%s Unknown action: %s%s Please report.", action, System.lineSeparator(), System.lineSeparator()), getActivity());
+                showInfoDialog("Info", String.format("Application error!%s Unknown action: %s%s Please report.", action, System.lineSeparator(), System.lineSeparator()));
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            showInfoDialog("Error", String.format("Application error!%sError: %s%s Please report.", ex.getMessage(), System.lineSeparator(), System.lineSeparator()), getActivity());
+            showInfoDialog("Error", String.format("Application error!%sError: %s%s Please report.", ex.getMessage(), System.lineSeparator(), System.lineSeparator()));
         }
     }
 
@@ -257,7 +257,7 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
         snackbar.show();
     }
 
-    private void showInfoDialog(String severity, String message, Context context) {
+    private void showInfoDialog(String severity, String message) {
         new MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
                 .setTitle(severity)
                 .setMessage(message)

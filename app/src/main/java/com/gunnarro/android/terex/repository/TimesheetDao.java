@@ -31,6 +31,9 @@ public interface TimesheetDao {
     Timesheet getTimesheet(String clientName, String projectCode, Integer year, Integer month);
 
     @Query("SELECT * FROM timesheet where year = :year ORDER BY client_name")
+   // @Query("SELECT t.*, count(e.timesheet_id) AS registeredWorkingDays , sum(e.worked_in_min) as  registeredWorkingHours FROM timesheet t"
+   //         + " INNER JOIN  timesheet_entry e ON e.timesheet_id = t.id "
+   //         + " WHERE year = :year")
     LiveData<List<Timesheet>> getTimesheetByYear(Integer year);
 
     @Query("SELECT * FROM timesheet WHERE status = :status ORDER BY year, month DESC")
