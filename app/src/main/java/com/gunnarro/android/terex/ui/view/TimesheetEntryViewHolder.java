@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
-import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.utility.Utility;
 
 import java.time.format.DateTimeFormatter;
@@ -48,6 +47,7 @@ public class TimesheetEntryViewHolder extends RecyclerView.ViewHolder {
             timesheetEntryLine1StatusView.setTextColor(timesheetEntryLine1StatusView.getResources().getColor(R.color.timesheet_status_open, null));
         } else if (timesheetEntry.isBilled()) {
             timesheetEntryLine1StatusView.setTextColor(timesheetEntryLine1StatusView.getResources().getColor(R.color.timesheet_status_billed, null));
+            itemView.findViewById(R.id.ic_timesheet_entry_row_delete).setVisibility(View.GONE);
         } else {
             //throw new TerexApplicationException(String.format("Application error, unknown timesheet entry status! status=%s, timesheetEntryId=%s", timesheetEntry.getStatus(),timesheetEntry.getId()), "50034", null);
         }

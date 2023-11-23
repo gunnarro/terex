@@ -75,7 +75,7 @@ public class InvoiceNewFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_invoice_new, container, false);
         // only completed time sheets can be used a attachment to a invoice.
         List<Timesheet> timesheetList = timesheetService.getTimesheets(Timesheet.TimesheetStatusEnum.COMPLETED.name());
-        List<SpinnerItem> timesheetItems = timesheetList.stream().map(t -> new SpinnerItem(t.getId(), t.getProjectCode())).collect(Collectors.toList());
+        List<SpinnerItem> timesheetItems = timesheetList.stream().map(t -> new SpinnerItem(t.getId(), String.format("%s-%s %s", t.getYear(), t.getMonth(), t.getProjectCode()))).collect(Collectors.toList());
         final AutoCompleteTextView timesheetSpinner = view.findViewById(R.id.invoice_timesheet_spinner);
         ArrayAdapter<SpinnerItem> timesheetAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, timesheetItems);
         timesheetSpinner.setAdapter(timesheetAdapter);
@@ -165,9 +165,7 @@ public class InvoiceNewFragment extends Fragment {
             }
 
             double sumBilledAmount = invoice.getTimesheetSummaryList().stream().mapToDouble(TimesheetSummary::getTotalBilledAmount).sum();
-
             double sumBilledHours = invoice.getTimesheetSummaryList().stream().mapToDouble(TimesheetSummary::getTotalWorkedHours).sum();
-
             double totalVat = sumBilledAmount * 0.25;
             double totalBilledAmountWithVat = sumBilledAmount + totalVat;
 

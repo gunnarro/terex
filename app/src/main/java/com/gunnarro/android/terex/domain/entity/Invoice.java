@@ -8,6 +8,7 @@ import androidx.room.TypeConverters;
 
 import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
 import com.gunnarro.android.terex.domain.converter.LocalDateTimeConverter;
+import com.gunnarro.android.terex.repository.InvoiceRepository;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -205,7 +206,13 @@ public class Invoice extends BaseEntity {
         this.currency = currency;
     }
 
+    public boolean isCompleted() {
+        return status.equals(InvoiceRepository.InvoiceStatusEnum.COMPLETED.name());
+    }
 
+    public boolean isNew() {
+        return status.equals(InvoiceRepository.InvoiceStatusEnum.NEW.name());
+    }
 
     @Override
     public boolean equals(Object o) {

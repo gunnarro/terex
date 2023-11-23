@@ -31,7 +31,7 @@ public class InvoiceRepository {
      * CANCELLED: the invoice have been cancelled.
      */
     public enum InvoiceStatusEnum {
-        OPEN, COMPLETED, SENT;
+        NEW, COMPLETED, SENT
     }
 
     private final InvoiceDao invoiceDao;
@@ -91,9 +91,13 @@ public class InvoiceRepository {
     public Long saveInvoice(@NotNull final Invoice invoice) {
         try {
             Invoice invoiceExisting = findInvoice(invoice.getReference());
-            Log.d("InvoiceRepository.saveInvoice", String.format("%s", invoiceExisting));
+            if (invoiceExisting != null && invoiceExisting.isCompleted()) {
+                throw new TerexApplicationException("Invoice is COMPLETED, not allowed to delete or update", "40045", null);
+            }
+            Log.d("InvoiceRepository.saveInvoice", String.format("%s", invoice));
             Long id = null;
             if (invoiceExisting == null) {
+                // this is a new invoice
                 invoice.setCreatedDate(LocalDateTime.now());
                 invoice.setLastModifiedDate(LocalDateTime.now());
                 id = insertInvoice(invoice);

@@ -43,7 +43,7 @@ public class InvoiceViewHolder extends RecyclerView.ViewHolder {
         invoiceLineHeaderView.setText(String.format("%s", invoice.getReference()));
         invoiceLine1StatusView.setText(invoice.getBillingDate().format(DateTimeFormatter.ofPattern("MMM", Locale.getDefault())));
 
-        if (invoice.getStatus().equals(InvoiceRepository.InvoiceStatusEnum.OPEN.name())) {
+        if (invoice.getStatus().equals(InvoiceRepository.InvoiceStatusEnum.NEW.name())) {
             invoiceLine1StatusView.setTextColor(invoiceLine1StatusView.getResources().getColor(R.color.invoice_status_open, null));
         } else if (invoice.getStatus().equals(InvoiceRepository.InvoiceStatusEnum.COMPLETED.name())) {
             invoiceLine1StatusView.setTextColor(invoiceLine1StatusView.getResources().getColor(R.color.invoice_status_completed, null));

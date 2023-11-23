@@ -1,18 +1,17 @@
 package com.gunnarro.android.terex.domain;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import android.content.Context;
 
 import com.gunnarro.android.terex.domain.entity.Timesheet;
-import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.mockito.Mock;
-
-import java.time.LocalDate;
 
 public class TimesheetTest {
 
@@ -24,9 +23,18 @@ public class TimesheetTest {
     }
 
     @Test
-    public void timesheetEntryToJson() {
-        Timesheet timeSheet = new Timesheet();
-        assertEquals("Open", "Open");
+    public void workedHours() {
+        Timesheet timeSheet = Timesheet.createDefault("gunnarro", "timesheet", 2023, 11);
+        assertEquals(0, timeSheet.getTotalWorkedDays().intValue());
+        assertEquals(0, timeSheet.getTotalWorkedMinutes().intValue());
+        assertEquals(21, timeSheet.getWorkingDaysInMonth().intValue());
+        assertEquals(157, timeSheet.getWorkingHoursInMonth().intValue());
+        assertFalse(timeSheet.getTotalWorkedMinutes() / 60 >= timeSheet.getWorkingHoursInMonth());
+        assertFalse(timeSheet.getTotalWorkedDays() >= timeSheet.getWorkingDaysInMonth());
+        timeSheet.setTotalWorkedMinutes(15700);
+        timeSheet.setTotalWorkedDays(22);
+        assertTrue(timeSheet.getTotalWorkedMinutes() / 60 >= timeSheet.getWorkingHoursInMonth());
+        assertTrue(timeSheet.getTotalWorkedDays() >= timeSheet.getWorkingDaysInMonth());
     }
 
 

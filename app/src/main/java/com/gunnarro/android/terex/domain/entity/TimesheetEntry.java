@@ -78,7 +78,7 @@ public class TimesheetEntry extends BaseEntity {
     private Integer hourlyRate;
 
     /**
-     * Status can only be OPEN of CLOSED. When CLOSED is is not possible to change or delete the entry.
+     * Status can only be OPEN and CLOSED. When CLOSED is not possible to change or delete the entry.
      * The status is automatically set equal to CLOSED when a timesheet have been completed and billed.
      */
     @NonNull

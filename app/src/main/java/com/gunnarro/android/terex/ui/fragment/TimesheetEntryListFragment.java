@@ -87,9 +87,6 @@ public class TimesheetEntryListFragment extends Fragment {
         // Update the cached copy of the timesheet entries in the adapter.
         timesheetEntryViewModel.getTimesheetEntryLiveData(timesheetId).observe(requireActivity(), adapter::submitList);
 
-        // TimesheetWithEntries timesheetWithEntries = timesheetEntryViewModel.getTimesheetWithEntries(timesheetId);
-        // Log.d("all timesheets", "timesheet with entries: " + timesheetWithEntries);
-
         FloatingActionButton addButton = view.findViewById(R.id.timesheet_entry_add_btn);
         addButton.setOnClickListener(v -> {
             requireActivity().getSupportFragmentManager()
@@ -108,14 +105,11 @@ public class TimesheetEntryListFragment extends Fragment {
                     .commit();
         });
 
-        // if timesheet has status closed, it is not possible to do any kind of changes
-        // fixme
-        /*if (timesheetWithEntries != null && timesheetWithEntries.getTimesheet().isBilled()) {
-            addButton.setVisibility(View.INVISIBLE);
-            calendarButton.setVisibility(View.INVISIBLE);
-        }*/
-        // listen after timesheet add and delete events
-        //RxBus.getInstance().listen().subscribe(getInputObserver());
+        // flip gui based on timesheet status
+        if (true) {
+            addButton.setVisibility(View.GONE);
+            calendarButton.setVisibility(View.GONE);
+        }
         // enable swipe
         enableSwipeToLeftAndDeleteItem(recyclerView);
         enableSwipeToRightAndViewItem(recyclerView);

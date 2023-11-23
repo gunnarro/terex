@@ -250,7 +250,11 @@ public class Timesheet extends BaseEntity {
         timesheet.setMonth(timesheetDate.getMonthValue());
         timesheet.setFromDate(Utility.getFirstDayOfMonth(timesheetDate));
         timesheet.setToDate(Utility.getLastDayOfMonth(timesheetDate));
+        timesheet.setTotalWorkedMinutes(0);
+        timesheet.setTotalWorkedDays(0);
         timesheet.createTimesheetRef();
+        timesheet.setWorkingDaysInMonth(Utility.countBusinessDaysInMonth(timesheet.getFromDate()));
+        timesheet.setWorkingHoursInMonth((int) (timesheet.getWorkingDaysInMonth() * 7.5));
         return timesheet;
     }
 

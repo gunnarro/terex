@@ -212,6 +212,7 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
             lastModifiedDateView.setEnabled(true);
             clientSpinner.setEnabled(false);
             projectSpinner.setEnabled(false);
+            statusSpinner.setEnabled(false);
             yearSpinner.setEnabled(false);
             monthSpinner.setEnabled(false);
             fromTimeView.setEnabled(false);

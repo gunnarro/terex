@@ -1,7 +1,6 @@
 package com.gunnarro.android.terex.ui.view;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -32,7 +31,4 @@ public class InvoiceViewModel extends AndroidViewModel {
         return invoices;
     }
 
-    public void saveInvoice(Invoice invoice) {
-        invoiceRepository.saveInvoice(invoice);
-    }
 }

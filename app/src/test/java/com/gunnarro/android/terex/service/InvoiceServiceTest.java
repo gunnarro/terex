@@ -15,7 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
-@Disabled
+//@Disabled
 @ExtendWith(MockitoExtension.class)
 public class InvoiceServiceTest {
 

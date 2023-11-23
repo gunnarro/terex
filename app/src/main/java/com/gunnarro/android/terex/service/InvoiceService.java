@@ -87,7 +87,7 @@ public class InvoiceService {
         invoice.setClientId(client.getId());
         // ensure that a timesheet is only billed once.
         invoice.setReference(String.format("%s-%s", client.getName(), timesheetId));
-        invoice.setStatus(InvoiceRepository.InvoiceStatusEnum.OPEN.name());
+        invoice.setStatus(InvoiceRepository.InvoiceStatusEnum.NEW.name());
         // The date when the customer is billed
         invoice.setBillingDate(LocalDate.now());
         invoice.setInvoicePeriod("month");

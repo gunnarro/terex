@@ -42,7 +42,7 @@ class InvoiceDaoTest {
         invoice.vat = 25.00
         invoiceDao!!.insert(invoice)
         val newInvoice = invoiceDao!!.getInvoiceById(invoice.id)
-        Assert.assertTrue(newInvoice.keys.stream().findFirst().isPresent)
+        Assert.assertEquals("", newInvoice.status)
     }
 
 }

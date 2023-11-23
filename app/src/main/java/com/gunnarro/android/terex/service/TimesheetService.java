@@ -54,6 +54,13 @@ public class TimesheetService {
 
     private final TimesheetRepository timesheetRepository;
 
+    /**
+     * for unit test only
+     */
+    public TimesheetService(TimesheetRepository timesheetRepository) {
+        this.timesheetRepository = timesheetRepository;
+    }
+
     @Inject
     public TimesheetService(Context applicationContext) {
         timesheetRepository = new TimesheetRepository(applicationContext);
@@ -84,6 +91,9 @@ public class TimesheetService {
     }
 
     public void deleteTimesheet(Timesheet timesheet) {
+        if (timesheet.isBilled()) {
+            throw new TerexApplicationException("Timesheet is BILLED, not allowed to delete or update", "40045", null);
+        }
         timesheetRepository.deleteTimesheet(timesheet);
     }
 
@@ -132,14 +142,6 @@ public class TimesheetService {
     // timesheet entry
     // ----------------------------------------
 
-    /**
-     * Check timesheet, set status to completed if registered work day is equal to the months number of workdays.
-     * Called after save or delete of a timesheet entry.
-     *
-     * @param timesheetId
-     */
-    public void updateTimesheetStatus(Long timesheetId) {
-    }
 
     public void updateTimesheetWorkedHoursAndDays(Long timesheetId) {
         Timesheet timesheet = timesheetRepository.getTimesheet(timesheetId);
@@ -193,6 +195,9 @@ public class TimesheetService {
     }
 
     public void deleteTimesheetEntry(TimesheetEntry timesheetEntry) {
+        if (timesheetEntry.isBilled()) {
+            throw new TerexApplicationException("Timesheet entry is closed, not allowed to delete or update", "40045", null);
+        }
         timesheetRepository.deleteTimesheetEntry(timesheetEntry);
     }
 
