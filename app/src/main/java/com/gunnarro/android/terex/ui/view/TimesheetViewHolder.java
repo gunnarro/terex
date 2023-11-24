@@ -62,6 +62,6 @@ public class TimesheetViewHolder extends RecyclerView.ViewHolder {
         timesheetLine1LabelView.setText(R.string.lbl_worked_days);
         timesheetLine1ValueView.setText(String.format("%s of %s days", timesheet.getTotalWorkedDays(), timesheet.getWorkingDaysInMonth()));
         timesheetLine2LabelView.setText(R.string.lbl_worked_hours);
-        timesheetLine2ValueView.setText(String.format("%s of %s hours", timesheet.getTotalWorkedMinutes()/60, timesheet.getWorkingHoursInMonth()));
+        timesheetLine2ValueView.setText(String.format("%s of %s hours", timesheet.getTotalWorkedHours(), timesheet.getWorkingHoursInMonth()));
     }
 }

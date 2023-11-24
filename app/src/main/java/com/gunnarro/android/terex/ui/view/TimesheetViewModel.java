@@ -22,7 +22,7 @@ public class TimesheetViewModel extends AndroidViewModel {
     // Using LiveData and caching what getTimesheetListLiveData returns has several benefits:
     // - We can put an observer on the data (instead of polling for changes) and only update the
     //   the UI when the data actually changes.
-    private LiveData<List<Timesheet>> timesheetList;
+    private final LiveData<List<Timesheet>> timesheetList;
 
     public TimesheetViewModel(@NonNull Application application, Integer year) {
         super(application);

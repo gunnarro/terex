@@ -26,14 +26,14 @@ public class TimesheetTest {
     public void workedHours() {
         Timesheet timeSheet = Timesheet.createDefault("gunnarro", "timesheet", 2023, 11);
         assertEquals(0, timeSheet.getTotalWorkedDays().intValue());
-        assertEquals(0, timeSheet.getTotalWorkedMinutes().intValue());
+        assertEquals(0, timeSheet.getTotalWorkedHours().intValue());
         assertEquals(21, timeSheet.getWorkingDaysInMonth().intValue());
         assertEquals(157, timeSheet.getWorkingHoursInMonth().intValue());
-        assertFalse(timeSheet.getTotalWorkedMinutes() / 60 >= timeSheet.getWorkingHoursInMonth());
+        assertFalse(timeSheet.getTotalWorkedHours() >= timeSheet.getWorkingHoursInMonth());
         assertFalse(timeSheet.getTotalWorkedDays() >= timeSheet.getWorkingDaysInMonth());
-        timeSheet.setTotalWorkedMinutes(15700);
+        timeSheet.setTotalWorkedHours(8);
         timeSheet.setTotalWorkedDays(22);
-        assertTrue(timeSheet.getTotalWorkedMinutes() / 60 >= timeSheet.getWorkingHoursInMonth());
+        assertTrue(timeSheet.getTotalWorkedHours() >= timeSheet.getWorkingHoursInMonth());
         assertTrue(timeSheet.getTotalWorkedDays() >= timeSheet.getWorkingDaysInMonth());
     }
 

@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
+import com.gunnarro.android.terex.repository.InvoiceRepository;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -22,12 +23,23 @@ public class InvoiceServiceTest {
     @Mock
     android.content.Context applicationContextMock;
 
+    @Mock
+    private TimesheetService timesheetService;
+
+    @Mock
+    private InvoiceRepository invoiceRepository;
+
     @Test
     void invoiceTemplateEnum() {
         assertEquals("html/template/norway-consulting-timesheet.mustache", InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.getTemplate());
         assertEquals("html/template/invoice-timesheet-attachment.mustache", InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getTemplate());
         assertEquals("norway-consulting-timesheet.pdf", InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.getPdfFileName());
         assertEquals("invoice-timesheet-attachment.pdf", InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getPdfFileName());
+    }
+
+    @Test
+    void saveInvoiceAttachment() {
+
     }
 
     @Test
@@ -43,7 +55,6 @@ public class InvoiceServiceTest {
         assertEquals("08:00", timesheets.get(0).getFromTime().toString());
         assertEquals("15:30", timesheets.get(0).getToTime().toString());
         assertEquals(null, timesheets.get(0).getComment());
-
     }
 
     @Test

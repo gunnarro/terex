@@ -83,8 +83,8 @@ public class Timesheet extends BaseEntity {
     private Integer workingHoursInMonth = 0;
     @ColumnInfo(name = "total_worked_days", defaultValue = "0")
     private Integer totalWorkedDays = 0;
-    @ColumnInfo(name = "total_worked_minutes", defaultValue = "0")
-    private Integer totalWorkedMinutes = 0;
+    @ColumnInfo(name = "total_worked_hours", defaultValue = "0")
+    private Integer totalWorkedHours = 0;
     @NotNull
     @ColumnInfo(name = "to_date")
     private LocalDate toDate;
@@ -180,12 +180,12 @@ public class Timesheet extends BaseEntity {
         this.totalWorkedDays = totalWorkedDays;
     }
 
-    public Integer getTotalWorkedMinutes() {
-        return totalWorkedMinutes;
+    public Integer getTotalWorkedHours() {
+        return totalWorkedHours;
     }
 
-    public void setTotalWorkedMinutes(Integer totalWorkedMinutes) {
-        this.totalWorkedMinutes = totalWorkedMinutes;
+    public void setTotalWorkedHours(Integer totalWorkedHours) {
+        this.totalWorkedHours = totalWorkedHours;
     }
 
     @NotNull
@@ -250,7 +250,7 @@ public class Timesheet extends BaseEntity {
         timesheet.setMonth(timesheetDate.getMonthValue());
         timesheet.setFromDate(Utility.getFirstDayOfMonth(timesheetDate));
         timesheet.setToDate(Utility.getLastDayOfMonth(timesheetDate));
-        timesheet.setTotalWorkedMinutes(0);
+        timesheet.setTotalWorkedHours(0);
         timesheet.setTotalWorkedDays(0);
         timesheet.createTimesheetRef();
         timesheet.setWorkingDaysInMonth(Utility.countBusinessDaysInMonth(timesheet.getFromDate()));
@@ -284,7 +284,7 @@ public class Timesheet extends BaseEntity {
         sb.append(", workingDaysInMonth=").append(workingDaysInMonth);
         sb.append(", workingHoursInMonth=").append(workingHoursInMonth);
         sb.append(", totalWorkedDays=").append(totalWorkedDays);
-        sb.append(", totalWorkedMinutes=").append(totalWorkedMinutes);
+        sb.append(", totalWorkedHours=").append(totalWorkedHours);
         sb.append(", toDate=").append(toDate);
         sb.append(", status='").append(status).append('\'');
         sb.append(", description='").append(description).append('\'');

@@ -142,8 +142,7 @@ public class TimesheetService {
     // timesheet entry
     // ----------------------------------------
 
-
-    public void updateTimesheetWorkedHoursAndDays(Long timesheetId) {
+    public Timesheet updateTimesheetWorkedHoursAndDays(Long timesheetId) {
         Timesheet timesheet = timesheetRepository.getTimesheet(timesheetId);
         List<TimesheetEntry> timesheetEntries = timesheetRepository.getTimesheetEntryList(timesheetId);
         int workedDays = 0;
@@ -153,13 +152,13 @@ public class TimesheetService {
             workedMinutes += e.getWorkedMinutes();
         }
         timesheet.setTotalWorkedDays(workedDays);
-        timesheet.setTotalWorkedMinutes(workedMinutes);
+        timesheet.setTotalWorkedHours(workedMinutes/60);
         if (timesheet.isNew() || timesheet.isActive()) {
-            if (timesheet.getWorkingHoursInMonth() <= (timesheet.getTotalWorkedMinutes() / 60) || timesheet.getTotalWorkedDays() <= timesheet.getTotalWorkedDays()) {
+            if (timesheet.getTotalWorkedDays() >= timesheet.getWorkingDaysInMonth() || timesheet.getTotalWorkedHours() >= timesheet.getWorkingHoursInMonth()) {
                 timesheet.setStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
             }
-            saveTimesheet(timesheet);
         }
+        return timesheet;
     }
 
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures
@@ -168,6 +167,16 @@ public class TimesheetService {
     public Long saveTimesheetEntry(@NotNull final TimesheetEntry timesheetEntry) {
         try {
             TimesheetEntry timesheetEntryExisting = timesheetRepository.getTimesheetEntry(timesheetEntry.getTimesheetId(), timesheetEntry.getWorkdayDate());
+
+            if (timesheetEntryExisting != null && timesheetEntry.isNew()) {
+                throw new TerexApplicationException("timesheet entry already exist, timesheetId=" + timesheetEntryExisting.getId() + " " + timesheetEntryExisting.getStatus(), "40040", null);
+
+            }
+            // first of all, check status
+            if (timesheetEntryExisting != null && timesheetEntryExisting.isBilled()) {
+                throw new TerexApplicationException("timesheet entry have status billed, no changes is allowed. timesheetId=" + timesheetEntryExisting.getId() + " " + timesheetEntryExisting.getStatus(), "40040", null);
+            }
+
             Log.d("TimesheetRepository.saveTimesheetEntry", String.format("%s", timesheetEntryExisting));
             // set the timesheet work date week number here, this is only used to simplify accumulate timesheet by week by the invoice service
             timesheetEntry.setWorkdayWeek(timesheetEntry.getWorkdayDate().get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()));
@@ -184,7 +193,6 @@ public class TimesheetService {
                 id = timesheetEntry.getId();
                 Log.d("TimesheetRepository.saveTimesheetEntry", "update timesheet entry: " + id + " - " + timesheetEntry.getWorkdayDate());
             }
-            updateTimesheetWorkedHoursAndDays(timesheetEntry.getTimesheetId());
             return id;
         } catch (InterruptedException | ExecutionException e) {
             // Something crashed, therefore restore interrupted state before leaving.
