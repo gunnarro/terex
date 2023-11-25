@@ -75,12 +75,12 @@ public class TimesheetServiceTest {
     }
 
     @Test
-    public void updateTimesheetWorkedHoursAndDays() {
+    public void updateTimesheet_worked_hours_and_days() {
         Timesheet timesheet = Timesheet.createDefault("gunnarro", "test-project", 2023, 11);
         timesheet.setId(23L);
         timesheet.setStatus(Timesheet.TimesheetStatusEnum.ACTIVE.name());
-        TimesheetEntry timesheetEntry1 = TimesheetEntry.createDefault(1L, Timesheet.TimesheetStatusEnum.NEW.name(), 30, LocalDate.now(), 450L, 1900);
-        TimesheetEntry timesheetEntry2 = TimesheetEntry.createDefault(2L, Timesheet.TimesheetStatusEnum.NEW.name(), 30, LocalDate.now(), 450L, 1900);
+        TimesheetEntry timesheetEntry1 = TimesheetEntry.createDefault(1L, Timesheet.TimesheetStatusEnum.NEW.name(), 30, LocalDate.now(), 450, 1900);
+        TimesheetEntry timesheetEntry2 = TimesheetEntry.createDefault(2L, Timesheet.TimesheetStatusEnum.NEW.name(), 30, LocalDate.now(), 450, 1900);
 
         when(timesheetRepositoryMock.getTimesheetEntryList(any())).thenReturn(List.of(timesheetEntry1, timesheetEntry2));
         when(timesheetRepositoryMock.getTimesheet(timesheet.getId())).thenReturn(timesheet);
@@ -90,7 +90,7 @@ public class TimesheetServiceTest {
         assertEquals(2, timesheetUpdated.getTotalWorkedDays());
         assertEquals(157, timesheetUpdated.getWorkingHoursInMonth());
         assertEquals(21, timesheetUpdated.getWorkingDaysInMonth());
-        assertEquals("ACTIVE", timesheetUpdated.getStatus());
+        assertEquals(Timesheet.TimesheetStatusEnum.ACTIVE.name(), timesheetUpdated.getStatus());
     }
 
     @Test
@@ -98,8 +98,8 @@ public class TimesheetServiceTest {
         Timesheet timesheet = Timesheet.createDefault("gunnarro", "test-project", 2023, 11);
         timesheet.setId(23L);
         timesheet.setStatus(Timesheet.TimesheetStatusEnum.ACTIVE.name());
-        TimesheetEntry timesheetEntry1 = TimesheetEntry.createDefault(1L, Timesheet.TimesheetStatusEnum.NEW.name(), 30, LocalDate.now(), 450L, 1900);
-        TimesheetEntry timesheetEntry2 = TimesheetEntry.createDefault(2L, Timesheet.TimesheetStatusEnum.NEW.name(), 30, LocalDate.now(), 450L, 1900);
+        TimesheetEntry timesheetEntry1 = TimesheetEntry.createDefault(1L, Timesheet.TimesheetStatusEnum.NEW.name(), 30, LocalDate.now(), 450, 1900);
+        TimesheetEntry timesheetEntry2 = TimesheetEntry.createDefault(2L, Timesheet.TimesheetStatusEnum.NEW.name(), 30, LocalDate.now(), 450, 1900);
         // simulate worked hours for a month
         timesheetEntry1.setWorkedMinutes(5080);
         timesheetEntry2.setWorkedMinutes(5080);
@@ -111,7 +111,7 @@ public class TimesheetServiceTest {
         assertEquals(2, timesheetUpdated.getTotalWorkedDays());
         assertEquals(157, timesheetUpdated.getWorkingHoursInMonth());
         assertEquals(21, timesheetUpdated.getWorkingDaysInMonth());
-        assertEquals("COMPLETED", timesheetUpdated.getStatus());
+        assertEquals(Timesheet.TimesheetStatusEnum.COMPLETED.name(), timesheetUpdated.getStatus());
     }
 
 
@@ -130,7 +130,7 @@ public class TimesheetServiceTest {
     }
 
     @Test
-    public void deleteTimesheet_status_not_allowed() throws ExecutionException, InterruptedException {
+    public void deleteTimesheet_status_not_allowed() {
         Timesheet timesheetExisting = Timesheet.createDefault("gunnarro", "test-project", 2023, 11);
         timesheetExisting.setId(23L);
         timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.BILLED.name());
@@ -143,20 +143,35 @@ public class TimesheetServiceTest {
 
     @Test
     public void saveTimesheetEntry_new_already_exist() throws ExecutionException, InterruptedException {
-        TimesheetEntry timesheetEntryExisting = TimesheetEntry.createDefault(23L, Timesheet.TimesheetStatusEnum.BILLED.name(), 30, LocalDate.now(), 450L, 1900);
-        TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(null, Timesheet.TimesheetStatusEnum.NEW.name(), 30, LocalDate.now(), 450L, 1900);
+        TimesheetEntry timesheetEntryExisting = TimesheetEntry.createDefault(23L, Timesheet.TimesheetStatusEnum.BILLED.name(), 30, LocalDate.now(), 450, 1900);
+        TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(null, Timesheet.TimesheetStatusEnum.NEW.name(), 30, LocalDate.now(), 450, 1900);
 
-        when(timesheetRepositoryMock.getTimesheetEntry(anyLong(), any())).thenReturn(timesheetEntryExisting);
+        when(timesheetRepositoryMock.getTimesheetEntry(timesheetEntry.getTimesheetId(), timesheetEntry.getWorkdayDate())).thenReturn(timesheetEntryExisting);
         TerexApplicationException ex = assertThrows(TerexApplicationException.class, () -> {
             timesheetService.saveTimesheetEntry(timesheetEntry);
         });
 
-        Assertions.assertEquals("Application error! Please Report error to app developer. Error=Timesheet entry is closed, not allowed to delete or update", ex.getMessage());
+        Assertions.assertEquals("Application error! Please Report error to app developer. Error=timesheet entry already exist, timesheetId=null, status=BILLED", ex.getMessage());
+    }
+
+    @Test
+    public void saveTimesheetEntry_work_date_not_in_timesheet_to_from_date_range() throws ExecutionException, InterruptedException {
+        Timesheet timesheet = Timesheet.createDefault("gunnarro", "test-project", 2023, 11);
+        timesheet.setId(1L);
+        TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(timesheet.getId(), Timesheet.TimesheetStatusEnum.NEW.name(), 30, LocalDate.of(2023, 12, 21), 450, 1900);
+
+        when(timesheetRepositoryMock.getTimesheet(anyLong())).thenReturn(timesheet);
+        when(timesheetRepositoryMock.getTimesheetEntry(timesheetEntry.getTimesheetId(), timesheetEntry.getWorkdayDate())).thenReturn(null);
+        TerexApplicationException ex = assertThrows(TerexApplicationException.class, () -> {
+            timesheetService.saveTimesheetEntry(timesheetEntry);
+        });
+
+        Assertions.assertEquals("Application error! Please Report error to app developer. Error=timesheet entry work date not in the to and from date range of the timesheet. 2023-12-21 <> 2023-11-01 - 2023-11-30", ex.getMessage());
     }
 
     @Test
     public void deleteTimesheetEntry_status_not_allowed() {
-        TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(23L, Timesheet.TimesheetStatusEnum.BILLED.name(), 30, LocalDate.now(), 450L, 1900);
+        TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(23L, Timesheet.TimesheetStatusEnum.BILLED.name(), 30, LocalDate.now(), 450, 1900);
         TerexApplicationException ex = assertThrows(TerexApplicationException.class, () -> {
             timesheetService.deleteTimesheetEntry(timesheetEntry);
         });

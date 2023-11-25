@@ -218,7 +218,7 @@ public class TimesheetEntry extends BaseEntity {
         return status.equals(Timesheet.TimesheetStatusEnum.BILLED.name());
     }
 
-    public static TimesheetEntry createDefault(Long timesheetId, String status, Integer dailyBreakMin, LocalDate workDayDate, Long workingHoursMin, Integer hourlyRate) {
+    public static TimesheetEntry createDefault(Long timesheetId, String status, Integer dailyBreakMin, LocalDate workDayDate, Integer workingHoursMin, Integer hourlyRate) {
         TimesheetEntry timesheetEntry = new TimesheetEntry();
         timesheetEntry.setTimesheetId(timesheetId);
         timesheetEntry.setStatus(status);

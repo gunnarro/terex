@@ -152,7 +152,7 @@ public class TimesheetService {
             workedMinutes += e.getWorkedMinutes();
         }
         timesheet.setTotalWorkedDays(workedDays);
-        timesheet.setTotalWorkedHours(workedMinutes/60);
+        timesheet.setTotalWorkedHours(workedMinutes / 60);
         if (timesheet.isNew() || timesheet.isActive()) {
             if (timesheet.getTotalWorkedDays() >= timesheet.getWorkingDaysInMonth() || timesheet.getTotalWorkedHours() >= timesheet.getWorkingHoursInMonth()) {
                 timesheet.setStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
@@ -169,18 +169,24 @@ public class TimesheetService {
             TimesheetEntry timesheetEntryExisting = timesheetRepository.getTimesheetEntry(timesheetEntry.getTimesheetId(), timesheetEntry.getWorkdayDate());
 
             if (timesheetEntryExisting != null && timesheetEntry.isNew()) {
-                throw new TerexApplicationException("timesheet entry already exist, timesheetId=" + timesheetEntryExisting.getId() + " " + timesheetEntryExisting.getStatus(), "40040", null);
+                throw new TerexApplicationException(String.format("timesheet entry already exist, timesheetId=%s, status=%s", timesheetEntryExisting.getId(), timesheetEntryExisting.getStatus()), "40040", null);
 
             }
             // first of all, check status
             if (timesheetEntryExisting != null && timesheetEntryExisting.isBilled()) {
-                throw new TerexApplicationException("timesheet entry have status billed, no changes is allowed. timesheetId=" + timesheetEntryExisting.getId() + " " + timesheetEntryExisting.getStatus(), "40040", null);
+                throw new TerexApplicationException(String.format("timesheet entry have status billed, no changes is allowed. timesheetId=%s, status=%s", timesheetEntryExisting.getId(), timesheetEntryExisting.getStatus()), "40040", null);
+            }
+
+            // validate work date, must be between the to and from date range of the timesheet
+            Timesheet timesheet = timesheetRepository.getTimesheet(timesheetEntry.getTimesheetId());
+            if (timesheetEntry.getWorkdayDate().isBefore(timesheet.getFromDate()) || timesheetEntry.getWorkdayDate().isAfter(timesheet.getToDate())) {
+                throw new TerexApplicationException(String.format("timesheet entry work date not in the to and from date range of the timesheet. %s <> %s - %s", timesheetEntry.getWorkdayDate(), timesheet.getFromDate(), timesheet.getToDate()), "40040", null);
             }
 
             Log.d("TimesheetRepository.saveTimesheetEntry", String.format("%s", timesheetEntryExisting));
             // set the timesheet work date week number here, this is only used to simplify accumulate timesheet by week by the invoice service
             timesheetEntry.setWorkdayWeek(timesheetEntry.getWorkdayDate().get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()));
-            Long id = null;
+            Long id;
             if (timesheetEntryExisting == null) {
                 timesheetEntry.setCreatedDate(LocalDateTime.now());
                 timesheetEntry.setLastModifiedDate(LocalDateTime.now());
