@@ -6,13 +6,12 @@ import static org.junit.Assert.assertNull;
 
 import com.gunnarro.android.terex.domain.entity.RegisterWork;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
-import com.gunnarro.android.terex.repository.TimesheetRepository;
 
-import org.junit.Test;
-public class RegisterWorkTest {
+import org.junit.jupiter.api.Test;
+class RegisterWorkTest {
 
     @Test
-    public void registerWork() {
+    void registerWork() {
         RegisterWork work = RegisterWork.buildDefault("MasterCard");
         assertEquals("30", work.getBreakInMin().toString());
         assertEquals("1075", work.getHourlyRate().toString());

@@ -3,17 +3,17 @@ package com.gunnarro.android.terex.domain;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 
-import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-public class TimesheetTest {
+class TimesheetTest {
 
     @Test
-    public void timesheetNew() {
+    void timesheetNew() {
         Timesheet timeSheet = Timesheet.createDefault("gunnarro", "terex-prjo", 2023, 11);
         assertEquals("gunnarro", timeSheet.getClientName());
         assertEquals("terex-prjo", timeSheet.getProjectCode());
@@ -32,7 +32,7 @@ public class TimesheetTest {
     }
 
     @Test
-    public void workedHours() {
+    void workedHours() {
         Timesheet timeSheet = Timesheet.createDefault("gunnarro", "timesheet", 2023, 11);
         assertEquals(0, timeSheet.getTotalWorkedDays().intValue());
         assertEquals(0, timeSheet.getTotalWorkedHours().intValue());
@@ -48,7 +48,7 @@ public class TimesheetTest {
 
 
     @Test
-    public void timesheetAreEqual() {
+    void timesheetAreEqual() {
         Timesheet timesheet1 = new Timesheet();
         timesheet1.setClientName("clientname_1");
         timesheet1.setProjectCode("projectcode_1");
@@ -61,11 +61,11 @@ public class TimesheetTest {
         timesheet2.setYear(2023);
         timesheet2.setMonth(11);
 
-        Assertions.assertEquals(timesheet1, timesheet2);
+        assertEquals(timesheet1, timesheet2);
     }
 
     @Test
-    public void timesheetNotEqual() {
+    void timesheetNotEqual() {
         Timesheet timesheet1 = new Timesheet();
         timesheet1.setClientName("clientname_1");
         timesheet1.setProjectCode("projectcode_1");
@@ -78,6 +78,6 @@ public class TimesheetTest {
         timesheet2.setYear(2023);
         timesheet2.setMonth(12);
 
-        Assertions.assertNotEquals(timesheet1, timesheet2);
+        assertNotEquals(timesheet1, timesheet2);
     }
 }

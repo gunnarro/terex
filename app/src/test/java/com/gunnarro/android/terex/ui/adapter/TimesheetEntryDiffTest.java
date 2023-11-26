@@ -5,14 +5,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
-public class TimesheetEntryDiffTest {
+class TimesheetEntryDiffTest {
 
     @Test
-    public void areItemsTheSame() {
+    void areItemsTheSame() {
         TimesheetEntry timesheetEntry1 = new TimesheetEntry();
         timesheetEntry1.setId(1L);
         timesheetEntry1.setTimesheetId(23L);
@@ -27,7 +27,7 @@ public class TimesheetEntryDiffTest {
     }
 
     @Test
-    public void areItemsTheSameNotSame() {
+    void areItemsTheSameNotSame() {
         TimesheetEntry timesheetEntry1 = new TimesheetEntry();
         timesheetEntry1.setId(1L);
         timesheetEntry1.setTimesheetId(23L);
@@ -44,7 +44,7 @@ public class TimesheetEntryDiffTest {
     }
 
     @Test
-    public void areContentsTheSame() {
+    void areContentsTheSame() {
         TimesheetEntry timesheetEntry1 = new TimesheetEntry();
         timesheetEntry1.setId(1L);
         timesheetEntry1.setTimesheetId(23L);
@@ -62,7 +62,7 @@ public class TimesheetEntryDiffTest {
     }
 
     @Test
-    public void areContentsTheSameNotEqual() {
+    void areContentsTheSameNotEqual() {
         TimesheetEntry timesheetEntry1 = new TimesheetEntry();
         timesheetEntry1.setId(1L);
         timesheetEntry1.setTimesheetId(23L);

@@ -12,7 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @Disabled
 @ExtendWith(MockitoExtension.class)
-public class PdfUtilityTest {
+class PdfUtilityTest {
 
     @Mock
     Environment environment;

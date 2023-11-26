@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @ExtendWith(MockitoExtension.class)
-public class TimesheetServiceTest {
+class TimesheetServiceTest {
 
     private TimesheetService timesheetService;
 
@@ -188,9 +188,7 @@ public class TimesheetServiceTest {
 
         when(timesheetRepositoryMock.getTimesheet(timesheetExisting.getId())).thenReturn(timesheetExisting);
 
-        TerexApplicationException ex = assertThrows(TerexApplicationException.class, () -> {
-            timesheetService.createTimesheetSummary(timesheetExisting.getId());
-        });
+        TerexApplicationException ex = assertThrows(TerexApplicationException.class, () -> timesheetService.createTimesheetSummary(timesheetExisting.getId()));
 
         Assertions.assertEquals("Application error! Please Report error to app developer. Error=Application error, timesheet not fulfilled! timesheetId=23, status=ACTIVE", ex.getMessage());
 
@@ -206,9 +204,7 @@ public class TimesheetServiceTest {
         when(timesheetRepositoryMock.getTimesheet(timesheetExisting.getId())).thenReturn(timesheetExisting);
         when(timesheetRepositoryMock.getTimesheetEntryList(timesheetEntry.getTimesheetId())).thenReturn(List.of());
 
-        TerexApplicationException ex = assertThrows(TerexApplicationException.class, () -> {
-            timesheetService.createTimesheetSummary(timesheetExisting.getId());
-        });
+        TerexApplicationException ex = assertThrows(TerexApplicationException.class, () -> timesheetService.createTimesheetSummary(timesheetExisting.getId()));
 
         Assertions.assertEquals("Application error! Please Report error to app developer. Error=Application error, timesheet not ready for billing, no entries found! timesheetId=23, status=COMPLETED", ex.getMessage());
     }

@@ -58,7 +58,6 @@ public class TestData {
     /**
      * @param year  current year
      * @param month from january to december, for example Month.MARCH
-     * @return
      */
     public static List<TimesheetEntry> generateTimesheetEntries(Integer year, Integer month) {
         return getWorkingDays(year, month).stream().map(TestData::createTimesheet).collect(Collectors.toList());

@@ -2,40 +2,35 @@ package com.gunnarro.android.terex.domain;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import android.content.Context;
 
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class TimesheetEntryTest {
+class TimesheetEntryTest {
 
     @Mock
     Context applicationContext;
 
-    @Before
-    public void init() {
-    }
-
     @Test
-    public void timesheetEntryToJson() {
+    void timesheetEntryToJson() {
         TimesheetEntry timeSheetEntry = new TimesheetEntry();
         //Timesheet timesheet = mapper.readValue(jsonString, Timesheet.class);
         assertEquals("Open", "Open");
     }
 
 
-
     @Test
-    public void cloneTimesheetEntry() {
+    void cloneTimesheetEntry() {
         TimesheetEntry timesheetEntry1 = new TimesheetEntry();
         timesheetEntry1.setId(23L);
         timesheetEntry1.setCreatedDate(LocalDateTime.now());
@@ -55,7 +50,7 @@ public class TimesheetEntryTest {
     }
 
     @Test
-    public void timesheetEntryAreEqual() {
+    void timesheetEntryAreEqual() {
         TimesheetEntry timesheetEntry1 = new TimesheetEntry();
         timesheetEntry1.setId(1L);
         timesheetEntry1.setTimesheetId(23L);
@@ -66,11 +61,11 @@ public class TimesheetEntryTest {
         timesheetEntry2.setTimesheetId(23L);
         timesheetEntry2.setWorkdayDate(LocalDate.of(2023, 9, 9));
 
-        Assertions.assertTrue(timesheetEntry1.equals(timesheetEntry2));
+        assertTrue(timesheetEntry1.equals(timesheetEntry2));
     }
 
     @Test
-    public void timesheetEntryNotEqual() {
+    void timesheetEntryNotEqual() {
         TimesheetEntry timesheetEntry1 = new TimesheetEntry();
         timesheetEntry1.setId(1L);
         timesheetEntry1.setTimesheetId(23L);
@@ -81,6 +76,6 @@ public class TimesheetEntryTest {
         timesheetEntry2.setTimesheetId(23L);
         timesheetEntry2.setWorkdayDate(LocalDate.of(2023, 9, 10));
 
-        Assertions.assertFalse(timesheetEntry1.equals(timesheetEntry2));
+        assertFalse(timesheetEntry1.equals(timesheetEntry2));
     }
 }

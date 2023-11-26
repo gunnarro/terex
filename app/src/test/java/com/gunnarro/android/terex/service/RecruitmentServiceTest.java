@@ -2,7 +2,7 @@ package com.gunnarro.android.terex.service;
 
 import org.junit.jupiter.api.Test;
 
-public class RecruitmentServiceTest {
+class RecruitmentServiceTest {
 
     @Test
     void getAll() {
