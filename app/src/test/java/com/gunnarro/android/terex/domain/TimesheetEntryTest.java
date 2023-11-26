@@ -1,33 +1,18 @@
 package com.gunnarro.android.terex.domain;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import android.content.Context;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 class TimesheetEntryTest {
-
-    @Mock
-    Context applicationContext;
-
-    @Test
-    void timesheetEntryToJson() {
-        TimesheetEntry timeSheetEntry = new TimesheetEntry();
-        //Timesheet timesheet = mapper.readValue(jsonString, Timesheet.class);
-        assertEquals("Open", "Open");
-    }
-
 
     @Test
     void cloneTimesheetEntry() {
@@ -61,7 +46,7 @@ class TimesheetEntryTest {
         timesheetEntry2.setTimesheetId(23L);
         timesheetEntry2.setWorkdayDate(LocalDate.of(2023, 9, 9));
 
-        assertTrue(timesheetEntry1.equals(timesheetEntry2));
+        assertEquals(timesheetEntry1, timesheetEntry2);
     }
 
     @Test
@@ -76,6 +61,6 @@ class TimesheetEntryTest {
         timesheetEntry2.setTimesheetId(23L);
         timesheetEntry2.setWorkdayDate(LocalDate.of(2023, 9, 10));
 
-        assertFalse(timesheetEntry1.equals(timesheetEntry2));
+        assertNotEquals(timesheetEntry1, timesheetEntry2);
     }
 }
