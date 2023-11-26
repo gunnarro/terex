@@ -24,6 +24,7 @@ import com.gunnarro.android.terex.utility.Utility;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
@@ -157,18 +158,19 @@ public class TimesheetService {
             TimesheetEntry timesheetEntryExisting = timesheetRepository.getTimesheetEntry(timesheetEntry.getTimesheetId(), timesheetEntry.getWorkdayDate());
 
             if (timesheetEntryExisting != null && timesheetEntry.isNew()) {
-                throw new TerexApplicationException(String.format("timesheet entry already exist, timesheetId=%s, status=%s", timesheetEntryExisting.getId(), timesheetEntryExisting.getStatus()), "40040", null);
+                throw new InputValidationException(String.format("timesheet entry already exist, timesheetId=%s, status=%s", timesheetEntryExisting.getId(), timesheetEntryExisting.getStatus()), "40040", null);
 
             }
             // first of all, check status
             if (timesheetEntryExisting != null && timesheetEntryExisting.isBilled()) {
-                throw new TerexApplicationException(String.format("timesheet entry have status billed, no changes is allowed. timesheetId=%s, status=%s", timesheetEntryExisting.getId(), timesheetEntryExisting.getStatus()), "40040", null);
+                throw new InputValidationException(String.format("timesheet entry have status billed, no changes is allowed. timesheetId=%s, status=%s", timesheetEntryExisting.getId(), timesheetEntryExisting.getStatus()), "40040", null);
             }
 
             // validate work date, must be between the to and from date range of the timesheet
             Timesheet timesheet = timesheetRepository.getTimesheet(timesheetEntry.getTimesheetId());
+            // check the timesheet entry date
             if (timesheetEntry.getWorkdayDate().isBefore(timesheet.getFromDate()) || timesheetEntry.getWorkdayDate().isAfter(timesheet.getToDate())) {
-                throw new TerexApplicationException(String.format("timesheet entry work date not in the to and from date range of the timesheet. %s <> %s - %s", timesheetEntry.getWorkdayDate(), timesheet.getFromDate(), timesheet.getToDate()), "40040", null);
+                throw new InputValidationException(String.format("timesheet entry work date not in the to and from date range of the timesheet. %s <> %s - %s", timesheetEntry.getWorkdayDate(), timesheet.getFromDate(), timesheet.getToDate()), "40040", null);
             }
 
             Log.d("TimesheetRepository.saveTimesheetEntry", String.format("%s", timesheetEntryExisting));
@@ -197,13 +199,22 @@ public class TimesheetService {
 
     public void deleteTimesheetEntry(TimesheetEntry timesheetEntry) {
         if (timesheetEntry.isBilled()) {
-            throw new TerexApplicationException("Timesheet entry is closed, not allowed to delete or update", "40045", null);
+            throw new InputValidationException("Timesheet entry is closed, not allowed to delete or update", "40045", null);
         }
         timesheetRepository.deleteTimesheetEntry(timesheetEntry);
     }
 
+    @NotNull
     public TimesheetEntry getMostRecentTimeSheetEntry(Long timesheetId) {
-        return timesheetRepository.getMostRecentTimeSheetEntry(timesheetId);
+        TimesheetEntry timesheetEntry = timesheetRepository.getMostRecentTimeSheetEntry(timesheetId);
+        if (timesheetEntry == null) {
+            // no timesheet entries found, so simply create a default entry;
+            timesheetEntry = TimesheetEntry.createDefault(timesheetId, Timesheet.TimesheetStatusEnum.NEW.name(), Utility.DEFAULT_DAILY_BREAK_IN_MINUTES, LocalDate.now(), Utility.DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES, Utility.DEFAULT_HOURLY_RATE);
+            // then set date equal to the timesheet from date.
+            Timesheet timesheet = timesheetRepository.getTimesheet(timesheetId);
+            timesheetEntry.setWorkdayDate(timesheet.getFromDate());
+        }
+        return timesheetEntry;
     }
 
     public TimesheetWithEntries getTimesheetWithEntries(Long timesheetId) {
@@ -240,6 +251,7 @@ public class TimesheetService {
         if (timesheetEntryList == null || timesheetEntryList.isEmpty()) {
             throw new TerexApplicationException(String.format("Application error, timesheet not ready for billing, no entries found! timesheetId=%s, status=%s", timesheetId, timesheet.getStatus()), "50023", null);
         }
+
         Log.d("createInvoiceSummary", "timesheet entries: " + timesheetEntryList);
         // accumulate timesheet by week for the mount
         Map<Integer, List<TimesheetEntry>> timesheetWeekMap = timesheetEntryList.stream().collect(Collectors.groupingBy(TimesheetEntry::getWorkdayWeek));
@@ -261,6 +273,23 @@ public class TimesheetService {
         return invoiceSummaryByWeek;
     }
 
+    private TimesheetSummary buildTimesheetSummaryForWeek(@NotNull Long timesheetId, @NotNull Integer week, @NotNull List<TimesheetEntry> timesheetEntryList) {
+        TimesheetSummary timesheetSummary = new TimesheetSummary();
+        timesheetSummary.setCreatedDate(LocalDateTime.now());
+        timesheetSummary.setLastModifiedDate(LocalDateTime.now());
+        timesheetSummary.setTimesheetId(timesheetId);
+        timesheetSummary.setWeekInYear(week);
+        timesheetSummary.setYear(timesheetEntryList.get(0).getWorkdayDate().getYear());
+        timesheetSummary.setFromDate(Utility.getFirstDayOfWeek(timesheetEntryList.get(0).getWorkdayDate(), week));
+        timesheetSummary.setToDate(Utility.getLastDayOfWeek(timesheetEntryList.get(0).getWorkdayDate(), week));
+        timesheetSummary.setTotalWorkedDays(timesheetEntryList.size());
+        timesheetEntryList.forEach(t -> {
+            timesheetSummary.setTotalBilledAmount(timesheetSummary.getTotalBilledAmount() + (t.getHourlyRate() * ((double) t.getWorkedMinutes() / 60)));
+            timesheetSummary.setTotalWorkedHours(timesheetSummary.getTotalWorkedHours() + (double) t.getWorkedMinutes() / 60);
+        });
+        return timesheetSummary;
+    }
+
     private TimesheetSummary buildTimesheetSummaryForMonth(@NotNull Long timesheetId, @NotNull List<TimesheetEntry> timesheetEntryList) {
         TimesheetSummary timesheetSummary = new TimesheetSummary();
         timesheetSummary.setCreatedDate(LocalDateTime.now());
@@ -277,23 +306,6 @@ public class TimesheetService {
         return timesheetSummary;
     }
 
-    private TimesheetSummary buildTimesheetSummaryForWeek(@NotNull Long
-                                                                  timesheetId, @NotNull Integer week, @NotNull List<TimesheetEntry> timesheetEntryList) {
-        TimesheetSummary timesheetSummary = new TimesheetSummary();
-        timesheetSummary.setCreatedDate(LocalDateTime.now());
-        timesheetSummary.setLastModifiedDate(LocalDateTime.now());
-        timesheetSummary.setTimesheetId(timesheetId);
-        timesheetSummary.setWeekInYear(week);
-        timesheetSummary.setYear(timesheetEntryList.get(0).getWorkdayDate().getYear());
-        timesheetSummary.setFromDate(Utility.getFirstDayOfWeek(timesheetEntryList.get(0).getWorkdayDate(), week));
-        timesheetSummary.setToDate(Utility.getLastDayOfWeek(timesheetEntryList.get(0).getWorkdayDate(), week));
-        timesheetSummary.setTotalWorkedDays(timesheetEntryList.size());
-        timesheetEntryList.forEach(t -> {
-            timesheetSummary.setTotalBilledAmount(timesheetSummary.getTotalBilledAmount() + (t.getHourlyRate() * ((double) t.getWorkedMinutes() / 60)));
-            timesheetSummary.setTotalWorkedHours(timesheetSummary.getTotalWorkedHours() + (double) t.getWorkedMinutes() / 60);
-        });
-        return timesheetSummary;
-    }
 
     private TimesheetEntryDto mapToTimesheetEntryDto(TimesheetEntry timesheetEntry) {
         TimesheetEntryDto timesheetEntryDto = new TimesheetEntryDto();

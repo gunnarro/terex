@@ -1,16 +1,21 @@
 
 i
-java:S3008 "SRename this field "INSTANCE" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(½ßõÊ
+java:S3008."SRename this field "INSTANCE" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(½ßõÊ
+»
+java:S6548,"˜A Singleton implementation was detected. Make sure the use of the Singleton pattern is required and the implementation is the right one for the context.(ŒÚ‹Òüÿÿÿÿ8¯ˆ£äÀ1
 m
-java:S3077 "WUse a thread-safe type; adding "volatile" is not enough to make this field thread-safe.(½ßõÊ
-K
-java:S1854@"5Remove this useless assignment to local variable "b".(’…œó
-<
-java:S1481@"&Remove this unused "b" local variable.(’…œó
-Q	java:S125D"<This block of commented-out lines of code should be removed.(»Ó°
+java:S3077."WUse a thread-safe type; adding "volatile" is not enough to make this field thread-safe.(½ßõÊ
+X	java:S125T"<This block of commented-out lines of code should be removed.(‘Š¨õ8¾ˆ£äÀ1
+h
+java:S1854]"FRemove this useless assignment to local variable "recruitmentCompany".(Äï€úüÿÿÿÿ8Àˆ£äÀ1
+Y
+java:S1481]"7Remove this unused "recruitmentCompany" local variable.(Äï€úüÿÿÿÿ8Âˆ£äÀ1
+X	java:S125a"<This block of commented-out lines of code should be removed.(¹†»ù8Äˆ£äÀ1
+Q	java:S125j"<This block of commented-out lines of code should be removed.(»Ó°
+]	java:S125t"<This block of commented-out lines of code should be removed.(¾”¼ôüÿÿÿÿ8Æˆ£äÀ1
 R
-java:S3985T"7Remove this unused private "PopulateDbAsyncTask" class.(õ¾­îýÿÿÿÿ
+java:S3985y"7Remove this unused private "PopulateDbAsyncTask" class.(õ¾­îýÿÿÿÿ
 L
-java:S1874T"1Remove this use of "AsyncTask"; it is deprecated.(õ¾­îýÿÿÿÿ
+java:S1874y"1Remove this use of "AsyncTask"; it is deprecated.(õ¾­îýÿÿÿÿ
 K
-java:S1068:"0Remove this unused "roomCallback" private field.(²€§ìúÿÿÿÿ
+java:S1068W"0Remove this unused "roomCallback" private field.(²€§ìúÿÿÿÿ

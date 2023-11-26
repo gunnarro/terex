@@ -23,7 +23,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.gunnarro.android.terex.R;
-import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.ui.adapter.TimesheetEntryListAdapter;
@@ -33,7 +32,6 @@ import com.gunnarro.android.terex.utility.Utility;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -83,28 +81,24 @@ public class TimesheetEntryListFragment extends Fragment {
             throw new TerexApplicationException("Missing timesheet id!", "50023", null);
         }
         Long timesheetId = getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY);
-        Boolean isTimesheetReadOnly = getArguments().getBoolean(TimesheetListFragment.TIMESHEET_READ_ONLY_KEY);
+        boolean isTimesheetReadOnly = getArguments().getBoolean(TimesheetListFragment.TIMESHEET_READ_ONLY_KEY);
 
         // Update the cached copy of the timesheet entries in the adapter.
         timesheetEntryViewModel.getTimesheetEntryLiveData(timesheetId).observe(requireActivity(), adapter::submitList);
 
         FloatingActionButton addButton = view.findViewById(R.id.timesheet_entry_add_btn);
-        addButton.setOnClickListener(v -> {
-            requireActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.content_frame, TimesheetEntryAddFragment.class, createTimesheetEntryBundle(timesheetId))
-                    .setReorderingAllowed(true)
-                    .commit();
-        });
+        addButton.setOnClickListener(v -> requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content_frame, TimesheetEntryAddFragment.class, createTimesheetEntryBundle(timesheetId))
+                .setReorderingAllowed(true)
+                .commit());
 
         FloatingActionButton calendarButton = view.findViewById(R.id.timesheet_entry_calendar_btn);
-        calendarButton.setOnClickListener(v -> {
-            requireActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.content_frame, TimesheetEntryCustomCalendarFragment.class, createTimesheetEntryBundle(timesheetId))
-                    .setReorderingAllowed(true)
-                    .commit();
-        });
+        calendarButton.setOnClickListener(v -> requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content_frame, TimesheetEntryCustomCalendarFragment.class, createTimesheetEntryBundle(timesheetId))
+                .setReorderingAllowed(true)
+                .commit());
 
         // flip gui based on timesheet status, hide buttons if timesheet has status BILLED
         if (isTimesheetReadOnly) {
@@ -120,9 +114,6 @@ public class TimesheetEntryListFragment extends Fragment {
 
     private Bundle createTimesheetEntryBundle(Long timesheetId) {
         TimesheetEntry mostRecentTimesheetEntry = timesheetEntryViewModel.getMostRecentTimesheetEntry(timesheetId);
-        if (mostRecentTimesheetEntry == null) {
-            mostRecentTimesheetEntry = createDefaultTimesheetEntry(timesheetId);
-        }
         String timesheetJson = Utility.gsonMapper().toJson(mostRecentTimesheetEntry, TimesheetEntry.class);
         Bundle bundle = new Bundle();
         bundle.putLong(TimesheetListFragment.TIMESHEET_ID_KEY, timesheetId);
@@ -178,10 +169,6 @@ public class TimesheetEntryListFragment extends Fragment {
         }
     }
 
-    private TimesheetEntry createDefaultTimesheetEntry(Long timesheetId) {
-        return TimesheetEntry.createDefault(timesheetId, Timesheet.TimesheetStatusEnum.NEW.name(), Utility.DEFAULT_DAILY_BREAK_IN_MINUTES, LocalDate.now(), Utility.DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES, Utility.DEFAULT_HOURLY_RATE);
-    }
-
     private void enableSwipeToRightAndViewItem(RecyclerView recyclerView) {
         SwipeCallback swipeToDeleteCallback = new SwipeCallback(requireContext(), ItemTouchHelper.RIGHT, getResources().getColor(R.color.color_bg_swipe_right, null), R.drawable.ic_add_black_24dp) {
             @Override
@@ -193,7 +180,7 @@ public class TimesheetEntryListFragment extends Fragment {
 
                 Bundle bundle = new Bundle();
                 bundle.putLong(TimesheetListFragment.TIMESHEET_ID_KEY, list.get(pos).getId());
-               // goToTimesheetEntryView(bundle);
+                // goToTimesheetEntryView(bundle);
             }
         };
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
@@ -205,7 +192,7 @@ public class TimesheetEntryListFragment extends Fragment {
         SwipeCallback swipeToDeleteCallback = new SwipeCallback(requireContext(), ItemTouchHelper.LEFT, getResources().getColor(R.color.color_bg_swipe_left, null), R.drawable.ic_delete_black_24dp) {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-                final int position = viewHolder.getAbsoluteAdapterPosition();// FIXME
+                final int position = viewHolder.getAbsoluteAdapterPosition();// FIXME crash when swipe, item is null at position!
                 timesheetEntryViewModel.deleteTimesheetEntry(timesheetEntryViewModel.getTimesheetEntryLiveData(1L).getValue().get(position));
                 showSnackbar("Deleted timesheet", R.color.color_snackbar_text_delete);
             }

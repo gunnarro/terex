@@ -186,8 +186,12 @@ public class TimesheetEntryCustomCalendarFragment extends Fragment {
      * When button save is click and new timesheet entry event is sent in order to insert it into the database
      */
     private void handleButtonSaveClick(CalendarView calendarView) {
-        timesheetService.saveTimesheetEntry(getTimesheetEntry());
-        showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_add_msg_format), selectedWorkDayDate), R.color.color_snackbar_text_add);
+        try {
+            timesheetService.saveTimesheetEntry(getTimesheetEntry());
+            showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_add_msg_format), selectedWorkDayDate), R.color.color_snackbar_text_add);
+        } catch (TerexApplicationException e) {
+            showSnackbar("Failed add timesheet entry!", R.color.design_default_color_error);
+        }
     }
 
     private void showSnackbar(String msg, @ColorRes int bgColor) {

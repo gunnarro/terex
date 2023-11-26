@@ -126,7 +126,7 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
     private Bundle createTimesheetBundle(Long timesheetId, Integer year) {
         Timesheet timesheet = timesheetViewModel.getTimesheet(timesheetId);
         if (timesheet == null) {
-           // timesheet = Timesheet.createDefault(null, null, year, LocalDate.now().getMonthValue());
+            // timesheet = Timesheet.createDefault(null, null, year, LocalDate.now().getMonthValue());
             return new Bundle();
         }
         String timesheetJson = Utility.gsonMapper().toJson(timesheet, Timesheet.class);

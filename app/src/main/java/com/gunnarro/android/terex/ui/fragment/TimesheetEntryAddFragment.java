@@ -77,9 +77,8 @@ public class TimesheetEntryAddFragment extends Fragment implements View.OnClickL
                     LocalDate.now().getDayOfMonth());
 
             // FIXME Set dates
-// datePickerDialog.getDatePicker().setMaxDate(maxTime);
-// datePickerDialog.getDatePicker().setMinDate(minTime);
-
+//datePickerDialog.getDatePicker().setMaxDate(maxTime);
+//datePickerDialog.getDatePicker().setMinDate(minTime);
 
             workdayDatePicker.setTitle(getResources().getString(R.string.title_select_workday_date));
             workdayDatePicker.getDatePicker().setMinDate(Utility.getFirstDayOfMonth(LocalDate.now()).toEpochDay());
@@ -95,9 +94,7 @@ public class TimesheetEntryAddFragment extends Fragment implements View.OnClickL
             TimePickerDialog fromTimePicker = new TimePickerDialog(
                     requireContext(),
                     R.style.DialogTheme,
-                    (timePicker, selectedHour, selectedMinute) -> {
-                        fromTime.setText(Utility.formatToHHMM(selectedHour, selectedMinute));
-                    },
+                    (timePicker, selectedHour, selectedMinute) -> fromTime.setText(Utility.formatToHHMM(selectedHour, selectedMinute)),
                     LocalTime.now().getHour(),
                     LocalTime.now().getMinute(),
                     true);
@@ -113,9 +110,7 @@ public class TimesheetEntryAddFragment extends Fragment implements View.OnClickL
             TimePickerDialog toTimePicker = new TimePickerDialog(
                     requireContext(),
                     R.style.DialogTheme,
-                    (timePicker, selectedHour, selectedMinute) -> {
-                        toTime.setText(Utility.formatToHHMM(selectedHour, selectedMinute));
-                    },
+                    (timePicker, selectedHour, selectedMinute) -> toTime.setText(Utility.formatToHHMM(selectedHour, selectedMinute)),
                     LocalTime.now().getHour(),
                     LocalTime.now().getMinute(),
                     true);
@@ -239,6 +234,18 @@ public class TimesheetEntryAddFragment extends Fragment implements View.OnClickL
 
         // hide fields if this is a new
         if (timesheetEntry.getId() == null) {
+            timesheetNameView.setEnabled(false);
+            view.findViewById(R.id.timesheet_entry_date_layout).setVisibility(View.GONE);
+            view.findViewById(R.id.btn_timesheet_entry_delete).setVisibility(View.GONE);
+        } else if (timesheetEntry.isClosed()) {
+            // timesheet entry is locked
+            createdDateView.setEnabled(false);
+            lastModifiedDateView.setEnabled(false);
+            // disable input that is not allowed to edit
+            timesheetNameView.setEnabled(false);
+            hourlyRateView.setEnabled(false);
+            workdayYearView.setEnabled(false);
+            workdayMonthView.setEnabled(false);
             view.findViewById(R.id.timesheet_entry_date_layout).setVisibility(View.GONE);
             view.findViewById(R.id.btn_timesheet_entry_delete).setVisibility(View.GONE);
         } else {

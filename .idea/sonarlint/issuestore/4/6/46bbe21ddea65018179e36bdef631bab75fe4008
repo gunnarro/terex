@@ -1,0 +1,7 @@
+
+‚
+java:S1149”"_Replace the synchronized class "StringBuffer" by an unsynchronized one such as "StringBuilder".(ğÔéóùÿÿÿÿ8Éã‹åÀ1
+{
+java:S1158£"XCall the static method Double.toString(...) instead of instantiating a temporary object.(ë¤¦’úÿÿÿÿ8Ïã‹åÀ1
+:
+java:S2153ì"Remove the boxing to "Long".(¤¯©ò8Øã‹åÀ1

@@ -1,7 +1,7 @@
 package com.gunnarro.android.terex.exception;
 
 public class InputValidationException extends RuntimeException {
-    private static final String DEFAULT_MESSAGE_FORMAT = "Validation error! =%s";
+    private static final String DEFAULT_MESSAGE_FORMAT = "%s";
     private final String errorCode;
 
     public InputValidationException(String msg, String errorCode, Throwable throwable) {

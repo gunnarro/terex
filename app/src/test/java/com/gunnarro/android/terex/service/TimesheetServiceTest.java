@@ -13,6 +13,7 @@ import com.gunnarro.android.terex.TestData;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
+import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.repository.TimesheetRepository;
 
@@ -53,11 +54,11 @@ class TimesheetServiceTest {
         Timesheet timesheet = Timesheet.createDefault("gunnarro", "test-project", 2023, 11);
         timesheet.setId(23L);
         when(timesheetRepositoryMock.getTimesheet(anyString(), anyString(), anyInt(), anyInt())).thenReturn(timesheet);
-        TerexApplicationException ex = assertThrows(TerexApplicationException.class, () -> {
+        InputValidationException ex = assertThrows(InputValidationException.class, () -> {
             timesheetService.saveTimesheet(timesheet);
         });
 
-        Assertions.assertEquals("Application error! Please Report error to app developer. Error=timesheet is already exist, timesheetId=23 NEW", ex.getMessage());
+        Assertions.assertEquals("timesheet already exist, timesheetId=23, status=NEW", ex.getMessage());
     }
 
     @Test
@@ -68,11 +69,11 @@ class TimesheetServiceTest {
         when(timesheetRepositoryMock.getTimesheet(anyString(), anyString(), anyInt(), anyInt())).thenReturn(timesheetExisting);
         Timesheet timesheetUpdated = Timesheet.createDefault("gunnarro", "test-project", 2023, 11);
         timesheetUpdated.setStatus(Timesheet.TimesheetStatusEnum.ACTIVE.name());
-        TerexApplicationException ex = assertThrows(TerexApplicationException.class, () -> {
+        InputValidationException ex = assertThrows(InputValidationException.class, () -> {
             timesheetService.saveTimesheet(timesheetUpdated);
         });
 
-        Assertions.assertEquals("Application error! Please Report error to app developer. Error=timesheet is already billed, no changes is allowed. timesheetId=23 BILLED", ex.getMessage());
+        Assertions.assertEquals("timesheet is already billed, no changes is allowed. timesheetId=23, status=BILLED", ex.getMessage());
     }
 
     @Test
@@ -148,40 +149,51 @@ class TimesheetServiceTest {
         TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(null, Timesheet.TimesheetStatusEnum.NEW.name(), 30, LocalDate.now(), 450, 1900);
 
         when(timesheetRepositoryMock.getTimesheetEntry(timesheetEntry.getTimesheetId(), timesheetEntry.getWorkdayDate())).thenReturn(timesheetEntryExisting);
-        TerexApplicationException ex = assertThrows(TerexApplicationException.class, () -> {
+        InputValidationException ex = assertThrows(InputValidationException.class, () -> {
             timesheetService.saveTimesheetEntry(timesheetEntry);
         });
 
-        Assertions.assertEquals("Application error! Please Report error to app developer. Error=timesheet entry already exist, timesheetId=null, status=BILLED", ex.getMessage());
+        Assertions.assertEquals("timesheet entry already exist, timesheetId=null, status=BILLED", ex.getMessage());
     }
 
     @Test
-    void saveTimesheetEntry_work_date_not_in_timesheet_date_range() throws ExecutionException, InterruptedException {
+    void saveTimesheetEntry_work_date_after_timesheet_to_date() throws ExecutionException, InterruptedException {
         Timesheet timesheet = Timesheet.createDefault("gunnarro", "test-project", 2023, 11);
         timesheet.setId(1L);
-        TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(timesheet.getId(), Timesheet.TimesheetStatusEnum.NEW.name(), 30, LocalDate.of(2023, 12, 21), 450, 1900);
-
+        TimesheetEntry timesheetEntryAfterToDate = TimesheetEntry.createDefault(timesheet.getId(), Timesheet.TimesheetStatusEnum.NEW.name(), 30, LocalDate.of(2023, 12, 21), 450, 1900);
         when(timesheetRepositoryMock.getTimesheet(anyLong())).thenReturn(timesheet);
-        when(timesheetRepositoryMock.getTimesheetEntry(timesheetEntry.getTimesheetId(), timesheetEntry.getWorkdayDate())).thenReturn(null);
-        TerexApplicationException ex = assertThrows(TerexApplicationException.class, () -> {
-            timesheetService.saveTimesheetEntry(timesheetEntry);
+        when(timesheetRepositoryMock.getTimesheetEntry(timesheetEntryAfterToDate.getTimesheetId(), timesheetEntryAfterToDate.getWorkdayDate())).thenReturn(null);
+        InputValidationException ex = assertThrows(InputValidationException.class, () -> {
+            timesheetService.saveTimesheetEntry(timesheetEntryAfterToDate);
         });
+        Assertions.assertEquals("timesheet entry work date not in the to and from date range of the timesheet. 2023-12-21 <> 2023-11-01 - 2023-11-30", ex.getMessage());
+    }
 
-        Assertions.assertEquals("Application error! Please Report error to app developer. Error=timesheet entry work date not in the to and from date range of the timesheet. 2023-12-21 <> 2023-11-01 - 2023-11-30", ex.getMessage());
+    @Test
+    void saveTimesheetEntry_work_date_before_timesheet_from_date() throws ExecutionException, InterruptedException {
+        Timesheet timesheet = Timesheet.createDefault("gunnarro", "test-project", 2023, 11);
+        timesheet.setId(1L);
+        TimesheetEntry timesheetEntryBeforeFromDate = TimesheetEntry.createDefault(timesheet.getId(), Timesheet.TimesheetStatusEnum.NEW.name(), 30, LocalDate.of(2023, 10, 21), 450, 1900);
+        when(timesheetRepositoryMock.getTimesheet(anyLong())).thenReturn(timesheet);
+        when(timesheetRepositoryMock.getTimesheetEntry(timesheetEntryBeforeFromDate.getTimesheetId(), timesheetEntryBeforeFromDate.getWorkdayDate())).thenReturn(null);
+        InputValidationException ex = assertThrows(InputValidationException.class, () -> {
+            timesheetService.saveTimesheetEntry(timesheetEntryBeforeFromDate);
+        });
+        Assertions.assertEquals("timesheet entry work date not in the to and from date range of the timesheet. 2023-10-21 <> 2023-11-01 - 2023-11-30", ex.getMessage());
     }
 
     @Test
     void deleteTimesheetEntry_status_not_allowed() {
         TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(23L, Timesheet.TimesheetStatusEnum.BILLED.name(), 30, LocalDate.now(), 450, 1900);
-        TerexApplicationException ex = assertThrows(TerexApplicationException.class, () -> {
+        InputValidationException ex = assertThrows(InputValidationException.class, () -> {
             timesheetService.deleteTimesheetEntry(timesheetEntry);
         });
 
-        Assertions.assertEquals("Application error! Please Report error to app developer. Error=Timesheet entry is closed, not allowed to delete or update", ex.getMessage());
+        Assertions.assertEquals("Timesheet entry is closed, not allowed to delete or update", ex.getMessage());
     }
 
     @Test
-    void createTimesheetSummary_not_ready_for_billing() throws ExecutionException, InterruptedException {
+    void createTimesheetSummary_not_ready_for_billing() {
         Timesheet timesheetExisting = Timesheet.createDefault("gunnarro", "test-project", 2023, 11);
         timesheetExisting.setId(23L);
         timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.ACTIVE.name());
@@ -191,11 +203,10 @@ class TimesheetServiceTest {
         TerexApplicationException ex = assertThrows(TerexApplicationException.class, () -> timesheetService.createTimesheetSummary(timesheetExisting.getId()));
 
         Assertions.assertEquals("Application error! Please Report error to app developer. Error=Application error, timesheet not fulfilled! timesheetId=23, status=ACTIVE", ex.getMessage());
-
     }
 
     @Test
-    void createTimesheetSummary_no_entries() throws ExecutionException, InterruptedException {
+    void createTimesheetSummary_no_entries() {
         Timesheet timesheetExisting = Timesheet.createDefault("gunnarro", "test-project", 2023, 11);
         timesheetExisting.setId(23L);
         timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
@@ -207,6 +218,14 @@ class TimesheetServiceTest {
         TerexApplicationException ex = assertThrows(TerexApplicationException.class, () -> timesheetService.createTimesheetSummary(timesheetExisting.getId()));
 
         Assertions.assertEquals("Application error! Please Report error to app developer. Error=Application error, timesheet not ready for billing, no entries found! timesheetId=23, status=COMPLETED", ex.getMessage());
+    }
+
+    @Test
+    void getMostRecentTimeSheetEntry_no_emtries() {
+        Timesheet timesheet = Timesheet.createDefault("gunnarro", "test-project", 2023, 11);
+        when(timesheetRepositoryMock.getTimesheet(timesheet.getId())).thenReturn(timesheet);
+        when(timesheetRepositoryMock.getMostRecentTimeSheetEntry(timesheet.getId())).thenReturn(null);
+        assertEquals("2023-11-01", timesheetService.getMostRecentTimeSheetEntry(timesheet.getId()).getWorkdayDate().toString());
     }
 
     @Test

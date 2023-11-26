@@ -109,6 +109,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:hint="@string/lbl_status">
 
                 <androidx.appcompat.widget.AppCompatAutoCompleteTextView
