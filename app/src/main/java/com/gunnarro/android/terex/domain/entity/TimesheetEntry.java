@@ -19,6 +19,8 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.WeekFields;
+import java.util.Locale;
 import java.util.Objects;
 
 import lombok.Getter;
@@ -223,6 +225,7 @@ public class TimesheetEntry extends BaseEntity {
         timesheetEntry.setTimesheetId(timesheetId);
         timesheetEntry.setStatus(status);
         timesheetEntry.setWorkdayDate(workDayDate);
+        timesheetEntry.setWorkdayWeek(timesheetEntry.getWorkdayDate().get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()));
         timesheetEntry.setFromTime(LocalTime.now(ZoneId.systemDefault()).withHour(8).withMinute(0).withSecond(0).withSecond(0).withNano(0));
         // add 7,5 hours
         timesheetEntry.setToTime(timesheetEntry.getFromTime().plusMinutes(workingHoursMin));

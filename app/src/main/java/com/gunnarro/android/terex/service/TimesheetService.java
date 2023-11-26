@@ -23,28 +23,15 @@ import com.gunnarro.android.terex.utility.Utility;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.time.DateTimeException;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Month;
-import java.time.Year;
-import java.time.temporal.ChronoField;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalField;
-import java.time.temporal.ValueRange;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ExecutionException;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -164,7 +151,7 @@ public class TimesheetService {
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures
     // that you're not doing any long running operations on the main thread, blocking the UI.
     @Transaction
-    public Long saveTimesheetEntry(@NotNull final TimesheetEntry timesheetEntry) {
+    public void saveTimesheetEntry(@NotNull final TimesheetEntry timesheetEntry) {
         try {
             TimesheetEntry timesheetEntryExisting = timesheetRepository.getTimesheetEntry(timesheetEntry.getTimesheetId(), timesheetEntry.getWorkdayDate());
 
@@ -199,7 +186,6 @@ public class TimesheetService {
                 id = timesheetEntry.getId();
                 Log.d("TimesheetRepository.saveTimesheetEntry", "update timesheet entry: " + id + " - " + timesheetEntry.getWorkdayDate());
             }
-            return id;
         } catch (InterruptedException | ExecutionException e) {
             // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();
@@ -246,12 +232,12 @@ public class TimesheetService {
         // check timesheet status
         Timesheet timesheet = getTimesheet(timesheetId);
         if (!timesheet.isCompleted()) {
-            throw new TerexApplicationException("Application error, timesheet have status COMPLETED", "50023", null);
+            throw new TerexApplicationException(String.format("Application error, timesheet not fulfilled! timesheetId=%s, status=%s", timesheetId, timesheet.getStatus()), "50023", null);
         }
         Log.d("createInvoiceSummary", String.format("timesheetId=%s", timesheetId));
         List<TimesheetEntry> timesheetEntryList = getTimesheetEntryList(timesheetId);
         if (timesheetEntryList == null || timesheetEntryList.isEmpty()) {
-            throw new TerexApplicationException("Application error, timesheet not ready for billing, no entries found!", "50023", null);
+            throw new TerexApplicationException(String.format("Application error, timesheet not ready for billing, no entries found! timesheetId=%s, status=%s", timesheetId, timesheet.getStatus()), "50023", null);
         }
         Log.d("createInvoiceSummary", "timesheet entries: " + timesheetEntryList);
         // accumulate timesheet by week for the mount
@@ -274,8 +260,7 @@ public class TimesheetService {
         return invoiceSummaryByWeek;
     }
 
-    private TimesheetSummary buildTimesheetSummaryForMonth(@NotNull Long
-                                                                   timesheetId, @NotNull List<TimesheetEntry> timesheetEntryList) {
+    private TimesheetSummary buildTimesheetSummaryForMonth(@NotNull Long timesheetId, @NotNull List<TimesheetEntry> timesheetEntryList) {
         TimesheetSummary timesheetSummary = new TimesheetSummary();
         timesheetSummary.setCreatedDate(LocalDateTime.now());
         timesheetSummary.setLastModifiedDate(LocalDateTime.now());
@@ -309,71 +294,6 @@ public class TimesheetService {
         return timesheetSummary;
     }
 
-    public List<TimesheetSummary> buildTimesheetSummaryByWeek(Integer year, Integer month) {
-        Map<Integer, List<TimesheetEntry>> weekMap = new HashMap<>();
-        generateTimesheet(year, month).forEach(t -> {
-            int week = getWeek(t.getWorkdayDate());
-            if (!weekMap.containsKey(week)) {
-                weekMap.put(week, new ArrayList<>());
-            }
-            Objects.requireNonNull(weekMap.get(week)).add(t);
-        });
-        List<TimesheetSummary> timesheetSummaryByWeek = new ArrayList<>();
-
-        weekMap.forEach((k, e) -> {
-            TimesheetSummary timesheetSummary = new TimesheetSummary();
-            timesheetSummary.setWeekInYear(k);
-            timesheetSummary.setTotalWorkedDays(e.size());
-            timesheetSummaryByWeek.add(timesheetSummary);
-            Objects.requireNonNull(weekMap.get(k)).forEach(t -> {
-                timesheetSummary.setTotalBilledAmount(timesheetSummary.getTotalBilledAmount() + (t.getHourlyRate() * ((double) t.getWorkedMinutes() / 60)));
-                timesheetSummary.setTotalWorkedHours(timesheetSummary.getTotalWorkedHours() + (double) t.getWorkedMinutes() / 60);
-            });
-        });
-        return timesheetSummaryByWeek;
-    }
-
-    /**
-     * @param year  current year
-     * @param month from january to december, for example Month.MARCH
-     * @return
-     */
-    public List<TimesheetEntry> generateTimesheet(Integer year, Integer month) {
-        return getWorkingDays(year, month).stream().map(this::createTimesheet).collect(Collectors.toList());
-    }
-
-    private List<LocalDate> getWorkingDays(Integer year, Integer month) {
-        // validate year and mount
-        try {
-            Year.of(year);
-        } catch (DateTimeException e) {
-            throw new RuntimeException(e.getMessage());
-        }
-        try {
-            Month.of(month);
-        } catch (DateTimeException e) {
-            throw new RuntimeException(e.getMessage());
-        }
-
-        LocalDate startDate = LocalDate.of(Year.of(year).getValue(), Month.of(month).getValue(), 1);
-        ValueRange range = startDate.range(ChronoField.DAY_OF_MONTH);
-        LocalDate endDate = startDate.withDayOfMonth((int) range.getMaximum());
-
-        Predicate<LocalDate> isWeekend = date -> date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY;
-
-        long daysBetween = ChronoUnit.DAYS.between(startDate, endDate);
-        return Stream.iterate(startDate, date -> date.plusDays(1)).limit(daysBetween).filter(isWeekend.negate()).collect(Collectors.toList());
-    }
-
-    private TimesheetEntry createTimesheet(LocalDate day) {
-        return TimesheetEntry.createDefault(new java.util.Random().nextLong(), Timesheet.TimesheetStatusEnum.NEW.name(), Utility.DEFAULT_DAILY_BREAK_IN_MINUTES, day, Utility.DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES, Utility.DEFAULT_HOURLY_RATE);
-    }
-
-    private static int getWeek(LocalDate date) {
-        TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
-        return date.get(woy);
-    }
-
     private TimesheetEntryDto mapToTimesheetEntryDto(TimesheetEntry timesheetEntry) {
         TimesheetEntryDto timesheetEntryDto = new TimesheetEntryDto();
         timesheetEntryDto.setComments(timesheetEntry.getComment());
@@ -383,7 +303,7 @@ public class TimesheetService {
         return timesheetEntryDto;
     }
 
-    public Company getCompany(Long timesheetId) {
+    public static Company getCompany(Long timesheetId) {
         Company company = new Company();
         company.setId(10L);
         company.setName("gunnarro:as");
@@ -399,7 +319,7 @@ public class TimesheetService {
         return company;
     }
 
-    public Company getClient(Long timesheetId) {
+    public static Company getClient(Long timesheetId) {
         Company client = new Company();
         client.setId(20L);
         client.setName("Norway Consulting AS");

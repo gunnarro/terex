@@ -95,7 +95,7 @@ public class InvoiceRepository {
                 throw new TerexApplicationException("Invoice is COMPLETED, not allowed to delete or update", "40045", null);
             }
             Log.d("InvoiceRepository.saveInvoice", String.format("%s", invoice));
-            Long id = null;
+            Long id;
             if (invoiceExisting == null) {
                 // this is a new invoice
                 invoice.setCreatedDate(LocalDateTime.now());

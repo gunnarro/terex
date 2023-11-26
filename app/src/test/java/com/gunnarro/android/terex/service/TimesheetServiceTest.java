@@ -9,8 +9,10 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
+import com.gunnarro.android.terex.TestData;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
+import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.repository.TimesheetRepository;
 
@@ -35,7 +37,6 @@ public class TimesheetServiceTest {
 
     @BeforeEach
     public void setup() {
-    //    timesheetRepositoryMock = Mockito.mock(TimesheetRepository.class);
         timesheetService = new TimesheetService(timesheetRepositoryMock);
     }
 
@@ -155,7 +156,7 @@ public class TimesheetServiceTest {
     }
 
     @Test
-    public void saveTimesheetEntry_work_date_not_in_timesheet_to_from_date_range() throws ExecutionException, InterruptedException {
+    public void saveTimesheetEntry_work_date_not_in_timesheet_date_range() throws ExecutionException, InterruptedException {
         Timesheet timesheet = Timesheet.createDefault("gunnarro", "test-project", 2023, 11);
         timesheet.setId(1L);
         TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(timesheet.getId(), Timesheet.TimesheetStatusEnum.NEW.name(), 30, LocalDate.of(2023, 12, 21), 450, 1900);
@@ -177,5 +178,83 @@ public class TimesheetServiceTest {
         });
 
         Assertions.assertEquals("Application error! Please Report error to app developer. Error=Timesheet entry is closed, not allowed to delete or update", ex.getMessage());
+    }
+
+    @Test
+    public void createTimesheetSummary_not_ready_for_billing() throws ExecutionException, InterruptedException {
+        Timesheet timesheetExisting = Timesheet.createDefault("gunnarro", "test-project", 2023, 11);
+        timesheetExisting.setId(23L);
+        timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.ACTIVE.name());
+
+        when(timesheetRepositoryMock.getTimesheet(timesheetExisting.getId())).thenReturn(timesheetExisting);
+
+        TerexApplicationException ex = assertThrows(TerexApplicationException.class, () -> {
+            timesheetService.createTimesheetSummary(timesheetExisting.getId());
+        });
+
+        Assertions.assertEquals("Application error! Please Report error to app developer. Error=Application error, timesheet not fulfilled! timesheetId=23, status=ACTIVE", ex.getMessage());
+
+    }
+
+    @Test
+    public void createTimesheetSummary_no_entries() throws ExecutionException, InterruptedException {
+        Timesheet timesheetExisting = Timesheet.createDefault("gunnarro", "test-project", 2023, 11);
+        timesheetExisting.setId(23L);
+        timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
+        TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(timesheetExisting.getId(), Timesheet.TimesheetStatusEnum.NEW.name(), 30, LocalDate.of(2023, 12, 21), 450, 1900);
+
+        when(timesheetRepositoryMock.getTimesheet(timesheetExisting.getId())).thenReturn(timesheetExisting);
+        when(timesheetRepositoryMock.getTimesheetEntryList(timesheetEntry.getTimesheetId())).thenReturn(List.of());
+
+        TerexApplicationException ex = assertThrows(TerexApplicationException.class, () -> {
+            timesheetService.createTimesheetSummary(timesheetExisting.getId());
+        });
+
+        Assertions.assertEquals("Application error! Please Report error to app developer. Error=Application error, timesheet not ready for billing, no entries found! timesheetId=23, status=COMPLETED", ex.getMessage());
+    }
+
+    @Test
+    public void createTimesheetSummary() {
+        Timesheet timesheetExisting = Timesheet.createDefault("gunnarro", "test-project", 2023, 11);
+        timesheetExisting.setId(23L);
+        timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
+        TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(timesheetExisting.getId(), Timesheet.TimesheetStatusEnum.NEW.name(), 30, LocalDate.of(2023, 12, 21), 450, 1900);
+
+        List<TimesheetEntry> timesheetEntryList = TestData.generateTimesheetEntries(timesheetExisting.getYear(), timesheetExisting.getMonth());
+        when(timesheetRepositoryMock.getTimesheet(timesheetExisting.getId())).thenReturn(timesheetExisting);
+        when(timesheetRepositoryMock.getTimesheetEntryList(timesheetEntry.getTimesheetId())).thenReturn(timesheetEntryList);
+
+        List<TimesheetSummary> timesheetSummaryList = timesheetService.createTimesheetSummary(timesheetExisting.getId());
+        // week 1
+        assertEquals(5, timesheetSummaryList.size());
+        assertEquals(23, timesheetSummaryList.get(0).getTimesheetId());
+        assertEquals(0, timesheetSummaryList.get(0).getTotalDaysOff());
+        assertEquals(3, timesheetSummaryList.get(0).getTotalWorkedDays().intValue());
+        assertEquals(22.5, timesheetSummaryList.get(0).getTotalWorkedHours());
+        assertEquals(28125.0, timesheetSummaryList.get(0).getTotalBilledAmount());
+        // week 2
+        assertEquals(23, timesheetSummaryList.get(1).getTimesheetId());
+        assertEquals(0, timesheetSummaryList.get(1).getTotalDaysOff());
+        assertEquals(5, timesheetSummaryList.get(1).getTotalWorkedDays().intValue());
+        assertEquals(37.5, timesheetSummaryList.get(1).getTotalWorkedHours());
+        assertEquals(46875.0, timesheetSummaryList.get(1).getTotalBilledAmount());
+        // week 3
+        assertEquals(23, timesheetSummaryList.get(2).getTimesheetId());
+        assertEquals(0, timesheetSummaryList.get(2).getTotalDaysOff());
+        assertEquals(5, timesheetSummaryList.get(2).getTotalWorkedDays().intValue());
+        assertEquals(37.5, timesheetSummaryList.get(2).getTotalWorkedHours());
+        assertEquals(46875.0, timesheetSummaryList.get(2).getTotalBilledAmount());
+        // week 4
+        assertEquals(23, timesheetSummaryList.get(3).getTimesheetId());
+        assertEquals(0, timesheetSummaryList.get(3).getTotalDaysOff());
+        assertEquals(5, timesheetSummaryList.get(3).getTotalWorkedDays().intValue());
+        assertEquals(37.5, timesheetSummaryList.get(3).getTotalWorkedHours());
+        assertEquals(46875.0, timesheetSummaryList.get(3).getTotalBilledAmount());
+        // week 5
+        assertEquals(23, timesheetSummaryList.get(4).getTimesheetId());
+        assertEquals(0, timesheetSummaryList.get(4).getTotalDaysOff());
+        assertEquals(3, timesheetSummaryList.get(4).getTotalWorkedDays().intValue());
+        assertEquals(22.5, timesheetSummaryList.get(4).getTotalWorkedHours());
+        assertEquals(28125.0, timesheetSummaryList.get(4).getTotalBilledAmount());
     }
 }

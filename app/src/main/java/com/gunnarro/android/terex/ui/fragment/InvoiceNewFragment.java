@@ -140,7 +140,7 @@ public class InvoiceNewFragment extends Fragment {
      * @param timesheetId to be created invoice for
      */
     private void createInvoice(@NotNull Long timesheetId) {
-        Long invoiceId = invoiceService.createInvoice(timesheetService.getCompany(timesheetId), timesheetService.getClient(timesheetId), timesheetId);
+        Long invoiceId = invoiceService.createInvoice(TimesheetService.getCompany(timesheetId), TimesheetService.getClient(timesheetId), timesheetId);
         if (invoiceId == null) {
             showInfoDialog("Info", "No timesheet found! timesheetId=" + timesheetId);
         }
@@ -195,8 +195,8 @@ public class InvoiceNewFragment extends Fragment {
         Map<String, Object> context = new HashMap<>();
         context.put("invoiceAttachmentTitle", "Vedlegg til faktura");
         context.put("invoiceBillingPeriod", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM")));
-        context.put("company", timesheetService.getCompany(null));
-        context.put("client", timesheetService.getClient(null));
+        context.put("company", TimesheetService.getCompany(null));
+        context.put("client", TimesheetService.getClient(null));
         context.put("timesheetProjectCode", "techlead-catalystone-solution-as");
         context.put("timesheetSummaryList", timesheetSummaryList);
         context.put("totalBilledHours", totalBilledHours);

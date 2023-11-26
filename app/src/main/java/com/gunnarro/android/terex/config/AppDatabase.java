@@ -47,15 +47,19 @@ public abstract class AppDatabase extends RoomDatabase {
     private static final int NUMBER_OF_THREADS = 10;
     public static final ExecutorService databaseExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
+    /**
+     * If it is acceptable to lose existing data when a migration path is missing, call the fallbackToDestructiveMigration()
+     */
     public static AppDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
             // Allow only single thread access to the database
             synchronized (AppDatabase.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
+                    INSTANCE = Room.databaseBuilder(
+                            context.getApplicationContext(),
                                     AppDatabase.class, "terex_database")
                             .fallbackToDestructiveMigration()
-                            //.createFromAsset("database/terex_database_data.sqlite")
+                            .createFromAsset("database/terex_database_data.sqlite")
                            // .addCallback(roomCallback)
                             .build();
                 }

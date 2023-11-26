@@ -1,25 +1,34 @@
 package com.gunnarro.android.terex.domain;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import android.content.Context;
-
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import org.mockito.Mock;
 
 public class TimesheetTest {
 
-    @Mock
-    Context applicationContext;
+    @Test
+    public void timesheetNew() {
+        Timesheet timeSheet = Timesheet.createDefault("gunnarro", "terex-prjo", 2023, 11);
+        assertEquals("gunnarro", timeSheet.getClientName());
+        assertEquals("terex-prjo", timeSheet.getProjectCode());
+        assertEquals(11, timeSheet.getMonth().intValue());
+        assertEquals(2023, timeSheet.getYear().intValue());
+        assertNull( timeSheet.getDescription());
+        assertEquals("2023:11:gunnarro:terex-prjo", timeSheet.getTimesheetRef());
+        assertEquals(Timesheet.TimesheetStatusEnum.NEW.name(), timeSheet.getStatus());
 
-    @Before
-    public void init() {
+        assertEquals(0, timeSheet.getTotalWorkedDays().intValue());
+        assertEquals(0, timeSheet.getTotalWorkedHours().intValue());
+        assertEquals(21, timeSheet.getWorkingDaysInMonth().intValue());
+        assertEquals(157, timeSheet.getWorkingHoursInMonth().intValue());
+        assertFalse(timeSheet.getTotalWorkedHours() >= timeSheet.getWorkingHoursInMonth());
+        assertFalse(timeSheet.getTotalWorkedDays() >= timeSheet.getWorkingDaysInMonth());
     }
 
     @Test
@@ -31,8 +40,8 @@ public class TimesheetTest {
         assertEquals(157, timeSheet.getWorkingHoursInMonth().intValue());
         assertFalse(timeSheet.getTotalWorkedHours() >= timeSheet.getWorkingHoursInMonth());
         assertFalse(timeSheet.getTotalWorkedDays() >= timeSheet.getWorkingDaysInMonth());
-        timeSheet.setTotalWorkedHours(8);
-        timeSheet.setTotalWorkedDays(22);
+        timeSheet.setTotalWorkedHours(157);
+        timeSheet.setTotalWorkedDays(21);
         assertTrue(timeSheet.getTotalWorkedHours() >= timeSheet.getWorkingHoursInMonth());
         assertTrue(timeSheet.getTotalWorkedDays() >= timeSheet.getWorkingDaysInMonth());
     }

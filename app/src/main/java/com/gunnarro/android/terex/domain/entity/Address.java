@@ -28,9 +28,10 @@ public class Address {
     String postCode;
     @ColumnInfo(name = "city")
     String city;
+    @ColumnInfo(name = "country")
+    String country;
     @ColumnInfo(name = "country_code")
     String countryCode;
-
 
     public String getStreetName() {
         return streetName;
@@ -72,6 +73,14 @@ public class Address {
         this.city = city;
     }
 
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
     public String getCountryCode() {
         return countryCode;
     }
@@ -79,5 +88,4 @@ public class Address {
     public void setCountryCode(String countryCode) {
         this.countryCode = countryCode;
     }
-
 }

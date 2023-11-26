@@ -45,14 +45,18 @@ public class InvoiceService {
     private final TimesheetService timesheetService;
     private final InvoiceRepository invoiceRepository;
 
+    public InvoiceService(InvoiceRepository invoiceRepository, TimesheetService timesheetService) {
+        this.timesheetService = timesheetService;
+        this.invoiceRepository = invoiceRepository;
+    }
 
     /**
      * default constructor
      */
     @Inject
     public InvoiceService(Context applicationContext) {
-        timesheetService = new TimesheetService(applicationContext);
-        invoiceRepository = new InvoiceRepository(applicationContext);
+        this.timesheetService = new TimesheetService(applicationContext);
+        this.invoiceRepository = new InvoiceRepository(applicationContext);
     }
 
     public Invoice getInvoice(Long invoiceId) {
@@ -72,7 +76,7 @@ public class InvoiceService {
     }
 
     @Transaction
-    public Long createInvoice(Company company, Company client, Long timesheetId) {
+    public Long createInvoice(Company company, @NotNull Company client, @NotNull Long timesheetId) {
         // first accumulate timesheet entries
         List<TimesheetSummary> timesheetSummaries = timesheetService.createTimesheetSummary(timesheetId);
         // save the invoice summaries

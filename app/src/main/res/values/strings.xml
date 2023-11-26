@@ -14,6 +14,7 @@
     <string name="title_timesheet_calendar">Timesheet calendar</string>
     <string name="title_timesheet_new">New timesheet</string>
     <string name="title_invoice_attachment">Invoice attachment</string>
+    <string name="title_settings">Settings</string>
 
     <!-- labels -->
     <string name="lbl_description">Description</string>
