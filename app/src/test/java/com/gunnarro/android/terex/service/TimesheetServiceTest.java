@@ -42,14 +42,14 @@ public class TimesheetServiceTest {
 
 
     @Test
-    public void saveTimesheet_new() throws ExecutionException, InterruptedException {
+    void saveTimesheet_new() throws ExecutionException, InterruptedException {
         when(timesheetRepositoryMock.getTimesheet(anyString(), anyString(), anyInt(), anyInt())).thenReturn(null);
         when(timesheetRepositoryMock.insertTimesheet(any())).thenReturn(23L);
         assertEquals(23, timesheetService.saveTimesheet(Timesheet.createDefault("gunnarro", "test-project", 2023, 11)));
     }
 
     @Test
-    public void saveTimesheet_timesheet_new_already_exist() throws ExecutionException, InterruptedException {
+    void saveTimesheet_timesheet_new_already_exist() throws ExecutionException, InterruptedException {
         Timesheet timesheet = Timesheet.createDefault("gunnarro", "test-project", 2023, 11);
         timesheet.setId(23L);
         when(timesheetRepositoryMock.getTimesheet(anyString(), anyString(), anyInt(), anyInt())).thenReturn(timesheet);
@@ -61,7 +61,7 @@ public class TimesheetServiceTest {
     }
 
     @Test
-    public void saveTimesheet_timesheet_update_already_billed() throws ExecutionException, InterruptedException {
+    void saveTimesheet_timesheet_update_already_billed() throws ExecutionException, InterruptedException {
         Timesheet timesheetExisting = Timesheet.createDefault("gunnarro", "test-project", 2023, 11);
         timesheetExisting.setId(23L);
         timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.BILLED.name());
@@ -76,7 +76,7 @@ public class TimesheetServiceTest {
     }
 
     @Test
-    public void updateTimesheet_worked_hours_and_days() {
+    void updateTimesheet_worked_hours_and_days() {
         Timesheet timesheet = Timesheet.createDefault("gunnarro", "test-project", 2023, 11);
         timesheet.setId(23L);
         timesheet.setStatus(Timesheet.TimesheetStatusEnum.ACTIVE.name());
@@ -95,7 +95,7 @@ public class TimesheetServiceTest {
     }
 
     @Test
-    public void updateTimesheetWorkedHoursAndDays_set_status_to_completed() {
+    void updateTimesheetWorkedHoursAndDays_set_status_to_completed() {
         Timesheet timesheet = Timesheet.createDefault("gunnarro", "test-project", 2023, 11);
         timesheet.setId(23L);
         timesheet.setStatus(Timesheet.TimesheetStatusEnum.ACTIVE.name());
@@ -117,7 +117,7 @@ public class TimesheetServiceTest {
 
 
     @Test
-    public void saveTimesheet_timesheet_update_to_completed() throws ExecutionException, InterruptedException {
+    void saveTimesheet_timesheet_update_to_completed() throws ExecutionException, InterruptedException {
         Timesheet timesheetExisting = Timesheet.createDefault("gunnarro", "test-project", 2023, 11);
         timesheetExisting.setId(23L);
         timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.ACTIVE.name());
@@ -131,7 +131,7 @@ public class TimesheetServiceTest {
     }
 
     @Test
-    public void deleteTimesheet_status_not_allowed() {
+    void deleteTimesheet_status_not_allowed() {
         Timesheet timesheetExisting = Timesheet.createDefault("gunnarro", "test-project", 2023, 11);
         timesheetExisting.setId(23L);
         timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.BILLED.name());
@@ -143,7 +143,7 @@ public class TimesheetServiceTest {
     }
 
     @Test
-    public void saveTimesheetEntry_new_already_exist() throws ExecutionException, InterruptedException {
+    void saveTimesheetEntry_new_already_exist() throws ExecutionException, InterruptedException {
         TimesheetEntry timesheetEntryExisting = TimesheetEntry.createDefault(23L, Timesheet.TimesheetStatusEnum.BILLED.name(), 30, LocalDate.now(), 450, 1900);
         TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(null, Timesheet.TimesheetStatusEnum.NEW.name(), 30, LocalDate.now(), 450, 1900);
 
@@ -156,7 +156,7 @@ public class TimesheetServiceTest {
     }
 
     @Test
-    public void saveTimesheetEntry_work_date_not_in_timesheet_date_range() throws ExecutionException, InterruptedException {
+    void saveTimesheetEntry_work_date_not_in_timesheet_date_range() throws ExecutionException, InterruptedException {
         Timesheet timesheet = Timesheet.createDefault("gunnarro", "test-project", 2023, 11);
         timesheet.setId(1L);
         TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(timesheet.getId(), Timesheet.TimesheetStatusEnum.NEW.name(), 30, LocalDate.of(2023, 12, 21), 450, 1900);
@@ -171,7 +171,7 @@ public class TimesheetServiceTest {
     }
 
     @Test
-    public void deleteTimesheetEntry_status_not_allowed() {
+    void deleteTimesheetEntry_status_not_allowed() {
         TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(23L, Timesheet.TimesheetStatusEnum.BILLED.name(), 30, LocalDate.now(), 450, 1900);
         TerexApplicationException ex = assertThrows(TerexApplicationException.class, () -> {
             timesheetService.deleteTimesheetEntry(timesheetEntry);
@@ -181,7 +181,7 @@ public class TimesheetServiceTest {
     }
 
     @Test
-    public void createTimesheetSummary_not_ready_for_billing() throws ExecutionException, InterruptedException {
+    void createTimesheetSummary_not_ready_for_billing() throws ExecutionException, InterruptedException {
         Timesheet timesheetExisting = Timesheet.createDefault("gunnarro", "test-project", 2023, 11);
         timesheetExisting.setId(23L);
         timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.ACTIVE.name());
@@ -197,7 +197,7 @@ public class TimesheetServiceTest {
     }
 
     @Test
-    public void createTimesheetSummary_no_entries() throws ExecutionException, InterruptedException {
+    void createTimesheetSummary_no_entries() throws ExecutionException, InterruptedException {
         Timesheet timesheetExisting = Timesheet.createDefault("gunnarro", "test-project", 2023, 11);
         timesheetExisting.setId(23L);
         timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
@@ -214,7 +214,7 @@ public class TimesheetServiceTest {
     }
 
     @Test
-    public void createTimesheetSummary() {
+    void createTimesheetSummary() {
         Timesheet timesheetExisting = Timesheet.createDefault("gunnarro", "test-project", 2023, 11);
         timesheetExisting.setId(23L);
         timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
