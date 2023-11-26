@@ -1,0 +1,63 @@
+# ref https://www.droidcon.com/2023/04/04/securely-create-android-release-using-github-actions/
+name: Android Release
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    
+jobs:
+  build:
+     runs-on: ubuntu-latest
+     steps:
+       - uses: actions/checkout@v3
+         with:
+            fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+       - name: set up JDK 19
+         uses: actions/setup-java@v3
+         with:
+          java-version: '19'
+          distribution: 'temurin'
+          cache: gradle 
+        
+       - name: Decode Keystore
+         env:
+           ENCODED_STRING: ${{ secrets.ANDROID_APP_KEY_STORE_BASE64 }}
+           SIGNING_KEY_STORE_PATH: ${{ secrets.ANDROID_APP_KEY_STORE_PATH }}
+ 
+         run: |
+           echo "keystore path: $SIGNING_KEY_STORE_PATH"
+           echo $ENCODED_STRING > keystore-b64.txt
+           base64 -d keystore-b64.txt > android-app-release-key-store.jks
+           
+       - name: Build Release apk
+         env:
+           SIGNING_KEY_STORE_PATH: ${{ secrets.ANDROID_APP_KEY_STORE_PATH }}
+           SIGNING_KEY_ALIAS: ${{ secrets.ANDROID_APP_KEY_ALIAS }}
+           SIGNING_KEY_PASSWORD: ${{ secrets.ANDROID_APP_KEY_PASSWORD }}
+           SIGNING_STORE_PASSWORD: ${{ secrets.ANDROID_APP_KEY_STORE_PASSWORD }}
+         run: ./gradlew assembleRelease
+
+       - name: Build Debug apk
+         env:
+           SIGNING_KEY_STORE_PATH: ${{ secrets.ANDROID_APP_KEY_STORE_PATH }}
+           SIGNING_KEY_ALIAS: ${{ secrets.ANDROID_APP_KEY_ALIAS }}
+           SIGNING_KEY_PASSWORD: ${{ secrets.ANDROID_APP_KEY_PASSWORD }}
+           SIGNING_STORE_PASSWORD: ${{ secrets.ANDROID_APP_KEY_STORE_PASSWORD }}
+         run: ./gradlew assembleDebug
+         
+       - name: Upload Release Build to Artifacts
+         uses: actions/upload-artifact@v3
+         with:
+           name: release-artifacts
+           path: app/build/outputs/apk/release/
+
+       - name: Upload Debug Build to Artifacts
+         uses: actions/upload-artifact@v3
+         with:
+           name: debug-artifacts
+           path: app/build/outputs/apk/debug/
+      
