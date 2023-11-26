@@ -17,6 +17,7 @@ import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
 import com.gunnarro.android.terex.domain.entity.TimesheetWithEntries;
+import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.repository.TimesheetRepository;
 import com.gunnarro.android.terex.utility.Utility;
@@ -87,13 +88,13 @@ public class TimesheetService {
     public Long saveTimesheet(Timesheet timesheet) {
         Timesheet timesheetExisting = timesheetRepository.getTimesheet(timesheet.getClientName(), timesheet.getProjectCode(), timesheet.getYear(), timesheet.getMonth());
         if (timesheetExisting != null && timesheet.isNew()) {
-            throw new TerexApplicationException("timesheet is already exist, timesheetId=" + timesheetExisting.getId() + " " + timesheetExisting.getStatus(), "40040", null);
+            throw new InputValidationException(String.format("timesheet already exist, timesheetId=%s, status=%s", timesheetExisting.getId(), timesheetExisting.getStatus()), "40040", null);
 
         }
         // first of all, check status
         if (timesheetExisting != null && timesheetExisting.isBilled()) {
             Log.d("", "timesheet is already billed, no changes is allowed. timesheetId=" + timesheetExisting.getId() + " " + timesheetExisting.getStatus());
-            throw new TerexApplicationException("timesheet is already billed, no changes is allowed. timesheetId=" + timesheetExisting.getId() + " " + timesheetExisting.getStatus(), "40040", null);
+            throw new InputValidationException(String.format("timesheet is already billed, no changes is allowed. timesheetId=%s, status=%s", timesheetExisting.getId(), timesheetExisting.getStatus()), "40040", null);
         }
         try {
             Log.d("TimesheetRepository.saveTimesheet", String.format("existingTimesheet: %s", timesheetExisting));

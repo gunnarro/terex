@@ -47,6 +47,7 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
     public static final String TIMESHEET_REQUEST_KEY = "100";
     public static final String TIMESHEET_JSON_KEY = "timesheet_as_json";
     public static final String TIMESHEET_ID_KEY = "timesheet_id";
+    public static final String TIMESHEET_READ_ONLY_KEY = "timesheet_read_only";
     public static final String TIMESHEET_ACTION_KEY = "111";
     public static final String TIMESHEET_ACTION_SAVE = "timesheet_save";
     public static final String TIMESHEET_ACTION_DELETE = "timesheet_delete";
@@ -162,11 +163,13 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
                 // redirect to timesheet entry list fragment
                 Bundle bundle = new Bundle();
                 bundle.putLong(TimesheetListFragment.TIMESHEET_ID_KEY, timesheet.getId());
+                bundle.putBoolean(TimesheetListFragment.TIMESHEET_READ_ONLY_KEY, timesheet.isClosed());
                 goToTimesheetEntryView(bundle);
             } else if (TIMESHEET_ACTION_EDIT.equals(action)) {
                 // redirect to timesheet entry list fragment
                 Bundle bundle = new Bundle();
                 bundle.putString(TimesheetListFragment.TIMESHEET_JSON_KEY, timesheetJson);
+                bundle.putBoolean(TimesheetListFragment.TIMESHEET_READ_ONLY_KEY, timesheet.isClosed());
                 goToTimesheetView(bundle);
             } else {
                 Log.w(Utility.buildTag(getClass(), "handleTimesheetActions"), "unknown action: " + action);

@@ -83,6 +83,7 @@ public class TimesheetEntryListFragment extends Fragment {
             throw new TerexApplicationException("Missing timesheet id!", "50023", null);
         }
         Long timesheetId = getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY);
+        Boolean isTimesheetReadOnly = getArguments().getBoolean(TimesheetListFragment.TIMESHEET_READ_ONLY_KEY);
 
         // Update the cached copy of the timesheet entries in the adapter.
         timesheetEntryViewModel.getTimesheetEntryLiveData(timesheetId).observe(requireActivity(), adapter::submitList);
@@ -105,8 +106,8 @@ public class TimesheetEntryListFragment extends Fragment {
                     .commit();
         });
 
-        // flip gui based on timesheet status
-        if (true) {
+        // flip gui based on timesheet status, hide buttons if timesheet has status BILLED
+        if (isTimesheetReadOnly) {
             addButton.setVisibility(View.GONE);
             calendarButton.setVisibility(View.GONE);
         }

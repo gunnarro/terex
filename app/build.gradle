@@ -1,6 +1,7 @@
 plugins {
-    id 'com.android.application'
-    id 'jacoco'
+    id "com.android.application"
+    id "jacoco"
+    id "org.sonarqube"
 }
 
 sonarqube {
@@ -8,6 +9,7 @@ sonarqube {
         property "sonar.projectKey", "gunnarro_terex"
         property "sonar.organization", "gunnarro"
         property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.sourceEncoding", "UTF-8"
     }
 }
 
@@ -157,11 +159,6 @@ dependencies {
     // https://mvnrepository.com/artifact/com.itextpdf/kernel
     implementation("com.itextpdf:kernel:$itextpdf_kernel")
     implementation("com.itextpdf:html2pdf:$itextpdf_html2pdf")
-
-
-    // custom calendar library
-   // implementation 'com.kizitonwose.calendar:view:2.3.0'
-   // implementation 'com.kizitonwose.calendar:compose:2.3.0'
 
     // Room components
     //noinspection GradleDependency

@@ -38,7 +38,8 @@
     <string name="lbl_worked_days">Worked days</string>
     <string name="lbl_worked_hours">Worked hours</string>
     <string name="lbl_of">of</string>
-    <string name="lbl_export_to_pdf">Exprot to pdf</string>
+    <string name="lbl_export_to_pdf">Export to pdf</string>
+    <string name="lbl_required">Required</string>
 
     <!-- button names -->
     <string name="btn_save">Save</string>

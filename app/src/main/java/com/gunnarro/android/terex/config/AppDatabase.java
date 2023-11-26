@@ -59,7 +59,7 @@ public abstract class AppDatabase extends RoomDatabase {
                             context.getApplicationContext(),
                                     AppDatabase.class, "terex_database")
                             .fallbackToDestructiveMigration()
-                            .createFromAsset("database/terex_database_data.sqlite")
+                            //.createFromAsset("database/terex_database_data.sqlite")
                            // .addCallback(roomCallback)
                             .build();
                 }

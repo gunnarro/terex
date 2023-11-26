@@ -52,7 +52,7 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requireActivity().setTitle(R.string.title_timesheet_new);
+        requireActivity().setTitle(R.string.title_timesheet);
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_timesheet_new, container, false);
 
@@ -116,7 +116,6 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
             if (!isInputDataValid()) {
                 return;
             }
-            ;
             view.findViewById(R.id.btn_timesheet_new_save).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
             Bundle result = new Bundle();
             result.putString(TimesheetListFragment.TIMESHEET_JSON_KEY, getTimesheetAsJson());
@@ -199,6 +198,22 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
             view.findViewById(R.id.timesheet_new_created_date_layout).setVisibility(View.GONE);
             view.findViewById(R.id.timesheet_new_last_modified_date_layout).setVisibility(View.GONE);
             view.findViewById(R.id.btn_timesheet_new_delete).setVisibility(View.GONE);
+        } else if (timesheet.isClosed()) {
+            view.findViewById(R.id.timesheet_new_created_date_layout).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.timesheet_new_last_modified_date_layout).setVisibility(View.VISIBLE);
+            // disable all fields, timesheet is locked.
+            createdDateView.setEnabled(false);
+            lastModifiedDateView.setEnabled(false);
+            clientSpinner.setEnabled(false);
+            projectSpinner.setEnabled(false);
+            statusSpinner.setEnabled(false);
+            yearSpinner.setEnabled(false);
+            monthSpinner.setEnabled(false);
+            fromTimeView.setEnabled(false);
+            toTimeView.setEnabled(false);
+            descriptionView.setEnabled(false);
+            view.findViewById(R.id.btn_timesheet_new_delete).setVisibility(View.GONE);
+            view.findViewById(R.id.btn_timesheet_new_save).setVisibility(View.GONE);
         } else {
             // change button icon to from add new to save
             ((MaterialButton) view.findViewById(R.id.btn_timesheet_new_save)).setText(getResources().getString(R.string.btn_save));
@@ -208,16 +223,16 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
                 view.findViewById(R.id.btn_timesheet_new_save).setVisibility(View.GONE);
             }
             // only allowed to update status
-            createdDateView.setEnabled(true);
-            lastModifiedDateView.setEnabled(true);
+            createdDateView.setEnabled(false);
+            lastModifiedDateView.setEnabled(false);
             clientSpinner.setEnabled(false);
             projectSpinner.setEnabled(false);
-            statusSpinner.setEnabled(false);
+            statusSpinner.setEnabled(true);
             yearSpinner.setEnabled(false);
             monthSpinner.setEnabled(false);
             fromTimeView.setEnabled(false);
             toTimeView.setEnabled(false);
-            descriptionView.setEnabled(false);
+            descriptionView.setEnabled(true);
         }
         Log.d(Utility.buildTag(getClass(), "updateTimesheetNewView"), String.format("updated %s ", timesheet));
     }
@@ -286,30 +301,35 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
             return Utility.gsonMapper().toJson(timesheet);
         } catch (Exception e) {
             Log.e("getTimesheetAsJson", e.toString());
-            throw new RuntimeException("unable to parse object to json! " + e);
+            throw new TerexApplicationException("unable to parse object to json! ", "50040", e);
         }
     }
 
     private boolean isInputDataValid() {
         boolean hasValidationError = true;
         AutoCompleteTextView clientSpinner = requireView().findViewById(R.id.timesheet_new_client_spinner);
-        if (clientSpinner.getText() == null) {
-            clientSpinner.setError("Required!");
+        if (!hasText(clientSpinner.getText())) {
+            clientSpinner.setError(getString(R.string.lbl_required));
             hasValidationError = false;
         }
         AutoCompleteTextView projectSpinner = requireView().findViewById(R.id.timesheet_new_project_spinner);
-        if (projectSpinner.getText() == null) {
-            projectSpinner.setError("Required!");
+        if (!hasText(projectSpinner.getText())) {
+            projectSpinner.setError(getString(R.string.lbl_required));
             hasValidationError = false;
         }
         AutoCompleteTextView statusSpinner = requireView().findViewById(R.id.timesheet_new_status_spinner);
-        if (statusSpinner.getText() == null) {
-            statusSpinner.setError("Required!");
+        if (!hasText(statusSpinner.getText())) {
+            statusSpinner.setError(getString(R.string.lbl_required));
+            hasValidationError = false;
+        }
+        AutoCompleteTextView yearSpinner = requireView().findViewById(R.id.timesheet_new_year_spinner);
+        if (!hasText(yearSpinner.getText())) {
+            yearSpinner.setError(getString(R.string.lbl_required));
             hasValidationError = false;
         }
         AutoCompleteTextView monthSpinner = requireView().findViewById(R.id.timesheet_new_month_spinner);
-        if (monthSpinner.getText() == null) {
-            monthSpinner.setError("Required!");
+        if (!hasText(monthSpinner.getText())) {
+            monthSpinner.setError(getString(R.string.lbl_required));
             hasValidationError = false;
         }
         // simply check if the timesheet already exist
@@ -324,8 +344,12 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
         toDateView.setText(Utility.formatDate(Utility.getLastDayOfMonth(date)));
     }
 
+    private boolean hasText(Editable e) {
+        return e != null && !e.toString().isBlank();
+    }
+
     /**
-     *
+     * Used for input validation
      */
     private TextWatcher createEmptyTextValidator(EditText editText, String regexp, String validationErrorMsg) {
         return new TextWatcher() {
