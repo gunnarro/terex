@@ -1,13 +1,19 @@
 package com.gunnarro.android.terex.domain;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import com.gunnarro.android.terex.domain.entity.Address;
 import com.gunnarro.android.terex.domain.entity.Company;
 import com.gunnarro.android.terex.domain.entity.Contact;
 import com.gunnarro.android.terex.domain.entity.Person;
 
-public class CompanyTest {
+import org.junit.jupiter.api.Test;
 
-    public void createCompany() {
+
+class CompanyTest {
+
+    @Test
+    void createCompany() {
         Company company = new Company();
         company.setName("Norway Consulting AS");
         company.setOrganizationNumber("");
@@ -19,9 +25,12 @@ public class CompanyTest {
         address.setCountryCode("no");
         company.setBusinessAddress(address);
         Person person = new Person();
+        company.setContactPerson(person);
 
         Contact contactInfo = new Contact();
         company.setContactInfo(contactInfo);
 
+        assertNotNull(company.getContactInfo());
+        assertNotNull(company.getContactPerson());
     }
 }
