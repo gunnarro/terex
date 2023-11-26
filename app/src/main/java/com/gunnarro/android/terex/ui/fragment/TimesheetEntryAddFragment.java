@@ -75,6 +75,12 @@ public class TimesheetEntryAddFragment extends Fragment implements View.OnClickL
                     LocalDate.now().getYear(),
                     LocalDate.now().getMonthValue(),
                     LocalDate.now().getDayOfMonth());
+
+            // FIXME Set dates
+// datePickerDialog.getDatePicker().setMaxDate(maxTime);
+// datePickerDialog.getDatePicker().setMinDate(minTime);
+
+
             workdayDatePicker.setTitle(getResources().getString(R.string.title_select_workday_date));
             workdayDatePicker.getDatePicker().setMinDate(Utility.getFirstDayOfMonth(LocalDate.now()).toEpochDay());
             workdayDatePicker.getDatePicker().setMaxDate(Utility.getLastDayOfMonth(LocalDate.now()).toEpochDay());
