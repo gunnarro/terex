@@ -97,3 +97,7 @@ Papp/src/main/java/com/gunnarro/android/terex/ui/fragment/ProjectNewFragment.jav
 Qapp/src/main/java/com/gunnarro/android/terex/ui/view/TimesheetEntryViewModel.java,5/c/5c0b379209d9bb26da5608942c897fd6069e3edb
 x
 Happ/src/main/java/com/gunnarro/android/terex/service/InvoiceService.java,5/c/5c8fc3971a945083417b7edb0de25e0fac92a621
+€
+Papp/src/main/java/com/gunnarro/android/terex/ui/fragment/InvoiceNewFragment.java,c/b/cb32430907b7791477e4cb0beae939018fb0b28d
+~
+Napp/src/main/java/com/gunnarro/android/terex/repository/InvoiceRepository.java,0/f/0f9c25334de8d77bda2a480e011e4977233b7ca2

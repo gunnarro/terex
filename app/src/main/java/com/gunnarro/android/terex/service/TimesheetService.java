@@ -147,6 +147,7 @@ public class TimesheetService {
                 timesheet.setStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
             }
         }
+        saveTimesheet(timesheet);
         return timesheet;
     }
 
@@ -189,6 +190,7 @@ public class TimesheetService {
                 id = timesheetEntry.getId();
                 Log.d("TimesheetRepository.saveTimesheetEntry", "update timesheet entry: " + id + " - " + timesheetEntry.getWorkdayDate());
             }
+            updateTimesheetWorkedHoursAndDays(timesheetEntry.getTimesheetId());
         } catch (InterruptedException | ExecutionException e) {
             // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();
@@ -197,11 +199,13 @@ public class TimesheetService {
         }
     }
 
+    @Transaction
     public void deleteTimesheetEntry(TimesheetEntry timesheetEntry) {
         if (timesheetEntry.isBilled()) {
             throw new InputValidationException("Timesheet entry is closed, not allowed to delete or update", "40045", null);
         }
         timesheetRepository.deleteTimesheetEntry(timesheetEntry);
+        updateTimesheetWorkedHoursAndDays(timesheetEntry.getTimesheetId());
     }
 
     @NotNull

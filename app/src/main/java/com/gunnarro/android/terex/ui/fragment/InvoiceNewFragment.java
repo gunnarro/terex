@@ -25,7 +25,6 @@ import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
-import com.gunnarro.android.terex.repository.InvoiceRepository;
 import com.gunnarro.android.terex.service.InvoiceService;
 import com.gunnarro.android.terex.service.TimesheetService;
 import com.gunnarro.android.terex.utility.Utility;
@@ -90,23 +89,12 @@ public class InvoiceNewFragment extends Fragment {
                 } else {
                     // item id is equal to selected timesheet id
                     createInvoice(item.id());
-
                 }
             } catch (TerexApplicationException e) {
                 showInfoDialog("Info", "Error creating invoice!");
             }
         });
-/*
-        view.findViewById(R.id.btn_invoice_new_send_email).setOnClickListener(v -> {
-            try {
-                File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-                File pdfFile = new File(path.getPath() + "/invoice_attachment_" + LocalDate.now().format(DateTimeFormatter.ISO_DATE) + ".pdf");
-                sendInvoiceToClient("gunnar_ronneberg@yahoo.no", "test", "message", pdfFile);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-*/
+
         view.findViewById(R.id.btn_invoice_new_cancel).setOnClickListener(v -> {
             view.findViewById(R.id.btn_invoice_new_cancel).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
             // Simply return back to credential list
@@ -144,15 +132,12 @@ public class InvoiceNewFragment extends Fragment {
         if (invoiceId == null) {
             showInfoDialog("Info", "No timesheet found! timesheetId=" + timesheetId);
         }
-        // finally close the timesheet
         Invoice invoice = invoiceService.getInvoice(invoiceId);
         createTimesheetSummaryAttachment(invoice.getId());
         createClientTimesheetAttachment(invoice.getId(), invoice.getTimesheetId());
-        invoice.setStatus(InvoiceRepository.InvoiceStatusEnum.COMPLETED.name());
-        invoiceService.saveInvoice(invoice);
     }
 
-    private Long createTimesheetSummaryAttachment(Long invoiceId) {
+    private void createTimesheetSummaryAttachment(Long invoiceId) {
         try {
             Invoice invoice = invoiceService.getInvoice(invoiceId);
             Log.d("createTimesheetSummaryAttachment", "timesheetSummary week: " + invoice.getTimesheetSummaryList());
@@ -180,10 +165,7 @@ public class InvoiceNewFragment extends Fragment {
             timesheetSummaryAttachment.setAttachmentFileName(invoiceAttachmentFileName);
             timesheetSummaryAttachment.setAttachmentFileType("html");
             timesheetSummaryAttachment.setAttachmentFileContent(invoiceSummaryHtml.getBytes(StandardCharsets.UTF_8));
-            return invoiceService.saveInvoiceAttachment(timesheetSummaryAttachment);
-
-            //return PdfUtility.saveFile(invoiceSummaryHtml, PdfUtility.getLocalDir() + "/" + invoiceAttachmentFileName + ".pdf")
-            //        && PdfUtility.saveFile(invoiceSummaryHtml, PdfUtility.getLocalDir() + "/" + invoiceAttachmentFileName + ".html");
+            invoiceService.saveInvoiceAttachment(timesheetSummaryAttachment);
         } catch (Exception e) {
             throw new TerexApplicationException(String.format("Error crating invoice attachment, invoice ref=%s", invoiceId), "50023", e);
         }
@@ -210,7 +192,7 @@ public class InvoiceNewFragment extends Fragment {
     }
 
 
-    private Long createClientTimesheetAttachment(Long invoiceId, Long timesheetId) {
+    private void createClientTimesheetAttachment(Long invoiceId, Long timesheetId) {
         try {
             List<TimesheetEntry> timesheetEntryList = timesheetService.getTimesheetEntryList(timesheetId);
             StringBuilder mustacheTemplateStr = new StringBuilder();
@@ -229,10 +211,7 @@ public class InvoiceNewFragment extends Fragment {
             timesheetSummaryAttachment.setAttachmentFileName(timesheetAttachmentFileName);
             timesheetSummaryAttachment.setAttachmentFileType("html");
             timesheetSummaryAttachment.setAttachmentFileContent(timesheetAttachmentHtml.getBytes(StandardCharsets.UTF_8));
-            return invoiceService.saveInvoiceAttachment(timesheetSummaryAttachment);
-
-            //return PdfUtility.saveFile(timesheetHtml, PdfUtility.getLocalDir() + "/" + invoiceFileName + ".pdf")
-            //        && PdfUtility.saveFile(timesheetHtml, PdfUtility.getLocalDir() + "/" + invoiceFileName + ".html");
+            invoiceService.saveInvoiceAttachment(timesheetSummaryAttachment);
         } catch (Exception e) {
             throw new TerexApplicationException(String.format("Error crating timesheet attachment, timesheetId=%s", timesheetId), "50023", e);
         }

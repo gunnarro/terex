@@ -18,6 +18,7 @@ import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
+import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.service.TimesheetService;
 import com.gunnarro.android.terex.utility.Utility;
@@ -176,20 +177,13 @@ public class TimesheetEntryCustomCalendarFragment extends Fragment {
     }
 
     /**
-     * Check that selected workday date is not before or after the date range of the timesheet.
-     */
-    private boolean isWorkdayDateValid() {
-      return false; //selectedWorkDayDate.isBefore() || selectedWorkDayDate.isAfter();
-    };
-
-    /**
      * When button save is click and new timesheet entry event is sent in order to insert it into the database
      */
     private void handleButtonSaveClick(CalendarView calendarView) {
         try {
             timesheetService.saveTimesheetEntry(getTimesheetEntry());
             showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_add_msg_format), selectedWorkDayDate), R.color.color_snackbar_text_add);
-        } catch (TerexApplicationException e) {
+        } catch (TerexApplicationException | InputValidationException e) {
             showSnackbar("Failed add timesheet entry!", R.color.design_default_color_error);
         }
     }
