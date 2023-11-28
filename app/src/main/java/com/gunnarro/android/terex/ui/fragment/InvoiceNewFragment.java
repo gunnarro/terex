@@ -157,7 +157,6 @@ public class InvoiceNewFragment extends Fragment {
             String invoiceSummaryHtml = createTimesheetSummaryAttachmentHtml(mustacheTemplateStr.toString(), invoice.getTimesheetSummaryList(), Double.toString(sumBilledHours), Double.toString(sumBilledAmount), Double.toString(totalBilledAmountWithVat), Double.toString(totalVat));
             Log.d("createInvoiceSummaryAttachment", "" + invoiceSummaryHtml);
             String invoiceAttachmentFileName = InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.name().toLowerCase() + "_attachment_" + invoice.getBillingDate().format(DateTimeFormatter.ofPattern("yyyy-MM"));
-            File path = Environment.getExternalStorageDirectory();
 
             InvoiceAttachment timesheetSummaryAttachment = new InvoiceAttachment();
             timesheetSummaryAttachment.setInvoiceId(invoiceId);
