@@ -2,7 +2,6 @@ package com.gunnarro.android.terex.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -133,19 +132,22 @@ public class InvoiceNewFragment extends Fragment {
             showInfoDialog("Info", "No timesheet found! timesheetId=" + timesheetId);
         }
         Invoice invoice = invoiceService.getInvoice(invoiceId);
-        createTimesheetSummaryAttachment(invoice.getId());
-        createClientTimesheetAttachment(invoice.getId(), invoice.getTimesheetId());
+        double sumBilledHours = createTimesheetSummaryAttachment(invoice.getId());
+        double sumWorkedHours = createClientTimesheetAttachment(invoice.getId(), invoice.getTimesheetId());
+        if (sumBilledHours == sumWorkedHours) {
+            showInfoDialog("Info", "Successfully generated invoice attachment.");
+        } else {
+            showInfoDialog("Error", String.format("Fond mismatch between billed and worked hours! Attachment must be regenerated. %s, %s", sumBilledHours, sumWorkedHours));
+        }
     }
 
-    private void createTimesheetSummaryAttachment(Long invoiceId) {
+    private double createTimesheetSummaryAttachment(Long invoiceId) {
         try {
             Invoice invoice = invoiceService.getInvoice(invoiceId);
             Log.d("createTimesheetSummaryAttachment", "timesheetSummary week: " + invoice.getTimesheetSummaryList());
             StringBuilder mustacheTemplateStr = new StringBuilder();
             // first read the invoice summary mustache html template
-            try (InputStream fis = requireContext().getAssets().open(InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getTemplate());
-                 InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
-                 BufferedReader br = new BufferedReader(isr)) {
+            try (InputStream fis = requireContext().getAssets().open(InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getTemplate()); InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8); BufferedReader br = new BufferedReader(isr)) {
                 br.lines().forEach(mustacheTemplateStr::append);
             }
 
@@ -165,6 +167,7 @@ public class InvoiceNewFragment extends Fragment {
             timesheetSummaryAttachment.setAttachmentFileType("html");
             timesheetSummaryAttachment.setAttachmentFileContent(invoiceSummaryHtml.getBytes(StandardCharsets.UTF_8));
             invoiceService.saveInvoiceAttachment(timesheetSummaryAttachment);
+            return sumBilledHours;
         } catch (Exception e) {
             throw new TerexApplicationException(String.format("Error crating invoice attachment, invoice ref=%s", invoiceId), "50023", e);
         }
@@ -191,7 +194,7 @@ public class InvoiceNewFragment extends Fragment {
     }
 
 
-    private void createClientTimesheetAttachment(Long invoiceId, Long timesheetId) {
+    private double createClientTimesheetAttachment(Long invoiceId, Long timesheetId) {
         try {
             List<TimesheetEntry> timesheetEntryList = timesheetService.getTimesheetEntryList(timesheetId);
             StringBuilder mustacheTemplateStr = new StringBuilder();
@@ -204,13 +207,14 @@ public class InvoiceNewFragment extends Fragment {
 
             String timesheetAttachmentHtml = createTimesheetListHtml(mustacheTemplateStr.toString(), timesheetEntryList, Double.toString(sumBilledHours));
             String timesheetAttachmentFileName = InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.name().toLowerCase() + "_attachment_" + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
-            InvoiceAttachment timesheetSummaryAttachment = new InvoiceAttachment();
-            timesheetSummaryAttachment.setInvoiceId(invoiceId);
-            timesheetSummaryAttachment.setAttachmentType(InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.name());
-            timesheetSummaryAttachment.setAttachmentFileName(timesheetAttachmentFileName);
-            timesheetSummaryAttachment.setAttachmentFileType("html");
-            timesheetSummaryAttachment.setAttachmentFileContent(timesheetAttachmentHtml.getBytes(StandardCharsets.UTF_8));
-            invoiceService.saveInvoiceAttachment(timesheetSummaryAttachment);
+            InvoiceAttachment clientTimesheetAttachment = new InvoiceAttachment();
+            clientTimesheetAttachment.setInvoiceId(invoiceId);
+            clientTimesheetAttachment.setAttachmentType(InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.name());
+            clientTimesheetAttachment.setAttachmentFileName(timesheetAttachmentFileName);
+            clientTimesheetAttachment.setAttachmentFileType("html");
+            clientTimesheetAttachment.setAttachmentFileContent(timesheetAttachmentHtml.getBytes(StandardCharsets.UTF_8));
+            invoiceService.saveInvoiceAttachment(clientTimesheetAttachment);
+            return sumBilledHours;
         } catch (Exception e) {
             throw new TerexApplicationException(String.format("Error crating timesheet attachment, timesheetId=%s", timesheetId), "50023", e);
         }

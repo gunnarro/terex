@@ -87,14 +87,14 @@ public class TimesheetService {
     }
 
     public Long saveTimesheet(Timesheet timesheet) {
+        Log.d("saveTimesheet", String.format("%s", timesheet));
         Timesheet timesheetExisting = timesheetRepository.getTimesheet(timesheet.getClientName(), timesheet.getProjectCode(), timesheet.getYear(), timesheet.getMonth());
         if (timesheetExisting != null && timesheet.isNew()) {
             throw new InputValidationException(String.format("timesheet already exist, timesheetId=%s, status=%s", timesheetExisting.getId(), timesheetExisting.getStatus()), "40040", null);
-
         }
         // first of all, check status
         if (timesheetExisting != null && timesheetExisting.isBilled()) {
-            Log.d("", "timesheet is already billed, no changes is allowed. timesheetId=" + timesheetExisting.getId() + " " + timesheetExisting.getStatus());
+            Log.e("", "timesheet is already billed, no changes is allowed. timesheetId=" + timesheetExisting.getId() + " " + timesheetExisting.getStatus());
             throw new InputValidationException(String.format("timesheet is already billed, no changes is allowed. timesheetId=%s, status=%s", timesheetExisting.getId(), timesheetExisting.getStatus()), "40040", null);
         }
         try {
@@ -106,6 +106,7 @@ public class TimesheetService {
                 // this is a new timesheet
                 timesheet.setCreatedDate(LocalDateTime.now());
                 timesheet.setLastModifiedDate(LocalDateTime.now());
+                timesheet.setStatus(Timesheet.TimesheetStatusEnum.ACTIVE.name());
                 id = timesheetRepository.insertTimesheet(timesheet);
                 Log.d("TimesheetRepository.saveTimesheet", String.format("inserted new timesheetId=%s, %s", id, timesheet));
             } else {
@@ -147,6 +148,7 @@ public class TimesheetService {
                 timesheet.setStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
             }
         }
+        Log.d("updateTimesheetWorkedHoursAndDays", String.format("updated worked days and hours! %s", timesheet));
         saveTimesheet(timesheet);
         return timesheet;
     }
@@ -159,12 +161,12 @@ public class TimesheetService {
             TimesheetEntry timesheetEntryExisting = timesheetRepository.getTimesheetEntry(timesheetEntry.getTimesheetId(), timesheetEntry.getWorkdayDate());
 
             if (timesheetEntryExisting != null && timesheetEntry.isNew()) {
-                throw new InputValidationException(String.format("timesheet entry already exist, timesheetId=%s, status=%s", timesheetEntryExisting.getId(), timesheetEntryExisting.getStatus()), "40040", null);
+                throw new InputValidationException(String.format("timesheet entry already exist, timesheetEntryId=%s, status=%s", timesheetEntryExisting.getId(), timesheetEntryExisting.getStatus()), "40040", null);
 
             }
             // first of all, check status
             if (timesheetEntryExisting != null && timesheetEntryExisting.isBilled()) {
-                throw new InputValidationException(String.format("timesheet entry have status billed, no changes is allowed. timesheetId=%s, status=%s", timesheetEntryExisting.getId(), timesheetEntryExisting.getStatus()), "40040", null);
+                throw new InputValidationException(String.format("timesheet entry have status billed, no changes is allowed. timesheetEntryId=%s, status=%s", timesheetEntryExisting.getId(), timesheetEntryExisting.getStatus()), "40040", null);
             }
 
             // validate work date, must be between the to and from date range of the timesheet
