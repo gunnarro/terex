@@ -28,6 +28,7 @@ import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
+import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.ui.adapter.TimesheetListAdapter;
 import com.gunnarro.android.terex.ui.dialog.DialogActionListener;
@@ -248,9 +249,13 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
     }
 
     private void deleteTimesheet(Long timesheetId) {
-        Timesheet timesheet = timesheetViewModel.getTimesheet(timesheetId);
-        timesheetViewModel.deleteTimesheet(timesheet);
-        showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_delete_msg_format), timesheet.getTimesheetRef()), R.color.color_snackbar_text_delete);
+        try {
+            Timesheet timesheet = timesheetViewModel.getTimesheet(timesheetId);
+            timesheetViewModel.deleteTimesheet(timesheet);
+            showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_delete_msg_format), timesheet.getTimesheetRef()), R.color.color_snackbar_text_delete);
+        } catch (TerexApplicationException | InputValidationException e) {
+            showInfoDialog("Info", e.getMessage());
+        }
     }
 
     private void showSnackbar(String msg, @ColorRes int bgColor) {

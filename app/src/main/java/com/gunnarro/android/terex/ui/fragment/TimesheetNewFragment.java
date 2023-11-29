@@ -121,7 +121,6 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
             result.putString(TimesheetListFragment.TIMESHEET_JSON_KEY, getTimesheetAsJson());
             result.putString(TimesheetListFragment.TIMESHEET_ACTION_KEY, TimesheetListFragment.TIMESHEET_ACTION_SAVE);
             getParentFragmentManager().setFragmentResult(TimesheetListFragment.TIMESHEET_REQUEST_KEY, result);
-            Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new timesheet intent: " + getTimesheetAsJson());
             returnToTimesheetList();
         });
 
@@ -179,7 +178,7 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
         statusSpinner.setText(timesheet.getStatus());
 
         AutoCompleteTextView yearSpinner = view.findViewById(R.id.timesheet_new_year_spinner);
-        yearSpinner.setText(String.format("%s", timesheet.getYear().toString()));
+        yearSpinner.setText(String.format("%s", timesheet.getYear()));
 
         AutoCompleteTextView monthSpinner = view.findViewById(R.id.timesheet_new_month_spinner);
         monthSpinner.setText(Utility.mapMonthNumberToName(timesheet.getMonth() - 1));

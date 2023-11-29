@@ -1,5 +1,6 @@
 package com.gunnarro.android.terex.domain.entity;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Index;
@@ -275,9 +276,10 @@ public class Timesheet extends BaseEntity {
         return Objects.hash(clientName, projectCode, year, month);
     }
 
+    @NonNull
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("Timesheet{");
+        final StringBuilder sb = new StringBuilder("Timesheet{");
         sb.append("id=").append(id);
         sb.append(", timesheetRef='").append(timesheetRef).append('\'');
         sb.append(", clientName='").append(clientName).append('\'');

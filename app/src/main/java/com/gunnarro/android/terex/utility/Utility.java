@@ -13,6 +13,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
@@ -267,14 +268,13 @@ public class Utility {
 
     public static Integer countBusinessDaysInMonth(LocalDate month) {
         LocalDate startDate = getFirstDayOfMonth(month);
-        LocalDate endDate = getLastDayOfMonth(month);
         // Predicate 2: Is a given date is a weekday
         Predicate<LocalDate> isWeekend = date -> date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY;
         // Get all days between two dates
-        long daysBetween = ChronoUnit.DAYS.between(startDate, endDate);
+        int daysInMonth = YearMonth.of(month.getYear(), month.getMonthValue()).lengthOfMonth();
         // Iterate over stream of all dates and check each day against any weekday or
         return Stream.iterate(startDate, date -> date.plusDays(1))
-                .limit(daysBetween)
+                .limit(daysInMonth)
                 .filter((isWeekend).negate())
                 .collect(Collectors.toList()).size();
     }

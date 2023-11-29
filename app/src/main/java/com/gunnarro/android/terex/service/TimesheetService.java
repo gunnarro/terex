@@ -81,7 +81,7 @@ public class TimesheetService {
 
     public void deleteTimesheet(Timesheet timesheet) {
         if (timesheet.isBilled()) {
-            throw new TerexApplicationException("Timesheet is BILLED, not allowed to delete or update", "40045", null);
+            throw new InputValidationException("Timesheet is BILLED, not allowed to delete or update", "40045", null);
         }
         timesheetRepository.deleteTimesheet(timesheet);
     }

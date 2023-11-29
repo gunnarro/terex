@@ -67,8 +67,6 @@ Japp/src/main/java/com/gunnarro/android/terex/domain/entity/BaseEntity.java,f/f
 Lapp/src/main/java/com/gunnarro/android/terex/service/RecruitmentService.java,0/7/07b59fec6c618db2e0df2f7dd7efc122ebf8eb2a
 M
 .github/workflows/android.yml,3/f/3f3614b660c98ad2ec2ec3066dba56ad2e3556ca
-W
-'.github/workflows/android-sonarqube.yml,0/0/00ef0056c7da619cdab9811491dfd14be25e756c
 ?
 settings.gradle,0/5/05efc8b1657769a27696d478ded1e95f38737233
 A
@@ -101,3 +99,7 @@ Happ/src/main/java/com/gunnarro/android/terex/service/InvoiceService.java,5/c/5
 Papp/src/main/java/com/gunnarro/android/terex/ui/fragment/InvoiceNewFragment.java,c/b/cb32430907b7791477e4cb0beae939018fb0b28d
 ~
 Napp/src/main/java/com/gunnarro/android/terex/repository/InvoiceRepository.java,0/f/0f9c25334de8d77bda2a480e011e4977233b7ca2
+x
+Happ/src/main/java/com/gunnarro/android/terex/ui/swipe/SwipeCallback.java,4/c/4c90649b39722a920ac3669bd0af332c91f2c887
+q
+Aapp/src/main/java/com/gunnarro/android/terex/utility/Utility.java,a/c/ac54805bfbfba4b658cc58ab92155fe8e6c7e05f
