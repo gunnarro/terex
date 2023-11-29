@@ -153,7 +153,7 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
             Timesheet timesheet = Utility.gsonMapper().fromJson(timesheetJson, Timesheet.class);
             if (TIMESHEET_ACTION_SAVE.equals(action)) {
                 timesheetViewModel.saveTimesheet(timesheet);
-                showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_saved_msg_format), timesheet.getTimesheetRef()), R.color.color_snackbar_text_add);
+                showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_saved_msg_format), timesheet.getTimesheetRef(), timesheet.getYear() + "-" + timesheet.getMonth()), R.color.color_snackbar_text_add);
             } else if (TIMESHEET_ACTION_DELETE.equals(action)) {
                 if (timesheet.getStatus().equals("BILLED")) {
                     showInfoDialog("Info", "Can not delete timesheet with status BILLED");

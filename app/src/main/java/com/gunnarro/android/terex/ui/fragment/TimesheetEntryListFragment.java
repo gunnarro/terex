@@ -25,6 +25,7 @@ import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
+import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.ui.adapter.TimesheetEntryListAdapter;
 import com.gunnarro.android.terex.ui.swipe.SwipeCallback;
@@ -153,9 +154,9 @@ public class TimesheetEntryListFragment extends Fragment {
             if (TIMESHEET_ENTRY_ACTION_SAVE.equals(action)) {
                 timesheetEntryViewModel.saveTimesheetEntry(timesheetEntry);
                 if (timesheetEntry.getId() == null) {
-                    showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_add_msg_format), timesheetEntry.getWorkdayDate()), R.color.color_snackbar_text_add);
+                    showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_add_msg_format), timesheetEntry.getWorkdayDate(), timesheetEntry.getWorkedHours()), R.color.color_snackbar_text_add);
                 } else {
-                    showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_update_msg_format), timesheetEntry.getWorkdayDate()), R.color.color_snackbar_text_update);
+                    showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_update_msg_format), timesheetEntry.getWorkdayDate(), timesheetEntry.getWorkedHours()), R.color.color_snackbar_text_update);
                 }
             } else if (TIMESHEET_ENTRY_ACTION_DELETE.equals(action)) {
                 timesheetEntryViewModel.deleteTimesheetEntry(timesheetEntry);
@@ -164,6 +165,8 @@ public class TimesheetEntryListFragment extends Fragment {
                 Log.w(Utility.buildTag(getClass(), "handleTimesheetEntryActions"), "unknown action: " + action);
                 showInfoDialog("Error", String.format("Application error!%s Unknown action: %s%s Please report.", action, System.lineSeparator(), System.lineSeparator()));
             }
+        } catch (InputValidationException ie) {
+            showInfoDialog("Info", ie.getMessage());
         } catch (Exception ex) {
             ex.printStackTrace();
             showInfoDialog("Error", String.format("Application error!%s Error: %s%s Please report.", ex.getMessage(), System.lineSeparator(), System.lineSeparator()));

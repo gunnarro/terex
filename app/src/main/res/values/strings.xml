@@ -103,9 +103,9 @@
     <string name="info_timesheet_list_updated_entry">Updated timesheet entry</string>
     <string name="info_timesheet_list_deleted_entry">Deleted entry from timesheet</string>
 
-    <string name="info_timesheet_list_add_msg_format">Added %s</string>
-    <string name="info_timesheet_list_saved_msg_format">Saved %s</string>
-    <string name="info_timesheet_list_update_msg_format">Updated %s</string>
+    <string name="info_timesheet_list_add_msg_format">Added %s, %s</string>
+    <string name="info_timesheet_list_saved_msg_format">Saved %s, %s</string>
+    <string name="info_timesheet_list_update_msg_format">Updated %s, %s</string>
     <string name="info_timesheet_list_delete_msg_format">Deleted %s</string>
 
     <!-- CalendarView values -->

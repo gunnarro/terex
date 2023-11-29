@@ -158,12 +158,12 @@ public class TimesheetService {
             TimesheetEntry timesheetEntryExisting = timesheetRepository.getTimesheetEntry(timesheetEntry.getTimesheetId(), timesheetEntry.getWorkdayDate());
 
             if (timesheetEntryExisting != null && timesheetEntry.isNew()) {
-                throw new InputValidationException(String.format("timesheet entry already exist, timesheetEntryId=%s, status=%s", timesheetEntryExisting.getId(), timesheetEntryExisting.getStatus()), "40040", null);
+                throw new InputValidationException(String.format("timesheet entry already exist, workday date=%s, status=%s", timesheetEntryExisting.getWorkdayDate(), timesheetEntryExisting.getStatus()), "40040", null);
 
             }
             // first of all, check status
             if (timesheetEntryExisting != null && timesheetEntryExisting.isBilled()) {
-                throw new InputValidationException(String.format("timesheet entry have status billed, no changes is allowed. timesheetEntryId=%s, status=%s", timesheetEntryExisting.getId(), timesheetEntryExisting.getStatus()), "40040", null);
+                throw new InputValidationException(String.format("timesheet entry have status billed, no changes is allowed. workday date=%s, status=%s", timesheetEntryExisting.getWorkdayDate(), timesheetEntryExisting.getStatus()), "40040", null);
             }
 
             // validate work date, must be between the to and from date range of the timesheet

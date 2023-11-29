@@ -160,7 +160,7 @@ public class TimesheetEntry extends BaseEntity {
     }
 
     public String getWorkedHours() {
-        return Double.valueOf((double) workedMinutes / 60).toString();
+        return Double.toString((double) workedMinutes / 60);
     }
 
     public void setWorkedMinutes(@NonNull Integer workedMinutes) {
@@ -233,7 +233,7 @@ public class TimesheetEntry extends BaseEntity {
         timesheetEntry.setFromTime(LocalTime.now(ZoneId.systemDefault()).withHour(8).withMinute(0).withSecond(0).withSecond(0).withNano(0));
         // add 7,5 hours
         timesheetEntry.setToTime(timesheetEntry.getFromTime().plusMinutes(workingHoursMin));
-        timesheetEntry.setWorkedMinutes(Long.valueOf(ChronoUnit.MINUTES.between(timesheetEntry.getFromTime(), timesheetEntry.getToTime())).intValue());
+        timesheetEntry.setWorkedMinutes((int) ChronoUnit.MINUTES.between(timesheetEntry.getFromTime(), timesheetEntry.getToTime()));
         timesheetEntry.setBreakInMin(dailyBreakMin);
         timesheetEntry.setHourlyRate(hourlyRate);
         return timesheetEntry;

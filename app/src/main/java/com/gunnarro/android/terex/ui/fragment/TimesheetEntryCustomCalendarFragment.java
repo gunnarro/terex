@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import com.applandeo.materialcalendarview.CalendarView;
 import com.applandeo.materialcalendarview.EventDay;
 import com.applandeo.materialcalendarview.exceptions.OutOfDateRangeException;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
@@ -73,10 +74,12 @@ public class TimesheetEntryCustomCalendarFragment extends Fragment {
         });
 
         calendarView.setSelected(true);
-        Calendar now = Calendar.getInstance();
-        now.setTimeInMillis(System.currentTimeMillis());
+        // should be set equal to the timesheet month, so get the timesheet from date
+        LocalDate timesheetFromDate = timesheetService.getTimesheet(timesheetId).getFromDate();
+        Calendar timesheetDateCal = Calendar.getInstance();
+        timesheetDateCal.set(timesheetFromDate.getYear(), timesheetFromDate.getMonthValue() - 1, timesheetFromDate.getDayOfMonth());
         try {
-            calendarView.setDate(now);
+            calendarView.setDate(timesheetDateCal);
             Calendar firstDayOfMonth = Calendar.getInstance();
             firstDayOfMonth.setTimeInMillis(Utility.getFirstDayOfMonth(LocalDate.now()).toEpochDay());
             Calendar lastDayOfMonth = Calendar.getInstance();
@@ -90,9 +93,8 @@ public class TimesheetEntryCustomCalendarFragment extends Fragment {
 
         view.findViewById(R.id.btn_timesheet_calendar_save).setEnabled(true);
         view.findViewById(R.id.btn_timesheet_calendar_save).setOnClickListener(v -> {
-            //   view.findViewById(R.id.btn_timesheet_calendar_save).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
             v.setEnabled(false);
-            handleButtonSaveClick(calendarView);
+            handleButtonSaveClick();
             v.setEnabled(true);
         });
 
@@ -179,12 +181,17 @@ public class TimesheetEntryCustomCalendarFragment extends Fragment {
     /**
      * When button save is click and new timesheet entry event is sent in order to insert it into the database
      */
-    private void handleButtonSaveClick(CalendarView calendarView) {
+    private void handleButtonSaveClick() {
+        if (selectedWorkDayDate == null) {
+            showInfoDialog("Info", "You must select a workday date!");
+            return;
+        }
         try {
-            timesheetService.saveTimesheetEntry(getTimesheetEntry());
-            showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_add_msg_format), selectedWorkDayDate), R.color.color_snackbar_text_add);
+            TimesheetEntry timesheetEntry = getTimesheetEntry();
+            timesheetService.saveTimesheetEntry(timesheetEntry);
+            showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_add_msg_format), timesheetEntry.getWorkdayDate(), timesheetEntry.getWorkedHours()), R.color.color_snackbar_text_add);
         } catch (TerexApplicationException | InputValidationException e) {
-            showSnackbar("Failed add timesheet entry!", R.color.design_default_color_error);
+           showInfoDialog("Info", e.getMessage());
         }
     }
 
@@ -193,5 +200,9 @@ public class TimesheetEntryCustomCalendarFragment extends Fragment {
         Snackbar snackbar = Snackbar.make(requireView().findViewById(R.id.timesheet_calendar_layout), msg, BaseTransientBottomBar.LENGTH_LONG);
         snackbar.setTextColor(getResources().getColor(bgColor, theme));
         snackbar.show();
+    }
+
+    private void showInfoDialog(String severity, String message) {
+        new MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme).setTitle(severity).setMessage(message).setCancelable(false).setPositiveButton("Ok", (dialog, which) -> dialog.cancel()).create().show();
     }
 }
