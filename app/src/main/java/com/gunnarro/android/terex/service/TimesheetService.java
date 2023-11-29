@@ -99,23 +99,20 @@ public class TimesheetService {
         }
         try {
             Log.d("TimesheetRepository.saveTimesheet", String.format("existingTimesheet: %s", timesheetExisting));
-            timesheet.setWorkingDaysInMonth(Utility.countBusinessDaysInMonth(timesheet.getFromDate()));
-            timesheet.setWorkingHoursInMonth((int) (timesheet.getWorkingDaysInMonth() * 7.5));
             Long id = null;
             if (timesheetExisting == null) {
                 // this is a new timesheet
                 timesheet.setCreatedDate(LocalDateTime.now());
                 timesheet.setLastModifiedDate(LocalDateTime.now());
                 timesheet.setStatus(Timesheet.TimesheetStatusEnum.ACTIVE.name());
+                // need only to this once, not allowed to change from and to date of a timesheet
+                timesheet.setWorkingDaysInMonth(Utility.countBusinessDaysInMonth(timesheet.getFromDate()));
+                timesheet.setWorkingHoursInMonth((int) (timesheet.getWorkingDaysInMonth() * 7.5));
                 id = timesheetRepository.insertTimesheet(timesheet);
                 Log.d("TimesheetRepository.saveTimesheet", String.format("inserted new timesheetId=%s, %s", id, timesheet));
             } else {
                 // this is a update of existing timesheet
                 timesheet.setLastModifiedDate(LocalDateTime.now());
-                // FIXME should not happen
-                if (timesheet.getId() == null) {
-                    timesheet.setId(timesheetExisting.getId());
-                }
                 timesheetRepository.updateTimesheet(timesheet);
                 Log.d("TimesheetRepository.saveTimesheet", String.format("updated timesheet: %s", timesheet));
             }

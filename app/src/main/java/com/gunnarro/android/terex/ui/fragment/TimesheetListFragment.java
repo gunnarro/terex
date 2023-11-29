@@ -176,9 +176,10 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
                 Log.w(Utility.buildTag(getClass(), "handleTimesheetActions"), "unknown action: " + action);
                 showInfoDialog("Info", String.format("Application error!%s Unknown action: %s%s Please report.", action, System.lineSeparator(), System.lineSeparator()));
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            showInfoDialog("Error", String.format("Application error!%sError: %s%s Please report.", ex.getMessage(), System.lineSeparator(), System.lineSeparator()));
+        } catch (TerexApplicationException | InputValidationException ex) {
+            showInfoDialog("Info", String.format("%s", ex.getMessage()));
+        } catch (Exception e) {
+            showInfoDialog("Error", String.format("%s", e.getMessage()));
         }
     }
 
