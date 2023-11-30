@@ -75,7 +75,7 @@ public class InvoiceViewFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         if (item.getItemId() == R.id.attachment_to_pdf) {
-            exportAttachment(selectedInvoiceAttachmentType.getTemplate(), selectedInvoiceAttachmentType.getPdfFileName());
+            exportAttachment(selectedInvoiceAttachmentType.name(), selectedInvoiceAttachmentType.getPdfFileName());
         }
         return true;
     }
@@ -148,10 +148,20 @@ public class InvoiceViewFragment extends Fragment {
                 .commit();
     }
 
-    private void exportAttachment(String attachmentHtml, String fileName) {
-        String invoiceAttachmentFileName = fileName + "_" + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
-        PdfUtility.saveFile(attachmentHtml, PdfUtility.getLocalDir() + "/" + invoiceAttachmentFileName + ".pdf");
-        showInfoDialog("Info", String.format("%s Exported to %s", selectedInvoiceAttachmentType, invoiceAttachmentFileName));
+    private void exportAttachment(String invoiceAttachmentType, String fileName) {
+        byte[] invoiceAttachmentHtml = null;
+        try {
+            invoiceAttachmentHtml = invoiceService.getInvoiceAttachment(invoiceId, invoiceAttachmentType, "html").getAttachmentFileContent();
+        } catch (Exception e) {
+            showInfoDialog("Error", String.format("Application error!%sError: %s%s Please report.", e.getMessage(), System.lineSeparator(), System.lineSeparator()));
+        }
+        try {
+            String invoiceAttachmentFileName = fileName + "_" + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
+            PdfUtility.saveFile(new String(invoiceAttachmentHtml), PdfUtility.getLocalDir() + "/" + invoiceAttachmentFileName + ".html");
+            showInfoDialog("Info", String.format("%s Exported to %s", selectedInvoiceAttachmentType, invoiceAttachmentFileName));
+        } catch (Exception e) {
+            showInfoDialog("Error", String.format("Export to pdf failed! file=%s, error=%s", fileName, e.getMessage()));
+        }
     }
 
     /**

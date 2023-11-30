@@ -14,7 +14,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 public class TimesheetViewHolder extends RecyclerView.ViewHolder {
-    private static final int TITLE_MAX_LENGTH = 30;
+    private static final int TITLE_MAX_LENGTH = 20;
     private final TextView timesheetLineHeaderView;
     private final TextView timesheetLine1StatusView;
     private final TextView timesheetLine1LabelView;

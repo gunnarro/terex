@@ -157,8 +157,8 @@ dependencies {
 
     // html to pdf
     // https://mvnrepository.com/artifact/com.itextpdf/kernel
-    implementation("com.itextpdf:kernel:$itextpdf_kernel")
-    implementation("com.itextpdf:html2pdf:$itextpdf_html2pdf")
+   // implementation("com.itextpdf:kernel:$itextpdf_kernel")
+   // implementation("com.itextpdf:html2pdf:$itextpdf_html2pdf")
 
     // Room components
     //noinspection GradleDependency
@@ -175,8 +175,8 @@ dependencies {
     implementation "androidx.biometric:biometric:$rootProject.biometric_version"
     // for pdf
     implementation "org.jsoup:jsoup:$jsoup"
-    implementation "org.xhtmlrenderer:flying-saucer-pdf-openpdf:$xhtmlrenderer_flying_saucer"
-    implementation "org.xhtmlrenderer:flying-saucer-core:$xhtmlrenderer_flying_saucer"
+    //implementation "org.xhtmlrenderer:flying-saucer-pdf-openpdf:$xhtmlrenderer_flying_saucer"
+    //implementation "org.xhtmlrenderer:flying-saucer-core:$xhtmlrenderer_flying_saucer"
 
     // html template engine
     implementation "com.github.spullara.mustache.java:compiler:$spullara_mustache_java"

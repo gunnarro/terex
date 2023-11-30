@@ -11,7 +11,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+import org.jsoup.Jsoup;
+
+//import io.github.mddanishansari.html_to_pdf.HtmlToPdfConvertor;
+//import org.jsoup.nodes.Document;
+//import org.xhtmlrenderer.pdf.ITextRenderer;
 
 public class PdfUtility {
 
@@ -52,5 +61,29 @@ public class PdfUtility {
         }
         return invoiceHtml.toString();
     }
+/*
+    public static void htmlToPdf(String html, String pdfFileName) throws IOException {
+        Log.d("htmlToPdf", pdfFileName);
+        String xhtml = htmlToXhtml(html);
+        xhtmlToPdf(xhtml, pdfFileName);
+    }
+
+    private static void xhtmlToPdf(String xhtml, String outFileName) throws IOException {
+        File output = new File(outFileName);
+        ITextRenderer iTextRenderer = new ITextRenderer();
+        iTextRenderer.setDocumentFromString(xhtml);
+        iTextRenderer.layout();
+        OutputStream os = new FileOutputStream(output);
+        iTextRenderer.createPDF(os);
+        os.close();
+    }
+
+    private static String htmlToXhtml(String html) {
+        Document document = Jsoup.parse(html);
+        document.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
+        return document.html();
+    }
+
+ */
 }
 

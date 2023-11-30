@@ -103,3 +103,7 @@ x
 Happ/src/main/java/com/gunnarro/android/terex/ui/swipe/SwipeCallback.java,4/c/4c90649b39722a920ac3669bd0af332c91f2c887
 q
 Aapp/src/main/java/com/gunnarro/android/terex/utility/Utility.java,a/c/ac54805bfbfba4b658cc58ab92155fe8e6c7e05f
+Å
+Qapp/src/main/java/com/gunnarro/android/terex/ui/fragment/InvoiceViewFragment.java,0/0/00a557329247b95901228cd227f3880ab0ff03f1
+t
+Dapp/src/main/java/com/gunnarro/android/terex/utility/PdfUtility.java,4/1/419d1d2c0f1746d5c95e537296d582a4b0227803

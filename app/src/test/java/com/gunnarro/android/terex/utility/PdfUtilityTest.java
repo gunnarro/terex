@@ -10,6 +10,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.io.IOException;
+
 @Disabled
 @ExtendWith(MockitoExtension.class)
 class PdfUtilityTest {
@@ -21,5 +23,11 @@ class PdfUtilityTest {
     void htmlToPdf() {
         String htmlStr = "<h1>Html to pdf test</h1>";
         assertTrue(PdfUtility.saveFile(htmlStr, "htmlToPdfTest.pdf"));
+    }
+
+    @Test
+    void htmlToPdf2() throws IOException {
+        String htmlStr = "<h1>Html to pdf test</h1>";
+      //  PdfUtility.htmlToPdf(htmlStr, "htmlToPdfTest2.pdf");
     }
 }
