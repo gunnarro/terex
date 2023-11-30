@@ -25,8 +25,8 @@ class TimesheetTest {
 
         assertEquals(0, timeSheet.getTotalWorkedDays().intValue());
         assertEquals(0, timeSheet.getTotalWorkedHours().intValue());
-        assertEquals(21, timeSheet.getWorkingDaysInMonth().intValue());
-        assertEquals(157, timeSheet.getWorkingHoursInMonth().intValue());
+        assertEquals(22, timeSheet.getWorkingDaysInMonth().intValue());
+        assertEquals(165, timeSheet.getWorkingHoursInMonth().intValue());
         assertFalse(timeSheet.getTotalWorkedHours() >= timeSheet.getWorkingHoursInMonth());
         assertFalse(timeSheet.getTotalWorkedDays() >= timeSheet.getWorkingDaysInMonth());
     }
@@ -36,12 +36,12 @@ class TimesheetTest {
         Timesheet timeSheet = Timesheet.createDefault("gunnarro", "timesheet", 2023, 11);
         assertEquals(0, timeSheet.getTotalWorkedDays().intValue());
         assertEquals(0, timeSheet.getTotalWorkedHours().intValue());
-        assertEquals(21, timeSheet.getWorkingDaysInMonth().intValue());
-        assertEquals(157, timeSheet.getWorkingHoursInMonth().intValue());
+        assertEquals(22, timeSheet.getWorkingDaysInMonth().intValue());
+        assertEquals(165, timeSheet.getWorkingHoursInMonth().intValue());
         assertFalse(timeSheet.getTotalWorkedHours() >= timeSheet.getWorkingHoursInMonth());
         assertFalse(timeSheet.getTotalWorkedDays() >= timeSheet.getWorkingDaysInMonth());
-        timeSheet.setTotalWorkedHours(157);
-        timeSheet.setTotalWorkedDays(21);
+        timeSheet.setTotalWorkedHours(165);
+        timeSheet.setTotalWorkedDays(22);
         assertTrue(timeSheet.getTotalWorkedHours() >= timeSheet.getWorkingHoursInMonth());
         assertTrue(timeSheet.getTotalWorkedDays() >= timeSheet.getWorkingDaysInMonth());
     }

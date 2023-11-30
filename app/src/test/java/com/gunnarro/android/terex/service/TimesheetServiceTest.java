@@ -90,8 +90,8 @@ class TimesheetServiceTest {
         Timesheet timesheetUpdated = timesheetService.updateTimesheetWorkedHoursAndDays(timesheet.getId());
         assertEquals(15, timesheetUpdated.getTotalWorkedHours());
         assertEquals(2, timesheetUpdated.getTotalWorkedDays());
-        assertEquals(157, timesheetUpdated.getWorkingHoursInMonth());
-        assertEquals(21, timesheetUpdated.getWorkingDaysInMonth());
+        assertEquals(165, timesheetUpdated.getWorkingHoursInMonth());
+        assertEquals(22, timesheetUpdated.getWorkingDaysInMonth());
         assertEquals(Timesheet.TimesheetStatusEnum.ACTIVE.name(), timesheetUpdated.getStatus());
     }
 
@@ -105,14 +105,15 @@ class TimesheetServiceTest {
         // simulate worked hours for a month
         timesheetEntry1.setWorkedMinutes(5080);
         timesheetEntry2.setWorkedMinutes(5080);
+        when(timesheetRepositoryMock.getTimesheet(timesheet.getClientName(), timesheet.getProjectCode(), timesheet.getYear(), timesheet.getMonth())).thenReturn(timesheet);
         when(timesheetRepositoryMock.getTimesheetEntryList(any())).thenReturn(List.of(timesheetEntry1, timesheetEntry2));
         when(timesheetRepositoryMock.getTimesheet(timesheet.getId())).thenReturn(timesheet);
 
         Timesheet timesheetUpdated = timesheetService.updateTimesheetWorkedHoursAndDays(timesheet.getId());
         assertEquals(169, timesheetUpdated.getTotalWorkedHours());
         assertEquals(2, timesheetUpdated.getTotalWorkedDays());
-        assertEquals(157, timesheetUpdated.getWorkingHoursInMonth());
-        assertEquals(21, timesheetUpdated.getWorkingDaysInMonth());
+        assertEquals(165, timesheetUpdated.getWorkingHoursInMonth());
+        assertEquals(22, timesheetUpdated.getWorkingDaysInMonth());
         assertEquals(Timesheet.TimesheetStatusEnum.COMPLETED.name(), timesheetUpdated.getStatus());
     }
 
@@ -136,11 +137,11 @@ class TimesheetServiceTest {
         Timesheet timesheetExisting = Timesheet.createDefault("gunnarro", "test-project", 2023, 11);
         timesheetExisting.setId(23L);
         timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.BILLED.name());
-        TerexApplicationException ex = assertThrows(TerexApplicationException.class, () -> {
+        InputValidationException ex = assertThrows(InputValidationException.class, () -> {
             timesheetService.deleteTimesheet(timesheetExisting);
         });
 
-        Assertions.assertEquals("Application error! Please Report error to app developer. Error=Timesheet is BILLED, not allowed to delete or update", ex.getMessage());
+        Assertions.assertEquals("Timesheet is BILLED, not allowed to delete or update", ex.getMessage());
     }
 
     @Test
@@ -153,7 +154,7 @@ class TimesheetServiceTest {
             timesheetService.saveTimesheetEntry(timesheetEntry);
         });
 
-        Assertions.assertEquals("timesheet entry already exist, timesheetId=null, status=BILLED", ex.getMessage());
+        Assertions.assertEquals("timesheet entry already exist, workday date=2023-11-30, status=BILLED", ex.getMessage());
     }
 
     @Test
