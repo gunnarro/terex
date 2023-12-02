@@ -90,7 +90,7 @@ public class InvoiceNewFragment extends Fragment {
                     createInvoice(item.id());
                 }
             } catch (TerexApplicationException e) {
-                showInfoDialog("Info", "Error creating invoice!");
+                showInfoDialog("Info", "Error creating invoice!" + e.getMessage());
             }
         });
 

@@ -2,6 +2,7 @@ package com.gunnarro.android.terex.ui.fragment;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.ListPopupWindow;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
@@ -78,6 +80,11 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
         ArrayAdapter<String> clientAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, clients);
         clientSpinner.setAdapter(clientAdapter);
         clientSpinner.setListSelection(0);
+        clientSpinner.setInputMethodMode(ListPopupWindow.INPUT_METHOD_NOT_NEEDED);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            clientSpinner.setAutoHandwritingEnabled(false);
+            clientSpinner.setImportantForAutofill(View.IMPORTANT_FOR_AUTOFILL_NO);
+        }
 
         final AutoCompleteTextView projectSpinner = view.findViewById(R.id.timesheet_new_project_spinner);
         ArrayAdapter<String> projectAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, projects);
@@ -89,6 +96,23 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
         ArrayAdapter<CharSequence> statusAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, Timesheet.TimesheetStatusEnum.names());
         statusSpinner.setAdapter(statusAdapter);
         statusSpinner.setListSelection(0);
+        statusSpinner.setValidator(new AutoCompleteTextView.Validator() {
+            @Override
+            public boolean isValid(CharSequence text) {
+                try {
+                    Timesheet.TimesheetStatusEnum.valueOf(text.toString());
+                    return true;
+                } catch (Exception e) {
+                   // ((AutoCompleteTextView)requireView().findViewById(R.id.timesheet_new_status_spinner)).setError("Invalid status");
+                    return false;
+                }
+            }
+
+            @Override
+            public CharSequence fixText(CharSequence invalidText) {
+                return null;
+            }
+        });
 
         // create timesheet year spinner
         final AutoCompleteTextView yearSpinner = view.findViewById(R.id.timesheet_new_year_spinner);
@@ -102,6 +126,25 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
         ArrayAdapter<CharSequence> monthAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, Utility.getMonthNames());
         monthSpinner.setAdapter(monthAdapter);
         monthSpinner.setListSelection(0);
+        monthSpinner.setValidator(new AutoCompleteTextView.Validator() {
+            @Override
+            public boolean isValid(CharSequence text) {
+                try {
+                    if (Utility.mapMonthNameToNumber(text.toString()) == null) {
+                     //   ((AutoCompleteTextView)requireView().findViewById(R.id.timesheet_new_month_spinner)).setError("Invalid month name");
+                        return false;
+                    }
+                    return true;
+                } catch (Exception e) {
+                    return false;
+                }
+            }
+
+            @Override
+            public CharSequence fixText(CharSequence invalidText) {
+                return null;
+            }
+        });
 
         monthSpinner.setOnItemClickListener((parent, view1, position, id) -> {
             Log.d("monthSpinner", "selected: " + monthAdapter.getItem(position));
@@ -158,10 +201,11 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
     }
 
     private void updateTimesheetNewView(View view, @NotNull Timesheet timesheet) {
-
-        TextView timesheetId = view.findViewById(R.id.timesheet_new_id);
-        timesheetId.setText(String.valueOf(timesheet.getId()));
-
+        // new timesheet don not have id yet, the id is generated upon save to database
+        if (!timesheet.isNew()) {
+            TextView timesheetId = view.findViewById(R.id.timesheet_new_id);
+            timesheetId.setText(String.valueOf(timesheet.getId()));
+        }
         EditText createdDateView = view.findViewById(R.id.timesheet_new_created_date);
         createdDateView.setText(Utility.formatDateTime(timesheet.getCreatedDate()));
 
@@ -257,7 +301,9 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
         Timesheet timesheet = new Timesheet();
 
         TextView timesheetIdView = requireView().findViewById(R.id.timesheet_new_id);
-        timesheet.setId(Utility.isInteger(timesheetIdView.getText().toString()) ? Long.parseLong(timesheetIdView.getText().toString()) : null);
+        if (timesheetIdView.getText() != null && !timesheetIdView.getText().toString().isBlank()) {
+            timesheet.setId(Long.parseLong(timesheetIdView.getText().toString()));
+        }
 
         EditText createdDateView = requireView().findViewById(R.id.timesheet_new_created_date);
         LocalDateTime createdDateTime = Utility.toLocalDateTime(createdDateView.getText().toString());

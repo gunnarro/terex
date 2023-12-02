@@ -68,7 +68,7 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
         selectedYear = LocalDate.now().getYear();
         // Get a new or existing ViewModel from the ViewModelProvider.
         try {
-            timesheetViewModel = new TimesheetViewModel(getActivity().getApplication(), selectedYear);//new ViewModelProvider(this).get(TimesheetViewModel.class);
+            timesheetViewModel = new TimesheetViewModel(requireActivity().getApplication(), selectedYear);//new ViewModelProvider(this).get(TimesheetViewModel.class);
         } catch (Exception e) {
             throw new TerexApplicationException("Error creating fragment!", "50051", e);
         }
@@ -179,7 +179,7 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
         } catch (TerexApplicationException | InputValidationException ex) {
             showInfoDialog("Info", String.format("%s", ex.getMessage()));
         } catch (Exception e) {
-            showInfoDialog("Error", String.format("%s", e.getMessage()));
+            showInfoDialog("Error", String.format("%s", e.getCause()));
         }
     }
 

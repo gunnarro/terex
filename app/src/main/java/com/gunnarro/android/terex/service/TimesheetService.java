@@ -90,12 +90,12 @@ public class TimesheetService {
         Log.d("saveTimesheet", String.format("%s", timesheet));
         Timesheet timesheetExisting = timesheetRepository.getTimesheet(timesheet.getClientName(), timesheet.getProjectCode(), timesheet.getYear(), timesheet.getMonth());
         if (timesheetExisting != null && timesheet.isNew()) {
-            throw new InputValidationException(String.format("timesheet already exist, timesheetId=%s, status=%s", timesheetExisting.getId(), timesheetExisting.getStatus()), "40040", null);
+            throw new InputValidationException(String.format("timesheet already exist. %s %s, status=%s", timesheetExisting.getClientName(), timesheet.getProjectCode(), timesheetExisting.getStatus()), "40040", null);
         }
         // first of all, check status
         if (timesheetExisting != null && timesheetExisting.isBilled()) {
             Log.e("", "timesheet is already billed, no changes is allowed. timesheetId=" + timesheetExisting.getId() + " " + timesheetExisting.getStatus());
-            throw new InputValidationException(String.format("timesheet is already billed, no changes is allowed. timesheetId=%s, status=%s", timesheetExisting.getId(), timesheetExisting.getStatus()), "40040", null);
+            throw new InputValidationException(String.format("timesheet is already billed, no changes is allowed. %s %s, status=%s", timesheetExisting.getClientName(), timesheet.getProjectCode(), timesheetExisting.getStatus()), "40040", null);
         }
         try {
             Log.d("TimesheetRepository.saveTimesheet", String.format("existingTimesheet: %s", timesheetExisting));
@@ -117,10 +117,9 @@ public class TimesheetService {
                 Log.d("TimesheetRepository.saveTimesheet", String.format("updated timesheet: %s", timesheet));
             }
             return id;
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (Exception e) {
             // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();
-            e.printStackTrace();
             throw new TerexApplicationException("Error saving timesheet!", e.getMessage(), e.getCause());
         }
     }

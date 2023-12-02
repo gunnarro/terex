@@ -14,7 +14,7 @@ class UtilityTest {
     @Test
     void getFirstDayOfMonth() {
         LocalDate date = LocalDate.of(2023, 11, 1);
-        LocalDate firstDayOfMonth= Utility.getFirstDayOfMonth(date);
+        LocalDate firstDayOfMonth = Utility.getFirstDayOfMonth(date);
         Assertions.assertEquals("2023-11-01", firstDayOfMonth.toString());
         Assertions.assertEquals("2023-11-30", Utility.getLastDayOfMonth(date).toString());
     }
@@ -65,6 +65,8 @@ class UtilityTest {
 
     @Test
     void mapToMonthName() {
+        Assertions.assertEquals(1, LocalDate.of(2023, 1, 1).getMonth().getValue());
+        Assertions.assertEquals(12, LocalDate.of(2023, 12, 1).getMonth().getValue());
         Assertions.assertEquals(13, Utility.getMonthNames().length);
         Assertions.assertEquals("December", Utility.getMonthNames()[Utility.getMonthNames().length - 2]);
         Assertions.assertEquals("January", Utility.mapMonthNumberToName(0));
