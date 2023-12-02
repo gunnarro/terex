@@ -175,8 +175,10 @@ dependencies {
     implementation "androidx.biometric:biometric:$rootProject.biometric_version"
     // for pdf
     implementation "org.jsoup:jsoup:$jsoup"
-    //implementation "org.xhtmlrenderer:flying-saucer-pdf-openpdf:$xhtmlrenderer_flying_saucer"
+    implementation "org.xhtmlrenderer:flying-saucer-pdf-openpdf:$xhtmlrenderer_flying_saucer"
     //implementation "org.xhtmlrenderer:flying-saucer-core:$xhtmlrenderer_flying_saucer"
+    //implementation "com.openhtmltopdf:openhtmltopdf-core:1.0.10"
+    //implementation "com.openhtmltopdf:openhtmltopdf-pdfbox:1.0.10"
 
     // html template engine
     implementation "com.github.spullara.mustache.java:compiler:$spullara_mustache_java"

@@ -12,7 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
 
-@Disabled
+//@Disabled
 @ExtendWith(MockitoExtension.class)
 class PdfUtilityTest {
 
@@ -28,6 +28,7 @@ class PdfUtilityTest {
     @Test
     void htmlToPdf2() throws IOException {
         String htmlStr = "<h1>Html to pdf test</h1>";
-      //  PdfUtility.htmlToPdf(htmlStr, "htmlToPdfTest2.pdf");
+
+       //PdfUtility.toPdf(htmlStr, "htmlToPdfTest2.pdf");
     }
 }

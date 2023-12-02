@@ -212,7 +212,7 @@ public class TimesheetService {
         TimesheetEntry timesheetEntry = timesheetRepository.getMostRecentTimeSheetEntry(timesheetId);
         if (timesheetEntry == null) {
             // no timesheet entries found, so simply create a default entry;
-            timesheetEntry = TimesheetEntry.createDefault(timesheetId, Timesheet.TimesheetStatusEnum.NEW.name(), Utility.DEFAULT_DAILY_BREAK_IN_MINUTES, LocalDate.now(), Utility.DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES, Utility.DEFAULT_HOURLY_RATE);
+            timesheetEntry = TimesheetEntry.createDefault(timesheetId, LocalDate.now());
             // then set date equal to the timesheet from date.
             Timesheet timesheet = timesheetRepository.getTimesheet(timesheetId);
             timesheetEntry.setWorkdayDate(timesheet.getFromDate());

@@ -1,9 +1,9 @@
 package com.gunnarro.android.terex.domain;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.gunnarro.android.terex.domain.entity.Timesheet;
@@ -29,6 +29,18 @@ class TimesheetTest {
         assertEquals(165, timeSheet.getWorkingHoursInMonth().intValue());
         assertFalse(timeSheet.getTotalWorkedHours() >= timeSheet.getWorkingHoursInMonth());
         assertFalse(timeSheet.getTotalWorkedDays() >= timeSheet.getWorkingDaysInMonth());
+    }
+
+    @Test
+    void status() {
+        Timesheet timeSheet = Timesheet.createDefault("gunnarro", "timesheet", 2023, 11);
+        assertTrue(timeSheet.isNew());
+        timeSheet.setStatus(Timesheet.TimesheetStatusEnum.ACTIVE.name());
+        assertTrue(timeSheet.isActive());
+        timeSheet.setStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
+        assertTrue(timeSheet.isCompleted());
+        timeSheet.setStatus(Timesheet.TimesheetStatusEnum.BILLED.name());
+        assertTrue(timeSheet.isBilled());
     }
 
     @Test

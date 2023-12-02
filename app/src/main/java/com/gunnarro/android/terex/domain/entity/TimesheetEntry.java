@@ -11,6 +11,7 @@ import androidx.room.TypeConverters;
 import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
 import com.gunnarro.android.terex.domain.converter.LocalDateTimeConverter;
 import com.gunnarro.android.terex.domain.converter.LocalTimeConverter;
+import com.gunnarro.android.terex.utility.Utility;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -220,22 +221,19 @@ public class TimesheetEntry extends BaseEntity {
         return status.equals(Timesheet.TimesheetStatusEnum.BILLED.name());
     }
 
-    public boolean isClosed() {
-        return status.equals(Timesheet.TimesheetStatusEnum.BILLED.name());
-    }
 
-    public static TimesheetEntry createDefault(Long timesheetId, String status, Integer dailyBreakMin, LocalDate workDayDate, Integer workingHoursMin, Integer hourlyRate) {
+    public static TimesheetEntry createDefault(Long timesheetId, LocalDate workDayDate) {
         TimesheetEntry timesheetEntry = new TimesheetEntry();
         timesheetEntry.setTimesheetId(timesheetId);
-        timesheetEntry.setStatus(status);
+        timesheetEntry.setStatus(Timesheet.TimesheetStatusEnum.NEW.name());
         timesheetEntry.setWorkdayDate(workDayDate);
         timesheetEntry.setWorkdayWeek(timesheetEntry.getWorkdayDate().get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()));
         timesheetEntry.setFromTime(LocalTime.now(ZoneId.systemDefault()).withHour(8).withMinute(0).withSecond(0).withSecond(0).withNano(0));
         // add 7,5 hours
-        timesheetEntry.setToTime(timesheetEntry.getFromTime().plusMinutes(workingHoursMin));
+        timesheetEntry.setToTime(timesheetEntry.getFromTime().plusMinutes(Utility.DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES));
         timesheetEntry.setWorkedMinutes((int) ChronoUnit.MINUTES.between(timesheetEntry.getFromTime(), timesheetEntry.getToTime()));
-        timesheetEntry.setBreakInMin(dailyBreakMin);
-        timesheetEntry.setHourlyRate(hourlyRate);
+        timesheetEntry.setBreakInMin(Utility.DEFAULT_DAILY_BREAK_IN_MINUTES);
+        timesheetEntry.setHourlyRate(Utility.DEFAULT_HOURLY_RATE);
         return timesheetEntry;
     }
 

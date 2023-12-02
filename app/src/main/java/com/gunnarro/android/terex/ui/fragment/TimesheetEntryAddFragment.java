@@ -119,9 +119,9 @@ public class TimesheetEntryAddFragment extends Fragment implements View.OnClickL
         });
 
         // disable save button as default
-        view.findViewById(R.id.btn_timesheet_entry_save).setEnabled(true);
-        view.findViewById(R.id.btn_timesheet_entry_save).setOnClickListener(v -> {
-            view.findViewById(R.id.btn_timesheet_entry_save).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
+        view.findViewById(R.id.timesheet_entry_save_btn).setEnabled(true);
+        view.findViewById(R.id.timesheet_entry_save_btn).setOnClickListener(v -> {
+            view.findViewById(R.id.timesheet_entry_save_btn).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
             Bundle result = new Bundle();
             result.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_KEY, getTimesheetEntryAsJson());
             result.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_KEY, TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_SAVE);
@@ -130,8 +130,8 @@ public class TimesheetEntryAddFragment extends Fragment implements View.OnClickL
             returnToTimesheetEntryList(getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY));
         });
 
-        view.findViewById(R.id.btn_timesheet_entry_delete).setOnClickListener(v -> {
-            view.findViewById(R.id.btn_timesheet_entry_delete).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
+        view.findViewById(R.id.timesheet_entry_delete_btn).setOnClickListener(v -> {
+            view.findViewById(R.id.timesheet_entry_delete_btn).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
             Bundle result = new Bundle();
             result.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_KEY, getTimesheetEntryAsJson());
             result.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_KEY, TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_DELETE);
@@ -140,8 +140,8 @@ public class TimesheetEntryAddFragment extends Fragment implements View.OnClickL
             returnToTimesheetEntryList(getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY));
         });
 
-        view.findViewById(R.id.btn_timesheet_entry_cancel).setOnClickListener(v -> {
-            view.findViewById(R.id.btn_timesheet_entry_cancel).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
+        view.findViewById(R.id.timesheet_entry_cancel_btn).setOnClickListener(v -> {
+            view.findViewById(R.id.timesheet_entry_cancel_btn).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
             // Simply return back to credential list
             NavigationView navigationView = requireActivity().findViewById(R.id.navigationView);
             requireActivity().onOptionsItemSelected(navigationView.getMenu().findItem(R.id.nav_timesheet_list));
@@ -236,8 +236,8 @@ public class TimesheetEntryAddFragment extends Fragment implements View.OnClickL
         if (timesheetEntry.getId() == null) {
             timesheetNameView.setEnabled(false);
             view.findViewById(R.id.timesheet_entry_date_layout).setVisibility(View.GONE);
-            view.findViewById(R.id.btn_timesheet_entry_delete).setVisibility(View.GONE);
-        } else if (timesheetEntry.isClosed()) {
+            view.findViewById(R.id.timesheet_entry_delete_btn).setVisibility(View.GONE);
+        } else if (timesheetEntry.isBilled()) {
             // timesheet entry is locked
             createdDateView.setEnabled(false);
             lastModifiedDateView.setEnabled(false);
@@ -247,16 +247,18 @@ public class TimesheetEntryAddFragment extends Fragment implements View.OnClickL
             workdayYearView.setEnabled(false);
             workdayMonthView.setEnabled(false);
             view.findViewById(R.id.timesheet_entry_date_layout).setVisibility(View.GONE);
-            view.findViewById(R.id.btn_timesheet_entry_delete).setVisibility(View.GONE);
+            view.findViewById(R.id.timesheet_entry_delete_btn).setVisibility(View.GONE);
+            view.findViewById(R.id.timesheet_entry_add_btn).setVisibility(View.GONE);
+            view.findViewById(R.id.timesheet_entry_cancel_btn).setVisibility(View.GONE);
         } else {
             // change button icon to from add new to save
-            ((MaterialButton) view.findViewById(R.id.btn_timesheet_entry_save)).setText(getResources().getString(R.string.btn_save));
+            ((MaterialButton) view.findViewById(R.id.timesheet_entry_save_btn)).setText(getResources().getString(R.string.btn_save));
             if (timesheetEntry.isBilled()) {
                 view.findViewById(R.id.btn_timesheet_new_delete).setVisibility(View.GONE);
                 view.findViewById(R.id.btn_timesheet_new_save).setVisibility(View.GONE);
             }
-            createdDateView.setEnabled(true);
-            lastModifiedDateView.setEnabled(true);
+            createdDateView.setEnabled(false);
+            lastModifiedDateView.setEnabled(false);
             // disable input that is not allowed to edit
             timesheetNameView.setEnabled(false);
             hourlyRateView.setEnabled(false);
@@ -275,9 +277,9 @@ public class TimesheetEntryAddFragment extends Fragment implements View.OnClickL
         }
 
         int id = view.getId();
-        if (id == R.id.btn_timesheet_entry_save) {
+        if (id == R.id.timesheet_entry_save_btn) {
             Log.d(Utility.buildTag(getClass(), "onClick"), "save button, save entry");
-        } else if (id == R.id.btn_timesheet_entry_cancel) {
+        } else if (id == R.id.timesheet_entry_cancel_btn) {
             // return back to main view
             Log.d(Utility.buildTag(getClass(), "onClick"), "cancel button, return back to timesheet list view");
         }

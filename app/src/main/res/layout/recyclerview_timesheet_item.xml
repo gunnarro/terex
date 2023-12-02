@@ -14,10 +14,10 @@
         android:id="@+id/timesheet_line_1_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:fontFamily="sans-serif-medium"
         android:gravity="center"
-        android:maxLines="3"
+        android:maxLines="4"
         android:text="Nov"
         android:textAlignment="center"
         android:textSize="24sp"
@@ -39,20 +39,32 @@
                 android:layout_marginStart="4dp"
                 android:layout_span="1"
                 android:gravity="start"
-                android:text="Nnorway consultiong - catalystOne"
+                android:text="Nnorway consultiong"
                 android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/ic_timesheet_row_view"
                 android:layout_width="14dp"
                 android:layout_height="14dp"
+                android:layout_gravity="end"
                 android:layout_marginTop="2dp"
                 android:layout_marginEnd="7dp"
                 android:contentDescription="@string/btn_view"
                 android:elevation="1dp"
-                android:layout_gravity="end"
                 android:src="@drawable/ic_more_horiz_24px" />
+        </TableRow>
 
+        <TableRow>
+
+            <TextView
+                android:id="@+id/timesheet_line_header_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_span="1"
+                android:gravity="start"
+                android:text="catalystOne"
+                android:textStyle="bold" />
         </TableRow>
 
         <TableRow>
@@ -91,5 +103,4 @@
                 android:text="8.345,00 Kr" />
         </TableRow>
     </TableLayout>
-
 </RelativeLayout>

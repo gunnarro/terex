@@ -157,7 +157,7 @@ public class InvoiceViewFragment extends Fragment {
         }
         try {
             String invoiceAttachmentFileName = fileName + "_" + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
-            PdfUtility.saveFile(new String(invoiceAttachmentHtml), PdfUtility.getLocalDir() + "/" + invoiceAttachmentFileName + ".html");
+            PdfUtility.saveFile(new String(invoiceAttachmentHtml), PdfUtility.getLocalDir() + "/" + invoiceAttachmentFileName + ".pdf");
             showInfoDialog("Info", String.format("%s Exported to %s", selectedInvoiceAttachmentType, invoiceAttachmentFileName));
         } catch (Exception e) {
             showInfoDialog("Error", String.format("Export to pdf failed! file=%s, error=%s", fileName, e.getMessage()));

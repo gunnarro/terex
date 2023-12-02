@@ -164,13 +164,13 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
                 // redirect to timesheet entry list fragment
                 Bundle bundle = new Bundle();
                 bundle.putLong(TimesheetListFragment.TIMESHEET_ID_KEY, timesheet.getId());
-                bundle.putBoolean(TimesheetListFragment.TIMESHEET_READ_ONLY_KEY, timesheet.isClosed());
+                bundle.putBoolean(TimesheetListFragment.TIMESHEET_READ_ONLY_KEY, timesheet.isBilled());
                 goToTimesheetEntryView(bundle);
             } else if (TIMESHEET_ACTION_EDIT.equals(action)) {
                 // redirect to timesheet entry list fragment
                 Bundle bundle = new Bundle();
                 bundle.putString(TimesheetListFragment.TIMESHEET_JSON_KEY, timesheetJson);
-                bundle.putBoolean(TimesheetListFragment.TIMESHEET_READ_ONLY_KEY, timesheet.isClosed());
+                bundle.putBoolean(TimesheetListFragment.TIMESHEET_READ_ONLY_KEY, timesheet.isBilled());
                 goToTimesheetView(bundle);
             } else {
                 Log.w(Utility.buildTag(getClass(), "handleTimesheetActions"), "unknown action: " + action);
@@ -286,6 +286,7 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
                 openTimesheetView(list.get(pos));
                 Bundle bundle = new Bundle();
                 bundle.putLong(TimesheetListFragment.TIMESHEET_ID_KEY, list.get(pos).getId());
+                bundle.putBoolean(TimesheetListFragment.TIMESHEET_READ_ONLY_KEY, list.get(pos).isBilled());
                 goToTimesheetEntryView(bundle);
             }
         };

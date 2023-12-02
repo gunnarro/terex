@@ -316,7 +316,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/tbl_timesheet_entry_register_buttons"
+            android:id="@+id/timesheet_entry_register_buttons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/timesheet_entry_div_layout"
@@ -326,7 +326,7 @@
             android:orientation="horizontal">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_timesheet_entry_delete"
+                android:id="@+id/timesheet_entry_delete_btn"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -336,7 +336,7 @@
                 app:iconTint="@color/color_btn_bg_delete" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_timesheet_entry_cancel"
+                android:id="@+id/timesheet_entry_cancel_btn"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -346,7 +346,7 @@
                 app:iconTint="@color/color_btn_bg_cancel" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_timesheet_entry_save"
+                android:id="@+id/timesheet_entry_save_btn"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

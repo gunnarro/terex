@@ -4,9 +4,12 @@ package com.gunnarro.android.terex.utility;
 import android.os.Environment;
 import android.util.Log;
 
+
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,6 +20,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import org.jsoup.Jsoup;
+import org.jsoup.helper.W3CDom;
+import org.jsoup.nodes.Document;
 
 //import io.github.mddanishansari.html_to_pdf.HtmlToPdfConvertor;
 //import org.jsoup.nodes.Document;
@@ -60,6 +65,23 @@ public class PdfUtility {
             throw new RuntimeException(e);
         }
         return invoiceHtml.toString();
+    }
+
+
+    /**
+     * builder.useFont(new File(getClass().getClassLoader().getResource("fonts/PRISTINA.ttf").getFile()), "PRISTINA");
+     *
+    public static void toPdf(String html, String filePath) throws IOException {
+        Document document = Jsoup.parse(html, "UTF-8");
+        document.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
+
+        try (OutputStream os = new FileOutputStream(filePath)) {
+            PdfRendererBuilder builder = new PdfRendererBuilder();
+            builder.withUri(filePath);
+            builder.toStream(os);
+            builder.withW3cDocument(new W3CDom().fromJsoup(document), "/");
+            builder.run();
+        }
     }
 /*
     public static void htmlToPdf(String html, String pdfFileName) throws IOException {

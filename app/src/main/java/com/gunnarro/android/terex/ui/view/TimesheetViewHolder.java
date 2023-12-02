@@ -15,7 +15,9 @@ import java.util.Locale;
 
 public class TimesheetViewHolder extends RecyclerView.ViewHolder {
     private static final int TITLE_MAX_LENGTH = 20;
-    private final TextView timesheetLineHeaderView;
+    private final TextView timesheetLineHeaderView1;
+    private final TextView timesheetLineHeaderView2;
+
     private final TextView timesheetLine1StatusView;
     private final TextView timesheetLine1LabelView;
     private final TextView timesheetLine1ValueView;
@@ -25,7 +27,8 @@ public class TimesheetViewHolder extends RecyclerView.ViewHolder {
 
     private TimesheetViewHolder(View itemView) {
         super(itemView);
-        timesheetLineHeaderView = itemView.findViewById(R.id.timesheet_line_header);
+        timesheetLineHeaderView1 = itemView.findViewById(R.id.timesheet_line_header);
+        timesheetLineHeaderView2 = itemView.findViewById(R.id.timesheet_line_header_2);
         timesheetLine1StatusView = itemView.findViewById(R.id.timesheet_line_1_status);
         timesheetLine1LabelView = itemView.findViewById(R.id.timesheet_line_1_label);
         timesheetLine1ValueView = itemView.findViewById(R.id.timesheet_line_1_value);
@@ -38,16 +41,16 @@ public class TimesheetViewHolder extends RecyclerView.ViewHolder {
         return new TimesheetViewHolder(view);
     }
 
-
     public void bindListLine(Timesheet timesheet) {
         if (timesheet == null) {
             return;
         }
-        String title = String.format("%s:%s:%s", timesheet.getId(), timesheet.getClientName(), timesheet.getProjectCode());
+        String title = timesheet.getClientName();
         if (title.length() > TITLE_MAX_LENGTH) {
             title = title.substring(0, TITLE_MAX_LENGTH) + "...";
         }
-        timesheetLineHeaderView.setText(title);
+        timesheetLineHeaderView1.setText(title);
+        timesheetLineHeaderView2.setText(timesheet.getProjectCode());
         timesheetLine1StatusView.setText(timesheet.getFromDate().format(DateTimeFormatter.ofPattern("MMM", Locale.getDefault())));
 
         if (timesheet.isNew()) {

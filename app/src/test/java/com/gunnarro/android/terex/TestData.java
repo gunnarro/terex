@@ -1,9 +1,7 @@
 package com.gunnarro.android.terex;
 
-import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
-import com.gunnarro.android.terex.utility.Utility;
 
 import java.time.DateTimeException;
 import java.time.DayOfWeek;
@@ -64,7 +62,7 @@ public class TestData {
     }
 
     private static TimesheetEntry createTimesheet(LocalDate day) {
-        return TimesheetEntry.createDefault(new java.util.Random().nextLong(), Timesheet.TimesheetStatusEnum.NEW.name(), Utility.DEFAULT_DAILY_BREAK_IN_MINUTES, day, Utility.DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES, Utility.DEFAULT_HOURLY_RATE);
+        return TimesheetEntry.createDefault(new java.util.Random().nextLong(), day);
     }
 
     private static List<LocalDate> getWorkingDays(Integer year, Integer month) {

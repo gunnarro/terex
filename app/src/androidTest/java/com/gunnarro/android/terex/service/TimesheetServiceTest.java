@@ -71,12 +71,14 @@ public class TimesheetServiceTest {
         Timesheet newTimesheet = Timesheet.createDefault("gunnarro", "terex", 2023, 11);
         newTimesheet.setDescription("Times used to develop android timesheet app");
         Long timesheetId = timesheetService.saveTimesheet(newTimesheet);
-        TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(timesheetId, Timesheet.TimesheetStatusEnum.NEW.name(), 30, LocalDate.of(2023, 11, 27), 450, 1250);
+        TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(timesheetId, LocalDate.of(2023, 11, 27));
+        timesheetEntry.setWorkedMinutes(450);
+        timesheetEntry.setBreakInMin(30);
+        timesheetEntry.setHourlyRate(1900);
         TerexApplicationException ex = assertThrows(TerexApplicationException.class, () -> {
             timesheetService.saveTimesheetEntry(timesheetEntry);
         });
 
         assertEquals("Application error! Please Report error to app developer. Error=timesheet is already exist, timesheetId=1 NEW", ex.getMessage());
-
     }
 }
