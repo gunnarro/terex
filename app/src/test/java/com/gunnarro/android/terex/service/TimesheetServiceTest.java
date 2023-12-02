@@ -58,7 +58,7 @@ class TimesheetServiceTest {
             timesheetService.saveTimesheet(timesheet);
         });
 
-        Assertions.assertEquals("timesheet already exist, timesheetId=23, status=NEW", ex.getMessage());
+        Assertions.assertEquals("timesheet already exist. gunnarro test-project, status=NEW", ex.getMessage());
     }
 
     @Test
@@ -73,7 +73,7 @@ class TimesheetServiceTest {
             timesheetService.saveTimesheet(timesheetUpdated);
         });
 
-        Assertions.assertEquals("timesheet is already billed, no changes is allowed. timesheetId=23, status=BILLED", ex.getMessage());
+        Assertions.assertEquals("timesheet is already billed, no changes is allowed. gunnarro test-project, status=BILLED", ex.getMessage());
     }
 
     @Test
