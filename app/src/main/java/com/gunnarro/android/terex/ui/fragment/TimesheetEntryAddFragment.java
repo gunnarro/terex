@@ -179,7 +179,7 @@ public class TimesheetEntryAddFragment extends Fragment implements View.OnClickL
         bundle.putLong(TimesheetListFragment.TIMESHEET_ID_KEY, timesheetId);
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_frame, TimesheetEntryListFragment.class, bundle)
+                .replace(R.id.nav_content_frame, TimesheetEntryListFragment.class, bundle)
                 .setReorderingAllowed(true)
                 .commit();
     }

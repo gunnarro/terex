@@ -1,6 +1,7 @@
 package com.gunnarro.android.terex.ui.fragment;
 
 import android.Manifest;
+import android.app.ActionBar;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -8,6 +9,9 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -16,9 +20,14 @@ import android.widget.EditText;
 import android.widget.ListPopupWindow;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationView;
 import com.gunnarro.android.terex.R;
@@ -40,6 +49,8 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class TimesheetNewFragment extends Fragment implements View.OnClickListener {
 
+    private NavController navController;
+
     RecruitmentService recruitmentService = new RecruitmentService();
 
     @Inject
@@ -49,14 +60,60 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Tell Android to call the fragment's onCreateOptionsMenu(...) and related methods.
+        setHasOptionsMenu(true);
+
+        // listen to backstack changes
+        // This callback is only called when MyFragment is at least started
+        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
+            @Override
+            public void handleOnBackPressed() {
+                // Handle the back button event
+                returnToTimesheetList();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+    }
+
+    /**
+     *
+     * To merge your menu into the app bar's options menu, override onCreateOptionsMenu() in your fragment.
+     */
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+       // menu.getItem(R.layout.custom_toolbar_layout);
+        // Inflate the menu; this adds items to the action bar.
+      //  menu.getItem(android.R.id.home).setVisible(false);
+     //   inflater.inflate(R.menu.back_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle item selection
+        if (item.getItemId() == R.id.home) {
+             returnToTimesheetList();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        this.navController = Navigation.findNavController(view);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requireActivity().setTitle(R.string.title_timesheet);
+
+        // do not show the action bar
+        //setHasOptionsMenu(true);
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_timesheet_new, container, false);
+
+        //toolbar.setNavigationIcon(R.drawable.ic_arrow_left);
+        //toolbar.setNavigationOnClickListener(v -> returnToTimesheetList());
 
         String[] clients = recruitmentService.getRecruitmentNames();
         String[] projects = recruitmentService.getProjectNames();
@@ -103,7 +160,7 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
                     Timesheet.TimesheetStatusEnum.valueOf(text.toString());
                     return true;
                 } catch (Exception e) {
-                   // ((AutoCompleteTextView)requireView().findViewById(R.id.timesheet_new_status_spinner)).setError("Invalid status");
+                    // ((AutoCompleteTextView)requireView().findViewById(R.id.timesheet_new_status_spinner)).setError("Invalid status");
                     return false;
                 }
             }
@@ -131,7 +188,7 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
             public boolean isValid(CharSequence text) {
                 try {
                     if (Utility.mapMonthNameToNumber(text.toString()) == null) {
-                     //   ((AutoCompleteTextView)requireView().findViewById(R.id.timesheet_new_month_spinner)).setError("Invalid month name");
+                        //   ((AutoCompleteTextView)requireView().findViewById(R.id.timesheet_new_month_spinner)).setError("Invalid month name");
                         return false;
                     }
                     return true;
@@ -180,24 +237,19 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
         view.findViewById(R.id.btn_timesheet_new_cancel).setOnClickListener(v -> {
             view.findViewById(R.id.btn_timesheet_new_cancel).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
             // Simply return back to credential list
-            NavigationView navigationView = requireActivity().findViewById(R.id.navigationView);
-            requireActivity().onOptionsItemSelected(navigationView.getMenu().findItem(R.id.nav_timesheet_list));
             returnToTimesheetList();
         });
 
         if (timesheet != null) {
             updateTimesheetNewView(view, timesheet);
         }
-
-        view.findViewById(R.id.timesheet_new_id).setVisibility(View.GONE);
-        view.findViewById(R.id.timesheet_new_created_date).setVisibility(View.GONE);
-        view.findViewById(R.id.timesheet_new_last_modified_date_layout).setVisibility(View.GONE);
         Log.d(Utility.buildTag(getClass(), "onCreateView"), String.format("%s", timesheet));
         return view;
     }
 
     private void returnToTimesheetList() {
-        requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, TimesheetListFragment.class, null).setReorderingAllowed(true).commit();
+       // requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_content_frame, TimesheetListFragment.class, null).setReorderingAllowed(true).commit();
+        navController.navigate(R.id.nav_from_timesheet_details_to_timesheet_list);
     }
 
     private void updateTimesheetNewView(View view, @NotNull Timesheet timesheet) {
@@ -236,18 +288,34 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
         EditText descriptionView = view.findViewById(R.id.timesheet_new_description);
         descriptionView.setText(timesheet.getDescription());
 
+        view.findViewById(R.id.timesheet_new_id).setVisibility(View.GONE);
+        view.findViewById(R.id.timesheet_new_created_date).setVisibility(View.GONE);
+        view.findViewById(R.id.timesheet_new_last_modified_date_layout).setVisibility(View.GONE);
+
         // hide fields if this is a new
         if (timesheet.getId() == null) {
             view.findViewById(R.id.timesheet_new_created_date_layout).setVisibility(View.GONE);
             view.findViewById(R.id.timesheet_new_last_modified_date_layout).setVisibility(View.GONE);
             view.findViewById(R.id.btn_timesheet_new_delete).setVisibility(View.GONE);
-        } else if (timesheet.isClosed()) {
+        } else if (timesheet.isBilled()) {
             view.findViewById(R.id.timesheet_new_created_date_layout).setVisibility(View.VISIBLE);
             view.findViewById(R.id.timesheet_new_last_modified_date_layout).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.timesheet_new_created_date).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.timesheet_new_last_modified_date).setVisibility(View.VISIBLE);
+
+            view.findViewById(R.id.timesheet_new_client_spinner_layout).setEnabled(false);
+            view.findViewById(R.id.timesheet_new_project_spinner_layout).setEnabled(false);
+            view.findViewById(R.id.timesheet_new_status_spinner_layout).setEnabled(false);
+            view.findViewById(R.id.timesheet_new_year_spinner_layout).setEnabled(false);
+            view.findViewById(R.id.timesheet_new_month_spinner_layout).setEnabled(false);
+            view.findViewById(R.id.timesheet_new_created_description_layout).setEnabled(false);
             // disable all fields, timesheet is locked.
             createdDateView.setEnabled(false);
             lastModifiedDateView.setEnabled(false);
             clientSpinner.setEnabled(false);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                clientSpinner.setAllowClickWhenDisabled(false);
+            }
             projectSpinner.setEnabled(false);
             statusSpinner.setEnabled(false);
             yearSpinner.setEnabled(false);
@@ -416,5 +484,4 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
             }
         };
     }
-
 }

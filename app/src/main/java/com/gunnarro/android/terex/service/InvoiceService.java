@@ -37,8 +37,8 @@ public class InvoiceService {
             return template;
         }
 
-        public String getPdfFileName() {
-            return template.split("/")[2].replace("mustache", "pdf");
+        public String getFileName() {
+            return template.split("/")[2].replace(".mustache", "");
         }
     }
 

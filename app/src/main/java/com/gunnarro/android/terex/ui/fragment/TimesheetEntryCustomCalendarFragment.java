@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import androidx.annotation.ColorRes;
 import androidx.fragment.app.Fragment;
 
+import com.applandeo.materialcalendarview.CalendarDay;
 import com.applandeo.materialcalendarview.CalendarView;
 import com.applandeo.materialcalendarview.EventDay;
 import com.applandeo.materialcalendarview.exceptions.OutOfDateRangeException;
@@ -62,9 +63,20 @@ public class TimesheetEntryCustomCalendarFragment extends Fragment {
         CalendarView calendarView = view.findViewById(R.id.view_timesheet_custom_calendar);
         Long timesheetId = getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY);
         // calendarView.setSelectedDates(selectedDates);
-        calendarView.setDisabledDays(createSelectedDates(timesheetId));
-        calendarView.setEvents(createEventDays(timesheetId));
-
+        //@Deprecated("Use setCalendarDays(List<CalendarDay>) with isEnabled = false")
+       // calendarView.setDisabledDays(createSelectedDates(timesheetId));
+        calendarView.setCalendarDays(createSelectedDates(timesheetId));
+        //  @Deprecated("Use setCalendarDays() instead")
+      //  calendarView.setEvents(createEventDays(timesheetId));
+        //  @Deprecated("Use setOnCalendarDayClickListener instead")
+        calendarView.setOnCalendarDayClickListener(day -> {
+            selectedWorkDayDate = LocalDate.of(
+                    day.getCalendar().get(Calendar.YEAR),
+                    day.getCalendar().get(Calendar.MONTH) + 1,
+                    day.getCalendar().get(Calendar.DAY_OF_MONTH));
+            Log.d("clicked on date:", selectedWorkDayDate.toString());
+        });
+        /*
         calendarView.setOnDayClickListener(eventDay -> {
             selectedWorkDayDate = LocalDate.of(
                     eventDay.getCalendar().get(Calendar.YEAR),
@@ -72,7 +84,7 @@ public class TimesheetEntryCustomCalendarFragment extends Fragment {
                     eventDay.getCalendar().get(Calendar.DAY_OF_MONTH));
             Log.d("clicked on date:", selectedWorkDayDate.toString());
         });
-
+*/
         calendarView.setSelected(true);
         // should be set equal to the timesheet month, so get the timesheet from date
         LocalDate timesheetFromDate = timesheetService.getTimesheet(timesheetId).getFromDate();
@@ -102,8 +114,6 @@ public class TimesheetEntryCustomCalendarFragment extends Fragment {
         view.findViewById(R.id.btn_timesheet_calendar_cancel).setOnClickListener(v -> {
             view.findViewById(R.id.btn_timesheet_calendar_cancel).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
             // Simply return back to credential list
-            NavigationView navigationView = requireActivity().findViewById(R.id.navigationView);
-            requireActivity().onOptionsItemSelected(navigationView.getMenu().findItem(R.id.nav_timesheet_list));
             returnToTimesheetEntryList(getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY));
         });
 
@@ -137,6 +147,30 @@ public class TimesheetEntryCustomCalendarFragment extends Fragment {
         }
     }
 
+    private List<CalendarDay> createCalendarDays(Long timesheetId) {
+        List<CalendarDay> calendarDays = new ArrayList<>();
+        calendarDays.addAll(createSelectedDates(timesheetId));
+        calendarDays.addAll(createAvailableCalendarDays(timesheetId));
+        return calendarDays;
+    }
+
+    private List<CalendarDay> createAvailableCalendarDays(Long timesheetId) {
+        List<CalendarDay> calendarDays = new ArrayList<>();
+        List<TimesheetEntry> timesheetEntryList = timesheetService.getTimesheetEntryList(timesheetId);
+        timesheetEntryList.forEach(t -> {
+            Calendar cal = Calendar.getInstance();
+            cal.set(t.getWorkdayDate().getYear(), t.getWorkdayDate().getMonth().getValue() - 1, t.getWorkdayDate().getDayOfMonth());
+           // calendarDays.add(new CalendarDay(cal, R.drawable.timesheet_day_ok_24, getResources().getColor(R.color.color_btn_bg_delete, null)));
+            CalendarDay calendarDay = new CalendarDay(cal);
+            calendarDay.setLabelColor(R.drawable.timesheet_day_ok_24);
+            calendarDay.setSelectedBackgroundResource(getResources().getColor(R.color.color_btn_bg_delete, null));
+            calendarDays.add(calendarDay);
+            Log.d("TimesheetCustomCalendarFragment", "ADD SELECTED DATE: " + t.getWorkdayDate().toString());
+        });
+        return calendarDays;
+    }
+
+
     private List<EventDay> createEventDays(Long timesheetId) {
         List<EventDay> eventDays = new ArrayList<>();
         List<TimesheetEntry> timesheetEntryList = timesheetService.getTimesheetEntryList(timesheetId);
@@ -149,13 +183,13 @@ public class TimesheetEntryCustomCalendarFragment extends Fragment {
         return eventDays;
     }
 
-    private List<Calendar> createSelectedDates(Long timesheetId) {
+    private List<CalendarDay> createSelectedDates(Long timesheetId) {
         List<TimesheetEntry> timesheetEntryList = timesheetService.getTimesheetEntryList(timesheetId);
-        List<Calendar> selectedDates = new ArrayList<>();
+        List<CalendarDay> selectedDates = new ArrayList<>();
         timesheetEntryList.forEach(t -> {
             Calendar cal = Calendar.getInstance();
             cal.set(t.getWorkdayDate().getYear(), t.getWorkdayDate().getMonth().getValue() - 1, t.getWorkdayDate().getDayOfMonth());
-            selectedDates.add(cal);
+            selectedDates.add(new CalendarDay(cal));
             Log.d("TimesheetCustomCalendarFragment", "ADD SELECTED DATE: " + t.getWorkdayDate());
         });
         return selectedDates;
@@ -173,7 +207,7 @@ public class TimesheetEntryCustomCalendarFragment extends Fragment {
         bundle.putLong(TimesheetListFragment.TIMESHEET_ID_KEY, timesheetId);
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_frame, TimesheetEntryListFragment.class, bundle)
+                .replace(R.id.nav_content_frame, TimesheetEntryListFragment.class, bundle)
                 .setReorderingAllowed(true)
                 .commit();
     }

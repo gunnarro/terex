@@ -35,7 +35,8 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity //implements NavigationView.OnNavigationItemSelectedListener
+{
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -88,31 +89,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         try {
-            setContentView(R.layout.activity_main);
+            setContentView(R.layout.activity_main_new);
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(Utility.buildTag(getClass(), "onCreate"), "Failed starting! " + e.getMessage());
         }
+        /*
         drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, R.string.title_timesheet, R.string.title_timesheet);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
-        NavigationView navigationView = findViewById(R.id.navigationView);
-        navigationView.setNavigationItemSelectedListener(this);
+*/
+     //   NavigationView navigationView = findViewById(R.id.navigationView);
+     //   navigationView.setNavigationItemSelectedListener(this);
         // display home button for actionbar
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setCustomView(R.layout.custom_toolbar_layout);
+     //   getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+     //   getSupportActionBar().setCustomView(R.layout.custom_toolbar_layout);
         // navigation view select timesheet menu as default
-        navigationView.setCheckedItem(R.id.nav_timesheet_list);
+       // navigationView.setCheckedItem(R.id.nav_timesheet_list);
 
         if (savedInstanceState == null) {
-            viewFragment(timesheetFragment);
+            //viewFragment(timesheetFragment);
         }
         // Finally, check and grant or deny permissions
         checkPermissions();
     }
-
+/*
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         Log.d(Utility.buildTag(getClass(), "onOptionsItemSelected"), "selected: " + item);
@@ -125,8 +127,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         return super.onOptionsItemSelected(item);
     }
-
-    @Override
+*/
+/*    @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         try {
             Log.d("MainActivity.onNavigationItemSelected", "selected: " + menuItem.getItemId());
@@ -140,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             } else if (id == R.id.nav_admin) {
                 viewFragment(adminFragment);
                 setTitle(R.string.title_admin);
-            }
+            }*/
             /*
             else if (id == R.id.nav_timesheet_new) {
                 viewFragment(timesheetNewFragment);
@@ -155,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }   else if (id == R.id.nav_timesheet_register_work) {
                 viewFragment(timesheetAddEntryFragment);
                 setTitle(R.string.title_register_work);
-            } */
+            } */ /*
             // close drawer after clicking the menu item
             DrawerLayout drawer = findViewById(R.id.drawer_layout);
             drawer.closeDrawer(GravityCompat.START);
@@ -165,15 +167,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return false;
         }
     }
-
+*/
+    /*
     private void viewFragment(@NonNull Fragment fragment) {
         Log.d(Utility.buildTag(getClass(), "viewFragment"), "fragment tag: " + fragment.getTag());
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_frame, fragment, fragment.getTag())
+                .replace(R.id.main_content_frame_deprecated, fragment, fragment.getTag())
                 .commit();
     }
-
+*/
     private void checkPermissions() {
         Log.i(Utility.buildTag(getClass(), "checkPermissions"), "Start check permissions...");
         // check and ask user for permission if not granted

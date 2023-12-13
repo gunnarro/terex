@@ -113,7 +113,7 @@ public class ProjectNewFragment extends Fragment {
     private void returnToProjectList() {
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_frame, InvoiceListFragment.class, null)
+                .replace(R.id.nav_content_frame, InvoiceListFragment.class, null)
                 .setReorderingAllowed(true)
                 .commit();
     }

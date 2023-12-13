@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/timesheet_list_fragment">
+
+    <!-- timesheet navigation -->
+    <fragment
+        android:id="@+id/timesheet_list_fragment"
+        android:name="com.gunnarro.android.terex.ui.fragment.TimesheetListFragment"
+        android:label="timesheet_list_fragment"
+        tools:layout="@layout/fragment_recycler_timesheet_list">
+        <action
+            android:id="@+id/nav_from_timesheet_list_to_timesheet_details"
+            app:destination="@id/timesheet_details_fragment">
+            <argument
+                android:name="timesheetId"
+                android:defaultValue="0L"
+                app:argType="long"
+                app:nullable="false" />
+        </action>
+        <action
+            android:id="@+id/nav_from_timesheet_list_to_timesheet_entry_list"
+            app:destination="@id/timesheet_entry_list_fragment">
+            <argument
+                android:name="timesheetId"
+                android:defaultValue="0L"
+                app:argType="long"
+                app:nullable="false" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/timesheet_details_fragment"
+        android:name="com.gunnarro.android.terex.ui.fragment.TimesheetNewFragment"
+        android:label="timesheet_details_fragment"
+        tools:layout="@layout/fragment_timesheet_new">
+        <argument
+            android:name="timesheetId"
+            android:defaultValue="0L"
+            app:argType="long"
+            app:nullable="false" />
+        <action
+            android:id="@+id/nav_from_timesheet_details_to_timesheet_list"
+            app:destination="@id/timesheet_list_fragment">
+        </action>
+    </fragment>
+
+    <!-- timesheet entry list -->
+    <fragment
+        android:id="@+id/timesheet_entry_list_fragment"
+        android:name="com.gunnarro.android.terex.ui.fragment.TimesheetEntryListFragment"
+        android:label="timesheet_entry_list_fragment"
+        tools:layout="@layout/fragment_recycler_timesheet_entry_list">
+        <action
+            android:id="@+id/nav_from_timesheet_entry_list_to_timesheet_entry_details"
+            app:destination="@id/timesheet_entry_details_fragment">
+            <argument
+                android:name="timesheetId"
+                android:defaultValue="0L"
+                app:argType="long"
+                app:nullable="false" />
+        </action>
+        <action
+            android:id="@+id/nav_from_timesheet_entry_list_to_timesheet_entry_calendar_add"
+            app:destination="@id/timesheet_entry_calendar_add_fragment">
+            <argument
+                android:name="timesheetId"
+                android:defaultValue="0L"
+                app:argType="long"
+                app:nullable="false" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/timesheet_entry_details_fragment"
+        android:name="com.gunnarro.android.terex.ui.fragment.TimesheetEntryAddFragment"
+        android:label="timesheet_entry_details_fragment"
+        tools:layout="@layout/fragment_timesheet_entry_add">
+        <argument
+            android:name="timesheetId"
+            android:defaultValue="0L"
+            app:argType="long"
+            app:nullable="false" />
+        <action
+            android:id="@+id/nav_from_timesheet_entry_details_to_timesheet_entry_list"
+            app:destination="@id/timesheet_entry_list_fragment">
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/timesheet_entry_calendar_add_fragment"
+        android:name="com.gunnarro.android.terex.ui.fragment.TimesheetEntryCustomCalendarFragment"
+        android:label="timesheet_entry_calendar_add_fragment"
+        tools:layout="@layout/fragment_timesheet_entry_custom_calendar">
+        <argument
+            android:name="timesheetId"
+            android:defaultValue="0L"
+            app:argType="long"
+            app:nullable="false" />
+        <action
+            android:id="@+id/nav_from_timesheet_entry_calendar_to_timesheet_entry_list"
+            app:destination="@id/timesheet_entry_list_fragment">
+        </action>
+    </fragment>
+
+    <!-- invoice navigation -->
+    <fragment
+        android:id="@+id/invoice_list_fragment"
+        android:name="com.gunnarro.android.terex.ui.fragment.InvoiceListFragment"
+        android:label="invoice_list_fragment"
+        tools:layout="@layout/fragment_recycler_invoice_list">
+        <action
+            android:id="@+id/show_invoice_details"
+            app:destination="@id/invoice_details_fragment" />
+        <action
+            android:id="@+id/show_invoice_add"
+            app:destination="@id/invoice_new_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/invoice_new_fragment"
+        android:name="com.gunnarro.android.terex.ui.fragment.InvoiceNewFragment"
+        android:label="invoice_new_fragment"
+        tools:layout="@layout/fragment_invoice_new"></fragment>
+
+    <fragment
+        android:id="@+id/invoice_details_fragment"
+        android:name="com.gunnarro.android.terex.ui.fragment.InvoiceViewFragment"
+        android:label="invoice_details_fragment"
+        tools:layout="@layout/fragment_invoice_view"></fragment>
+
+    <!-- preferences -->
+
+</navigation>

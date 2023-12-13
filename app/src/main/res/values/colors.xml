@@ -48,4 +48,13 @@
     <color name="color_bg_swipe_left">#fa2a12</color>
     <color name="color_bg_swipe_right">#7fc464</color>
 
+    <!-- recycle list colors -->
+    <color name="color_bg_list">#ffffff</color>
+    <color name="color_bg_list_item">#d5e5f0</color>
+    <color name="color_bg_tint_btn">#ffffff</color>
+    <color name="color_list_item_border">#d5e5f0</color>
+
+
+    cardview_dark_background
+
 </resources>

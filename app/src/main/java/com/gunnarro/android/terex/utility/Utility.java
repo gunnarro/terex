@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.WeekFields;
@@ -204,6 +205,11 @@ public class Utility {
         System.out.println("Sunday of the Week: " + sunday);
     }
 
+    public static boolean isFirstDayOfWeek(LocalDate date) {
+        return date.getDayOfWeek().name().equals(DayOfWeek.MONDAY.name());
+    }
+
+
     public static LocalDate getFirstDayOfWeek(LocalDate date, Integer weekOfYear) {
         return LocalDate.of(date.getYear(), date.getMonthValue(), 1)
                 .with(DayOfWeek.MONDAY)
@@ -247,7 +253,8 @@ public class Utility {
     }
 
     public static String[] getMonthNames() {
-        return new DateFormatSymbols().getMonths();
+        return new String[]{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+        //return new DateFormatSymbols().getMonths();
     }
 
     /**

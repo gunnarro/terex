@@ -7,24 +7,25 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentManager;
+import androidx.navigation.NavController;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
+import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.ui.fragment.TimesheetListFragment;
 import com.gunnarro.android.terex.ui.view.TimesheetViewHolder;
 import com.gunnarro.android.terex.utility.Utility;
 
 public class TimesheetListAdapter extends ListAdapter<Timesheet, TimesheetViewHolder> implements AdapterView.OnItemClickListener {
 
-    private final FragmentManager fragmentManager;
+    private final NavController navController;
 
-    public TimesheetListAdapter(@NonNull FragmentManager fragmentManager, @NonNull DiffUtil.ItemCallback<Timesheet> diffCallback) {
+    public TimesheetListAdapter(@NonNull NavController navController, @NonNull DiffUtil.ItemCallback<Timesheet> diffCallback) {
         super(diffCallback);
         this.setHasStableIds(true);
-        this.fragmentManager = fragmentManager;
+        this.navController = navController;
     }
 
     @NonNull
@@ -32,10 +33,10 @@ public class TimesheetListAdapter extends ListAdapter<Timesheet, TimesheetViewHo
     public TimesheetViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         TimesheetViewHolder viewHolder = TimesheetViewHolder.create(parent);
         viewHolder.itemView.findViewById(R.id.ic_timesheet_row_view).setOnClickListener(v -> {
-            Bundle actionBundle = new Bundle();
-            actionBundle.putString(TimesheetListFragment.TIMESHEET_JSON_KEY, toJson(getItem(viewHolder.getBindingAdapterPosition())));
-            actionBundle.putString(TimesheetListFragment.TIMESHEET_ACTION_KEY, TimesheetListFragment.TIMESHEET_ACTION_EDIT);
-            fragmentManager.setFragmentResult(TimesheetListFragment.TIMESHEET_REQUEST_KEY, actionBundle);
+            Bundle bundle = new Bundle();
+            bundle.putString(TimesheetListFragment.TIMESHEET_JSON_KEY, toJson(getItem(viewHolder.getBindingAdapterPosition())));
+            bundle.putString(TimesheetListFragment.TIMESHEET_ACTION_KEY, TimesheetListFragment.TIMESHEET_ACTION_EDIT);
+            navController.navigate(R.id.nav_from_timesheet_list_to_timesheet_entry_list, bundle);
         });
         return viewHolder;
     }
@@ -45,7 +46,7 @@ public class TimesheetListAdapter extends ListAdapter<Timesheet, TimesheetViewHo
             return Utility.gsonMapper().toJson(timesheet);
         } catch (Exception e) {
             Log.e("getTimesheetAsJson", e.toString());
-            throw new RuntimeException("unable to parse object to json! " + e);
+            throw new TerexApplicationException("unable to parse object to json!", "505500", e);
         }
     }
 

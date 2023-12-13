@@ -109,7 +109,7 @@ class TimesheetServiceTest {
         // simulate worked hours for a month
         timesheetEntry1.setWorkedMinutes(5080);
         timesheetEntry2.setWorkedMinutes(5080);
-        when(timesheetRepositoryMock.getTimesheet(timesheet.getClientName(), timesheet.getProjectCode(), timesheet.getYear(), timesheet.getMonth())).thenReturn(timesheet);
+//        when(timesheetRepositoryMock.getTimesheet(timesheet.getClientName(), timesheet.getProjectCode(), timesheet.getYear(), timesheet.getMonth())).thenReturn(timesheet);
         when(timesheetRepositoryMock.getTimesheetEntryList(any())).thenReturn(List.of(timesheetEntry1, timesheetEntry2));
         when(timesheetRepositoryMock.getTimesheet(timesheet.getId())).thenReturn(timesheet);
 

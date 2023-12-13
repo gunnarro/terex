@@ -1,6 +1,12 @@
 package com.gunnarro.android.terex.ui.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Environment;
+import android.print.PrintAttributes;
+import android.print.PrintDocumentAdapter;
+import android.print.PrintJob;
+import android.print.PrintManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -75,7 +81,7 @@ public class InvoiceViewFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         if (item.getItemId() == R.id.attachment_to_pdf) {
-            exportAttachment(selectedInvoiceAttachmentType.name(), selectedInvoiceAttachmentType.getPdfFileName());
+            exportAttachment(selectedInvoiceAttachmentType.name(), selectedInvoiceAttachmentType.getFileName());
         }
         return true;
     }
@@ -132,23 +138,41 @@ public class InvoiceViewFragment extends Fragment {
         } catch (Exception e) {
             showInfoDialog("Error", String.format("Application error!%sError: %s%s Please report.", e.getMessage(), System.lineSeparator(), System.lineSeparator()));
         }
+
+        Log.d("", "html=" + new String(invoiceAttachmentHtml));
         webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
         webView.getSettings().setJavaScriptEnabled(false);
         webView.getSettings().setLoadsImagesAutomatically(true);
+    //    webView.setWebViewClient(new LocalContentWebViewClient());
         //webView.loadDataWithBaseURL(null, invoiceHtml, "text/html", "utf-8", null);
         Log.d("invoice timesheet attachment", String.format("%s", new String(invoiceAttachmentHtml)));
-        webView.loadDataWithBaseURL(null, new String(invoiceAttachmentHtml), "text/html", "UTF-8", null);
+        webView.loadDataWithBaseURL("file://android_asset/", new String(invoiceAttachmentHtml), "text/html", "UTF-8", null);
     }
 
     private void returnToInvoiceList() {
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_frame, InvoiceListFragment.class, null)
+                .replace(R.id.nav_content_frame, InvoiceListFragment.class, null)
                 .setReorderingAllowed(true)
                 .commit();
     }
 
     private void exportAttachment(String invoiceAttachmentType, String fileName) {
+        String invoiceAttachmentFileName = fileName + "_" + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
+        PrintManager printManager = (PrintManager) getActivity().getSystemService(Context.PRINT_SERVICE);
+        WebView webView = requireView().findViewById(R.id.invoice_web_view);
+        PrintDocumentAdapter printAdapter = webView.createPrintDocumentAdapter(invoiceAttachmentFileName);
+
+        PrintAttributes printAttributes = new PrintAttributes.Builder()
+                .setMediaSize(PrintAttributes.MediaSize.ISO_A4)
+                .setResolution(new PrintAttributes.Resolution("pdf", "pdf", 600, 600))
+                .setMinMargins(PrintAttributes.Margins.NO_MARGINS)
+                .build();
+
+        PrintJob printJob = printManager.print(invoiceAttachmentFileName, printAdapter, printAttributes);
+        Log.d("", "printJob status=" + printJob.isCompleted());
+        java.io.File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM + "/PDFTest/");
+/*
         byte[] invoiceAttachmentHtml = null;
         try {
             invoiceAttachmentHtml = invoiceService.getInvoiceAttachment(invoiceId, invoiceAttachmentType, "html").getAttachmentFileContent();
@@ -162,6 +186,8 @@ public class InvoiceViewFragment extends Fragment {
         } catch (Exception e) {
             showInfoDialog("Error", String.format("Export to pdf failed! file=%s, error=%s", fileName, e.getMessage()));
         }
+
+ */
     }
 
     /**

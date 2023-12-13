@@ -7,19 +7,21 @@
     tools:context=".ui.fragment.TimesheetNewFragment"
     tools:ignore="ExtraText">
 
+    <!-- hidden fields -->
+    <TextView
+        android:id="@+id/timesheet_new_id"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text=""
+        android:visibility="invisible" />
+
     <RelativeLayout
+        android:id="@+id/timesheet_new_main_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="10dp"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         tools:ignore="UselessParent">
-
-        <TextView
-            android:id="@+id/timesheet_new_id"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:text=""
-            android:visibility="invisible" />
 
         <!-- horizontal date layout -->
         <LinearLayout
@@ -37,7 +39,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:enabled="true"
+                android:enabled="false"
                 android:hint="@string/prompt_created_date">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -55,7 +57,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:enabled="true"
+                android:enabled="false"
                 android:hint="@string/prompt_last_modified_date">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -69,12 +71,16 @@
         </LinearLayout>
 
         <!-- vertical spinner layout -->
+
+        <!-- year and mount date -->
         <LinearLayout
             android:id="@+id/timesheet_new_spinner_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/timesheet_new_date_layout"
             android:layout_margin="10dp"
+            android:layout_marginTop="-10dp"
+            android:layout_marginBottom="10dp"
             android:baselineAligned="false"
             android:orientation="vertical"
             tools:ignore="UselessParent">
@@ -91,9 +97,10 @@
                     android:id="@+id/timesheet_new_client_spinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
                     android:autofillHints="false"
+                    android:clickable="true"
                     android:importantForAutofill="no"
+                    android:inputType="none"
                     tools:ignore="KeyboardInaccessibleWidget" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -109,9 +116,11 @@
                     android:id="@+id/timesheet_new_project_spinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
                     android:autofillHints="false"
+                    android:clickable="true"
                     android:importantForAutofill="no"
+                    android:inputType="none"
+                    android:autoHandwritingEnabled="false"
                     tools:ignore="KeyboardInaccessibleWidget" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -126,14 +135,14 @@
                     android:id="@+id/timesheet_new_status_spinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
                     android:autofillHints="false"
+                    android:clickable="true"
                     android:importantForAutofill="no"
+                    android:inputType="none"
                     tools:ignore="KeyboardInaccessibleWidget" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
-        <!-- year and mount date -->
         <LinearLayout
             android:id="@+id/timesheet_new_year_month_layout"
             android:layout_width="match_parent"
@@ -161,6 +170,7 @@
                     android:layout_height="wrap_content"
                     android:clickable="false"
                     android:enabled="false"
+                    android:inputType="none"
                     tools:ignore="KeyboardInaccessibleWidget" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -171,6 +181,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:layout_weight="1"
+                android:enabled="true"
                 android:hint="@string/lbl_month">
 
                 <androidx.appcompat.widget.AppCompatAutoCompleteTextView
@@ -178,6 +189,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clickable="false"
+                    android:inputType="none"
                     tools:ignore="KeyboardInaccessibleWidget" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
@@ -193,6 +205,7 @@
             android:orientation="horizontal"
             tools:ignore="UselessParent">
 
+            <!-- none editable fields, disabled -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/timesheet_new_from_date_layout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
@@ -244,19 +257,20 @@
             tools:ignore="UselessParent">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/timesheet_new_description_layout"
+                android:id="@+id/timesheet_new_created_description_layout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/lbl_description">
+                android:layout_weight="1"
+                android:hint="@string/prompt_description">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/timesheet_new_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:enabled="true"
                     android:inputType="text"
-                    android:maxLength="50"
-                    android:text="" />
+                    android:text="@string/lbl_description" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
@@ -288,6 +302,7 @@
                 android:layout_marginEnd="10dp"
                 android:layout_weight="1"
                 android:text="@string/btn_cancel"
+
                 app:iconTint="@color/color_btn_bg_cancel" />
 
             <com.google.android.material.button.MaterialButton

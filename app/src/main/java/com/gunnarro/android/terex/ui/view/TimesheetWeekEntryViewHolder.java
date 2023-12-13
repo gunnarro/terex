@@ -14,7 +14,8 @@ import com.gunnarro.android.terex.utility.Utility;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
-public class TimesheetEntryViewHolder extends RecyclerView.ViewHolder {
+public class TimesheetWeekEntryViewHolder extends RecyclerView.ViewHolder {
+    private final TextView timesheetEntryWeekHeaderView;
     private final TextView timesheetEntryLineHeaderView;
     private final TextView timesheetEntryLine1StatusView;
     private final TextView timesheetEntryLine1LabelView;
@@ -23,8 +24,9 @@ public class TimesheetEntryViewHolder extends RecyclerView.ViewHolder {
     private final TextView timesheetEntryLine2ValueView;
 
 
-    private TimesheetEntryViewHolder(View itemView) {
+    private TimesheetWeekEntryViewHolder(View itemView) {
         super(itemView);
+        timesheetEntryWeekHeaderView = itemView.findViewById(R.id.timesheet_week_entry_header);
         timesheetEntryLineHeaderView = itemView.findViewById(R.id.timesheet_entry_line_header);
         timesheetEntryLine1StatusView = itemView.findViewById(R.id.timesheet_entry_line_1_status);
         timesheetEntryLine1LabelView = itemView.findViewById(R.id.timesheet_entry_line_1_label);
@@ -33,12 +35,18 @@ public class TimesheetEntryViewHolder extends RecyclerView.ViewHolder {
         timesheetEntryLine2ValueView = itemView.findViewById(R.id.timesheet_entry_line_2_value);
     }
 
-    public static TimesheetEntryViewHolder create(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_timesheet_entry_item, parent, false);
-        return new TimesheetEntryViewHolder(view);
+    public static TimesheetWeekEntryViewHolder create(ViewGroup parent) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_timesheet_week_entry_item, parent, false);
+        return new TimesheetWeekEntryViewHolder(view);
     }
 
     public void bindListLine(TimesheetEntry timesheetEntry) {
+        if (Utility.isFirstDayOfWeek(timesheetEntry.getWorkdayDate())) {
+            timesheetEntryWeekHeaderView.setText(String.format("week %s", Utility.getWeek(timesheetEntry.getWorkdayDate())));
+            timesheetEntryWeekHeaderView.setVisibility(View.VISIBLE);
+        } else {
+            timesheetEntryWeekHeaderView.setVisibility(View.GONE);
+        }
         timesheetEntryLineHeaderView.setText(timesheetEntry.getTimesheetId().toString());
         timesheetEntryLine1StatusView.setText(timesheetEntry.getWorkdayDate().format(DateTimeFormatter.ofPattern("dd", Locale.getDefault())));
         // can have status OPEN or BILLED

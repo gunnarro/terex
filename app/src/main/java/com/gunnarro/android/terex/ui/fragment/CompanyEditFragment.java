@@ -151,7 +151,7 @@ public class CompanyEditFragment extends Fragment implements View.OnClickListene
     private void returnToTimesheetList() {
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_frame, TimesheetEntryListFragment.class, null)
+                .replace(R.id.nav_content_frame, TimesheetEntryListFragment.class, null)
                 .setReorderingAllowed(true)
                 .commit();
     }

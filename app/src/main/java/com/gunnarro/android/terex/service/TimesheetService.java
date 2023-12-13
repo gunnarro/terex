@@ -112,7 +112,13 @@ public class TimesheetService {
                 Log.d("TimesheetRepository.saveTimesheet", String.format("inserted new timesheetId=%s, %s", id, timesheet));
             } else {
                 // this is a update of existing timesheet
+                // must be set here, because the values is not handled in the fragment/UI and will therefore be reset during an update.
+                // this should be fixed by not using the entity directly in the fragment/UI.
                 timesheet.setLastModifiedDate(LocalDateTime.now());
+                //timesheet.setWorkingDaysInMonth(timesheetExisting.getWorkingDaysInMonth());
+                //timesheet.setWorkingHoursInMonth(timesheetExisting.getWorkingHoursInMonth());
+                //timesheet.setTotalWorkedDays(timesheetExisting.getTotalWorkedDays());
+                //timesheet.setTotalWorkedHours(timesheetExisting.getTotalWorkedHours());
                 timesheetRepository.updateTimesheet(timesheet);
                 Log.d("TimesheetRepository.saveTimesheet", String.format("updated timesheet: %s", timesheet));
             }
@@ -145,7 +151,6 @@ public class TimesheetService {
             }
         }
         Log.d("updateTimesheetWorkedHoursAndDays", String.format("updated worked days and hours! %s", timesheet));
-        saveTimesheet(timesheet);
         return timesheet;
     }
 
@@ -188,7 +193,8 @@ public class TimesheetService {
                 id = timesheetEntry.getId();
                 Log.d("TimesheetRepository.saveTimesheetEntry", "update timesheet entry: " + id + " - " + timesheetEntry.getWorkdayDate());
             }
-            updateTimesheetWorkedHoursAndDays(timesheetEntry.getTimesheetId());
+            Timesheet timesheetUpdated = updateTimesheetWorkedHoursAndDays(timesheet.getId());
+            saveTimesheet(timesheetUpdated);
         } catch (InterruptedException | ExecutionException e) {
             // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();

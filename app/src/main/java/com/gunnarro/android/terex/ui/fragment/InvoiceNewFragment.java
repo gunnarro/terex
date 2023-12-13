@@ -188,6 +188,7 @@ public class InvoiceNewFragment extends Fragment {
         context.put("vatInPercent", "25%");
         context.put("totalVat", totalVat);
         context.put("totalBilledAmountWithVat", totalBilledAmountWithVat);
+        context.put("generatedDate", LocalDate.now().format(DateTimeFormatter.ISO_DATE));
         StringWriter writer = new StringWriter();
         mustache.execute(writer, context);
         return writer.toString();
@@ -225,10 +226,12 @@ public class InvoiceNewFragment extends Fragment {
         Mustache mustache = mf.compile(new StringReader(mustacheTemplateStr), "");
         Map<String, Object> context = new HashMap<>();
         context.put("title", "Timeliste for konsulentbistand");
-        context.put("timesheetPeriod", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM")));
+        // FIXME get date from timesheet
+        context.put("timesheetPeriod", timesheetList.get(0).getWorkdayDate().format(DateTimeFormatter.ofPattern("yyyy/MM")));
         context.put("timesheetList", timesheetList);
         context.put("totalWorkDays", timesheetList.size());
         context.put("sunBilledHours", sumBilledHours);
+        context.put("generatedDate", LocalDate.now().format(DateTimeFormatter.ISO_DATE));
         StringWriter writer = new StringWriter();
         mustache.execute(writer, context);
         return writer.toString();
@@ -250,7 +253,7 @@ public class InvoiceNewFragment extends Fragment {
     }
 
     private void returnToInvoiceList() {
-        requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, InvoiceListFragment.class, null).setReorderingAllowed(true).commit();
+        requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_content_frame, InvoiceListFragment.class, null).setReorderingAllowed(true).commit();
     }
 
 }

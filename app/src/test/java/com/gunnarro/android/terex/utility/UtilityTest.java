@@ -50,6 +50,20 @@ class UtilityTest {
     }
 
     @Test
+    void formatToWeekOnly() {
+        // check from monday to next monday
+        Assertions.assertTrue(Utility.isFirstDayOfWeek(LocalDate.of(2023, 12, 4)));
+        Assertions.assertFalse(Utility.isFirstDayOfWeek(LocalDate.of(2023, 12, 5)));
+        Assertions.assertFalse(Utility.isFirstDayOfWeek(LocalDate.of(2023, 12, 6)));
+        Assertions.assertFalse(Utility.isFirstDayOfWeek(LocalDate.of(2023, 12, 7)));
+        Assertions.assertFalse(Utility.isFirstDayOfWeek(LocalDate.of(2023, 12, 8)));
+        Assertions.assertFalse(Utility.isFirstDayOfWeek(LocalDate.of(2023, 12, 9)));
+        Assertions.assertFalse(Utility.isFirstDayOfWeek(LocalDate.of(2023, 12, 10)));
+        Assertions.assertTrue(Utility.isFirstDayOfWeek(LocalDate.of(2023, 12, 11)));
+        Assertions.assertEquals(50, Utility.getWeek(LocalDate.of(2023, 12, 11)));
+    }
+
+    @Test
     void formatToHHMM() {
         Assertions.assertEquals("02:08", Utility.formatToHHMM(2, 8));
         Assertions.assertEquals("00:00", Utility.formatToHHMM(0, 0));
@@ -67,8 +81,8 @@ class UtilityTest {
     void mapToMonthName() {
         Assertions.assertEquals(1, LocalDate.of(2023, 1, 1).getMonth().getValue());
         Assertions.assertEquals(12, LocalDate.of(2023, 12, 1).getMonth().getValue());
-        Assertions.assertEquals(13, Utility.getMonthNames().length);
-        Assertions.assertEquals("December", Utility.getMonthNames()[Utility.getMonthNames().length - 2]);
+        Assertions.assertEquals(12, Utility.getMonthNames().length);
+        Assertions.assertEquals("December", Utility.getMonthNames()[Utility.getMonthNames().length -1]);
         Assertions.assertEquals("January", Utility.mapMonthNumberToName(0));
         Assertions.assertEquals(LocalDate.of(2023, 1, 1).getMonth().name(), Utility.getMonthNames()[0].toUpperCase());
         Assertions.assertEquals(LocalDate.of(2023, 1, 1).getMonth().getValue(), Utility.mapMonthNameToNumber("January").intValue());

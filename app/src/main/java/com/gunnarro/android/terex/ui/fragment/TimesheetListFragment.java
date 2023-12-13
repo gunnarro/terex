@@ -18,6 +18,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
 import androidx.lifecycle.LiveData;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -54,6 +56,7 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
     public static final String TIMESHEET_ACTION_DELETE = "timesheet_delete";
     public static final String TIMESHEET_ACTION_EDIT = "timesheet_edit";
     public static final String TIMESHEET_ACTION_VIEW = "timesheet_view";
+    private NavController navController;
     private TimesheetViewModel timesheetViewModel;
     private List<Integer> timesheetYears;
     private Integer selectedYear = LocalDate.now().getYear();
@@ -89,7 +92,7 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
         View view = inflater.inflate(R.layout.fragment_recycler_timesheet_list, container, false);
         setHasOptionsMenu(true);
         RecyclerView recyclerView = view.findViewById(R.id.timesheet_list_recyclerview);
-        TimesheetListAdapter timesheetListAdapter = new TimesheetListAdapter(getParentFragmentManager(), new TimesheetListAdapter.TimesheetDiff());
+        TimesheetListAdapter timesheetListAdapter = new TimesheetListAdapter(navController, new TimesheetListAdapter.TimesheetDiff());
         recyclerView.setAdapter(timesheetListAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         // Update the cached copy of the timesheet entries in the adapter.
@@ -97,11 +100,7 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
 
         FloatingActionButton addButton = view.findViewById(R.id.timesheet_add_btn);
         addButton.setOnClickListener(v -> {
-            requireActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.content_frame, TimesheetNewFragment.class, createTimesheetBundle(timesheetListAdapter.getItemId(0), selectedYear))
-                    .setReorderingAllowed(true)
-                    .commit();
+            navController.navigate(R.id.nav_from_timesheet_list_to_timesheet_details, createTimesheetBundle(timesheetListAdapter.getItemId(0), selectedYear));
         });
 
         // enable swipe
@@ -112,11 +111,12 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
     }
 
     /**
-     * Update backup info after view is successfully create
+     * setup after view is successfully create
      */
     @Override
     public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        this.navController = Navigation.findNavController(view);
     }
 
     @Override
@@ -165,13 +165,13 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
                 Bundle bundle = new Bundle();
                 bundle.putLong(TimesheetListFragment.TIMESHEET_ID_KEY, timesheet.getId());
                 bundle.putBoolean(TimesheetListFragment.TIMESHEET_READ_ONLY_KEY, timesheet.isBilled());
-                goToTimesheetEntryView(bundle);
+                openTimesheetEntryListView(bundle);
             } else if (TIMESHEET_ACTION_EDIT.equals(action)) {
                 // redirect to timesheet entry list fragment
                 Bundle bundle = new Bundle();
                 bundle.putString(TimesheetListFragment.TIMESHEET_JSON_KEY, timesheetJson);
                 bundle.putBoolean(TimesheetListFragment.TIMESHEET_READ_ONLY_KEY, timesheet.isBilled());
-                goToTimesheetView(bundle);
+                openTimesheetDetailsView(bundle);
             } else {
                 Log.w(Utility.buildTag(getClass(), "handleTimesheetActions"), "unknown action: " + action);
                 showInfoDialog("Info", String.format("Application error!%s Unknown action: %s%s Please report.", action, System.lineSeparator(), System.lineSeparator()));
@@ -233,20 +233,27 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
         timesheetListAdapter.notifyDataSetChanged();
     }
 
-    private void goToTimesheetEntryView(Bundle bundle) {
+    private void openTimesheetEntryListView(Bundle bundle) {
+        navController.navigate(R.id.nav_from_timesheet_list_to_timesheet_entry_list, bundle);
+        /*
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_frame, TimesheetEntryListFragment.class, bundle)
+                .replace(R.id.nav_content_frame, TimesheetEntryListFragment.class, bundle)
                 .setReorderingAllowed(true)
                 .commit();
+
+         */
     }
 
-    private void goToTimesheetView(Bundle bundle) {
+    private void openTimesheetDetailsView(Bundle bundle) {
+        navController.navigate(R.id.timesheet_details_fragment, bundle);
+        /*
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_frame, TimesheetNewFragment.class, bundle)
+                .replace(R.id.nav_content_frame, TimesheetNewFragment.class, createTimesheetBundle(timesheet.getId(), selectedYear))
                 .setReorderingAllowed(true)
                 .commit();
+         */
     }
 
     private void deleteTimesheet(Long timesheetId) {
@@ -283,24 +290,15 @@ public class TimesheetListFragment extends Fragment implements DialogActionListe
                 LiveData<List<Timesheet>> listLiveData = timesheetViewModel.getTimesheetLiveData(selectedYear);
                 int pos = viewHolder.getAbsoluteAdapterPosition();
                 List<Timesheet> list = listLiveData.getValue();
-                openTimesheetView(list.get(pos));
                 Bundle bundle = new Bundle();
                 bundle.putLong(TimesheetListFragment.TIMESHEET_ID_KEY, list.get(pos).getId());
                 bundle.putBoolean(TimesheetListFragment.TIMESHEET_READ_ONLY_KEY, list.get(pos).isBilled());
-                goToTimesheetEntryView(bundle);
+                openTimesheetDetailsView(bundle);
             }
         };
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
         itemTouchhelper.attachToRecyclerView(recyclerView);
         Log.i(Utility.buildTag(getClass(), "enableSwipeToRightAndAdd"), "enabled swipe handler for timesheet list item");
-    }
-
-    private void openTimesheetView(Timesheet timesheet) {
-        requireActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.content_frame, TimesheetNewFragment.class, createTimesheetBundle(timesheet.getId(), selectedYear))
-                .setReorderingAllowed(true)
-                .commit();
     }
 
     private void enableSwipeToLeftAndDeleteItem(RecyclerView recyclerView) {

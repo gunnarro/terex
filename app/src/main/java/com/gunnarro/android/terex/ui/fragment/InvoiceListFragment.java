@@ -65,7 +65,7 @@ public class InvoiceListFragment extends Fragment {
         FloatingActionButton addButton = view.findViewById(R.id.add_invoice);
         addButton.setOnClickListener(v -> requireActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_frame, InvoiceNewFragment.class, null)
+                .replace(R.id.nav_content_frame, InvoiceNewFragment.class, null)
                 .setReorderingAllowed(true)
                 .commit());
         Log.d(Utility.buildTag(getClass(), "onCreateView"), "");
@@ -87,7 +87,7 @@ public class InvoiceListFragment extends Fragment {
       if (bundle.getLong(INVOICE_ID_KEY) > 0) {
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.content_frame, InvoiceViewFragment.class, bundle)
+                    .replace(R.id.nav_content_frame, InvoiceViewFragment.class, bundle)
                     .setReorderingAllowed(true)
                     .commit();
         }

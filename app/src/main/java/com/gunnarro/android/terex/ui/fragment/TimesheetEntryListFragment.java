@@ -1,7 +1,5 @@
 package com.gunnarro.android.terex.ui.fragment;
 
-import android.app.AlertDialog;
-import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
@@ -91,14 +89,14 @@ public class TimesheetEntryListFragment extends Fragment {
         FloatingActionButton addButton = view.findViewById(R.id.timesheet_entry_add_btn);
         addButton.setOnClickListener(v -> requireActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_frame, TimesheetEntryAddFragment.class, createTimesheetEntryBundle(timesheetId))
+                .replace(R.id.nav_content_frame, TimesheetEntryAddFragment.class, createTimesheetEntryBundle(timesheetId))
                 .setReorderingAllowed(true)
                 .commit());
 
         FloatingActionButton calendarButton = view.findViewById(R.id.timesheet_entry_calendar_btn);
         calendarButton.setOnClickListener(v -> requireActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_frame, TimesheetEntryCustomCalendarFragment.class, createTimesheetEntryBundle(timesheetId))
+                .replace(R.id.nav_content_frame, TimesheetEntryCustomCalendarFragment.class, createTimesheetEntryBundle(timesheetId))
                 .setReorderingAllowed(true)
                 .commit());
 

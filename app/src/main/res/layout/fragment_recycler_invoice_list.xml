@@ -17,6 +17,7 @@
             android:id="@+id/invoice_list_recyclerview"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:background="@color/color_bg_list"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -31,7 +32,7 @@
             android:layout_margin="16dp"
             android:contentDescription="@string/btn_add"
             android:src="@drawable/ic_add_white_24dp"
-            app:backgroundTint="@color/cardview_dark_background"
+            app:backgroundTint="@color/color_bg_tint_btn"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 

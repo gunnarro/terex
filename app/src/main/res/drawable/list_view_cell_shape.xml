@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@color/colorBackgroundListItem" />
+    <solid android:color="@color/color_bg_list_item" />
     <stroke
         android:width="2dp"
-        android:color="@color/colorBorderListItem" />
+        android:color="@color/color_list_item_border" />
     <corners android:radius="10dp" />
     <padding
         android:bottom="5dp"
