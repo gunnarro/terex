@@ -1,23 +1,15 @@
 package com.gunnarro.android.terex.ui.fragment;
 
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.ColorRes;
-import androidx.fragment.app.Fragment;
-
 import com.applandeo.materialcalendarview.CalendarDay;
 import com.applandeo.materialcalendarview.CalendarView;
 import com.applandeo.materialcalendarview.EventDay;
 import com.applandeo.materialcalendarview.exceptions.OutOfDateRangeException;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.BaseTransientBottomBar;
-import com.google.android.material.snackbar.Snackbar;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.exception.InputValidationException;
@@ -37,7 +29,7 @@ import javax.inject.Inject;
 /**
  * <a href="https://github.com/Applandeo/Material-Calendar-View">Material-Calendar-View</a>
  */
-public class TimesheetEntryCustomCalendarFragment extends Fragment {
+public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
 
     private LocalDate selectedWorkDayDate;
 
@@ -113,8 +105,10 @@ public class TimesheetEntryCustomCalendarFragment extends Fragment {
 
         view.findViewById(R.id.btn_timesheet_calendar_cancel).setOnClickListener(v -> {
             view.findViewById(R.id.btn_timesheet_calendar_cancel).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
-            // Simply return back to credential list
-            returnToTimesheetEntryList(getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY));
+            // Simply return back to the timesheet list
+            Bundle bundle = new Bundle();
+            bundle.putLong(TimesheetListFragment.TIMESHEET_ID_KEY, timesheetId);
+            navigateTo(R.id.nav_from_timesheet_entry_calendar_to_timesheet_entry_list, bundle);
         });
 
         Log.d(Utility.buildTag(getClass(), "onCreateView"), "");
@@ -227,16 +221,5 @@ public class TimesheetEntryCustomCalendarFragment extends Fragment {
         } catch (TerexApplicationException | InputValidationException e) {
            showInfoDialog("Info", e.getMessage());
         }
-    }
-
-    private void showSnackbar(String msg, @ColorRes int bgColor) {
-        Resources.Theme theme = getResources().newTheme();
-        Snackbar snackbar = Snackbar.make(requireView().findViewById(R.id.timesheet_calendar_layout), msg, BaseTransientBottomBar.LENGTH_LONG);
-        snackbar.setTextColor(getResources().getColor(bgColor, theme));
-        snackbar.show();
-    }
-
-    private void showInfoDialog(String severity, String message) {
-        new MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme).setTitle(severity).setMessage(message).setCancelable(false).setPositiveButton("Ok", (dialog, which) -> dialog.cancel()).create().show();
     }
 }

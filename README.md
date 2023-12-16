@@ -6,5 +6,7 @@
 Android time tracking app.
 This is a simple application for time registration for consultants.
 
+“One-Activity-Multiple-Fragments” pattern
+
 ## Resources
 - [calendar](https://github.com/kizitonwose/Calendar)

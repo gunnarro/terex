@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import androidx.annotation.NonNull;
-import androidx.navigation.NavController;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
@@ -15,17 +14,18 @@ import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.ui.fragment.TimesheetListFragment;
+import com.gunnarro.android.terex.ui.listener.ListOnItemClickListener;
 import com.gunnarro.android.terex.ui.view.TimesheetViewHolder;
 import com.gunnarro.android.terex.utility.Utility;
 
 public class TimesheetListAdapter extends ListAdapter<Timesheet, TimesheetViewHolder> implements AdapterView.OnItemClickListener {
 
-    private final NavController navController;
+    private final ListOnItemClickListener listOnItemClickListener;
 
-    public TimesheetListAdapter(@NonNull NavController navController, @NonNull DiffUtil.ItemCallback<Timesheet> diffCallback) {
+    public TimesheetListAdapter(@NonNull ListOnItemClickListener listOnItemClickListener, @NonNull DiffUtil.ItemCallback<Timesheet> diffCallback) {
         super(diffCallback);
         this.setHasStableIds(true);
-        this.navController = navController;
+        this.listOnItemClickListener = listOnItemClickListener;
     }
 
     @NonNull
@@ -34,9 +34,9 @@ public class TimesheetListAdapter extends ListAdapter<Timesheet, TimesheetViewHo
         TimesheetViewHolder viewHolder = TimesheetViewHolder.create(parent);
         viewHolder.itemView.findViewById(R.id.ic_timesheet_row_view).setOnClickListener(v -> {
             Bundle bundle = new Bundle();
-            bundle.putString(TimesheetListFragment.TIMESHEET_JSON_KEY, toJson(getItem(viewHolder.getBindingAdapterPosition())));
+            bundle.putLong(TimesheetListFragment.TIMESHEET_ID_KEY, getItem(viewHolder.getBindingAdapterPosition()).getId());
             bundle.putString(TimesheetListFragment.TIMESHEET_ACTION_KEY, TimesheetListFragment.TIMESHEET_ACTION_EDIT);
-            navController.navigate(R.id.nav_from_timesheet_list_to_timesheet_entry_list, bundle);
+            listOnItemClickListener.onItemClick(bundle);
         });
         return viewHolder;
     }

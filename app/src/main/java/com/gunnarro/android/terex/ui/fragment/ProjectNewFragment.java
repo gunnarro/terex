@@ -81,9 +81,6 @@ public class ProjectNewFragment extends Fragment {
 
         view.findViewById(R.id.btn_project_new_cancel).setOnClickListener(v -> {
             view.findViewById(R.id.btn_project_new_cancel).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
-            // Simply return back to project list
-            NavigationView navigationView = requireActivity().findViewById(R.id.navigationView);
-            requireActivity().onOptionsItemSelected(navigationView.getMenu().findItem(R.id.nav_invoice_list));
             returnToProjectList();
         });
 

@@ -17,7 +17,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationView;
@@ -40,7 +39,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 
 @AndroidEntryPoint
-public class TimesheetEntryAddFragment extends Fragment implements View.OnClickListener {
+public class TimesheetEntryAddFragment extends BaseFragment implements View.OnClickListener {
 
     @Inject
     public TimesheetEntryAddFragment() {
@@ -142,9 +141,6 @@ public class TimesheetEntryAddFragment extends Fragment implements View.OnClickL
 
         view.findViewById(R.id.timesheet_entry_cancel_btn).setOnClickListener(v -> {
             view.findViewById(R.id.timesheet_entry_cancel_btn).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
-            // Simply return back to credential list
-            NavigationView navigationView = requireActivity().findViewById(R.id.navigationView);
-            requireActivity().onOptionsItemSelected(navigationView.getMenu().findItem(R.id.nav_timesheet_list));
             returnToTimesheetEntryList(getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY));
         });
 
@@ -177,11 +173,7 @@ public class TimesheetEntryAddFragment extends Fragment implements View.OnClickL
     private void returnToTimesheetEntryList(Long timesheetId) {
         Bundle bundle = new Bundle();
         bundle.putLong(TimesheetListFragment.TIMESHEET_ID_KEY, timesheetId);
-        requireActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.nav_content_frame, TimesheetEntryListFragment.class, bundle)
-                .setReorderingAllowed(true)
-                .commit();
+        navigateTo(R.id.nav_from_timesheet_entry_details_to_timesheet_entry_list, bundle);
     }
 
     private void updateTimesheetEntryAddView(View view, @NotNull TimesheetEntry timesheetEntry) {

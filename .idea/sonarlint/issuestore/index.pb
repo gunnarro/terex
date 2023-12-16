@@ -139,9 +139,19 @@ Qapp/src/main/java/com/gunnarro/android/terex/ui/fragment/InvoiceListFragment.ja
 Qapp/src/main/java/com/gunnarro/android/terex/ui/fragment/CompanyEditFragment.java,a/d/ada37a1a3990f0ef3d452b383b1393f242d27403
 Å
 Qapp/src/main/java/com/gunnarro/android/terex/ui/fragment/PreferencesFragment.java,8/5/85c04df72847678675d3815de12089eac70fbdd8
-t
-Dapp/src/main/java/com/gunnarro/android/terex/ui/MainActivityNew.java,8/8/88409eeaba480b7bb5f81374488cec67938b0024
 p
 @app/src/main/java/com/gunnarro/android/terex/MyAppComponent.java,4/4/44ccfdd02d16a997eb6535fcd047e0cf85e759a6
 F
 app/proguard-rules.pro,9/e/9e08934d811afe28fbc77aaa3c0d747b94348db9
+z
+Japp/src/main/java/com/gunnarro/android/terex/ui/fragment/HomeFragment.java,5/1/51826f62a1502d85173e87e077bf1eff0921a4ee
+{
+Kapp/src/main/java/com/gunnarro/android/terex/ui/fragment/AdminFragment.java,6/2/62fe1c311bc5a3fc56ea1d3df641c1e7e7905f8f
+z
+Japp/src/main/java/com/gunnarro/android/terex/ui/fragment/BaseFragment.java,b/d/bd955cbf867946e1d447b59f8b0ad9189ba8e7e0
+
+Oapp/src/main/java/com/gunnarro/android/terex/ui/adapter/InvoiceListAdapter.java,c/a/ca2b516bc245a4e9160c9de99dcf308afa83fcbe
+9
+	README.md,8/e/8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d
+Ö
+Uapp/src/main/java/com/gunnarro/android/terex/ui/listener/ListOnItemClickListener.java,f/b/fbc8e8823250b52ab3be0b8a9fb78ed17e6516e5

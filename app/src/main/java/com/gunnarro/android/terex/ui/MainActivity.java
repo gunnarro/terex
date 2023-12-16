@@ -4,75 +4,38 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
-import com.google.android.material.navigation.NavigationView;
 import com.gunnarro.android.terex.R;
-import com.gunnarro.android.terex.ui.fragment.AdminFragment;
-import com.gunnarro.android.terex.ui.fragment.InvoiceListFragment;
-import com.gunnarro.android.terex.ui.fragment.TimesheetEntryAddFragment;
-import com.gunnarro.android.terex.ui.fragment.TimesheetEntryCustomCalendarFragment;
-import com.gunnarro.android.terex.ui.fragment.TimesheetListFragment;
-import com.gunnarro.android.terex.ui.fragment.TimesheetEntryListFragment;
-import com.gunnarro.android.terex.ui.fragment.TimesheetNewFragment;
 import com.gunnarro.android.terex.utility.Utility;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Objects;
-
-import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class MainActivity extends AppCompatActivity //implements NavigationView.OnNavigationItemSelectedListener
-{
+public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
     public static final int PERMISSION_REQUEST = 1;
 
-    @Inject
-    AdminFragment adminFragment;
-
-    @Inject
-    TimesheetEntryListFragment timesheetListFragment;
-
-    @Inject
-    TimesheetListFragment timesheetFragment;
-
-    @Inject
-    TimesheetEntryAddFragment timesheetAddEntryFragment;
-
-    @Inject
-    TimesheetEntryCustomCalendarFragment timesheetCalendarFragment;
-
-    @Inject
-    TimesheetNewFragment timesheetNewFragment;
-
-    @Inject
-    InvoiceListFragment invoiceListFragment;
+    AppBarConfiguration appBarConfiguration;
 
     private DrawerLayout drawer;
 
     public MainActivity() {
-        this.adminFragment = new AdminFragment();
-        this.timesheetListFragment = new TimesheetEntryListFragment();
-        //this.timesheetAddEntryFragment = new TimesheetAddEntryFragment();
-        this.invoiceListFragment = new InvoiceListFragment();
-        //this.timesheetCalendarFragment = new TimesheetCustomCalendarFragment();
-        //this.timesheetNewFragment = new TimesheetNewFragment();
-        this.timesheetFragment = new TimesheetListFragment();
     }
 
     @Override
@@ -81,102 +44,41 @@ public class MainActivity extends AppCompatActivity //implements NavigationView.
         Log.d(Utility.buildTag(getClass(), "onCreate"), "context: " + getApplicationContext());
         Log.d(Utility.buildTag(getClass(), "onCreate"), "app file dir: " + getApplicationContext().getFilesDir().getPath());
 
-        // Initialize exception handler
-        //new UCEHandler.Builder(this).build();
-
         if (!new File(getApplicationContext().getFilesDir().getPath()).exists()) {
             Log.d(Utility.buildTag(getClass(), "onCreate"), "app file dir missing! " + getApplicationContext().getFilesDir().getPath());
         }
 
         try {
-            setContentView(R.layout.activity_main_new);
+            setContentView(R.layout.activity_main);
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(Utility.buildTag(getClass(), "onCreate"), "Failed starting! " + e.getMessage());
         }
-        /*
-        drawer = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, R.string.title_timesheet, R.string.title_timesheet);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-*/
-     //   NavigationView navigationView = findViewById(R.id.navigationView);
-     //   navigationView.setNavigationItemSelectedListener(this);
-        // display home button for actionbar
-     //   getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-     //   getSupportActionBar().setCustomView(R.layout.custom_toolbar_layout);
-        // navigation view select timesheet menu as default
-       // navigationView.setCheckedItem(R.id.nav_timesheet_list);
 
-        if (savedInstanceState == null) {
-            //viewFragment(timesheetFragment);
-        }
+
+        // new navigation https://developer.android.com/guide/navigation/integrations/ui
+
+//        CollapsingToolbarLayout layout = findViewById(R.id.collapsing_toolbar_layout);
+//        Toolbar toolbar = findViewById(R.id.toolbar);
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_content_frame);
+        NavController navController = navHostFragment.getNavController();
+        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
+        // In oder to add navigation support as default to the action bar, mus also override onSupportNavigateUp() method.
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        // end new navigation
         // Finally, check and grant or deny permissions
         checkPermissions();
     }
-/*
+
+    /**
+     * Override onSupportNavigateUp() to handle Up navigation
+     */
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        Log.d(Utility.buildTag(getClass(), "onOptionsItemSelected"), "selected: " + item);
-        if (item.getItemId() == android.R.id.home) {// Open Close Drawer Layout
-            if (drawer.isOpen()) {
-                drawer.closeDrawers();
-            } else {
-                drawer.openDrawer(GravityCompat.START);
-            }
-        }
-        return super.onOptionsItemSelected(item);
+    public boolean onSupportNavigateUp() {
+        NavController navController = Navigation.findNavController(this, R.id.nav_content_frame);
+        return NavigationUI.navigateUp(navController, appBarConfiguration) || super.onSupportNavigateUp();
     }
-*/
-/*    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        try {
-            Log.d("MainActivity.onNavigationItemSelected", "selected: " + menuItem.getItemId());
-            int id = menuItem.getItemId();
-            if (id == R.id.nav_timesheet_list) {
-                viewFragment(timesheetFragment);
-                setTitle(R.string.title_timesheets);
-            } else if (id == R.id.nav_invoice_list) {
-                viewFragment(invoiceListFragment);
-                setTitle(R.string.title_invoice);
-            } else if (id == R.id.nav_admin) {
-                viewFragment(adminFragment);
-                setTitle(R.string.title_admin);
-            }*/
-            /*
-            else if (id == R.id.nav_timesheet_new) {
-                viewFragment(timesheetNewFragment);
-                setTitle(R.string.title_timesheet_new);
-            }
-            else if (id == R.id.nav_invoice) {
-                viewFragment(invoiceFragment);
-                setTitle(R.string.title_invoice_overview);
-            } else if (id == R.id.nav_timesheet_calendar) {
-                viewFragment(timesheetCalendarFragment);
-                setTitle(R.string.title_timesheet_calendar);
-            }   else if (id == R.id.nav_timesheet_register_work) {
-                viewFragment(timesheetAddEntryFragment);
-                setTitle(R.string.title_register_work);
-            } */ /*
-            // close drawer after clicking the menu item
-            DrawerLayout drawer = findViewById(R.id.drawer_layout);
-            drawer.closeDrawer(GravityCompat.START);
-            return false;
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-            return false;
-        }
-    }
-*/
-    /*
-    private void viewFragment(@NonNull Fragment fragment) {
-        Log.d(Utility.buildTag(getClass(), "viewFragment"), "fragment tag: " + fragment.getTag());
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.main_content_frame_deprecated, fragment, fragment.getTag())
-                .commit();
-    }
-*/
+
     private void checkPermissions() {
         Log.i(Utility.buildTag(getClass(), "checkPermissions"), "Start check permissions...");
         // check and ask user for permission if not granted
@@ -214,4 +116,5 @@ public class MainActivity extends AppCompatActivity //implements NavigationView.
             }
         }
     }
+
 }

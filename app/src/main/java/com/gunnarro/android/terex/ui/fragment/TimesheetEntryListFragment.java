@@ -1,15 +1,12 @@
 package com.gunnarro.android.terex.ui.fragment;
 
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
@@ -17,15 +14,13 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.BaseTransientBottomBar;
-import com.google.android.material.snackbar.Snackbar;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.ui.adapter.TimesheetEntryListAdapter;
+import com.gunnarro.android.terex.ui.listener.ListOnItemClickListener;
 import com.gunnarro.android.terex.ui.swipe.SwipeCallback;
 import com.gunnarro.android.terex.ui.view.TimesheetEntryViewModel;
 import com.gunnarro.android.terex.utility.Utility;
@@ -37,9 +32,10 @@ import java.util.List;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class TimesheetEntryListFragment extends Fragment {
+public class TimesheetEntryListFragment extends BaseFragment implements ListOnItemClickListener {
     public static final String TIMESHEET_ENTRY_REQUEST_KEY = "200";
     public static final String TIMESHEET_ENTRY_JSON_KEY = "timesheet_entry_as_json";
+    public static final String TIMESHEET_ENTRY_ID_KEY = "timesheet_entry_id";
     public static final String TIMESHEET_ENTRY_ACTION_KEY = "211";
     public static final String TIMESHEET_ENTRY_ACTION_SAVE = "timesheet_entry_save";
     public static final String TIMESHEET_ENTRY_ACTION_DELETE = "timesheet_entry_delete";
@@ -72,7 +68,7 @@ public class TimesheetEntryListFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_recycler_timesheet_entry_list, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.timesheet_entry_list_recyclerview);
-        final TimesheetEntryListAdapter adapter = new TimesheetEntryListAdapter(getParentFragmentManager(), new TimesheetEntryListAdapter.TimesheetEntryDiff());
+        final TimesheetEntryListAdapter adapter = new TimesheetEntryListAdapter(this, new TimesheetEntryListAdapter.TimesheetEntryDiff());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -87,18 +83,14 @@ public class TimesheetEntryListFragment extends Fragment {
         timesheetEntryViewModel.getTimesheetEntryLiveData(timesheetId).observe(requireActivity(), adapter::submitList);
 
         FloatingActionButton addButton = view.findViewById(R.id.timesheet_entry_add_btn);
-        addButton.setOnClickListener(v -> requireActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.nav_content_frame, TimesheetEntryAddFragment.class, createTimesheetEntryBundle(timesheetId))
-                .setReorderingAllowed(true)
-                .commit());
+        addButton.setOnClickListener(v ->
+                getNavController().navigate(R.id.nav_from_timesheet_entry_list_to_timesheet_entry_details, createTimesheetEntryBundle(timesheetId))
+        );
 
         FloatingActionButton calendarButton = view.findViewById(R.id.timesheet_entry_calendar_btn);
-        calendarButton.setOnClickListener(v -> requireActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.nav_content_frame, TimesheetEntryCustomCalendarFragment.class, createTimesheetEntryBundle(timesheetId))
-                .setReorderingAllowed(true)
-                .commit());
+        calendarButton.setOnClickListener(v ->
+                getNavController().navigate(R.id.nav_from_timesheet_entry_list_to_timesheet_entry_calendar_add, createTimesheetEntryBundle(timesheetId))
+        );
 
         // flip gui based on timesheet status, hide buttons if timesheet has status BILLED
         if (isTimesheetReadOnly) {
@@ -204,15 +196,8 @@ public class TimesheetEntryListFragment extends Fragment {
         Log.i(Utility.buildTag(getClass(), "enableSwipeToLeftAndDeleteItem"), "enabled swipe handler for delete timesheet entry list item");
     }
 
-    private void showSnackbar(String msg, @ColorRes int bgColor) {
-        Resources.Theme theme = getResources().newTheme();
-        Snackbar snackbar = Snackbar.make(requireView().findViewById(R.id.timesheet_entry_list_layout), msg, BaseTransientBottomBar.LENGTH_LONG);
-        snackbar.setTextColor(getResources().getColor(bgColor, theme));
-        snackbar.show();
+    @Override
+    public void onItemClick(Bundle bundle) {
+        handleTimesheetEntryActions(null, bundle.getString(TIMESHEET_ENTRY_ACTION_KEY));
     }
-
-    private void showInfoDialog(String severity, String message) {
-        new MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme).setTitle(severity).setMessage(message).setCancelable(false).setPositiveButton("Ok", (dialog, which) -> dialog.cancel()).create().show();
-    }
-
 }

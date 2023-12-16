@@ -7,25 +7,26 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
+import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.ui.fragment.TimesheetEntryListFragment;
+import com.gunnarro.android.terex.ui.listener.ListOnItemClickListener;
 import com.gunnarro.android.terex.ui.view.TimesheetEntryViewHolder;
 import com.gunnarro.android.terex.utility.Utility;
 
 public class TimesheetEntryListAdapter extends ListAdapter<TimesheetEntry, TimesheetEntryViewHolder> implements AdapterView.OnItemClickListener {
 
-    private final FragmentManager fragmentManager;
+    private final ListOnItemClickListener listOnItemClickListener;
 
-    public TimesheetEntryListAdapter(@NonNull FragmentManager fragmentManager, @NonNull DiffUtil.ItemCallback<TimesheetEntry> diffCallback) {
+    public TimesheetEntryListAdapter(@NonNull ListOnItemClickListener listOnItemClickListener, @NonNull DiffUtil.ItemCallback<TimesheetEntry> diffCallback) {
         super(diffCallback);
         // do not have stable id's, since items can be deleted and inserted into the list. Can be with the same timesheet id and and workday date, but the id have changed.
         this.setHasStableIds(false);
-        this.fragmentManager = fragmentManager;
+        this.listOnItemClickListener = listOnItemClickListener;
     }
 
     @NonNull
@@ -34,9 +35,9 @@ public class TimesheetEntryListAdapter extends ListAdapter<TimesheetEntry, Times
         TimesheetEntryViewHolder viewHolder = TimesheetEntryViewHolder.create(parent);
         viewHolder.itemView.findViewById(R.id.ic_timesheet_entry_row_delete).setOnClickListener(v -> {
             Bundle actionBundle = new Bundle();
-            actionBundle.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_KEY, toJson(getItem(viewHolder.getBindingAdapterPosition())));
+            actionBundle.putLong(TimesheetEntryListFragment.TIMESHEET_ENTRY_ID_KEY, getItem(viewHolder.getBindingAdapterPosition()).getId());
             actionBundle.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_KEY, TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_DELETE);
-            fragmentManager.setFragmentResult(TimesheetEntryListFragment.TIMESHEET_ENTRY_REQUEST_KEY, actionBundle);
+            listOnItemClickListener.onItemClick(actionBundle);
         });
         return viewHolder;
     }
@@ -56,7 +57,7 @@ public class TimesheetEntryListAdapter extends ListAdapter<TimesheetEntry, Times
             return Utility.gsonMapper().toJson(timesheet);
         } catch (Exception e) {
             Log.e("getTimesheetAsJson", e.toString());
-            throw new RuntimeException("unable to parse timesheetEntry to json! " + e);
+            throw new TerexApplicationException("unable to parse timesheetEntry to json!", "500500", e);
         }
     }
 

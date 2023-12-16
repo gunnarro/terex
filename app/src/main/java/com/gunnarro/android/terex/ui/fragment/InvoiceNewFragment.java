@@ -9,13 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
-import androidx.fragment.app.Fragment;
-
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.navigation.NavigationView;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.InvoiceAttachment;
@@ -49,7 +45,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class InvoiceNewFragment extends Fragment {
+public class InvoiceNewFragment extends BaseFragment {
 
     // @Inject
     private InvoiceService invoiceService;
@@ -87,7 +83,11 @@ public class InvoiceNewFragment extends Fragment {
                     showInfoDialog("Info", "Please select a timesheet!");
                 } else {
                     // item id is equal to selected timesheet id
-                    createInvoice(item.id());
+                    Long invoiceId = createInvoice(item.id());
+                    Bundle bundle = new Bundle();
+                    bundle.putLong(InvoiceListFragment.INVOICE_ID_KEY, invoiceId);
+                    bundle.putString(InvoiceListFragment.INVOICE_ACTION_KEY, InvoiceListFragment.INVOICE_ACTION_VIEW);
+                    navigateTo(R.id.nav_from_invoice_new_to_invoice_details, bundle);
                 }
             } catch (TerexApplicationException e) {
                 showInfoDialog("Info", "Error creating invoice!" + e.getMessage());
@@ -97,8 +97,6 @@ public class InvoiceNewFragment extends Fragment {
         view.findViewById(R.id.btn_invoice_new_cancel).setOnClickListener(v -> {
             view.findViewById(R.id.btn_invoice_new_cancel).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
             // Simply return back to credential list
-            NavigationView navigationView = requireActivity().findViewById(R.id.navigationView);
-            requireActivity().onOptionsItemSelected(navigationView.getMenu().findItem(R.id.nav_invoice_list));
             returnToInvoiceList();
         });
 
@@ -114,19 +112,11 @@ public class InvoiceNewFragment extends Fragment {
     }
 
     /**
-     * Update backup info after view is successfully create
-     */
-    @Override
-    public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
-
-    /**
      * Create a new invoice for the given timesheet.
      *
      * @param timesheetId to be created invoice for
      */
-    private void createInvoice(@NotNull Long timesheetId) {
+    private Long createInvoice(@NotNull Long timesheetId) {
         Long invoiceId = invoiceService.createInvoice(TimesheetService.getCompany(timesheetId), TimesheetService.getClient(timesheetId), timesheetId);
         if (invoiceId == null) {
             showInfoDialog("Info", "No timesheet found! timesheetId=" + timesheetId);
@@ -139,6 +129,7 @@ public class InvoiceNewFragment extends Fragment {
         } else {
             showInfoDialog("Error", String.format("Fond mismatch between billed and worked hours! Attachment must be regenerated. %s, %s", sumBilledHours, sumWorkedHours));
         }
+        return invoiceId;
     }
 
     private double createTimesheetSummaryAttachment(Long invoiceId) {
@@ -248,12 +239,8 @@ public class InvoiceNewFragment extends Fragment {
         startActivity(Intent.createChooser(email, "Choose Email client:"));
     }
 
-    private void showInfoDialog(String severity, String message) {
-        new MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme).setTitle(severity).setMessage(message).setCancelable(false).setPositiveButton("Ok", (dialog, which) -> dialog.cancel()).create().show();
-    }
-
     private void returnToInvoiceList() {
-        requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_content_frame, InvoiceListFragment.class, null).setReorderingAllowed(true).commit();
+        navigateTo(R.id.nav_from_invoice_new_to_invoice_list, null);
     }
 
 }

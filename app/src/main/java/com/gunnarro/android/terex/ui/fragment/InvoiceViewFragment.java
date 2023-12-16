@@ -21,9 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.service.InvoiceService;
 import com.gunnarro.android.terex.utility.PdfUtility;
@@ -41,7 +39,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class InvoiceViewFragment extends Fragment {
+public class InvoiceViewFragment extends BaseFragment {
 
     private InvoiceService invoiceService;
     private List<InvoiceService.InvoiceAttachmentTypesEnum> invoiceAttachmentTypes;
@@ -143,7 +141,7 @@ public class InvoiceViewFragment extends Fragment {
         webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
         webView.getSettings().setJavaScriptEnabled(false);
         webView.getSettings().setLoadsImagesAutomatically(true);
-    //    webView.setWebViewClient(new LocalContentWebViewClient());
+        //    webView.setWebViewClient(new LocalContentWebViewClient());
         //webView.loadDataWithBaseURL(null, invoiceHtml, "text/html", "utf-8", null);
         Log.d("invoice timesheet attachment", String.format("%s", new String(invoiceAttachmentHtml)));
         webView.loadDataWithBaseURL("file://android_asset/", new String(invoiceAttachmentHtml), "text/html", "UTF-8", null);
@@ -196,15 +194,5 @@ public class InvoiceViewFragment extends Fragment {
     private String readInvoiceFile(LocalDate invoiceDate) throws IOException {
         String invoiceFileName = "invoice_attachment_" + invoiceDate.format(DateTimeFormatter.ISO_DATE) + ".html";
         return PdfUtility.readFile(PdfUtility.getLocalDir() + "/" + invoiceFileName);
-    }
-
-    private void showInfoDialog(String severity, String message) {
-        new MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
-                .setTitle(severity)
-                .setMessage(message)
-                .setCancelable(false)
-                .setPositiveButton("Ok", (dialog, which) -> dialog.cancel())
-                .create()
-                .show();
     }
 }

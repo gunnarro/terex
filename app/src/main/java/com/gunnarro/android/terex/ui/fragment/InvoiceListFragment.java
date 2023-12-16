@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,20 +15,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.ui.adapter.InvoiceListAdapter;
+import com.gunnarro.android.terex.ui.listener.ListOnItemClickListener;
 import com.gunnarro.android.terex.ui.view.InvoiceViewModel;
 import com.gunnarro.android.terex.utility.Utility;
-
-import org.jetbrains.annotations.NotNull;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class InvoiceListFragment extends Fragment {
+public class InvoiceListFragment extends BaseFragment implements ListOnItemClickListener {
     public static final String INVOICE_REQUEST_KEY = "300";
     public static final String INVOICE_ID_KEY = "invoice_id";
+    public static final String INVOICE_ACTION_KEY = "invoice_action";
     public static final String INVOICE_ACTION_VIEW = "invoice_view";
     private InvoiceViewModel invoiceViewModel;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,7 +51,7 @@ public class InvoiceListFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_recycler_invoice_list, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.invoice_list_recyclerview);
-        final InvoiceListAdapter adapter = new InvoiceListAdapter(getParentFragmentManager(), new InvoiceListAdapter.InvoiceDiff());
+        final InvoiceListAdapter adapter = new InvoiceListAdapter(this, new InvoiceListAdapter.InvoiceDiff());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         // Add an observer on the LiveData returned by getAlphabetizedWords.
@@ -63,33 +61,25 @@ public class InvoiceListFragment extends Fragment {
         invoiceViewModel.getAllInvoices().observe(requireActivity(), adapter::submitList);
 
         FloatingActionButton addButton = view.findViewById(R.id.add_invoice);
-        addButton.setOnClickListener(v -> requireActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.nav_content_frame, InvoiceNewFragment.class, null)
-                .setReorderingAllowed(true)
-                .commit());
+        addButton.setOnClickListener(v -> navigateTo(R.id.nav_from_invoice_list_to_invoice_new, null));
+
         Log.d(Utility.buildTag(getClass(), "onCreateView"), "");
         return view;
     }
 
-    /**
-     * Update backup info after view is successfully create
-     */
-    @Override
-    public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
+
 
     private void handleFragmentResult(Bundle bundle) {
         if (bundle == null) {
             return;
         }
       if (bundle.getLong(INVOICE_ID_KEY) > 0) {
-            requireActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.nav_content_frame, InvoiceViewFragment.class, bundle)
-                    .setReorderingAllowed(true)
-                    .commit();
+          navigateTo(R.id.nav_from_invoice_list_to_invoice_details, bundle);
         }
+    }
+
+    @Override
+    public void onItemClick(Bundle bundle) {
+        getNavController().navigate(R.id.nav_from_invoice_list_to_invoice_details, bundle);
     }
 }

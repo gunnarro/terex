@@ -1,7 +1,6 @@
 package com.gunnarro.android.terex.ui.fragment;
 
 import android.Manifest;
-import android.app.ActionBar;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -9,9 +8,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -20,16 +16,11 @@ import android.widget.EditText;
 import android.widget.ListPopupWindow;
 import android.widget.TextView;
 
-import androidx.activity.OnBackPressedCallback;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.navigation.NavigationView;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
@@ -47,7 +38,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 
 @AndroidEntryPoint
-public class TimesheetNewFragment extends Fragment implements View.OnClickListener {
+public class TimesheetNewFragment extends BaseFragment implements View.OnClickListener {
 
     private NavController navController;
 
@@ -55,45 +46,6 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
 
     @Inject
     public TimesheetNewFragment() {
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // Tell Android to call the fragment's onCreateOptionsMenu(...) and related methods.
-        setHasOptionsMenu(true);
-
-        // listen to backstack changes
-        // This callback is only called when MyFragment is at least started
-        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
-            @Override
-            public void handleOnBackPressed() {
-                // Handle the back button event
-                returnToTimesheetList();
-            }
-        };
-        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
-    }
-
-    /**
-     *
-     * To merge your menu into the app bar's options menu, override onCreateOptionsMenu() in your fragment.
-     */
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-       // menu.getItem(R.layout.custom_toolbar_layout);
-        // Inflate the menu; this adds items to the action bar.
-      //  menu.getItem(android.R.id.home).setVisible(false);
-     //   inflater.inflate(R.menu.back_menu, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // handle item selection
-        if (item.getItemId() == R.id.home) {
-             returnToTimesheetList();
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -221,7 +173,7 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
             result.putString(TimesheetListFragment.TIMESHEET_JSON_KEY, getTimesheetAsJson());
             result.putString(TimesheetListFragment.TIMESHEET_ACTION_KEY, TimesheetListFragment.TIMESHEET_ACTION_SAVE);
             getParentFragmentManager().setFragmentResult(TimesheetListFragment.TIMESHEET_REQUEST_KEY, result);
-            returnToTimesheetList();
+            navigateTo(R.id.nav_from_timesheet_details_to_timesheet_list, null);
         });
 
         view.findViewById(R.id.btn_timesheet_new_delete).setOnClickListener(v -> {
@@ -231,13 +183,13 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
             result.putString(TimesheetListFragment.TIMESHEET_ACTION_KEY, TimesheetListFragment.TIMESHEET_ACTION_DELETE);
             getParentFragmentManager().setFragmentResult(TimesheetListFragment.TIMESHEET_REQUEST_KEY, result);
             Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new delete item intent");
-            returnToTimesheetList();
+            navigateTo(R.id.nav_from_timesheet_details_to_timesheet_list, null);
         });
 
         view.findViewById(R.id.btn_timesheet_new_cancel).setOnClickListener(v -> {
             view.findViewById(R.id.btn_timesheet_new_cancel).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
-            // Simply return back to credential list
-            returnToTimesheetList();
+            // Simply return back to timesheet list
+            navigateTo(R.id.nav_from_timesheet_details_to_timesheet_list, null);
         });
 
         if (timesheet != null) {
@@ -245,11 +197,6 @@ public class TimesheetNewFragment extends Fragment implements View.OnClickListen
         }
         Log.d(Utility.buildTag(getClass(), "onCreateView"), String.format("%s", timesheet));
         return view;
-    }
-
-    private void returnToTimesheetList() {
-       // requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.nav_content_frame, TimesheetListFragment.class, null).setReorderingAllowed(true).commit();
-        navController.navigate(R.id.nav_from_timesheet_details_to_timesheet_list);
     }
 
     private void updateTimesheetNewView(View view, @NotNull Timesheet timesheet) {
