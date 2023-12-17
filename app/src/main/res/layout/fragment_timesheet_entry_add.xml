@@ -7,26 +7,27 @@
     tools:context=".ui.fragment.TimesheetEntryAddFragment"
     tools:ignore="ExtraText">
 
+    <!-- hidden fields -->
+    <TextView
+        android:id="@+id/timesheet_entry_timesheet_id"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:enabled="false"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/timesheet_entry_id"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:enabled="false"
+        android:visibility="invisible" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="10dp"
         android:orientation="vertical"
         tools:ignore="UselessParent">
-
-        <TextView
-            android:id="@+id/timesheet_entry_timesheet_id"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:enabled="false"
-            android:visibility="invisible" />
-
-        <TextView
-            android:id="@+id/timesheet_entry_id"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:enabled="false"
-            android:visibility="invisible" />
 
         <!-- horizontal date layout -->
         <LinearLayout
@@ -96,11 +97,11 @@
                     android:id="@+id/timesheet_entry_timesheet_spinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:autofillHints="false"
+                    android:enabled="true"
+                    android:importantForAutofill="no"
                     android:inputType="text"
                     android:maxLength="50"
-                    android:enabled="true"
-                    android:autofillHints="false"
-                    android:importantForAutofill="no"
                     android:text="" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -109,15 +110,15 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:hint="@string/lbl_status">
+                android:hint="@string/lbl_status"
+                android:visibility="gone">
 
                 <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                     android:id="@+id/timesheet_entry_status_spinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
                     android:autofillHints="false"
+                    android:clickable="true"
                     android:importantForAutofill="no"
                     tools:ignore="KeyboardInaccessibleWidget" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -148,9 +149,9 @@
                     android:id="@+id/timesheet_entry_workday_year"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:enabled="false"
                     android:inputType="number"
                     android:maxLength="4"
-                    android:enabled="false"
                     android:text="" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -168,9 +169,9 @@
                     android:id="@+id/timesheet_entry_workday_month"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:enabled="false"
                     android:inputType="number"
                     android:maxLength="2"
-                    android:enabled="false"
                     android:text="" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -194,7 +195,7 @@
 
         </LinearLayout>
 
-            <!-- work day to and from time -->
+        <!-- work day to and from time -->
         <LinearLayout
             android:id="@+id/timesheet_entry_work_time_layout"
             android:layout_width="match_parent"
