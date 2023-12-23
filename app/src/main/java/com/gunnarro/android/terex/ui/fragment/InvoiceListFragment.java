@@ -60,7 +60,7 @@ public class InvoiceListFragment extends BaseFragment implements ListOnItemClick
         // Update the cached copy of the words in the adapter.
         invoiceViewModel.getAllInvoices().observe(requireActivity(), adapter::submitList);
 
-        FloatingActionButton addButton = view.findViewById(R.id.add_invoice);
+        FloatingActionButton addButton = view.findViewById(R.id.invoice_list_add_btn);
         addButton.setOnClickListener(v -> navigateTo(R.id.nav_from_invoice_list_to_invoice_new, null));
 
         Log.d(Utility.buildTag(getClass(), "onCreateView"), "");

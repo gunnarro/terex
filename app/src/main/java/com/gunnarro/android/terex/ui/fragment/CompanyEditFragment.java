@@ -173,8 +173,8 @@ public class CompanyEditFragment extends Fragment implements View.OnClickListene
         AutoCompleteTextView projectSpinner = view.findViewById(R.id.timesheet_new_project_spinner);
         projectSpinner.setText(timesheet.getProjectCode());
 
-        AutoCompleteTextView statusSpinner = view.findViewById(R.id.timesheet_new_status_spinner);
-        statusSpinner.setText(timesheet.getStatus());
+     //   AutoCompleteTextView statusSpinner = view.findViewById(R.id.timesheet_new_status_spinner);
+     //   statusSpinner.setText(timesheet.getStatus());
 
         AutoCompleteTextView yearSpinner = view.findViewById(R.id.timesheet_new_year_spinner);
         yearSpinner.setText(timesheet.getYear().toString());
@@ -244,8 +244,8 @@ public class CompanyEditFragment extends Fragment implements View.OnClickListene
         AutoCompleteTextView projectSpinner = requireView().findViewById(R.id.timesheet_new_project_spinner);
         timesheet.setProjectCode(projectSpinner.getText().toString());
 
-        AutoCompleteTextView statusSpinner = requireView().findViewById(R.id.timesheet_new_status_spinner);
-        timesheet.setStatus(statusSpinner.getText().toString());
+     //   AutoCompleteTextView statusSpinner = requireView().findViewById(R.id.timesheet_new_status_spinner);
+     //   timesheet.setStatus(statusSpinner.getText().toString());
 
         AutoCompleteTextView yearSpinner = requireView().findViewById(R.id.timesheet_new_year_spinner);
         timesheet.setYear(Integer.parseInt(yearSpinner.getText().toString()));

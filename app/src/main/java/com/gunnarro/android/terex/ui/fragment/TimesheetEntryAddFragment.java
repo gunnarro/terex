@@ -19,7 +19,6 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
@@ -56,6 +55,7 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
         requireActivity().setTitle(R.string.title_register_work);
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_timesheet_entry_add, container, false);
+
         // create status spinner
         final AutoCompleteTextView statusSpinner = view.findViewById(R.id.timesheet_entry_status_spinner);
         ArrayAdapter<CharSequence> statusAdapter = ArrayAdapter.createFromResource(requireContext(), R.array.timesheet_statuses, android.R.layout.simple_spinner_item);

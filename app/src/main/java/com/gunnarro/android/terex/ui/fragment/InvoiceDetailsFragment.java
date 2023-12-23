@@ -39,7 +39,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class InvoiceViewFragment extends BaseFragment {
+public class InvoiceDetailsFragment extends BaseFragment {
 
     private InvoiceService invoiceService;
     private List<InvoiceService.InvoiceAttachmentTypesEnum> invoiceAttachmentTypes;
@@ -48,7 +48,7 @@ public class InvoiceViewFragment extends BaseFragment {
     private Long invoiceId;
 
     @Inject
-    public InvoiceViewFragment() {
+    public InvoiceDetailsFragment() {
     }
 
     @Override
@@ -61,7 +61,7 @@ public class InvoiceViewFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_invoice_view, container, false);
+        View view = inflater.inflate(R.layout.fragment_invoice_details, container, false);
         setHasOptionsMenu(true);
         invoiceId = getArguments().getLong(InvoiceListFragment.INVOICE_ID_KEY);
         Log.d(Utility.buildTag(getClass(), "onCreateView"), "");

@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/home_fragment">
+    app:startDestination="@id/nav_home_fragment">
 
     <!-- start page navigation, application entry point -->
     <fragment
-        android:id="@+id/home_fragment"
+        android:id="@+id/nav_home_fragment"
         android:name="com.gunnarro.android.terex.ui.fragment.HomeFragment"
         tools:layout="@layout/fragment_home">
         <action
@@ -133,7 +133,7 @@
         android:id="@+id/invoice_new_fragment"
         android:name="com.gunnarro.android.terex.ui.fragment.InvoiceNewFragment"
         android:label="invoice_new_fragment"
-        tools:layout="@layout/fragment_invoice_new" >
+        tools:layout="@layout/fragment_invoice_new">
         <action
             android:id="@+id/nav_from_invoice_new_to_invoice_details"
             app:destination="@id/invoice_details_fragment" />
@@ -144,9 +144,9 @@
 
     <fragment
         android:id="@+id/invoice_details_fragment"
-        android:name="com.gunnarro.android.terex.ui.fragment.InvoiceViewFragment"
+        android:name="com.gunnarro.android.terex.ui.fragment.InvoiceDetailsFragment"
         android:label="invoice_details_fragment"
-        tools:layout="@layout/fragment_invoice_view" >
+        tools:layout="@layout/fragment_invoice_details">
         <action
             android:id="@+id/nav_from_invoice_details_to_invoice_list"
             app:destination="@id/invoice_list_fragment" />

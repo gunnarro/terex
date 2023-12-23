@@ -74,7 +74,7 @@ ext {
     androidx_navigation_ui = '2.7.5'
    // androidx.navigation.safe_args = '2.7.5'
     // google
-    google_android_material = '1.10.0'
+    google_android_material = '1.12.0-alpha02'
     google_dagger_hilt_android = '2.49'
     // xml
     //jackson_databind = '2.15.2'

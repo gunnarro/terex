@@ -11,8 +11,6 @@
     <color name="colorDate">#0074d9</color>
     <color name="colorNumbers">#0074d9</color>
     <color name="colorSection">#FFF</color>
-    <color name="colorSmsSent">#f3fc6e</color>
-    <color name="colorSmsReceived">#dee1bb</color>
     <color name="color_btn_hover">#ffffff</color>
     <color name="color_btn_border">#dee1bb</color>
     <color name="color_btn_background">#03DAC5</color>
@@ -51,7 +49,7 @@
     <!-- recycle list colors -->
     <color name="color_bg_list">#ffffff</color>
     <color name="color_bg_list_item">#d5e5f0</color>
-    <color name="color_bg_tint_btn">#ffffff</color>
+    <color name="color_bg_tint_btn">#0100f6</color>
     <color name="color_list_item_border">#d5e5f0</color>
 
 </resources>
