@@ -91,7 +91,9 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
 
         FloatingActionButton addButton = view.findViewById(R.id.timesheet_add_btn);
         addButton.setOnClickListener(v -> {
-            navigateTo(R.id.nav_from_timesheet_list_to_timesheet_details, createTimesheetBundle(timesheetListAdapter.getItemId(0), selectedYear));
+            Bundle bundle = new Bundle();
+            bundle.putString(TimesheetListFragment.TIMESHEET_ID_KEY, null);
+            navigateTo(R.id.nav_from_timesheet_list_to_timesheet_details, bundle);
         });
 
         // enable swipe

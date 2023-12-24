@@ -9,9 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
-import com.github.mustachejava.DefaultMustacheFactory;
-import com.github.mustachejava.Mustache;
-import com.github.mustachejava.MustacheFactory;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.InvoiceAttachment;
@@ -26,18 +23,11 @@ import com.gunnarro.android.terex.utility.Utility;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -136,18 +126,12 @@ public class InvoiceNewFragment extends BaseFragment {
         try {
             Invoice invoice = invoiceService.getInvoice(invoiceId);
             Log.d("createTimesheetSummaryAttachment", "timesheetSummary week: " + invoice.getTimesheetSummaryList());
-            StringBuilder mustacheTemplateStr = new StringBuilder();
-            // first read the invoice summary mustache html template
-            try (InputStream fis = requireContext().getAssets().open(InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getTemplate()); InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8); BufferedReader br = new BufferedReader(isr)) {
-                br.lines().forEach(mustacheTemplateStr::append);
-            }
-
             double sumBilledAmount = invoice.getTimesheetSummaryList().stream().mapToDouble(TimesheetSummary::getTotalBilledAmount).sum();
             double sumBilledHours = invoice.getTimesheetSummaryList().stream().mapToDouble(TimesheetSummary::getTotalWorkedHours).sum();
             double totalVat = sumBilledAmount * 0.25;
             double totalBilledAmountWithVat = sumBilledAmount + totalVat;
 
-            String invoiceSummaryHtml = createTimesheetSummaryAttachmentHtml(mustacheTemplateStr.toString(), invoice.getTimesheetSummaryList(), Double.toString(sumBilledHours), Double.toString(sumBilledAmount), Double.toString(totalBilledAmountWithVat), Double.toString(totalVat));
+            String invoiceSummaryHtml = timesheetService.createTimesheetSummaryAttachmentHtml(requireContext(), invoice.getTimesheetSummaryList(), Double.toString(sumBilledHours), Double.toString(sumBilledAmount), Double.toString(totalBilledAmountWithVat), Double.toString(totalVat));
             Log.d("createInvoiceSummaryAttachment", "" + invoiceSummaryHtml);
             String invoiceAttachmentFileName = InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.name().toLowerCase() + "_attachment_" + invoice.getBillingDate().format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
@@ -164,40 +148,12 @@ public class InvoiceNewFragment extends BaseFragment {
         }
     }
 
-    private String createTimesheetSummaryAttachmentHtml(String mustacheTemplateStr, List<TimesheetSummary> timesheetSummaryList, String totalBilledHours, String totalBilledAmount, String totalBilledAmountWithVat, String totalVat) {
-        MustacheFactory mf = new DefaultMustacheFactory();
-        Mustache mustache = mf.compile(new StringReader(mustacheTemplateStr), "");
-        Map<String, Object> context = new HashMap<>();
-        context.put("invoiceAttachmentTitle", "Vedlegg til faktura");
-        context.put("invoiceBillingPeriod", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM")));
-        context.put("company", TimesheetService.getCompany(null));
-        context.put("client", TimesheetService.getClient(null));
-        context.put("timesheetProjectCode", "techlead-catalystone-solution-as");
-        context.put("timesheetSummaryList", timesheetSummaryList);
-        context.put("totalBilledHours", totalBilledHours);
-        context.put("totalBilledAmount", totalBilledAmount);
-        context.put("vatInPercent", "25%");
-        context.put("totalVat", totalVat);
-        context.put("totalBilledAmountWithVat", totalBilledAmountWithVat);
-        context.put("generatedDate", LocalDate.now().format(DateTimeFormatter.ISO_DATE));
-        StringWriter writer = new StringWriter();
-        mustache.execute(writer, context);
-        return writer.toString();
-    }
-
-
     private double createClientTimesheetAttachment(Long invoiceId, Long timesheetId) {
         try {
             List<TimesheetEntry> timesheetEntryList = timesheetService.getTimesheetEntryList(timesheetId);
-            StringBuilder mustacheTemplateStr = new StringBuilder();
-            // first read the invoice summary mustache html template
-            try (InputStream fis = requireContext().getAssets().open(InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.getTemplate()); InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8); BufferedReader br = new BufferedReader(isr)) {
-                br.lines().forEach(mustacheTemplateStr::append);
-            }
-
             double sumBilledHours = timesheetEntryList.stream().mapToDouble(TimesheetEntry::getWorkedMinutes).sum() / 60;
 
-            String timesheetAttachmentHtml = createTimesheetListHtml(mustacheTemplateStr.toString(), timesheetEntryList, Double.toString(sumBilledHours));
+            String timesheetAttachmentHtml = timesheetService.createTimesheetListHtml(requireContext(), timesheetEntryList, Double.toString(sumBilledHours));
             String timesheetAttachmentFileName = InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.name().toLowerCase() + "_attachment_" + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
             InvoiceAttachment clientTimesheetAttachment = new InvoiceAttachment();
             clientTimesheetAttachment.setInvoiceId(invoiceId);
@@ -212,21 +168,6 @@ public class InvoiceNewFragment extends BaseFragment {
         }
     }
 
-    private String createTimesheetListHtml(String mustacheTemplateStr, List<TimesheetEntry> timesheetList, String sumBilledHours) {
-        MustacheFactory mf = new DefaultMustacheFactory();
-        Mustache mustache = mf.compile(new StringReader(mustacheTemplateStr), "");
-        Map<String, Object> context = new HashMap<>();
-        context.put("title", "Timeliste for konsulentbistand");
-        // FIXME get date from timesheet
-        context.put("timesheetPeriod", timesheetList.get(0).getWorkdayDate().format(DateTimeFormatter.ofPattern("yyyy/MM")));
-        context.put("timesheetList", timesheetList);
-        context.put("totalWorkDays", timesheetList.size());
-        context.put("sunBilledHours", sumBilledHours);
-        context.put("generatedDate", LocalDate.now().format(DateTimeFormatter.ISO_DATE));
-        StringWriter writer = new StringWriter();
-        mustache.execute(writer, context);
-        return writer.toString();
-    }
 
     private void sendInvoiceToClient(String toEmailAddress, String subject, String message, File pdfFile) {
         Intent email = new Intent(Intent.ACTION_SEND);

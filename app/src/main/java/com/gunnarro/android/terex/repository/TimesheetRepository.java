@@ -48,6 +48,19 @@ public class TimesheetRepository {
         return timesheetEntryDao.getRegisteredWorkedHours(timesheetId);
     }
 
+    public List<TimesheetSummary> getTimesheetSummary(Long timesheetId) {
+        try {
+            CompletionService<List<TimesheetSummary>> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
+            service.submit(() -> timesheetSummaryDao.getTimesheetSummaries(timesheetId));
+            Future<List<TimesheetSummary>> future = service.take();
+            return future != null ? future.get() : null;
+        } catch (InterruptedException | ExecutionException e) {
+            // Something crashed, therefore restore interrupted state before leaving.
+            Thread.currentThread().interrupt();
+            throw new TerexApplicationException("Error getting timesheet with entries list", e.getMessage(), e.getCause());
+        }
+    }
+
     public Long saveTimesheetSummary(TimesheetSummary timesheetSummary) {
         try {
             CompletionService<Long> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);

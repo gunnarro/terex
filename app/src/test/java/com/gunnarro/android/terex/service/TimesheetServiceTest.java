@@ -7,7 +7,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import android.content.Context;
+import android.content.res.AssetManager;
 
 import com.gunnarro.android.terex.TestData;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
@@ -24,6 +28,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -286,4 +293,41 @@ class TimesheetServiceTest {
         assertEquals(22.5, timesheetSummaryList.get(4).getTotalWorkedHours());
         assertEquals(28125.0, timesheetSummaryList.get(4).getTotalBilledAmount());
     }
+
+    @Test
+    void createTimesheetListHtml() throws IOException {
+        File mustacheTemplateFile = new File("src/test/timesheet-attachment.mustache");
+        Context applicationContextMock = mock(Context.class);
+        AssetManager assetManagerMock = mock(AssetManager.class);
+        when(assetManagerMock.open(anyString())).thenReturn(new FileInputStream(mustacheTemplateFile));
+        when(applicationContextMock.getAssets()).thenReturn(assetManagerMock);
+        List<TimesheetEntry> timesheetEntryList = TestData.generateTimesheetEntries(2023, 1);
+        String templateHtml = timesheetService.createTimesheetListHtml(applicationContextMock, timesheetEntryList, "150");
+        Assertions.assertNotNull(templateHtml);
+    }
+
+    @Test
+    void createTimesheetSummaryHtml() throws IOException {
+        File mustacheTemplateFile = new File("src/test/timesheet-attachment.mustache");
+        Context applicationContextMock = mock(Context.class);
+        AssetManager assetManagerMock = mock(AssetManager.class);
+        when(assetManagerMock.open(anyString())).thenReturn(new FileInputStream(mustacheTemplateFile));
+        when(applicationContextMock.getAssets()).thenReturn(assetManagerMock);
+        List<TimesheetSummary> timesheetSummaryList = TestData.buildTimesheetSummaryByWeek(2023, 1);
+        String templateHtml = timesheetService.createTimesheetSummaryHtml(applicationContextMock, timesheetSummaryList, "150", "50.000", "55.000", "25");
+        Assertions.assertNotNull(templateHtml);
+    }
+
+    @Test
+    void createTimesheetSummaryAttachmentHtml() throws IOException {
+        File mustacheTemplateFile = new File("src/test/timesheet-attachment.mustache");
+        Context applicationContextMock = mock(Context.class);
+        AssetManager assetManagerMock = mock(AssetManager.class);
+        when(assetManagerMock.open(anyString())).thenReturn(new FileInputStream(mustacheTemplateFile));
+        when(applicationContextMock.getAssets()).thenReturn(assetManagerMock);
+        List<TimesheetSummary> timesheetSummaryList = TestData.buildTimesheetSummaryByWeek(2023, 1);
+        String templateHtml = timesheetService.createTimesheetSummaryAttachmentHtml(applicationContextMock, timesheetSummaryList, "150", "50.000", "55.000", "25");
+        Assertions.assertNotNull(templateHtml);
+    }
+
 }

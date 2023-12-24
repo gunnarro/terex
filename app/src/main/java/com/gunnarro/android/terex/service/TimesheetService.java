@@ -6,6 +6,9 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.room.Transaction;
 
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
 import com.gunnarro.android.terex.domain.TimesheetMapper;
 import com.gunnarro.android.terex.domain.dto.TimesheetEntryDto;
 import com.gunnarro.android.terex.domain.dto.TimesheetInfoDto;
@@ -24,11 +27,20 @@ import com.gunnarro.android.terex.utility.Utility;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -55,6 +67,16 @@ public class TimesheetService {
         timesheetRepository = new TimesheetRepository(applicationContext);
     }
 
+
+    private String loadMustacheTemplate(Context applicationContext, InvoiceService.InvoiceAttachmentTypesEnum template) {
+        StringBuilder mustacheTemplateStr = new StringBuilder();
+        try (InputStream fis = applicationContext.getAssets().open(template.getTemplate()); InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8); BufferedReader br = new BufferedReader(isr)) {
+            br.lines().forEach(mustacheTemplateStr::append);
+            return mustacheTemplateStr.toString();
+        } catch (IOException e) {
+            throw new TerexApplicationException("error reading mustache template", "50050", e);
+        }
+    }
 
     // ----------------------------------------
     // timesheet
@@ -241,6 +263,10 @@ public class TimesheetService {
     // timesheet summary
     // ----------------------------------------
 
+    public List<TimesheetSummary> getTimesheetSummary(Long timesheetId) {
+        return timesheetRepository.getTimesheetSummary(timesheetId);
+    }
+
     public Long saveTimesheetSummary(TimesheetSummary timesheetSummary) {
         return timesheetRepository.saveTimesheetSummary(timesheetSummary);
     }
@@ -254,20 +280,20 @@ public class TimesheetService {
         if (!timesheet.isCompleted()) {
             throw new TerexApplicationException(String.format("Application error, timesheet not fulfilled! timesheetId=%s, status=%s", timesheetId, timesheet.getStatus()), "50023", null);
         }
-        Log.d("createInvoiceSummary", String.format("timesheetId=%s", timesheetId));
+        Log.d("createTimesheetSummary", String.format("timesheetId=%s", timesheetId));
         List<TimesheetEntry> timesheetEntryList = getTimesheetEntryList(timesheetId);
         if (timesheetEntryList == null || timesheetEntryList.isEmpty()) {
             throw new TerexApplicationException(String.format("Application error, timesheet not ready for billing, no entries found! timesheetId=%s, status=%s", timesheetId, timesheet.getStatus()), "50023", null);
         }
 
-        Log.d("createInvoiceSummary", "timesheet entries: " + timesheetEntryList);
+        Log.d("createTimesheetSummary", "timesheet entries: " + timesheetEntryList);
         // accumulate timesheet by week for the mount
         Map<Integer, List<TimesheetEntry>> timesheetWeekMap = timesheetEntryList.stream().collect(Collectors.groupingBy(TimesheetEntry::getWorkdayWeek));
         List<TimesheetSummary> invoiceSummaryByWeek = new ArrayList<>();
         timesheetWeekMap.forEach((k, e) -> {
             invoiceSummaryByWeek.add(buildTimesheetSummaryForWeek(timesheetId, k, e));
         });
-        Log.d("createInvoiceSummary", "timesheet summary by week: " + invoiceSummaryByWeek);
+        Log.d("createTimesheetSummary", "timesheet summary by week: " + invoiceSummaryByWeek);
         // close the timesheet after invoice have been generated, is not possible to do any form of changes on the time list.
         timesheet.setStatus(Timesheet.TimesheetStatusEnum.BILLED.name());
         saveTimesheet(timesheet);
@@ -279,6 +305,66 @@ public class TimesheetService {
 
         invoiceSummaryByWeek.sort(Comparator.comparing(TimesheetSummary::getWeekInYear));
         return invoiceSummaryByWeek;
+    }
+
+    public String createTimesheetSummaryAttachmentHtml(Context applicationContext, List<TimesheetSummary> timesheetSummaryList, String totalBilledHours, String totalBilledAmount, String totalBilledAmountWithVat, String totalVat) {
+        MustacheFactory mf = new DefaultMustacheFactory();
+        Mustache mustache = mf.compile(new StringReader(loadMustacheTemplate(applicationContext, InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY)), "");
+        Map<String, Object> context = new HashMap<>();
+        context.put("invoiceAttachmentTitle", "Vedlegg til faktura");
+        context.put("invoiceBillingPeriod", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM")));
+        context.put("company", TimesheetService.getCompany(null));
+        context.put("client", TimesheetService.getClient(null));
+        context.put("timesheetProjectCode", "techlead-catalystone-solution-as");
+        context.put("timesheetSummaryList", timesheetSummaryList);
+        context.put("totalBilledHours", totalBilledHours);
+        context.put("totalBilledAmount", totalBilledAmount);
+        context.put("vatInPercent", "25%");
+        context.put("totalVat", totalVat);
+        context.put("totalBilledAmountWithVat", totalBilledAmountWithVat);
+        context.put("generatedDate", LocalDate.now().format(DateTimeFormatter.ISO_DATE));
+        StringWriter writer = new StringWriter();
+        mustache.execute(writer, context);
+        return writer.toString();
+    }
+
+
+    public String createTimesheetSummaryHtml(Context applicationContext, List<TimesheetSummary> timesheetSummaryList, String totalBilledHours, String totalBilledAmount, String totalBilledAmountWithVat, String totalVat) {
+        MustacheFactory mf = new DefaultMustacheFactory();
+        Mustache mustache = mf.compile(new StringReader(loadMustacheTemplate(applicationContext, InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY_2)), "");
+        Map<String, Object> context = new HashMap<>();
+        context.put("invoiceAttachmentTitle", "Timesheet Summary");
+        context.put("invoiceBillingPeriod", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM")));
+        context.put("company", TimesheetService.getCompany(null));
+        context.put("client", TimesheetService.getClient(null));
+        context.put("timesheetProjectCode", "techlead-catalystone-solution-as");
+        context.put("timesheetSummaryList", timesheetSummaryList);
+        context.put("totalBilledHours", totalBilledHours);
+        context.put("totalBilledAmount", totalBilledAmount);
+        context.put("vatInPercent", "25%");
+        context.put("totalVat", totalVat);
+        context.put("totalBilledAmountWithVat", totalBilledAmountWithVat);
+        context.put("generatedDate", LocalDateTime.now().format(DateTimeFormatter.ISO_DATE));
+        StringWriter writer = new StringWriter();
+        mustache.execute(writer, context);
+        return writer.toString();
+    }
+
+
+    public String createTimesheetListHtml(@NotNull Context applicationContext, @NotNull List<TimesheetEntry> timesheetList, String sumBilledHours) {
+        MustacheFactory mf = new DefaultMustacheFactory();
+        Mustache mustache = mf.compile(new StringReader(loadMustacheTemplate(applicationContext, InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET)), "");
+        Map<String, Object> context = new HashMap<>();
+        context.put("title", "Timeliste for konsulentbistand");
+        // FIXME get date from timesheet
+        context.put("timesheetPeriod", timesheetList.get(0).getWorkdayDate().format(DateTimeFormatter.ofPattern("yyyy/MM")));
+        context.put("timesheetList", timesheetList);
+        context.put("totalWorkDays", timesheetList.size());
+        context.put("sunBilledHours", sumBilledHours);
+        context.put("generatedDate", LocalDate.now().format(DateTimeFormatter.ISO_DATE));
+        StringWriter writer = new StringWriter();
+        mustache.execute(writer, context);
+        return writer.toString();
     }
 
     private TimesheetSummary buildTimesheetSummaryForWeek(@NotNull Long timesheetId, @NotNull Integer week, @NotNull List<TimesheetEntry> timesheetEntryList) {

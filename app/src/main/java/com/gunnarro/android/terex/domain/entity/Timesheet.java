@@ -48,7 +48,7 @@ public class Timesheet extends BaseEntity {
         NEW, ACTIVE, COMPLETED, BILLED;
 
         public static String[] names() {
-            return new String[]{NEW.name(), ACTIVE.name(), COMPLETED.name()};
+            return new String[]{NEW.name(), ACTIVE.name(), COMPLETED.name(), BILLED.name()};
         }
     }
 
@@ -214,7 +214,6 @@ public class Timesheet extends BaseEntity {
     public void setDescription(String description) {
         this.description = description;
     }
-
 
 
     public boolean isNew() {

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>gunnarro:as vedlegg faktura</title>
+    <link rel="stylesheet" href="file://android_asset/assets/html/css/bootstrap.min-v5.1.0.css">
+
+<style type="text/css">
+    .invoice-title h2, .invoice-title h3 {
+    display: inline-block;
+}
+
+.table > thead > tr > .no-line {
+    border-bottom: none;
+}
+
+.table > tbody > tr > .no-line {
+    border-top: none;
+}
+
+.table > foot > tr > .no-line {
+    border-bottom: none;
+}
+
+.table > tbody > tr > .thick-line {
+    border-top: 2px solid;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+            <div class="col-md">
+                <div class="invoice-title">
+                    <img src="./assets/html/image/gunnarroas.png" alt="gunnarro:as">
+                </div>
+                <hr>
+                <div class="invoice-title">
+                    <h3>{{invoiceAttachmentTitle}}</h3><h3 class="pull-right">{{invoiceBillingPeriod}}</h3>
+                </div>
+            </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><strong>Timesheet summary</strong></h3>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">År</th>
+                                    <th class="text-center">Måned</th>
+                                    <th class="text-center">Uke</th>
+                                    <th class="text-center">Fra / til dato</th>
+                                    <th class="text-center">Timer</th>
+                                    <th class="text-center">Beløp</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#timesheetSummaryList}}
+                                    <tr>
+                                        <td align="center">{{year}}</td>
+                                        <td align="center">{{fromDateMM}}</td>
+                                        <td align="center">{{weekInYear}}</td>
+                                        <td align="center">{{fromDateDDMM}} - {{toDateDDMM}}</td>
+                                        <td align="right">{{totalWorkedHours}}</td>
+                                        <td align="right">{{totalBilledAmount}}</td>
+                                    </tr>
+                                {{/timesheetSummaryList}}
+                                <tr>
+                                    <td class="thick-line"></td>
+                                    <td class="thick-line"></td>
+                                    <td class="thick-line"></td>
+                                    <td class="thick-line text-center"><strong>Sum</strong></td>
+                                    <td class="thick-line text-right">{{totalBilledHours}}</td>
+                                    <td class="thick-line text-right">{{totalBilledAmount}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="no-line"></td>
+                                    <td class="no-line"></td>
+                                    <td class="no-line"></td>
+                                    <td class="no-line text-center"><strong>Moms</strong></td>
+                                    <td class="no-line text-right">{{vatInPercent}}</td>
+                                    <td class="no-line text-right">{{totalVat}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="no-line"></td>
+                                    <td class="no-line"></td>
+                                    <td class="no-line"></td>
+                                    <td class="no-line text-center"><strong>Total</strong></td>
+                                    <td class="no-line text-right"></td>
+                                    <td class="no-line text-right">{{totalBilledAmountWithVat}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="py-5">
+            <div class="d-flex justify-content-between py-4 my-4 border-top">
+                <p>powered by <a href="https://github.com/gunnarro/terex">TeRex</a>, generated {{generatedDate}}</p>
+            </div>
+    </footer>
+</div>
+</body>
+</html>

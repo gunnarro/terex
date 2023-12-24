@@ -27,7 +27,9 @@ import kotlin.random.Random;
 public class InvoiceService {
 
     public enum InvoiceAttachmentTypesEnum {
-        CLIENT_TIMESHEET("html/template/norway-consulting-timesheet.mustache"), TIMESHEET_SUMMARY("html/template/invoice-timesheet-attachment.mustache");
+        CLIENT_TIMESHEET("html/template/norway-consulting-timesheet.mustache"),
+        TIMESHEET_SUMMARY_2("html/template/timesheet-summary.mustache"),
+        TIMESHEET_SUMMARY("html/template/invoice-timesheet-attachment.mustache");
 
         private final String template;
         InvoiceAttachmentTypesEnum(String template) {
@@ -80,9 +82,9 @@ public class InvoiceService {
         // first accumulate timesheet entries
         List<TimesheetSummary> timesheetSummaries = timesheetService.createTimesheetSummary(timesheetId);
         // save the invoice summaries
-        timesheetSummaries.forEach(i -> {
-            timesheetService.saveTimesheetSummary(i);
-            Log.d("saved timesheet summary", "" + i);
+        timesheetSummaries.forEach(t -> {
+            timesheetService.saveTimesheetSummary(t);
+            Log.d("saved timesheet summary", "" + t);
         });
         // there after create the invoice
         Invoice invoice = new Invoice();

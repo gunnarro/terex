@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <group android:id="@+id/timesheet_action_bar_menu">
+
         <item
-            android:id="@+id/year_dropdown_menu"
-            android:title="@string/lbl_year"
-            app:actionViewClass="android.widget.Spinner"
+            android:id="@+id/timesheet_summary_menu_item"
+            android:title="@string/lbl_timesheet"
+            android:icon="@drawable/ic_list_24dp"
             app:showAsAction="always" />
-    </group>
 </menu>

@@ -155,3 +155,11 @@ Oapp/src/main/java/com/gunnarro/android/terex/ui/adapter/InvoiceListAdapter.java
 Uapp/src/main/java/com/gunnarro/android/terex/ui/listener/ListOnItemClickListener.java,f/b/fbc8e8823250b52ab3be0b8a9fb78ed17e6516e5
 „
 Tapp/src/main/java/com/gunnarro/android/terex/ui/fragment/InvoiceDetailsFragment.java,5/d/5dc4de134e2d0c950dea9092c6743a7f7b4442ae
+€
+Papp/src/main/java/com/gunnarro/android/terex/ui/dialog/DialogActionListener.java,7/4/7484bf78bbfa7e429ecc0213855eb6bed2323c0f
+†
+Vapp/src/main/java/com/gunnarro/android/terex/ui/fragment/TimesheetSummaryFragment.java,4/f/4f077f0f14a33dc3c9f1eee13fb0a4d3cb1157e1
+€
+Papp/src/main/java/com/gunnarro/android/terex/repository/TimesheetSummaryDao.java,a/8/a8dbebb6e5bf0fde27d6420d2cab6c5c713049b6
+€
+Papp/src/main/java/com/gunnarro/android/terex/domain/entity/TimesheetSummary.java,9/4/94c3a43b9be29ac676d9b93458d778f252222b88

@@ -8,6 +8,9 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -16,14 +19,17 @@ import android.widget.EditText;
 import android.widget.ListPopupWindow;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.button.MaterialButtonToggleGroup;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
+import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.service.RecruitmentService;
+import com.gunnarro.android.terex.service.TimesheetService;
 import com.gunnarro.android.terex.utility.Utility;
 
 import org.jetbrains.annotations.NotNull;
@@ -39,6 +45,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class TimesheetNewFragment extends BaseFragment implements View.OnClickListener {
 
+    private TimesheetService timesheetService;
     RecruitmentService recruitmentService = new RecruitmentService();
 
     @Inject
@@ -46,12 +53,18 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requireActivity().setTitle(R.string.title_timesheet);
+        timesheetService = new TimesheetService(requireActivity().getApplicationContext());
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         // do not show the action bar
-        //setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_timesheet_new, container, false);
 
@@ -62,17 +75,15 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
         String[] projects = recruitmentService.getProjectNames();
         Timesheet timesheet = Timesheet.createDefault(clients[0], projects[0], LocalDate.now().getYear(), LocalDate.now().getMonthValue());
         // check if this is an existing or a new timesheet
-        String timesheetJson = getArguments() != null ? getArguments().getString(TimesheetListFragment.TIMESHEET_JSON_KEY) : null;
-        if (timesheetJson != null && !timesheetJson.isEmpty()) {
+        Long timesheetId = getArguments() != null ? getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY) : null;
+        if (timesheetId != null && timesheetId > 0) {
             try {
-                timesheet = Utility.gsonMapper().fromJson(timesheetJson, Timesheet.class);
-                Log.d(Utility.buildTag(getClass(), "onFragmentResult"), String.format("json: %s, timesheet: %s", timesheetJson, timesheet));
+                timesheet = timesheetService.getTimesheet(timesheetId);//Utility.gsonMapper().fromJson(timesheetJson, Timesheet.class);
+                Log.d(Utility.buildTag(getClass(), "onCreateView"), String.format("timesheet=%s", timesheet));
             } catch (Exception e) {
-                Log.e("", e.toString());
+                Log.e("Timesheet new error!", e.toString());
                 throw new TerexApplicationException("Application Error!", "5000", e);
             }
-        } else {
-            Log.d(Utility.buildTag(getClass(), "onFragmentResult"), String.format("default timesheet not found! use timesheet: %s", timesheet));
         }
 
         // status button group - some styling problem - buttons are disabled as default
@@ -104,7 +115,6 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
             clientSpinner.setAutoHandwritingEnabled(false);
             clientSpinner.setImportantForAutofill(View.IMPORTANT_FOR_AUTOFILL_NO);
         }
-
 
         final AutoCompleteTextView projectSpinner = view.findViewById(R.id.timesheet_new_project_spinner);
         ArrayAdapter<String> projectAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, projects);
@@ -180,21 +190,12 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
                 return;
             }
             view.findViewById(R.id.btn_timesheet_new_save).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
-            Bundle result = new Bundle();
-            result.putString(TimesheetListFragment.TIMESHEET_JSON_KEY, getTimesheetAsJson());
-            result.putString(TimesheetListFragment.TIMESHEET_ACTION_KEY, TimesheetListFragment.TIMESHEET_ACTION_SAVE);
-            getParentFragmentManager().setFragmentResult(TimesheetListFragment.TIMESHEET_REQUEST_KEY, result);
-            navigateTo(R.id.nav_from_timesheet_details_to_timesheet_list, null);
+            saveTimesheet();
         });
 
         view.findViewById(R.id.btn_timesheet_new_delete).setOnClickListener(v -> {
             view.findViewById(R.id.btn_timesheet_new_delete).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
-            Bundle result = new Bundle();
-            result.putString(TimesheetListFragment.TIMESHEET_JSON_KEY, getTimesheetAsJson());
-            result.putString(TimesheetListFragment.TIMESHEET_ACTION_KEY, TimesheetListFragment.TIMESHEET_ACTION_DELETE);
-            getParentFragmentManager().setFragmentResult(TimesheetListFragment.TIMESHEET_REQUEST_KEY, result);
-            Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new delete item intent");
-            navigateTo(R.id.nav_from_timesheet_details_to_timesheet_list, null);
+            confirmDeleteTimesheetDialog(getString(R.string.msg_delete_timesheet), getString(R.string.msg_confirm_delete));
         });
 
         view.findViewById(R.id.btn_timesheet_new_cancel).setOnClickListener(v -> {
@@ -203,16 +204,39 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
             navigateTo(R.id.nav_from_timesheet_details_to_timesheet_list, null);
         });
 
-        if (timesheet != null) {
-            updateTimesheetNewView(view, timesheet);
-          //  setTimesheetStatus(view, timesheet);
-        }
-        Log.d(Utility.buildTag(getClass(), "onCreateView"), String.format("%s", timesheet));
+        updateTimesheetInputData(view, timesheet);
+        Log.d(Utility.buildTag(getClass(), "onCreateView"), String.format("view timesheet=%s", timesheet));
         return view;
     }
 
-    private void updateTimesheetNewView(@NotNull View view, @NotNull Timesheet timesheet) {
-        // new timesheet don not have id yet, the id is generated upon save to database
+    private void saveTimesheet() {
+        try {
+            Timesheet timesheet = readTimesheetInputData();
+            timesheetService.saveTimesheet(timesheet);
+            showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_saved_msg_format), timesheet.getTimesheetRef(), timesheet.getYear() + "-" + timesheet.getMonth()), R.color.color_snackbar_text_add);
+            navigateTo(R.id.nav_from_timesheet_details_to_timesheet_list, null);
+        } catch (TerexApplicationException | InputValidationException ex) {
+            showInfoDialog("Info", String.format("%s", ex.getMessage()));
+        } catch (Exception e) {
+            showInfoDialog("Error", String.format("%s", e.getCause()));
+        }
+    }
+
+    private void deleteTimesheet() {
+        Timesheet timesheet = readTimesheetInputData();
+        timesheetService.deleteTimesheet(timesheet);
+        showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_delete_msg_format), timesheet.getTimesheetRef()), R.color.color_snackbar_text_delete);
+        navigateTo(R.id.nav_from_timesheet_details_to_timesheet_list, null);
+    }
+
+    private void confirmDeleteTimesheetDialog(final String title, final String message) {
+        new MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme).setTitle(title).setMessage(message).setPositiveButton(R.string.btn_ok, (dialogInterface, i) -> deleteTimesheet()).setNeutralButton(R.string.btn_cancel, (dialogInterface, i) -> {
+            // nothing to do
+        }).show();
+    }
+
+    private void updateTimesheetInputData(@NotNull View view, @NotNull Timesheet timesheet) {
+        // new timesheet do not have id yet, the id is generated upon save to database
         if (!timesheet.isNew()) {
             TextView timesheetId = view.findViewById(R.id.timesheet_new_id);
             timesheetId.setText(String.valueOf(timesheet.getId()));
@@ -256,23 +280,40 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
         toTimeView.setText(Utility.formatDate(timesheet.getToDate()));
 
         EditText descriptionView = view.findViewById(R.id.timesheet_new_description);
-        descriptionView.setText(timesheet.getDescription());
+        descriptionView.setText(timesheet.getDescription() + timesheet.getId());
 
+        // hidden as default
         view.findViewById(R.id.timesheet_new_id).setVisibility(View.GONE);
-        view.findViewById(R.id.timesheet_new_created_date).setVisibility(View.GONE);
+        view.findViewById(R.id.timesheet_new_created_date_layout).setVisibility(View.GONE);
         view.findViewById(R.id.timesheet_new_last_modified_date_layout).setVisibility(View.GONE);
 
         // hide fields if this is a new
-        if (timesheet.getId() == null) {
+        if (timesheet.isNew()) {
             view.findViewById(R.id.timesheet_new_created_date_layout).setVisibility(View.GONE);
             view.findViewById(R.id.timesheet_new_last_modified_date_layout).setVisibility(View.GONE);
             view.findViewById(R.id.btn_timesheet_new_delete).setVisibility(View.GONE);
-        } else if (timesheet.isBilled()) {
+        } else if (timesheet.isActive() || timesheet.isCompleted()) {
+            // Status and description are the only values that is allowed to change.
+            // change button icon to from add new to save
             view.findViewById(R.id.timesheet_new_created_date_layout).setVisibility(View.VISIBLE);
             view.findViewById(R.id.timesheet_new_last_modified_date_layout).setVisibility(View.VISIBLE);
-            view.findViewById(R.id.timesheet_new_created_date).setVisibility(View.VISIBLE);
-            view.findViewById(R.id.timesheet_new_last_modified_date).setVisibility(View.VISIBLE);
-
+            ((MaterialButton) view.findViewById(R.id.btn_timesheet_new_save)).setText(getResources().getString(R.string.btn_save));
+            // only allowed to update status
+            createdDateView.setEnabled(false);
+            lastModifiedDateView.setEnabled(false);
+            clientSpinner.setEnabled(false);
+            projectSpinner.setEnabled(false);
+            //view.findViewById(R.id.timesheet_new_status_group_layout).setEnabled(false);
+            statusSpinner.setEnabled(true);
+            yearSpinner.setEnabled(false);
+            monthSpinner.setEnabled(false);
+            fromTimeView.setEnabled(false);
+            toTimeView.setEnabled(false);
+            descriptionView.setEnabled(true);
+        } else if (timesheet.isBilled()) {
+            // if timesheet is billed, disable all fields and actions, not allowed to change.
+            view.findViewById(R.id.timesheet_new_created_date_layout).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.timesheet_new_last_modified_date_layout).setVisibility(View.VISIBLE);
             view.findViewById(R.id.timesheet_new_client_spinner_layout).setEnabled(false);
             view.findViewById(R.id.timesheet_new_project_spinner_layout).setEnabled(false);
             view.findViewById(R.id.timesheet_new_status_spinner_layout).setEnabled(false);
@@ -296,28 +337,9 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
             descriptionView.setEnabled(false);
             view.findViewById(R.id.btn_timesheet_new_delete).setVisibility(View.GONE);
             view.findViewById(R.id.btn_timesheet_new_save).setVisibility(View.GONE);
-        } else {
-            // change button icon to from add new to save
-            ((MaterialButton) view.findViewById(R.id.btn_timesheet_new_save)).setText(getResources().getString(R.string.btn_save));
-            // not allowed to change a timesheet with status set equal to BILLED
-            if (timesheet.isBilled()) {
-                view.findViewById(R.id.btn_timesheet_new_delete).setVisibility(View.GONE);
-                view.findViewById(R.id.btn_timesheet_new_save).setVisibility(View.GONE);
-            }
-            // only allowed to update status
-            createdDateView.setEnabled(false);
-            lastModifiedDateView.setEnabled(false);
-            clientSpinner.setEnabled(false);
-            projectSpinner.setEnabled(false);
-            //view.findViewById(R.id.timesheet_new_status_group_layout).setEnabled(false);
-            statusSpinner.setEnabled(true);
-            yearSpinner.setEnabled(false);
-            monthSpinner.setEnabled(false);
-            fromTimeView.setEnabled(false);
-            toTimeView.setEnabled(false);
-            descriptionView.setEnabled(true);
+            ((MaterialButton) view.findViewById(R.id.btn_timesheet_new_cancel)).setText(getResources().getString(R.string.btn_back));
         }
-        Log.d(Utility.buildTag(getClass(), "updateTimesheetNewView"), String.format("updated %s ", timesheet));
+        Log.d(Utility.buildTag(getClass(), "updateTimesheetNewView"), String.format("updated timesheetId=%s ", timesheet.getId()));
     }
 
     @Override
@@ -336,15 +358,39 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
             Log.d(Utility.buildTag(getClass(), "onClick"), "cancel button, return back to timesheet list view");
         }
     }
-/*
-    private void setTimesheetStatus(View view, Timesheet timesheet) {
-        view.findViewById(R.id.timesheet_new_status_new).setEnabled(timesheet.isNew());
-        view.findViewById(R.id.timesheet_new_status_active).setEnabled(timesheet.isActive());
-        view.findViewById(R.id.timesheet_new_status_completed).setEnabled(timesheet.isCompleted());
-        view.findViewById(R.id.timesheet_new_status_billed).setEnabled(timesheet.isBilled());
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        // keep a reference to options menu
+        //optionsMenu = menu;
+        // clear current menu items
+        menu.clear();
+        // set fragment specific menu items
+        inflater.inflate(R.menu.timesheet_details_menu, menu);
+        MenuItem viewTimesheetSummaryMenuItem = menu.findItem(R.id.timesheet_summary_menu_item);
+        viewTimesheetSummaryMenuItem.setOnMenuItemClickListener(item -> {
+                    TextView timesheetIdView = requireView().findViewById(R.id.timesheet_new_id);
+                    Log.d("", ""+timesheetIdView.getText());
+                    long timesheetId = Long.parseLong(timesheetIdView.getText().toString());
+                    Bundle bundle = new Bundle();
+                    bundle.putLong(TimesheetListFragment.TIMESHEET_ID_KEY, timesheetId);
+                    navigateTo(R.id.nav_from_timesheet_details_to_timesheet_summary, bundle);
+                    return false;
+                }
+        );
+
+        Log.d(Utility.buildTag(getClass(), "onCreateOptionsMenu"), "menu: " + menu);
     }
-*/
-    private String getTimesheetAsJson() {
+
+    /*
+        private void setTimesheetStatus(View view, Timesheet timesheet) {
+            view.findViewById(R.id.timesheet_new_status_new).setEnabled(timesheet.isNew());
+            view.findViewById(R.id.timesheet_new_status_active).setEnabled(timesheet.isActive());
+            view.findViewById(R.id.timesheet_new_status_completed).setEnabled(timesheet.isCompleted());
+            view.findViewById(R.id.timesheet_new_status_billed).setEnabled(timesheet.isBilled());
+        }
+    */
+    private Timesheet readTimesheetInputData() {
         Timesheet timesheet = new Timesheet();
 
         TextView timesheetIdView = requireView().findViewById(R.id.timesheet_new_id);
@@ -373,8 +419,8 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
         //MaterialButtonToggleGroup statusBtnGrp = requireView().findViewById(R.id.timesheet_new_status_group_layout);
         //MaterialButton selectedStatusBtn = statusBtnGrp.findViewById(statusBtnGrp.getCheckedButtonId());
         //timesheet.setStatus(selectedStatusBtn.getText().toString().toUpperCase());
-          AutoCompleteTextView statusSpinner = requireView().findViewById(R.id.timesheet_new_status_spinner);
-          timesheet.setStatus(statusSpinner.getText().toString());
+        AutoCompleteTextView statusSpinner = requireView().findViewById(R.id.timesheet_new_status_spinner);
+        timesheet.setStatus(statusSpinner.getText().toString());
 
         AutoCompleteTextView yearSpinner = requireView().findViewById(R.id.timesheet_new_year_spinner);
         timesheet.setYear(Integer.parseInt(yearSpinner.getText().toString()));
@@ -392,12 +438,7 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
         timesheet.setDescription(descriptionView.getText().toString());
 
         timesheet.createTimesheetRef();
-        try {
-            return Utility.gsonMapper().toJson(timesheet);
-        } catch (Exception e) {
-            Log.e("getTimesheetAsJson", e.toString());
-            throw new TerexApplicationException("unable to parse object to json! ", "50040", e);
-        }
+        return timesheet;
     }
 
     private boolean isInputDataValid() {
@@ -412,11 +453,11 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
             projectSpinner.setError(getString(R.string.lbl_required));
             hasValidationError = false;
         }
-            AutoCompleteTextView statusSpinner = requireView().findViewById(R.id.timesheet_new_status_spinner);
-            if (!hasText(statusSpinner.getText())) {
-                statusSpinner.setError(getString(R.string.lbl_required));
-                hasValidationError = false;
-            }
+        AutoCompleteTextView statusSpinner = requireView().findViewById(R.id.timesheet_new_status_spinner);
+        if (!hasText(statusSpinner.getText())) {
+            statusSpinner.setError(getString(R.string.lbl_required));
+            hasValidationError = false;
+        }
         AutoCompleteTextView yearSpinner = requireView().findViewById(R.id.timesheet_new_year_spinner);
         if (!hasText(yearSpinner.getText())) {
             yearSpinner.setError(getString(R.string.lbl_required));

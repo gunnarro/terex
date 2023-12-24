@@ -57,6 +57,21 @@
         <action
             android:id="@+id/nav_from_timesheet_details_to_timesheet_list"
             app:destination="@id/timesheet_list_fragment" />
+        <action
+            android:id="@+id/nav_from_timesheet_details_to_timesheet_summary"
+            app:destination="@id/timesheet_summary_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/timesheet_summary_fragment"
+        android:name="com.gunnarro.android.terex.ui.fragment.TimesheetSummaryFragment"
+        android:label="timesheet_summary_fragment"
+        tools:layout="@layout/fragment_timesheet_summary">
+        <argument
+            android:name="timesheetId"
+            android:defaultValue="0L"
+            app:argType="long"
+            app:nullable="false" />
     </fragment>
 
     <!-- timesheet entry list -->

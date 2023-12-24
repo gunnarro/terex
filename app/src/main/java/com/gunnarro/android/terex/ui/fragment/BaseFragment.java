@@ -53,4 +53,5 @@ abstract class BaseFragment extends Fragment {
     protected NavController getNavController() {
         return navController;
     }
+
 }
