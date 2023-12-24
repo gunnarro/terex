@@ -42,7 +42,7 @@ public class TimesheetWithEntries {
     @NonNull
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("TimesheetWithEntries{");
+        final StringBuilder sb = new StringBuilder("TimesheetWithEntries{");
         sb.append("timesheet=").append(timesheet);
         sb.append(", timesheetEntryList=").append(timesheetEntryList);
         sb.append('}');

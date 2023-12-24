@@ -112,7 +112,7 @@ public class InvoiceAttachment extends BaseEntity {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("InvoiceAttachment{");
+        final StringBuilder sb = new StringBuilder("InvoiceAttachment{");
         sb.append("id=").append(id);
         sb.append(", invoiceId=").append(invoiceId);
         sb.append(", attachmentFileName='").append(attachmentFileName).append('\'');

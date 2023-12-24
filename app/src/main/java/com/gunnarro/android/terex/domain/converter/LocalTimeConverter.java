@@ -3,7 +3,6 @@ package com.gunnarro.android.terex.domain.converter;
 import androidx.annotation.Nullable;
 import androidx.room.TypeConverter;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class LocalTimeConverter {
