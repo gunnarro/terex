@@ -9,9 +9,8 @@ import androidx.room.Transaction;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
-import com.gunnarro.android.terex.domain.TimesheetMapper;
+import com.gunnarro.android.terex.domain.dto.TimesheetDto;
 import com.gunnarro.android.terex.domain.dto.TimesheetEntryDto;
-import com.gunnarro.android.terex.domain.dto.TimesheetInfoDto;
 import com.gunnarro.android.terex.domain.entity.Address;
 import com.gunnarro.android.terex.domain.entity.Company;
 import com.gunnarro.android.terex.domain.entity.Contact;
@@ -20,6 +19,7 @@ import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
 import com.gunnarro.android.terex.domain.entity.TimesheetWithEntries;
+import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
 import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.repository.TimesheetRepository;
@@ -82,12 +82,17 @@ public class TimesheetService {
     // timesheet
     // ----------------------------------------
 
-    public TimesheetInfoDto getTimesheetInfo(Long timesheetId) {
-        Timesheet timesheet = getTimesheet(timesheetId);
-        Integer sumDays = timesheetRepository.getRegisteredWorkedDays(timesheetId);
-        Integer sumHours = timesheetRepository.getRegisteredWorkedHours(timesheetId);
-        return TimesheetMapper.toTimesheetInfoDto(timesheet, sumDays, sumHours);
+    public LiveData<Map<Timesheet, List<TimesheetEntry>>> getTimesheetLiveData(Long timesheetId) {
+        return timesheetRepository.getTimesheetLiveData(timesheetId);
     }
+
+    public TimesheetDto getTimesheetDto(Long timesheetId) {
+        TimesheetWithEntries timesheet = getTimesheetWithEntries(timesheetId);
+        Integer sumDays = timesheet.getTimesheetEntryList().size();
+        Integer sumHours = timesheet.getTimesheetEntryList().stream().mapToInt(TimesheetEntry::getWorkedMinutes).sum()/60;
+        return TimesheetMapper.toTimesheetDto(timesheet.getTimesheet(), sumDays, sumHours);
+    }
+
 
     public List<Timesheet> getTimesheets(String status) {
         return timesheetRepository.getTimesheets(status);
@@ -137,8 +142,9 @@ public class TimesheetService {
                 // must be set here, because the values is not handled in the fragment/UI and will therefore be reset during an update.
                 // this should be fixed by not using the entity directly in the fragment/UI.
                 timesheet.setLastModifiedDate(LocalDateTime.now());
-                //timesheet.setWorkingDaysInMonth(timesheetExisting.getWorkingDaysInMonth());
-                //timesheet.setWorkingHoursInMonth(timesheetExisting.getWorkingHoursInMonth());
+                // TODO since these values are not used in the view and therefore get lost when updating the timesheet, we simply take care of this here.
+                timesheet.setWorkingDaysInMonth(timesheetExisting.getWorkingDaysInMonth());
+                timesheet.setWorkingHoursInMonth(timesheetExisting.getWorkingHoursInMonth());
                 //timesheet.setTotalWorkedDays(timesheetExisting.getTotalWorkedDays());
                 //timesheet.setTotalWorkedHours(timesheetExisting.getTotalWorkedHours());
                 timesheetRepository.updateTimesheet(timesheet);
@@ -155,26 +161,6 @@ public class TimesheetService {
     // ----------------------------------------
     // timesheet entry
     // ----------------------------------------
-
-    public Timesheet updateTimesheetWorkedHoursAndDays(Long timesheetId) {
-        Timesheet timesheet = timesheetRepository.getTimesheet(timesheetId);
-        List<TimesheetEntry> timesheetEntries = timesheetRepository.getTimesheetEntryList(timesheetId);
-        int workedDays = 0;
-        int workedMinutes = 0;
-        for (TimesheetEntry e : timesheetEntries) {
-            workedDays++;
-            workedMinutes += e.getWorkedMinutes();
-        }
-        timesheet.setTotalWorkedDays(workedDays);
-        timesheet.setTotalWorkedHours(workedMinutes / 60);
-        if (timesheet.isNew() || timesheet.isActive()) {
-            if (timesheet.getTotalWorkedDays() >= timesheet.getWorkingDaysInMonth() || timesheet.getTotalWorkedHours() >= timesheet.getWorkingHoursInMonth()) {
-                timesheet.setStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
-            }
-        }
-        Log.d("updateTimesheetWorkedHoursAndDays", String.format("updated worked days and hours! %s", timesheet));
-        return timesheet;
-    }
 
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures
     // that you're not doing any long running operations on the main thread, blocking the UI.
@@ -215,8 +201,6 @@ public class TimesheetService {
                 id = timesheetEntry.getId();
                 Log.d("TimesheetRepository.saveTimesheetEntry", "update timesheet entry: " + id + " - " + timesheetEntry.getWorkdayDate());
             }
-            Timesheet timesheetUpdated = updateTimesheetWorkedHoursAndDays(timesheet.getId());
-            saveTimesheet(timesheetUpdated);
         } catch (InterruptedException | ExecutionException e) {
             // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();
@@ -231,7 +215,6 @@ public class TimesheetService {
             throw new InputValidationException("Timesheet entry is closed, not allowed to delete or update", "40045", null);
         }
         timesheetRepository.deleteTimesheetEntry(timesheetEntry);
-        updateTimesheetWorkedHoursAndDays(timesheetEntry.getTimesheetId());
     }
 
     @NotNull
@@ -274,7 +257,7 @@ public class TimesheetService {
     /**
      * Used as invoice attachment
      */
-    public List<TimesheetSummary> createTimesheetSummary(@NotNull Long timesheetId) {
+    public List<TimesheetSummary> createTimesheetSummaryForBilling(@NotNull Long timesheetId) {
         // check timesheet status
         Timesheet timesheet = getTimesheet(timesheetId);
         if (!timesheet.isCompleted()) {
@@ -286,14 +269,8 @@ public class TimesheetService {
             throw new TerexApplicationException(String.format("Application error, timesheet not ready for billing, no entries found! timesheetId=%s, status=%s", timesheetId, timesheet.getStatus()), "50023", null);
         }
 
-        Log.d("createTimesheetSummary", "timesheet entries: " + timesheetEntryList);
-        // accumulate timesheet by week for the mount
-        Map<Integer, List<TimesheetEntry>> timesheetWeekMap = timesheetEntryList.stream().collect(Collectors.groupingBy(TimesheetEntry::getWorkdayWeek));
-        List<TimesheetSummary> invoiceSummaryByWeek = new ArrayList<>();
-        timesheetWeekMap.forEach((k, e) -> {
-            invoiceSummaryByWeek.add(buildTimesheetSummaryForWeek(timesheetId, k, e));
-        });
-        Log.d("createTimesheetSummary", "timesheet summary by week: " + invoiceSummaryByWeek);
+        List<TimesheetSummary> timesheetSummaryByWeek = createTimesheetSummary(timesheetId, "WEEK");
+        Log.d("createTimesheetSummary", "timesheet summary by week: " + timesheetSummaryByWeek);
         // close the timesheet after invoice have been generated, is not possible to do any form of changes on the time list.
         timesheet.setStatus(Timesheet.TimesheetStatusEnum.BILLED.name());
         saveTimesheet(timesheet);
@@ -302,10 +279,28 @@ public class TimesheetService {
         timesheetEntryList.forEach(e -> {
             timesheetRepository.closeTimesheetEntry(e.getId());
         });
-
-        invoiceSummaryByWeek.sort(Comparator.comparing(TimesheetSummary::getWeekInYear));
-        return invoiceSummaryByWeek;
+        return timesheetSummaryByWeek;
     }
+
+    public List<TimesheetSummary> createTimesheetSummary(Long timesheetId, String by) {
+        List<TimesheetEntry> timesheetEntryList = getTimesheetEntryList(timesheetId);
+        Log.d("createTimesheetSummary", "timesheet entries: " + timesheetEntryList);
+        // accumulate timesheet by week for the mount
+        Map<Integer, List<TimesheetEntry>> timesheetWeekMap = switch (by) {
+            case "WEEK" ->
+                    timesheetEntryList.stream().collect(Collectors.groupingBy(TimesheetEntry::getWorkdayWeek));
+            case "MONTH" ->
+                    timesheetEntryList.stream().collect(Collectors.groupingBy(TimesheetEntry::getWorkdayMonth));
+            case "YEAR" ->
+                    timesheetEntryList.stream().collect(Collectors.groupingBy(TimesheetEntry::getWorkdayYear));
+            default -> Map.of();
+        };
+        List<TimesheetSummary> timesheetSummaryByWeek = new ArrayList<>();
+        timesheetWeekMap.forEach((k, e) -> timesheetSummaryByWeek.add(buildTimesheetSummaryForWeek(timesheetId, k, e)));
+        timesheetSummaryByWeek.sort(Comparator.comparing(TimesheetSummary::getWeekInYear));
+        return timesheetSummaryByWeek;
+    }
+
 
     public String createTimesheetSummaryAttachmentHtml(Context applicationContext, List<TimesheetSummary> timesheetSummaryList, String totalBilledHours, String totalBilledAmount, String totalBilledAmountWithVat, String totalVat) {
         MustacheFactory mf = new DefaultMustacheFactory();

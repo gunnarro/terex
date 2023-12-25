@@ -1,51 +1,50 @@
 <!DOCTYPE html>
-<html>
+<html lang="no">
 <head>
-<style type="text/css">
-         html {
-                        font-family: helvetica,arial,sans-serif;
-                        font-size: 100%;
-                    }
+    <title>norway consulting timesheet</title>
+    <style>
+     html {
+         font-family: helvetica,arial,sans-serif;
+         font-size: 100%;
+     }
 
-                 table {
-                     table-layout: auto;
-                     font-size: 100%;
-                     margin: 1em;
-                     border: none;
-                     border-collapse: collapse;
-                     margin-left: auto;
-                     margin-right: auto;
-                     margin-bottom: 1.6em;
-                }
+     table {
+         table-layout: auto;
+         font-size: 100%;
+         margin: 1em;
+         border: none;
+         border-collapse: collapse;
+         margin-left: auto;
+         margin-right: auto;
+         margin-bottom: 1.6em;
+    }
 
-                 table caption {
-                    text-align: center;
-                    font-weight: bold;
-                 }
+     table caption {
+        text-align: center;
+        font-weight: bold;
+     }
 
-                 thead tr th {
-                    border-bottom: 1px solid #000000;
-                    text-align: center;
-                    font-weight: bold;
-                    padding: 3px;
-                }
-                 tfoot tr th {
-                    border-top: 1px solid #000000;
-                    font-weight: bold;
-                    padding: 3px
-                }
+     thead tr th {
+        border-bottom: 1px solid #000000;
+        text-align: center;
+        font-weight: bold;
+        padding: 3px;
+    }
+     tfoot tr th {
+        border-top: 1px solid #000000;
+        font-weight: bold;
+        padding: 3px
+    }
 
-                td {
-                     padding: 5px;
-                }
+    td {
+         padding: 5px;
+    }
 </style>
 </head>
 <body>
- <div class="invoice-title">
-    <!-- img src="file://android_asset/html/image/norway-consulting-logo-horizontal.png" -->
-    <img src="../image/norway-consulting-logo-horizontal.png" alt="norway consulting AS">
-    <p>Norway Consulting AS</p>
- </div>
+<div class="invoice-title">
+    <img src="html/image/norway-consulting-logo-horizontal.png" alt="norway consulting as">
+</div>
 <table>
     <caption>{{title}}</caption>
     <tr>
@@ -74,44 +73,44 @@
         <td>Anita@norway-consulting.no</td>
     </tr>
     <tr>
-            <td>Måned/årstall</td>
-            <td>:</td>
-            <td>{{timesheetPeriod}}</td>
-        </tr>
-        <tr>
-                <td>Tilbakemelding</td>
-                <td>:</td>
-                <td></td>
-            </tr>
+        <td>Måned/årstall</td>
+        <td>:</td>
+        <td>{{timesheetPeriod}}</td>
+    </tr>
+    <tr>
+        <td>Tilbakemelding</td>
+        <td>:</td>
+        <td></td>
+    </tr>
 </table>
 
 <table>
     <caption>Oversikt fakturerte timer</caption>
     <thead>
     <tr>
-        <th align="center">Dato</th>
-        <th align="center">Fra</th>
-        <th align="center">Til</th>
-        <th align="center">Antall timer</th>
-        <th align="center">Beskrivelse av bistand</th>
+        <th class="text-center">Dato</th>
+        <th class="text-center">Fra</th>
+        <th class="text-center">Til</th>
+        <th class="text-center">Antall timer</th>
+        <th class="text-center">Beskrivelse av bistand</th>
     </tr>
     </thead>
     <tbody>
-        {{#timesheetList}}
-            <tr>
-                <td align="center">{{workdayDateDay}}</td>
-                <td align="center">{{fromTime}}</td>
-                <td align="center">{{toTime}}</td>
-                <td align="right">{{workedHours}}</td>
-                <td align="right">{{comment}}</td>
-            </tr>
-        {{/timesheetList}}
+    {{#timesheetList}}
+    <tr>
+        <td class="text-center">{{workdayDateDay}}</td>
+        <td class="text-center">{{fromTime}}</td>
+        <td class="text-center">{{toTime}}</td>
+        <td class="text-end">{{workedHours}}</td>
+        <td class="text-start">{{comment}}</td>
+    </tr>
+    {{/timesheetList}}
     </tbody>
     <tfoot>
     <tr>
-        <th align="center">Sum</th>
-        <th colspan="2" align="center">{{sunWorkDays}}</th>
-        <th align="right">{{sunBilledHours}}</th>
+        <th class="text-center">Sum</th>
+        <th colspan="2" class="text-end">{{sunWorkDays}}</th>
+        <th class="text-end">{{sunBilledHours}}</th>
         <th></th>
     </tr>
     </tfoot>

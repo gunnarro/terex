@@ -56,7 +56,7 @@ public class TimesheetSummaryFragment extends BaseFragment {
     }
 
     private void buildTimesheetSummary(Long timesheetId) {
-        List<TimesheetSummary> timesheetSummaryList = timesheetService.getTimesheetSummary(timesheetId);
+        List<TimesheetSummary> timesheetSummaryList = timesheetService.createTimesheetSummary(timesheetId, "WEEK");
         double sumBilledAmount = timesheetSummaryList.stream().mapToDouble(TimesheetSummary::getTotalBilledAmount).sum();
         double sumBilledHours = timesheetSummaryList.stream().mapToDouble(TimesheetSummary::getTotalWorkedHours).sum();
         double totalVat = sumBilledAmount * 0.25;
@@ -72,14 +72,14 @@ public class TimesheetSummaryFragment extends BaseFragment {
             return;
         }
 
-        Log.d("", "html=" + new String(timesheetSummaryHtml));
+        Log.d("", "html=" + timesheetSummaryHtml);
         webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
         webView.getSettings().setJavaScriptEnabled(false);
         webView.getSettings().setLoadsImagesAutomatically(true);
         //    webView.setWebViewClient(new LocalContentWebViewClient());
         //webView.loadDataWithBaseURL(null, invoiceHtml, "text/html", "utf-8", null);
-        Log.d("timesheet summary", String.format("%s", new String(timesheetSummaryHtml)));
-        webView.loadDataWithBaseURL("file://android_asset/", new String(timesheetSummaryHtml), "text/html", "UTF-8", null);
+        Log.d("timesheet summary", String.format("%s", timesheetSummaryHtml));
+        webView.loadDataWithBaseURL("file:///android_asset/", timesheetSummaryHtml, "text/html", "UTF-8", null);
     }
 
 }

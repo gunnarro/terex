@@ -1,13 +1,16 @@
 package com.gunnarro.android.terex.ui.view;
 
 import android.app.Application;
+import android.app.KeyguardManager;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Transformations;
 
-import com.gunnarro.android.terex.domain.dto.TimesheetInfoDto;
+import com.gunnarro.android.terex.domain.dto.TimesheetDto;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
+import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
 import com.gunnarro.android.terex.service.TimesheetService;
 
 import java.util.List;
@@ -31,6 +34,9 @@ public class TimesheetViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<Timesheet>> getTimesheetLiveData(Integer year) {
+        //return Transformations.map(timesheetService.getTimesheetListLiveData(year) {
+        //    t -> TimesheetMapper.toTimesheetDtoList(timesheetList.getValue())
+        //};
       //  timesheetList = timesheetService.getTimesheetListLiveData(year);
         return timesheetList;
     }
@@ -43,8 +49,8 @@ public class TimesheetViewModel extends AndroidViewModel {
         return timesheetService.getTimesheet(timesheetId);
     }
 
-    public TimesheetInfoDto getTimesheetInfoDto(Long timesheetId) {
-        return timesheetService.getTimesheetInfo(timesheetId);
+    public TimesheetDto getTimesheetDto(Long timesheetId) {
+        return timesheetService.getTimesheetDto(timesheetId);
     }
 
     public void deleteTimesheet(Timesheet timesheet) {

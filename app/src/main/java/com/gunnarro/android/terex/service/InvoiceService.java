@@ -80,7 +80,7 @@ public class InvoiceService {
     @Transaction
     public Long createInvoice(Company company, @NotNull Company client, @NotNull Long timesheetId) {
         // first accumulate timesheet entries
-        List<TimesheetSummary> timesheetSummaries = timesheetService.createTimesheetSummary(timesheetId);
+        List<TimesheetSummary> timesheetSummaries = timesheetService.createTimesheetSummaryForBilling(timesheetId);
         // save the invoice summaries
         timesheetSummaries.forEach(t -> {
             timesheetService.saveTimesheetSummary(t);

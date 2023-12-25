@@ -82,10 +82,6 @@ public class Timesheet extends BaseEntity {
     private Integer workingDaysInMonth = 0;
     @ColumnInfo(name = "working_hours_in_month", defaultValue = "0")
     private Integer workingHoursInMonth = 0;
-    @ColumnInfo(name = "total_worked_days", defaultValue = "0")
-    private Integer totalWorkedDays = 0;
-    @ColumnInfo(name = "total_worked_hours", defaultValue = "0")
-    private Integer totalWorkedHours = 0;
     @NotNull
     @ColumnInfo(name = "to_date")
     private LocalDate toDate;
@@ -173,22 +169,6 @@ public class Timesheet extends BaseEntity {
         this.workingHoursInMonth = workingHoursInMonth;
     }
 
-    public Integer getTotalWorkedDays() {
-        return totalWorkedDays;
-    }
-
-    public void setTotalWorkedDays(Integer totalWorkedDays) {
-        this.totalWorkedDays = totalWorkedDays;
-    }
-
-    public Integer getTotalWorkedHours() {
-        return totalWorkedHours;
-    }
-
-    public void setTotalWorkedHours(Integer totalWorkedHours) {
-        this.totalWorkedHours = totalWorkedHours;
-    }
-
     @NotNull
     public LocalDate getToDate() {
         return toDate;
@@ -254,8 +234,6 @@ public class Timesheet extends BaseEntity {
         timesheet.setMonth(timesheetDate.getMonthValue());
         timesheet.setFromDate(Utility.getFirstDayOfMonth(timesheetDate));
         timesheet.setToDate(Utility.getLastDayOfMonth(timesheetDate));
-        timesheet.setTotalWorkedHours(0);
-        timesheet.setTotalWorkedDays(0);
         timesheet.createTimesheetRef();
         timesheet.setWorkingDaysInMonth(Utility.countBusinessDaysInMonth(timesheet.getFromDate()));
         timesheet.setWorkingHoursInMonth((int) (timesheet.getWorkingDaysInMonth() * 7.5));
@@ -288,8 +266,6 @@ public class Timesheet extends BaseEntity {
         sb.append(", fromDate=").append(fromDate);
         sb.append(", workingDaysInMonth=").append(workingDaysInMonth);
         sb.append(", workingHoursInMonth=").append(workingHoursInMonth);
-        sb.append(", totalWorkedDays=").append(totalWorkedDays);
-        sb.append(", totalWorkedHours=").append(totalWorkedHours);
         sb.append(", toDate=").append(toDate);
         sb.append(", status='").append(status).append('\'');
         sb.append(", description='").append(description).append('\'');

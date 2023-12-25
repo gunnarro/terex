@@ -125,8 +125,6 @@ Aapp/src/main/java/com/gunnarro/android/terex/ui/MainActivity.java,5/7/576af1ac
 Rapp/src/main/java/com/gunnarro/android/terex/ui/view/TimesheetEntryViewHolder.java,0/e/0ef64cc9544a3787e65af75d0271b053437407dc
 Ü
 Vapp/src/main/java/com/gunnarro/android/terex/ui/adapter/TimesheetEntryListAdapter.java,1/3/13ee170cee39bb78064351a2fe7c93d172e7adf3
-Ü
-Vapp/src/main/java/com/gunnarro/android/terex/ui/view/TimesheetWeekEntryViewHolder.java,d/7/d7a6baeca3bad71cc7e1ce963c712ca39cf0515d
 Å
 Qapp/src/main/java/com/gunnarro/android/terex/domain/entity/InvoiceAttachment.java,d/7/d7e6a1ae9a4d7f306969d2416e77f1b290eb111c
 Å
@@ -169,8 +167,6 @@ t
 Dapp/src/main/java/com/gunnarro/android/terex/domain/entity/Task.java,f/2/f26402b8f3f4a7a0665ba7c27f22b9b70c2aedf1
 |
 Lapp/src/main/java/com/gunnarro/android/terex/domain/entity/HtmlTemplate.java,2/8/28ac0b4a9d23cf21658b7a62b38641fd37fb0972
-x
-Happ/src/main/java/com/gunnarro/android/terex/domain/TimesheetMapper.java,6/9/6930f26fd791e7f81df1148208a960abfc86f040
 Ö
 Uapp/src/main/java/com/gunnarro/android/terex/domain/converter/LocalDateConverter.java,8/4/84d87e21d958b3a9883ec76a84a47a00cb2f523a
 â
@@ -179,5 +175,9 @@ Yapp/src/main/java/com/gunnarro/android/terex/domain/converter/LocalDateTimeConv
 Uapp/src/main/java/com/gunnarro/android/terex/domain/converter/LocalTimeConverter.java,b/f/bf36bccce7f277fe5d9a63a2a73fe861d4cace19
 ~
 Napp/src/main/java/com/gunnarro/android/terex/domain/dto/TimesheetEntryDto.java,a/6/a699bb89921ea7103bec8a969662bcde0ca18281
-}
-Mapp/src/main/java/com/gunnarro/android/terex/domain/dto/TimesheetInfoDto.java,6/d/6d25b1f48a8000a7515933ad09945231723d764b
+~
+Napp/src/main/java/com/gunnarro/android/terex/repository/TimesheetEntryDao.java,c/4/c4b5bf0a94ad19a50f4239cb94a0f04a93067ca6
+
+Oapp/src/main/java/com/gunnarro/android/terex/domain/mapper/TimesheetMapper.java,1/9/192fc739c44371dd9497d407e741daf0dd160639
+y
+Iapp/src/main/java/com/gunnarro/android/terex/domain/dto/TimesheetDto.java,c/3/c33a2efc576d54e69234ffd5a40a1cada41d2467

@@ -120,7 +120,7 @@ public class InvoiceDetailsFragment extends BaseFragment {
     }
 
     private void loadInvoiceAttachment(Long invoiceId, InvoiceService.InvoiceAttachmentTypesEnum invoiceAttachmentType) {
-        Log.d("loadInvoiceAttachment", String.format("%s %s", invoiceId, invoiceAttachmentType));
+        Log.d("loadInvoiceAttachment", String.format("invoiceId=%s, attachmentType=%s", invoiceId, invoiceAttachmentType));
         WebView webView;
         try {
             webView = requireView().findViewById(R.id.invoice_web_view);
@@ -141,10 +141,8 @@ public class InvoiceDetailsFragment extends BaseFragment {
         webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
         webView.getSettings().setJavaScriptEnabled(false);
         webView.getSettings().setLoadsImagesAutomatically(true);
-        //    webView.setWebViewClient(new LocalContentWebViewClient());
-        //webView.loadDataWithBaseURL(null, invoiceHtml, "text/html", "utf-8", null);
         Log.d("invoice timesheet attachment", String.format("%s", new String(invoiceAttachmentHtml)));
-        webView.loadDataWithBaseURL("file://android_asset/", new String(invoiceAttachmentHtml), "text/html", "UTF-8", null);
+        webView.loadDataWithBaseURL("file:///android_asset/", new String(invoiceAttachmentHtml), "text/html", "UTF-8", null);
     }
 
     private void returnToInvoiceList() {

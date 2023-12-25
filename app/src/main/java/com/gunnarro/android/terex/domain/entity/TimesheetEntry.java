@@ -120,6 +120,14 @@ public class TimesheetEntry extends BaseEntity {
         return workdayWeek;
     }
 
+    public Integer getWorkdayMonth() {
+        return workdayDate.getMonthValue();
+    }
+
+    public Integer getWorkdayYear() {
+        return workdayDate.getYear();
+    }
+
     public void setWorkdayWeek(@NonNull Integer workdayWeek) {
         this.workdayWeek = workdayWeek;
     }

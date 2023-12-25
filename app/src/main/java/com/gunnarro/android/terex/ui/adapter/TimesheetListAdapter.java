@@ -12,11 +12,9 @@ import androidx.recyclerview.widget.ListAdapter;
 
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
-import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.ui.fragment.TimesheetListFragment;
 import com.gunnarro.android.terex.ui.listener.ListOnItemClickListener;
 import com.gunnarro.android.terex.ui.view.TimesheetViewHolder;
-import com.gunnarro.android.terex.utility.Utility;
 
 public class TimesheetListAdapter extends ListAdapter<Timesheet, TimesheetViewHolder> implements AdapterView.OnItemClickListener {
 
@@ -39,15 +37,6 @@ public class TimesheetListAdapter extends ListAdapter<Timesheet, TimesheetViewHo
             listOnItemClickListener.onItemClick(bundle);
         });
         return viewHolder;
-    }
-
-    private String toJson(Timesheet timesheet) {
-        try {
-            return Utility.gsonMapper().toJson(timesheet);
-        } catch (Exception e) {
-            Log.e("getTimesheetAsJson", e.toString());
-            throw new TerexApplicationException("unable to parse object to json!", "505500", e);
-        }
     }
 
     @Override

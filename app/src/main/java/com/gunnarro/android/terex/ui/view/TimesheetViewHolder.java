@@ -63,8 +63,8 @@ public class TimesheetViewHolder extends RecyclerView.ViewHolder {
             timesheetLine1StatusView.setTextColor(timesheetLine1StatusView.getResources().getColor(R.color.timesheet_status_billed, null));
         }
         timesheetLine1LabelView.setText(R.string.lbl_worked_days);
-        timesheetLine1ValueView.setText(String.format("%s of %s days", timesheet.getTotalWorkedDays(), timesheet.getWorkingDaysInMonth()));
+        timesheetLine1ValueView.setText(String.format("%s of %s days", "na", timesheet.getWorkingDaysInMonth()));
         timesheetLine2LabelView.setText(R.string.lbl_worked_hours);
-        timesheetLine2ValueView.setText(String.format("%s of %s hours", timesheet.getTotalWorkedHours(), timesheet.getWorkingHoursInMonth()));
+        timesheetLine2ValueView.setText(String.format("%s of %s hours", "na", timesheet.getWorkingHoursInMonth()));
     }
 }

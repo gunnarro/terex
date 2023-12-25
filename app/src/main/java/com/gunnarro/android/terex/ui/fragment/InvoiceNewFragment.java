@@ -27,6 +27,7 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -148,9 +149,14 @@ public class InvoiceNewFragment extends BaseFragment {
         }
     }
 
+    /**
+     * The timesheet should contain an entry for all days in the month.
+     * Days not worked, sick, or vacation are simple blank.
+     */
     private double createClientTimesheetAttachment(Long invoiceId, Long timesheetId) {
         try {
             List<TimesheetEntry> timesheetEntryList = timesheetService.getTimesheetEntryList(timesheetId);
+            populateTimesheetList(timesheetId, timesheetEntryList);
             double sumBilledHours = timesheetEntryList.stream().mapToDouble(TimesheetEntry::getWorkedMinutes).sum() / 60;
 
             String timesheetAttachmentHtml = timesheetService.createTimesheetListHtml(requireContext(), timesheetEntryList, Double.toString(sumBilledHours));
@@ -168,6 +174,28 @@ public class InvoiceNewFragment extends BaseFragment {
         }
     }
 
+    private void populateTimesheetList(Long timesheetId, List<TimesheetEntry> timesheetEntryList) {
+        Timesheet timesheet = timesheetService.getTimesheet(timesheetId);
+        // interpolate missing days in the month.
+        TimesheetEntry timesheetEntry = new TimesheetEntry();
+        timesheetEntry.setTimesheetId(2L);
+        for (LocalDate date = timesheet.getFromDate(); date.isBefore(timesheet.getToDate()); date = date.plusDays(1)) {
+            boolean isInList = false;
+            for (TimesheetEntry e : timesheetEntryList) {
+                if (e.getWorkdayDate().equals(date)) {
+                    isInList = true;
+                    break;
+                }
+            }
+            if (!isInList) {
+                TimesheetEntry timesheetEntry1 = new TimesheetEntry();
+                timesheetEntry1.setWorkdayDate(date);
+                timesheetEntry1.setWorkedMinutes(0);
+                timesheetEntryList.add(timesheetEntry1);
+            }
+        }
+        timesheetEntryList.sort(Comparator.comparing(TimesheetEntry::getWorkdayDate));
+    }
 
     private void sendInvoiceToClient(String toEmailAddress, String subject, String message, File pdfFile) {
         Intent email = new Intent(Intent.ACTION_SEND);

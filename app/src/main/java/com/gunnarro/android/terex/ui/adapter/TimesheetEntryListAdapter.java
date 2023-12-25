@@ -52,15 +52,6 @@ public class TimesheetEntryListAdapter extends ListAdapter<TimesheetEntry, Times
         notifyItemRangeRemoved(position, 1);
     }
 
-    private String toJson(TimesheetEntry timesheet) {
-        try {
-            return Utility.gsonMapper().toJson(timesheet);
-        } catch (Exception e) {
-            Log.e("getTimesheetAsJson", e.toString());
-            throw new TerexApplicationException("unable to parse timesheetEntry to json!", "500500", e);
-        }
-    }
-
     /**
      * User to check is list items are equal or not
      */

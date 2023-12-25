@@ -7,11 +7,12 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
-import com.gunnarro.android.terex.domain.entity.TimesheetWithEntries;
 import com.gunnarro.android.terex.service.TimesheetService;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Repository is completely separated from the UI through the ViewModel.
@@ -32,20 +33,21 @@ public class TimesheetEntryViewModel extends AndroidViewModel {
         return listLiveData;
     }
 
+    public LiveData<Map<Timesheet, List<TimesheetEntry>>> getTimesheetLiveData(Long timesheetId) {
+        LiveData<Map<Timesheet, List<TimesheetEntry>>> listLiveData = timesheetService.getTimesheetLiveData(timesheetId);
+        Log.d("getTimesheetLiveData", String.format("timesheetId=%s, timesheetEntries=%s", timesheetId, listLiveData.getValue()));
+        return listLiveData;
+    }
+
     public TimesheetEntry getMostRecentTimesheetEntry(Long timesheetId) {
         return timesheetService.getMostRecentTimeSheetEntry(timesheetId);
     }
 
-    public TimesheetWithEntries getTimesheetWithEntries(Long timesheetId) {
-        if (timesheetId == null) { return null; }
-        return timesheetService.getTimesheetWithEntries(timesheetId);
+    public void saveTimesheetEntry(TimesheetEntry timesheetEntry) {
+        timesheetService.saveTimesheetEntry(timesheetEntry);
     }
 
-    public void saveTimesheetEntry(TimesheetEntry timesheet) {
-        timesheetService.saveTimesheetEntry(timesheet);
-    }
-
-    public void deleteTimesheetEntry(TimesheetEntry timesheet) {
-        timesheetService.deleteTimesheetEntry(timesheet);
+    public void deleteTimesheetEntry(TimesheetEntry timesheetEntry) {
+        timesheetService.deleteTimesheetEntry(timesheetEntry);
     }
 }

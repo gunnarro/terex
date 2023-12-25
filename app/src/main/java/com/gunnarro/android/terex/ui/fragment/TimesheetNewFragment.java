@@ -280,7 +280,7 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
         toTimeView.setText(Utility.formatDate(timesheet.getToDate()));
 
         EditText descriptionView = view.findViewById(R.id.timesheet_new_description);
-        descriptionView.setText(timesheet.getDescription() + timesheet.getId());
+        descriptionView.setText(timesheet.getDescription());
 
         // hidden as default
         view.findViewById(R.id.timesheet_new_id).setVisibility(View.GONE);

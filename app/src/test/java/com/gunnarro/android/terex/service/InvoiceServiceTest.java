@@ -61,7 +61,7 @@ class InvoiceServiceTest {
 
         List<TimesheetSummary> timesheetSummaries = List.of(timesheetSummaryWeek1);
         Long timesheetId = 1L;
-        when(timesheetServiceMock.createTimesheetSummary(anyLong())).thenReturn(timesheetSummaries);
+        when(timesheetServiceMock.createTimesheetSummaryForBilling(anyLong())).thenReturn(timesheetSummaries);
         when(invoiceRepositoryMock.saveInvoice(any())).thenReturn(23L);
         Long invoiceId = invoiceService.createInvoice(TimesheetService.getClient(1L), TimesheetService.getCompany(2L), timesheetId );
         assertEquals(23, invoiceId);

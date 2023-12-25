@@ -25,8 +25,6 @@ import com.gunnarro.android.terex.ui.swipe.SwipeCallback;
 import com.gunnarro.android.terex.ui.view.TimesheetEntryViewModel;
 import com.gunnarro.android.terex.utility.Utility;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -111,19 +109,6 @@ public class TimesheetEntryListFragment extends BaseFragment implements ListOnIt
         bundle.putLong(TimesheetListFragment.TIMESHEET_ID_KEY, timesheetId);
         bundle.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_KEY, timesheetJson);
         return bundle;
-    }
-
-    /**
-     * Update backup info after view is successfully create
-     */
-    @Override
-    public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
     }
 
     private void handleFragmentResult(Bundle bundle) {

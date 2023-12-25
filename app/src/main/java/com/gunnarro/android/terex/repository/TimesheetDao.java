@@ -10,12 +10,17 @@ import androidx.room.Transaction;
 import androidx.room.Update;
 
 import com.gunnarro.android.terex.domain.entity.Timesheet;
+import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetWithEntries;
 
 import java.util.List;
+import java.util.Map;
 
 @Dao
 public interface TimesheetDao {
+
+    @Query("SELECT * FROM timesheet t JOIN timesheet_entry e ON t.id = e.timesheet_id WHERE t.id = :timesheetId")
+    LiveData<Map<Timesheet, List<TimesheetEntry>>> getTimesheetLiveData(Long timesheetId);
 
     @Query("SELECT * FROM timesheet WHERE id = :id")
     Timesheet getTimesheetById(Long id);

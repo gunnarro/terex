@@ -1,6 +1,6 @@
 package com.gunnarro.android.terex.domain.dto;
 
-public class TimesheetInfoDto {
+public class TimesheetDto {
     private Long timesheetId;
     private Long invoiceNumber;
     private String clientName;
@@ -10,15 +10,13 @@ public class TimesheetInfoDto {
     private Integer month;
     private Integer workingDaysInMonth;
     private Integer workingHoursInMonth;
-
     private Integer registeredWorkedDays;
     private Integer registeredWorkedHours;
-
     private Integer registeredSickLeaveDays;
     private Integer registeredSickLeaveHours;
-
     private Integer registeredVacationDays;
     private Integer registeredVacationHours;
+    private String description;
 
     public Long getTimesheetId() {
         return timesheetId;
@@ -138,5 +136,13 @@ public class TimesheetInfoDto {
 
     public void setRegisteredVacationHours(Integer registeredVacationHours) {
         this.registeredVacationHours = registeredVacationHours;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

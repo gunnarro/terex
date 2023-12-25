@@ -15,6 +15,7 @@ import com.gunnarro.android.terex.exception.TerexApplicationException;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
@@ -39,6 +40,10 @@ public class TimesheetRepository {
         timesheetSummaryDao = AppDatabase.getDatabase(applicationContext).timesheetSummaryDao();
     }
 
+
+    public LiveData<Map<Timesheet, List<TimesheetEntry>>> getTimesheetLiveData(Long timesheetId) {
+        return timesheetDao.getTimesheetLiveData(timesheetId);
+    }
 
     public Integer getRegisteredWorkedDays(Long timesheetId) {
         return timesheetEntryDao.getRegisteredWorkedDays(timesheetId);
