@@ -4,25 +4,18 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>gunnarro:as vedlegg faktura</title>
-    <link rel="stylesheet" href="html/css/bootstrap.min-v5.1.0.css">
+    <link rel="stylesheet" href="html/css/bootstrap.min-v5.3.2.css">
 
-    <style type="text/css">
-    .invoice-title h2, .invoice-title h3 {
-        display: inline-block;
-    }
-
+    <style>
     .table > thead > tr > .no-line {
         border-bottom: none;
     }
-
     .table > tbody > tr > .no-line {
         border-top: none;
     }
-
     .table > foot > tr > .no-line {
         border-bottom: none;
     }
-
     .table > tbody > tr > .thick-line {
         border-top: 2px solid;
     }
@@ -32,19 +25,19 @@
 <body>
 
 <div class="container">
-    <div class="row">
+    <!-- header -->
+    <div class="row mt-3">
         <div class="col-md">
-            <div class="invoice-title">
-                <img src="html/image/gunnarroas.png" alt="gunnarro:as">
-            </div>
-            <hr>
-            <div class="invoice-title">
-                <h3>{{invoiceAttachmentTitle}}</h3>
-                <h3 class="pull-right">{{invoiceBillingPeriod}}</h3>
-            </div>
+            <img class="img-fluid float-start" src="html/image/gunnarroas.png" alt="gunnarro:as">
         </div>
     </div>
-    <div class="row">
+    <div class="row mt-3">
+        <div class="col-md">
+            <h3>{{invoiceAttachmentTitle}} {invoiceBillingPeriod}}</h3>
+        </div>
+    </div>
+    <!-- information -->
+    <div class="row mt3">
         <div class="col-md">
             <address>
                 <strong>Kunde</strong><br>
@@ -80,7 +73,7 @@
             </address>
         </div>
     </div>
-
+    <!-- table -->
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default">
@@ -142,12 +135,12 @@
             </div>
         </div>
     </div>
-    <footer class="py-5">
-        <div class="d-flex justify-content-between py-4 my-4 border-top">
-            <p>powered by <a href="https://github.com/gunnarro/terex">TeRex</a>, generated
-                {{generatedDate}}</p>
-        </div>
-    </footer>
+    <!-- footer -->
+    <div class="row">
+            <div class="col-md fs-6 text-muted">
+                <p class="float-start">&copy; 2023 powered by <a class="text-reset" href="https://github.com/gunnarro/terex">TeRex</a></p>
+            </div>
+    </div>
 </div>
 </body>
 </html>
