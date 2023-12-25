@@ -12,7 +12,6 @@ import static org.mockito.Mockito.when;
 
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.support.v4.media.MediaMetadataCompat;
 
 import com.gunnarro.android.terex.TestData;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
@@ -348,15 +347,14 @@ class TimesheetServiceTest {
         when(applicationContextMock.getAssets()).thenReturn(assetManagerMock);
         List<TimesheetEntry> timesheetEntryList = TestData.generateTimesheetEntries(timesheet.getFromDate().getYear(), timesheet.getFromDate().getMonthValue());
 
-
         when(timesheetRepositoryMock.getTimesheet(anyLong())).thenReturn(timesheet);
         when(timesheetRepositoryMock.getTimesheetEntryList(anyLong())).thenReturn(timesheetEntryList);
 
         List<TimesheetEntry> timesheetEntryListReadyForBilling = timesheetService.getTimesheetEntryListReadyForBilling(23L);
-        String templateHtml = timesheetService.createTimesheetListHtml(applicationContextMock, timesheetEntryListReadyForBilling, "150");
+        String templateHtml = timesheetService.createTimesheetListHtml(applicationContextMock, timesheetEntryListReadyForBilling);
         Assertions.assertNotNull(templateHtml);
         System.out.println(templateHtml);
-        saveToFile("src/test/" + InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.getFileName() + ".html", templateHtml);
+      //  saveToFile("src/test/" + InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.getFileName() + ".html", templateHtml);
     }
 
     // FIXME
@@ -383,7 +381,7 @@ class TimesheetServiceTest {
         when(assetManagerMock.open(anyString())).thenReturn(new FileInputStream(mustacheTemplateFile));
         when(applicationContextMock.getAssets()).thenReturn(assetManagerMock);
         List<TimesheetSummary> timesheetSummaryList = TestData.buildTimesheetSummaryByWeek(2023, 1);
-        String templateHtml = timesheetService.createTimesheetSummaryAttachmentHtml(applicationContextMock, timesheetSummaryList, "150", "50.000", "55.000", "25");
+        String templateHtml = timesheetService.createTimesheetSummaryAttachmentHtml(applicationContextMock, timesheetSummaryList);
         Assertions.assertNotNull(templateHtml);
     }
 

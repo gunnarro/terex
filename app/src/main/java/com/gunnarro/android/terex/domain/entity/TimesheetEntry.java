@@ -246,6 +246,9 @@ public class TimesheetEntry extends BaseEntity {
         this.type = type;
     }
 
+    public String getWorkDateDay() {
+        return workdayDate.format(DateTimeFormatter.ofPattern("EEE"));
+    }
     public boolean isRegularWorkDay() {
         return type.equals(TimesheetEntryTypeEnum.REGULAR.name());
     }

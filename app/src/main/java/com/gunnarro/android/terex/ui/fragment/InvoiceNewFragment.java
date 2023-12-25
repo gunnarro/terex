@@ -127,12 +127,9 @@ public class InvoiceNewFragment extends BaseFragment {
         try {
             Invoice invoice = invoiceService.getInvoice(invoiceId);
             Log.d("createTimesheetSummaryAttachment", "timesheetSummary week: " + invoice.getTimesheetSummaryList());
-            double sumBilledAmount = invoice.getTimesheetSummaryList().stream().mapToDouble(TimesheetSummary::getTotalBilledAmount).sum();
             double sumBilledHours = invoice.getTimesheetSummaryList().stream().mapToDouble(TimesheetSummary::getTotalWorkedHours).sum();
-            double totalVat = sumBilledAmount * 0.25;
-            double totalBilledAmountWithVat = sumBilledAmount + totalVat;
 
-            String invoiceSummaryHtml = timesheetService.createTimesheetSummaryAttachmentHtml(requireContext(), invoice.getTimesheetSummaryList(), Double.toString(sumBilledHours), Double.toString(sumBilledAmount), Double.toString(totalBilledAmountWithVat), Double.toString(totalVat));
+            String invoiceSummaryHtml = timesheetService.createTimesheetSummaryAttachmentHtml(requireContext(), invoice.getTimesheetSummaryList());
             Log.d("createInvoiceSummaryAttachment", "" + invoiceSummaryHtml);
             String invoiceAttachmentFileName = InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.name().toLowerCase() + "_attachment_" + invoice.getBillingDate().format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
@@ -157,8 +154,7 @@ public class InvoiceNewFragment extends BaseFragment {
         try {
             List<TimesheetEntry> timesheetEntryList = timesheetService.getTimesheetEntryListReadyForBilling(timesheetId);
             double sumBilledHours = timesheetEntryList.stream().mapToDouble(TimesheetEntry::getWorkedMinutes).sum() / 60;
-
-            String timesheetAttachmentHtml = timesheetService.createTimesheetListHtml(requireContext(), timesheetEntryList, Double.toString(sumBilledHours));
+            String timesheetAttachmentHtml = timesheetService.createTimesheetListHtml(requireContext(), timesheetEntryList);
             String timesheetAttachmentFileName = InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.name().toLowerCase() + "_attachment_" + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
             InvoiceAttachment clientTimesheetAttachment = new InvoiceAttachment();
             clientTimesheetAttachment.setInvoiceId(invoiceId);

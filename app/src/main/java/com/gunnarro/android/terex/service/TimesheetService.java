@@ -313,7 +313,12 @@ public class TimesheetService {
     }
 
 
-    public String createTimesheetSummaryAttachmentHtml(Context applicationContext, List<TimesheetSummary> timesheetSummaryList, String totalBilledHours, String totalBilledAmount, String totalBilledAmountWithVat, String totalVat) {
+    public String createTimesheetSummaryAttachmentHtml(Context applicationContext, List<TimesheetSummary> timesheetSummaryList) {
+        double totalBilledAmount = timesheetSummaryList.stream().mapToDouble(TimesheetSummary::getTotalBilledAmount).sum();
+        double totalBilledHours = timesheetSummaryList.stream().mapToDouble(TimesheetSummary::getTotalWorkedHours).sum();
+        double totalVat = totalBilledAmount * 0.25;
+        double totalBilledAmountWithVat = totalBilledAmount + totalVat;
+
         MustacheFactory mf = new DefaultMustacheFactory();
         Mustache mustache = mf.compile(new StringReader(loadMustacheTemplate(applicationContext, InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY)), "");
         Map<String, Object> context = new HashMap<>();
@@ -323,11 +328,11 @@ public class TimesheetService {
         context.put("client", TimesheetService.getClient(null));
         context.put("timesheetProjectCode", "techlead-catalystone-solution-as");
         context.put("timesheetSummaryList", timesheetSummaryList);
-        context.put("totalBilledHours", totalBilledHours);
-        context.put("totalBilledAmount", totalBilledAmount);
+        context.put("totalBilledHours", Double.toString(totalBilledHours));
+        context.put("totalBilledAmount", Double.toString(totalBilledAmount));
         context.put("vatInPercent", "25%");
-        context.put("totalVat", totalVat);
-        context.put("totalBilledAmountWithVat", totalBilledAmountWithVat);
+        context.put("totalVat", Double.toString(totalVat));
+        context.put("totalBilledAmountWithVat", Double.toString(totalBilledAmountWithVat));
         context.put("generatedDate", LocalDate.now().format(DateTimeFormatter.ISO_DATE));
         StringWriter writer = new StringWriter();
         mustache.execute(writer, context);
@@ -357,7 +362,8 @@ public class TimesheetService {
     }
 
 
-    public String createTimesheetListHtml(@NotNull Context applicationContext, @NotNull List<TimesheetEntry> timesheetEntryList, String sumBilledHours) {
+    public String createTimesheetListHtml(@NotNull Context applicationContext, @NotNull List<TimesheetEntry> timesheetEntryList) {
+        double sumBilledHours = timesheetEntryList.stream().mapToDouble(TimesheetEntry::getWorkedMinutes).sum() / 60;
         MustacheFactory mf = new DefaultMustacheFactory();
         Mustache mustache = mf.compile(new StringReader(loadMustacheTemplate(applicationContext, InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET)), "");
         Map<String, Object> context = new HashMap<>();
@@ -366,7 +372,7 @@ public class TimesheetService {
         context.put("timesheetPeriod", timesheetEntryList.get(0).getWorkdayDate().format(DateTimeFormatter.ofPattern("yyyy/MM")));
         context.put("timesheetEntryList", timesheetEntryList);
         context.put("totalWorkDays", timesheetEntryList.size());
-        context.put("sunBilledHours", sumBilledHours);
+        context.put("sunBilledHours", Double.toString(sumBilledHours));
         context.put("generatedDate", LocalDate.now().format(DateTimeFormatter.ISO_DATE));
         StringWriter writer = new StringWriter();
         mustache.execute(writer, context);
