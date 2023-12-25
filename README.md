@@ -5,8 +5,15 @@
 # TeRex
 Android time tracking app.
 This is a simple application for time registration for consultants.
+Timesheet can be exported to pdf file.
+Basically, there are four main types of timesheet types, daily, weekly, bi-weekly and monthly timesheet.
+However, current version of this app version support only monthly timesheet.
 
-“One-Activity-Multiple-Fragments” pattern
+Timesheet:
+
+Timesheet entry:
+Time entry involves employees entering the time they start and end work on a task or project on a timesheet. 
+This data is then used in client billing.
 
 ## Resources
 - [calendar](https://github.com/kizitonwose/Calendar)

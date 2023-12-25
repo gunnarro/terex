@@ -58,10 +58,10 @@ public class TestData {
      * @param month from january to december, for example Month.MARCH
      */
     public static List<TimesheetEntry> generateTimesheetEntries(Integer year, Integer month) {
-        return getWorkingDays(year, month).stream().map(TestData::createTimesheet).collect(Collectors.toList());
+        return getWorkingDays(year, month).stream().map(TestData::createTimesheetEntry).collect(Collectors.toList());
     }
 
-    private static TimesheetEntry createTimesheet(LocalDate day) {
+    private static TimesheetEntry createTimesheetEntry(LocalDate day) {
         return TimesheetEntry.createDefault(new java.util.Random().nextLong(), day);
     }
 

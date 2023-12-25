@@ -19,8 +19,7 @@ class HtmlTemplateTest {
 
     @Test
     void htmlTemplate() throws FileNotFoundException {
-        FileReader mustacheTemplateFile = new FileReader("src/test/timesheet-attachment.mustache");
-        String resourceRoot = "";
+        FileReader mustacheTemplateFile = new FileReader("src/test/res/timesheet-attachment.mustache");
         MustacheFactory mf = new DefaultMustacheFactory();
         Mustache m = mf.compile(mustacheTemplateFile,"");
         List<TimesheetSummary> invoiceSummaryList = new ArrayList<>();
@@ -31,6 +30,21 @@ class HtmlTemplateTest {
         StringWriter writer = new StringWriter();
         m.execute(writer, context);
         System.out.println(writer.toString());
+    }
 
+
+    @Test
+    void timesheetHtmlTemplate() throws FileNotFoundException {
+        FileReader mustacheTemplateFile = new FileReader("src/test/res/norway-consulting-timesheet.mustache");
+        MustacheFactory mf = new DefaultMustacheFactory();
+        Mustache m = mf.compile(mustacheTemplateFile,"");
+        List<TimesheetSummary> invoiceSummaryList = new ArrayList<>();
+        Map<String, Object> context = new HashMap<>();
+        context.put("invoiceSummaryList", invoiceSummaryList);
+        context.put("sunBilledHours", "192,5");
+        context.put("sumBilledAmount", "194567,00");
+        StringWriter writer = new StringWriter();
+        m.execute(writer, context);
+        System.out.println(writer.toString());
     }
 }

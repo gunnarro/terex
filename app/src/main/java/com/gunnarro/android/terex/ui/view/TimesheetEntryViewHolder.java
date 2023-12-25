@@ -42,7 +42,7 @@ public class TimesheetEntryViewHolder extends RecyclerView.ViewHolder {
         timesheetEntryLineHeaderView.setText(timesheetEntry.getTimesheetId().toString());
         timesheetEntryLine1StatusView.setText(timesheetEntry.getWorkdayDate().format(DateTimeFormatter.ofPattern("dd", Locale.getDefault())));
         // can have status OPEN or BILLED
-        if (timesheetEntry.isNew()) {
+        if (timesheetEntry.isOpen()) {
             timesheetEntryLine1StatusView.setTextColor(timesheetEntryLine1StatusView.getResources().getColor(R.color.timesheet_status_open, null));
         } else if (timesheetEntry.isBilled()) {
             timesheetEntryLine1StatusView.setTextColor(timesheetEntryLine1StatusView.getResources().getColor(R.color.timesheet_status_billed, null));

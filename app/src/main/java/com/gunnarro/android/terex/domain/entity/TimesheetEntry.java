@@ -44,6 +44,13 @@ import lombok.Setter;
         indices = {@Index(value = {"timesheet_id", "workday_date"}, unique = true)})
 public class TimesheetEntry extends BaseEntity {
 
+    public enum TimesheetEntryTypeEnum {
+        REGULAR, VACATION, HOLIDAY, SICK_LEAVE
+    }
+
+    public enum TimesheetEntryStatusEnum {
+        OPEN, CLOSED
+    }
     @PrimaryKey(autoGenerate = true)
     private Long id;
 
@@ -61,12 +68,20 @@ public class TimesheetEntry extends BaseEntity {
     @ColumnInfo(name = "workday_date")
     private LocalDate workdayDate;
 
+    /**
+     * type of entry, SICK_LEAVE, VACATION, HOLIDAY, REGULAR.
+     * Default to REGULAR, which means a ordinary workday.
+     */
     @NonNull
-    @ColumnInfo(name = "from_time")
+    @ColumnInfo(name = "type", defaultValue = "REGULAR")
+    private String type;
+
+    @NonNull
+    @ColumnInfo(name = "start_time")
     private LocalTime fromTime;
 
     @NonNull
-    @ColumnInfo(name = "to_time")
+    @ColumnInfo(name = "end_time")
     private LocalTime toTime;
 
     @NotNull
@@ -76,6 +91,7 @@ public class TimesheetEntry extends BaseEntity {
     @ColumnInfo(name = "break_in_min")
     private Integer breakInMin;
 
+    // TODO remove rate, should be placed at project level.
     @NotNull
     @ColumnInfo(name = "hourly_rate")
     private Integer hourlyRate;
@@ -221,19 +237,33 @@ public class TimesheetEntry extends BaseEntity {
         this.useAsDefault = useAsDefault;
     }
 
-    public boolean isNew() {
-        return status.equals(Timesheet.TimesheetStatusEnum.NEW.name());
+    @NonNull
+    public String getType() {
+        return type;
+    }
+
+    public void setType(@NonNull String type) {
+        this.type = type;
+    }
+
+    public boolean isRegularWorkDay() {
+        return type.equals(TimesheetEntryTypeEnum.REGULAR.name());
+    }
+
+    public boolean isOpen() {
+        return status.equals(TimesheetEntryStatusEnum.OPEN.name());
     }
 
     public boolean isBilled() {
-        return status.equals(Timesheet.TimesheetStatusEnum.BILLED.name());
+        return status.equals(TimesheetEntryStatusEnum.CLOSED.name());
     }
 
 
     public static TimesheetEntry createDefault(Long timesheetId, LocalDate workDayDate) {
         TimesheetEntry timesheetEntry = new TimesheetEntry();
         timesheetEntry.setTimesheetId(timesheetId);
-        timesheetEntry.setStatus(Timesheet.TimesheetStatusEnum.NEW.name());
+        timesheetEntry.setStatus(TimesheetEntryStatusEnum.OPEN.name());
+        timesheetEntry.setType(TimesheetEntryTypeEnum.REGULAR.name());
         timesheetEntry.setWorkdayDate(workDayDate);
         timesheetEntry.setWorkdayWeek(timesheetEntry.getWorkdayDate().get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()));
         timesheetEntry.setFromTime(LocalTime.now(ZoneId.systemDefault()).withHour(8).withMinute(0).withSecond(0).withSecond(0).withNano(0));
@@ -245,21 +275,22 @@ public class TimesheetEntry extends BaseEntity {
         return timesheetEntry;
     }
 
-    public static TimesheetEntry clone(TimesheetEntry timesheet) {
-        if (timesheet == null) {
+    public static TimesheetEntry clone(TimesheetEntry timesheetEntry) {
+        if (timesheetEntry == null) {
             return null;
         }
         TimesheetEntry clone = new TimesheetEntry();
-        clone.setTimesheetId(timesheet.getTimesheetId());
-        clone.setBreakInMin(timesheet.getBreakInMin());
-        clone.setWorkedMinutes(timesheet.getWorkedMinutes());
-        clone.setStatus(timesheet.getStatus());
-        clone.setHourlyRate(timesheet.getHourlyRate());
-        clone.setWorkdayWeek(timesheet.getWorkdayWeek());
-        clone.setBreakInMin(timesheet.getBreakInMin());
-        clone.setFromTime(timesheet.getFromTime());
-        clone.setToTime(timesheet.getToTime());
-        clone.setComment(timesheet.getComment());
+        clone.setTimesheetId(timesheetEntry.getTimesheetId());
+        clone.setBreakInMin(timesheetEntry.getBreakInMin());
+        clone.setWorkedMinutes(timesheetEntry.getWorkedMinutes());
+        clone.setStatus(timesheetEntry.getStatus());
+        clone.setType(timesheetEntry.getType());
+        clone.setHourlyRate(timesheetEntry.getHourlyRate());
+        clone.setWorkdayWeek(timesheetEntry.getWorkdayWeek());
+        clone.setBreakInMin(timesheetEntry.getBreakInMin());
+        clone.setFromTime(timesheetEntry.getFromTime());
+        clone.setToTime(timesheetEntry.getToTime());
+        clone.setComment(timesheetEntry.getComment());
         return clone;
     }
 
@@ -291,9 +322,10 @@ public class TimesheetEntry extends BaseEntity {
         sb.append(", workedMinutes=").append(workedMinutes);
         sb.append(", breakInMin=").append(breakInMin);
         sb.append(", hourlyRate=").append(hourlyRate);
-        sb.append(", status='").append(status).append('\'');
-        sb.append(", comment='").append(comment).append('\'');
-        sb.append(", useAsDefault='").append(useAsDefault).append('\'');
+        sb.append(", status='").append(status);
+        sb.append(", type=").append(type);
+        sb.append(", comment='").append(comment);
+        sb.append(", useAsDefault='").append(useAsDefault);
         sb.append('}');
         return sb.toString();
     }

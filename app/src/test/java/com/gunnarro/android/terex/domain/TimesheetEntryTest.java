@@ -1,11 +1,11 @@
 package com.gunnarro.android.terex.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 
 import org.junit.jupiter.api.Test;
@@ -23,7 +23,7 @@ class TimesheetEntryTest {
         timesheetEntry1.setLastModifiedDate(LocalDateTime.now());
         timesheetEntry1.setWorkdayDate(LocalDate.now());
         timesheetEntry1.setHourlyRate(1075);
-        timesheetEntry1.setStatus(Timesheet.TimesheetStatusEnum.NEW.name());
+        timesheetEntry1.setStatus(TimesheetEntry.TimesheetEntryStatusEnum.OPEN.name());
         timesheetEntry1.setBreakInMin(30);
         timesheetEntry1.setWorkdayDate(LocalDate.of(2023, 9, 9));
 
@@ -36,10 +36,18 @@ class TimesheetEntryTest {
     }
 
     @Test
+    void type() {
+        TimesheetEntry timeSheetEntry = TimesheetEntry.createDefault(23L, LocalDate.of(2023, 12, 2));
+        assertTrue(timeSheetEntry.isRegularWorkDay());
+        timeSheetEntry.setType(TimesheetEntry.TimesheetEntryTypeEnum.HOLIDAY.name());
+        assertFalse(timeSheetEntry.isRegularWorkDay());
+    }
+
+    @Test
     void status() {
         TimesheetEntry timeSheetEntry = TimesheetEntry.createDefault(23L, LocalDate.of(2023, 12, 2));
-        assertTrue(timeSheetEntry.isNew());
-        timeSheetEntry.setStatus(Timesheet.TimesheetStatusEnum.BILLED.name());
+        assertTrue(timeSheetEntry.isOpen());
+        timeSheetEntry.setStatus(TimesheetEntry.TimesheetEntryStatusEnum.CLOSED.name());
         assertTrue(timeSheetEntry.isBilled());
     }
 

@@ -169,13 +169,13 @@ public class TimesheetService {
         try {
             TimesheetEntry timesheetEntryExisting = timesheetRepository.getTimesheetEntry(timesheetEntry.getTimesheetId(), timesheetEntry.getWorkdayDate());
 
-            if (timesheetEntryExisting != null && timesheetEntry.isNew()) {
-                throw new InputValidationException(String.format("timesheet entry already exist, workday date=%s, status=%s", timesheetEntryExisting.getWorkdayDate(), timesheetEntryExisting.getStatus()), "40040", null);
-
-            }
             // first of all, check status
             if (timesheetEntryExisting != null && timesheetEntryExisting.isBilled()) {
                 throw new InputValidationException(String.format("timesheet entry have status billed, no changes is allowed. workday date=%s, status=%s", timesheetEntryExisting.getWorkdayDate(), timesheetEntryExisting.getStatus()), "40040", null);
+            }
+
+            if (timesheetEntryExisting != null) {
+                throw new InputValidationException(String.format("timesheet entry already exist, workday date=%s, status=%s", timesheetEntryExisting.getWorkdayDate(), timesheetEntryExisting.getStatus()), "40040", null);
             }
 
             // validate work date, must be between the to and from date range of the timesheet
@@ -240,6 +240,17 @@ public class TimesheetService {
 
     public List<TimesheetEntry> getTimesheetEntryList(Long timesheetId) {
         return timesheetRepository.getTimesheetEntryList(timesheetId);
+    }
+
+    /**
+     * This service return timesheet entries where holidays and free days are added, if missing.
+     * This so the timesheet contains an entry for all days in the month.
+     * Added entries will not have any impact the timesheet calculated fields.
+     */
+    public List<TimesheetEntry> getTimesheetEntryListReadyForBilling(Long timesheetId) {
+        List<TimesheetEntry> timesheetEntryList = timesheetRepository.getTimesheetEntryList(timesheetId);
+         populateTimesheetList(timesheetId,timesheetEntryList);
+         return timesheetEntryList;
     }
 
     // ----------------------------------------
@@ -346,15 +357,15 @@ public class TimesheetService {
     }
 
 
-    public String createTimesheetListHtml(@NotNull Context applicationContext, @NotNull List<TimesheetEntry> timesheetList, String sumBilledHours) {
+    public String createTimesheetListHtml(@NotNull Context applicationContext, @NotNull List<TimesheetEntry> timesheetEntryList, String sumBilledHours) {
         MustacheFactory mf = new DefaultMustacheFactory();
         Mustache mustache = mf.compile(new StringReader(loadMustacheTemplate(applicationContext, InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET)), "");
         Map<String, Object> context = new HashMap<>();
         context.put("title", "Timeliste for konsulentbistand");
         // FIXME get date from timesheet
-        context.put("timesheetPeriod", timesheetList.get(0).getWorkdayDate().format(DateTimeFormatter.ofPattern("yyyy/MM")));
-        context.put("timesheetList", timesheetList);
-        context.put("totalWorkDays", timesheetList.size());
+        context.put("timesheetPeriod", timesheetEntryList.get(0).getWorkdayDate().format(DateTimeFormatter.ofPattern("yyyy/MM")));
+        context.put("timesheetEntryList", timesheetEntryList);
+        context.put("totalWorkDays", timesheetEntryList.size());
         context.put("sunBilledHours", sumBilledHours);
         context.put("generatedDate", LocalDate.now().format(DateTimeFormatter.ISO_DATE));
         StringWriter writer = new StringWriter();
@@ -377,6 +388,30 @@ public class TimesheetService {
             timesheetSummary.setTotalWorkedHours(timesheetSummary.getTotalWorkedHours() + (double) t.getWorkedMinutes() / 60);
         });
         return timesheetSummary;
+    }
+
+
+    private void populateTimesheetList(Long timesheetId, List<TimesheetEntry> timesheetEntryList) {
+        Timesheet timesheet = getTimesheet(timesheetId);
+        // interpolate missing days in the month.
+        for (LocalDate date = timesheet.getFromDate(); date.isBefore(timesheet.getToDate()); date = date.plusDays(1)) {
+            boolean isInList = false;
+            for (TimesheetEntry e : timesheetEntryList) {
+                if (e.getWorkdayDate().equals(date)) {
+                    isInList = true;
+                    break;
+                }
+            }
+            if (!isInList) {
+                TimesheetEntry timesheetEntry = new TimesheetEntry();
+                timesheetEntry.setTimesheetId(timesheetId);
+                timesheetEntry.setStatus(TimesheetEntry.TimesheetEntryStatusEnum.CLOSED.name());
+                timesheetEntry.setWorkdayDate(date);
+                timesheetEntry.setWorkedMinutes(0);
+                timesheetEntryList.add(timesheetEntry);
+            }
+        }
+        timesheetEntryList.sort(Comparator.comparing(TimesheetEntry::getWorkdayDate));
     }
 
     private TimesheetSummary buildTimesheetSummaryForMonth(@NotNull Long timesheetId, @NotNull List<TimesheetEntry> timesheetEntryList) {

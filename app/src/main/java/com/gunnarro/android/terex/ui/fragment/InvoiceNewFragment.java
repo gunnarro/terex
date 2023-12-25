@@ -155,8 +155,7 @@ public class InvoiceNewFragment extends BaseFragment {
      */
     private double createClientTimesheetAttachment(Long invoiceId, Long timesheetId) {
         try {
-            List<TimesheetEntry> timesheetEntryList = timesheetService.getTimesheetEntryList(timesheetId);
-            populateTimesheetList(timesheetId, timesheetEntryList);
+            List<TimesheetEntry> timesheetEntryList = timesheetService.getTimesheetEntryListReadyForBilling(timesheetId);
             double sumBilledHours = timesheetEntryList.stream().mapToDouble(TimesheetEntry::getWorkedMinutes).sum() / 60;
 
             String timesheetAttachmentHtml = timesheetService.createTimesheetListHtml(requireContext(), timesheetEntryList, Double.toString(sumBilledHours));
@@ -172,29 +171,6 @@ public class InvoiceNewFragment extends BaseFragment {
         } catch (Exception e) {
             throw new TerexApplicationException(String.format("Error crating timesheet attachment, timesheetId=%s", timesheetId), "50023", e);
         }
-    }
-
-    private void populateTimesheetList(Long timesheetId, List<TimesheetEntry> timesheetEntryList) {
-        Timesheet timesheet = timesheetService.getTimesheet(timesheetId);
-        // interpolate missing days in the month.
-        TimesheetEntry timesheetEntry = new TimesheetEntry();
-        timesheetEntry.setTimesheetId(2L);
-        for (LocalDate date = timesheet.getFromDate(); date.isBefore(timesheet.getToDate()); date = date.plusDays(1)) {
-            boolean isInList = false;
-            for (TimesheetEntry e : timesheetEntryList) {
-                if (e.getWorkdayDate().equals(date)) {
-                    isInList = true;
-                    break;
-                }
-            }
-            if (!isInList) {
-                TimesheetEntry timesheetEntry1 = new TimesheetEntry();
-                timesheetEntry1.setWorkdayDate(date);
-                timesheetEntry1.setWorkedMinutes(0);
-                timesheetEntryList.add(timesheetEntry1);
-            }
-        }
-        timesheetEntryList.sort(Comparator.comparing(TimesheetEntry::getWorkdayDate));
     }
 
     private void sendInvoiceToClient(String toEmailAddress, String subject, String message, File pdfFile) {

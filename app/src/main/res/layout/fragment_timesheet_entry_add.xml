@@ -125,6 +125,18 @@
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
+        <!--  entry type -->
+        <LinearLayout
+            android:id="@+id/timesheet_entry_type_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/timesheet_entry_spinner_layout"
+            android:layout_margin="10dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
+
+        </LinearLayout>
         <!-- workday year, month day -->
         <LinearLayout
             android:id="@+id/timesheet_entry_work_date_layout"

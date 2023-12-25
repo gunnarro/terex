@@ -200,6 +200,10 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
         AutoCompleteTextView statusSpinner = view.findViewById(R.id.timesheet_entry_status_spinner);
         statusSpinner.setText(timesheetEntry.getStatus());
 
+        // TODO implement me
+       // AutoCompleteTextView typeSpinner = view.findViewById(R.id.timesheet_entry_type_spinner);
+       // typeSpinner.setText(timesheetEntry.getType());
+
         EditText hourlyRateView = view.findViewById(R.id.timesheet_entry_hourly_rate);
         hourlyRateView.setText(String.format("%s", timesheetEntry.getHourlyRate()));
 
@@ -300,6 +304,10 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
 
         AutoCompleteTextView statusSpinner = requireView().findViewById(R.id.timesheet_entry_status_spinner);
         timesheetEntry.setStatus(statusSpinner.getText().toString());
+
+        // TODO implement me
+        //AutoCompleteTextView typeSpinner = requireView().findViewById(R.id.timesheet_entry_type_spinner);
+        timesheetEntry.setType(TimesheetEntry.TimesheetEntryTypeEnum.REGULAR.name());
 
         TextView hourlyRateView = requireView().findViewById(R.id.timesheet_entry_hourly_rate);
         timesheetEntry.setHourlyRate(Integer.parseInt(hourlyRateView.getText().toString()));
