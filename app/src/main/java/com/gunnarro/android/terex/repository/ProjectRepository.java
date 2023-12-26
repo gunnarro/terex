@@ -59,8 +59,9 @@ public class ProjectRepository {
             Future<List<Project>> future = service.take();
             return future != null ? future.get() : null;
         } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-            return null;
+            // Something crashed, therefore restore interrupted state before leaving.
+            Thread.currentThread().interrupt();
+            throw new TerexApplicationException("error getting projects!", "50050", e);
         }
     }
 
@@ -72,8 +73,9 @@ public class ProjectRepository {
             Future<Project> future = service.take();
             return future != null ? future.get() : null;
         } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-            return null;
+            // Something crashed, therefore restore interrupted state before leaving.
+            Thread.currentThread().interrupt();
+            throw new TerexApplicationException("error getting project!", "50050", e);
         }
     }
 
@@ -84,8 +86,9 @@ public class ProjectRepository {
             Future<Project> future = service.take();
             return future != null ? future.get() : null;
         } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-            return null;
+            // Something crashed, therefore restore interrupted state before leaving.
+            Thread.currentThread().interrupt();
+            throw new TerexApplicationException("error find project!", "50050", e);
         }
     }
 
@@ -114,7 +117,6 @@ public class ProjectRepository {
         } catch (Exception e) {
             // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();
-            e.printStackTrace();
             throw new TerexApplicationException("Error saving invoice!", e.getMessage(), e.getCause());
         }
     }

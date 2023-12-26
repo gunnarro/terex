@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 
 import com.gunnarro.android.terex.R;
+import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.service.InvoiceService;
 import com.gunnarro.android.terex.utility.Utility;
 
@@ -48,21 +49,11 @@ public class AdminFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_admin, container, false);
-        /**
-         view.findViewById(R.id.btn_admin_generate_timesheet).setOnClickListener(v -> {
-         try {
-         //generateTimesheet();
-         createTimesheetAttachment(1L);
-         } catch (Exception e) {
-         e.printStackTrace();
-         }
-         });
-         */
         view.findViewById(R.id.btn_create_invoice_attachment).setOnClickListener(v -> {
             try {
-
+                //
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new TerexApplicationException("application error!", "50050", e);
             }
         });
 
@@ -70,7 +61,7 @@ public class AdminFragment extends Fragment {
             try {
                 File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new TerexApplicationException("application error!", "50050", e);
             }
         });
 

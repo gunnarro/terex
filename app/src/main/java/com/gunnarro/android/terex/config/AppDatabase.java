@@ -51,18 +51,16 @@ public abstract class AppDatabase extends RoomDatabase {
      * If it is acceptable to lose existing data when a migration path is missing, call the fallbackToDestructiveMigration()
      */
     public static AppDatabase getDatabase(final Context context) {
-        if (INSTANCE == null) {
-            // Allow only single thread access to the database
-            synchronized (AppDatabase.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(
-                            context.getApplicationContext(),
-                                    AppDatabase.class, "terex_database")
-                            .fallbackToDestructiveMigration()
-                            //.createFromAsset("database/terex_database_data.sqlite")
-                           // .addCallback(roomCallback)
-                            .build();
-                }
+        // Allow only single thread access to the database
+        synchronized (AppDatabase.class) {
+            if (INSTANCE == null) {
+                INSTANCE = Room.databaseBuilder(
+                                context.getApplicationContext(),
+                                AppDatabase.class, "terex_database")
+                        .fallbackToDestructiveMigration()
+                        //.createFromAsset("database/terex_database_data.sqlite")
+                        // .addCallback(roomCallback)
+                        .build();
             }
         }
         return INSTANCE;
@@ -113,7 +111,7 @@ public abstract class AppDatabase extends RoomDatabase {
             timesheet.setWorkdayDate(work.getWorkdayDate());
             timesheet.setFromTime(work.getFromTime());
             timesheet.setToTime(work.getToTime());
-         //   INSTANCE.timesheetEntryDao().insert(timesheet);
+            //   INSTANCE.timesheetEntryDao().insert(timesheet);
         }
     };
 

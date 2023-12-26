@@ -204,7 +204,6 @@ public class TimesheetService {
         } catch (InterruptedException | ExecutionException e) {
             // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();
-            e.printStackTrace();
             throw new TerexApplicationException("Error saving timesheet entry!", e.getMessage(), e.getCause());
         }
     }

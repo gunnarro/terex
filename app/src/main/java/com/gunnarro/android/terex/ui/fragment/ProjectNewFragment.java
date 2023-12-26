@@ -10,7 +10,6 @@ import android.widget.AutoCompleteTextView;
 
 import androidx.fragment.app.Fragment;
 
-import com.google.android.material.navigation.NavigationView;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.Project;
 import com.gunnarro.android.terex.domain.entity.SpinnerItem;
@@ -67,16 +66,14 @@ public class ProjectNewFragment extends Fragment {
                    // Invoice invoice = createInvoice(item.id());
                 }
             } catch (TerexApplicationException e) {
-                //showInfoDialog("Error creating project!", requireContext());
+                // Something crashed, therefore restore interrupted state before leaving.
+                Thread.currentThread().interrupt();
+                throw e;
             }
         });
 
         view.findViewById(R.id.btn_project_new_delete).setOnClickListener(v -> {
-            try {
 
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         });
 
         view.findViewById(R.id.btn_project_new_cancel).setOnClickListener(v -> {

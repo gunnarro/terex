@@ -15,6 +15,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.gunnarro.android.terex.R;
+import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.utility.Utility;
 
 import java.io.File;
@@ -51,8 +52,8 @@ public class MainActivity extends AppCompatActivity {
         try {
             setContentView(R.layout.activity_main);
         } catch (Exception e) {
-            e.printStackTrace();
             Log.e(Utility.buildTag(getClass(), "onCreate"), "Failed starting! " + e.getMessage());
+            throw new TerexApplicationException("Application error!", "50000", e);
         }
 
 

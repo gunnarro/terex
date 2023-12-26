@@ -103,7 +103,6 @@ public class TimesheetRepository {
         } catch (InterruptedException | ExecutionException e) {
             // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();
-            e.printStackTrace();
             throw new TerexApplicationException("Error getting timesheet!", e.getMessage(), e.getCause());
         }
     }
@@ -118,7 +117,6 @@ public class TimesheetRepository {
         } catch (InterruptedException | ExecutionException e) {
             // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();
-            e.printStackTrace();
             throw new TerexApplicationException("Error getting timesheet!", e.getMessage(), e.getCause());
         }
     }
@@ -145,7 +143,6 @@ public class TimesheetRepository {
         } catch (InterruptedException | ExecutionException e) {
             // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();
-            e.printStackTrace();
             throw new TerexApplicationException("Error getting timesheet list", e.getMessage(), e.getCause());
         }
     }
@@ -159,7 +156,6 @@ public class TimesheetRepository {
         } catch (InterruptedException | ExecutionException e) {
             // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();
-            e.printStackTrace();
             throw new TerexApplicationException("Error getting timesheet entry list", e.getMessage(), e.getCause());
         }
     }
@@ -195,7 +191,6 @@ public class TimesheetRepository {
         } catch (InterruptedException | ExecutionException e) {
             // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();
-            e.printStackTrace();
             throw new TerexApplicationException("Error getting timesheet entry list", e.getMessage(), e.getCause());
         }
     }
