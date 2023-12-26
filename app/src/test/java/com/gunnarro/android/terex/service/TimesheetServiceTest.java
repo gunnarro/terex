@@ -18,7 +18,6 @@ import com.gunnarro.android.terex.domain.dto.TimesheetEntryDto;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
-import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
 import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.repository.TimesheetRepository;
@@ -359,8 +358,6 @@ class TimesheetServiceTest {
         saveToFile("src/test/" + InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.getFileName() + ".html", templateHtml);
     }
 
-    // FIXME
-    @Disabled
     @Test
     void createTimesheetSummaryHtml() throws IOException {
         File mustacheTemplateFile = new File("src/main/assets/" + InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getTemplate());
@@ -371,6 +368,7 @@ class TimesheetServiceTest {
         List<TimesheetSummary> timesheetSummaryList = TestData.buildTimesheetSummaryByWeek(2023, 1);
         String templateHtml = timesheetService.createTimesheetSummaryHtml(applicationContextMock, timesheetSummaryList, "150", "50.000", "55.000", "25");
         Assertions.assertNotNull(templateHtml);
+        saveToFile("src/test/" + InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getFileName() + ".html", templateHtml);
     }
 
     //FIXME

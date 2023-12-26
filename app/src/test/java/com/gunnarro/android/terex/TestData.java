@@ -41,6 +41,8 @@ public class TestData {
             TimesheetSummary timesheetSummary = new TimesheetSummary();
             timesheetSummary.setCreatedDate(LocalDateTime.now());
             timesheetSummary.setLastModifiedDate(LocalDateTime.now());
+            timesheetSummary.setFromDate(e.get(0).getWorkdayDate());
+            timesheetSummary.setToDate(e.get(e.size()-1).getWorkdayDate());
             timesheetSummary.setWeekInYear(k);
             timesheetSummary.setCurrency("NOK");
             timesheetSummary.setTotalWorkedDays(e.size());

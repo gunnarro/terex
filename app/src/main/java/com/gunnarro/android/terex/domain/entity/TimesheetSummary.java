@@ -97,24 +97,12 @@ public class TimesheetSummary extends BaseEntity {
         return fromDate;
     }
 
-    public String getFromDateDDMM() {
-        return fromDate.format(DateTimeFormatter.ofPattern("dd.MM"));
-    }
-
-    public String getFromDateMM() {
-        return fromDate.format(DateTimeFormatter.ofPattern("MM"));
-    }
-
     public void setFromDate(LocalDate fromDate) {
         this.fromDate = fromDate;
     }
 
     public LocalDate getToDate() {
         return toDate;
-    }
-
-    public String getToDateDDMM() {
-        return toDate.format(DateTimeFormatter.ofPattern("dd.MM"));
     }
 
     public void setToDate(LocalDate toDate) {
@@ -167,6 +155,19 @@ public class TimesheetSummary extends BaseEntity {
 
     public void setCurrency(String currency) {
         this.currency = currency;
+    }
+
+    // helper methods
+    public String getFromDateMM() {
+        return fromDate.format(DateTimeFormatter.ofPattern("MM"));
+    }
+
+    public String getFromDateDDMM() {
+        return fromDate.format(DateTimeFormatter.ofPattern("dd.MM"));
+    }
+
+    public String getToDateDDMM() {
+        return toDate.format(DateTimeFormatter.ofPattern("dd.MM"));
     }
 
     @Override
