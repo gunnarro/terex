@@ -23,7 +23,6 @@ import java.util.Objects;
         unique = true)})
 public class TimesheetSummary extends BaseEntity {
 
-    @NotNull
     @PrimaryKey(autoGenerate = true)
     private Long id;
     /**

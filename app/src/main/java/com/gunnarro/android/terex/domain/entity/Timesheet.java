@@ -52,7 +52,6 @@ public class Timesheet extends BaseEntity {
         }
     }
 
-    @NotNull
     @PrimaryKey(autoGenerate = true)
     private Long id;
 
