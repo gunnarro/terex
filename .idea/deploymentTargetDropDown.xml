@@ -2,7 +2,16 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="TimesheetServiceTest">
+        <State />
+      </entry>
       <entry key="app">
+        <State />
+      </entry>
+      <entry key="newTimesheet()">
+        <State />
+      </entry>
+      <entry key="newTimesheet_already_exist()">
         <State />
       </entry>
     </value>
