@@ -68,8 +68,9 @@ public class InvoiceRepository {
             Future<Invoice> future = service.take();
             return future != null ? future.get() : null;
         } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-            return null;
+            // Something crashed, therefore restore interrupted state before leaving.
+            Thread.currentThread().interrupt();
+            throw new TerexApplicationException("Error get invoice", e.getMessage(), e.getCause());
         }
     }
 
@@ -80,8 +81,9 @@ public class InvoiceRepository {
             Future<Invoice> future = service.take();
             return future != null ? future.get() : null;
         } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-            return null;
+            // Something crashed, therefore restore interrupted state before leaving.
+            Thread.currentThread().interrupt();
+            throw new TerexApplicationException("Error find invoice", e.getMessage(), e.getCause());
         }
     }
 
@@ -113,7 +115,6 @@ public class InvoiceRepository {
         } catch (Exception e) {
             // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();
-            e.printStackTrace();
             throw new TerexApplicationException("Error saving invoice!", e.getMessage(), e.getCause());
         }
     }
@@ -148,8 +149,9 @@ public class InvoiceRepository {
             Future<InvoiceAttachment> future = service.take();
             return future != null ? future.get() : null;
         } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-            return null;
+            // Something crashed, therefore restore interrupted state before leaving.
+            Thread.currentThread().interrupt();
+            throw new TerexApplicationException("Error get invoice attachment", e.getMessage(), e.getCause());
         }
     }
 
@@ -160,8 +162,9 @@ public class InvoiceRepository {
             Future<InvoiceAttachment> future = service.take();
             return future != null ? future.get() : null;
         } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-            return null;
+            // Something crashed, therefore restore interrupted state before leaving.
+            Thread.currentThread().interrupt();
+            throw new TerexApplicationException("Error find invoice attachment", e.getMessage(), e.getCause());
         }
     }
 
@@ -186,7 +189,6 @@ public class InvoiceRepository {
         } catch (Exception e) {
             // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();
-            e.printStackTrace();
             throw new TerexApplicationException("Error saving invoice!", e.getMessage(), e.getCause());
         }
     }
