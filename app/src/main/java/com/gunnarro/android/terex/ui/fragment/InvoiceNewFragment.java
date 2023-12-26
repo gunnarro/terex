@@ -112,13 +112,9 @@ public class InvoiceNewFragment extends BaseFragment {
             showInfoDialog("Info", "No timesheet found! timesheetId=" + timesheetId);
         }
         Invoice invoice = invoiceService.getInvoice(invoiceId);
-        double sumBilledHours = createTimesheetSummaryAttachment(invoice.getId());
-        double sumWorkedHours = createClientTimesheetAttachment(invoice.getId(), invoice.getTimesheetId());
-        if (sumBilledHours == sumWorkedHours) {
-            showInfoDialog("Info", "Successfully generated invoice attachment.");
-        } else {
-            showInfoDialog("Error", String.format("Fond mismatch between billed and worked hours! Attachment must be regenerated. %s, %s", sumBilledHours, sumWorkedHours));
-        }
+        createTimesheetSummaryAttachment(invoice.getId());
+        createClientTimesheetAttachment(invoice.getId(), invoice.getTimesheetId());
+        showInfoDialog("Info", "Successfully generated invoice attachment. invoiceId=" + invoiceId);
         return invoiceId;
     }
 
@@ -149,11 +145,9 @@ public class InvoiceNewFragment extends BaseFragment {
      * The timesheet should contain an entry for all days in the month.
      * Days not worked, sick, or vacation are simple blank.
      */
-    private double createClientTimesheetAttachment(Long invoiceId, Long timesheetId) {
+    private void createClientTimesheetAttachment(Long invoiceId, Long timesheetId) {
         try {
-            List<TimesheetEntryDto> timesheetEntryDtoList = timesheetService.getTimesheetEntryDtoListReadyForBilling(timesheetId);
-            double sumBilledHours = timesheetEntryDtoList.stream().mapToDouble(TimesheetEntryDto::getWorkedMinutes).sum() / 60;
-            String timesheetAttachmentHtml = timesheetService.createTimesheetListHtml(requireContext(), timesheetEntryDtoList);
+            String timesheetAttachmentHtml = timesheetService.createTimesheetListHtml(timesheetId, requireContext());
             String timesheetAttachmentFileName = InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.name().toLowerCase() + "_attachment_" + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
             InvoiceAttachment clientTimesheetAttachment = new InvoiceAttachment();
             clientTimesheetAttachment.setInvoiceId(invoiceId);
@@ -162,7 +156,6 @@ public class InvoiceNewFragment extends BaseFragment {
             clientTimesheetAttachment.setAttachmentFileType("html");
             clientTimesheetAttachment.setAttachmentFileContent(timesheetAttachmentHtml.getBytes(StandardCharsets.UTF_8));
             invoiceService.saveInvoiceAttachment(clientTimesheetAttachment);
-            return sumBilledHours;
         } catch (Exception e) {
             throw new TerexApplicationException(String.format("Error crating timesheet attachment, timesheetId=%s", timesheetId), "50023", e);
         }

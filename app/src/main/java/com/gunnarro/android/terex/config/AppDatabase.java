@@ -48,6 +48,8 @@ public abstract class AppDatabase extends RoomDatabase {
     public static final ExecutorService databaseExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
     /**
+     * This method must be synchronized because all services will try to get an da instance during application startup,
+     * and DB config must only be initialized once.
      * If it is acceptable to lose existing data when a migration path is missing, call the fallbackToDestructiveMigration()
      */
     public static AppDatabase getDatabase(final Context context) {

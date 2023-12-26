@@ -9,13 +9,10 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.gunnarro.android.terex.R;
-import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
 import com.gunnarro.android.terex.service.TimesheetService;
 import com.gunnarro.android.terex.utility.Utility;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -56,13 +53,7 @@ public class TimesheetSummaryFragment extends BaseFragment {
     }
 
     private void buildTimesheetSummary(Long timesheetId) {
-        List<TimesheetSummary> timesheetSummaryList = timesheetService.createTimesheetSummary(timesheetId, "WEEK");
-        double sumBilledAmount = timesheetSummaryList.stream().mapToDouble(TimesheetSummary::getTotalBilledAmount).sum();
-        double sumBilledHours = timesheetSummaryList.stream().mapToDouble(TimesheetSummary::getTotalWorkedHours).sum();
-        double totalVat = sumBilledAmount * 0.25;
-        double totalBilledAmountWithVat = sumBilledAmount + totalVat;
-        String timesheetSummaryHtml = timesheetService.createTimesheetSummaryHtml(requireContext(), timesheetSummaryList, Double.toString(sumBilledHours), Double.toString(sumBilledAmount), Double.toString(totalBilledAmountWithVat), Double.toString(totalVat));
-
+        String timesheetSummaryHtml = timesheetService.createTimesheetSummaryHtml(timesheetId, requireContext());
         WebView webView;
         try {
             webView = requireView().findViewById(R.id.timesheet_summary_web_view);

@@ -339,29 +339,37 @@ public class TimesheetService {
     }
 
 
-    public String createTimesheetSummaryHtml(Context applicationContext, List<TimesheetSummary> timesheetSummaryList, String totalBilledHours, String totalBilledAmount, String totalBilledAmountWithVat, String totalVat) {
+    public String createTimesheetSummaryHtml(Long timesheetId, Context applicationContext) {
+        List<TimesheetSummary> timesheetSummaryList = createTimesheetSummary(timesheetId, "WEEK");
+        double totalBilledAmount = timesheetSummaryList.stream().mapToDouble(TimesheetSummary::getTotalBilledAmount).sum();
+        double totalBilledHours = timesheetSummaryList.stream().mapToDouble(TimesheetSummary::getTotalWorkedHours).sum();
+        double vat = 25;
+        double totalVat = totalBilledAmount * (vat/100);
+        double totalBilledAmountWithVat = totalBilledAmount + totalVat;
         MustacheFactory mf = new DefaultMustacheFactory();
         Mustache mustache = mf.compile(new StringReader(loadMustacheTemplate(applicationContext, InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY_2)), "");
         Map<String, Object> context = new HashMap<>();
-        context.put("invoiceAttachmentTitle", "Timesheet Summary");
+        context.put("invoiceAttachmentTitle", "Vedlegg til faktura");
         context.put("invoiceBillingPeriod", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM")));
+        context.put("timesheetPeriod", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM")));
         context.put("company", TimesheetService.getCompany(null));
         context.put("client", TimesheetService.getClient(null));
         context.put("timesheetProjectCode", "techlead-catalystone-solution-as");
         context.put("timesheetSummaryList", timesheetSummaryList);
         context.put("totalBilledHours", totalBilledHours);
         context.put("totalBilledAmount", totalBilledAmount);
-        context.put("vatInPercent", "25%");
+        context.put("vatInPercent",  vat + "%");
         context.put("totalVat", totalVat);
         context.put("totalBilledAmountWithVat", totalBilledAmountWithVat);
-        context.put("generatedDate", LocalDateTime.now().format(DateTimeFormatter.ISO_DATE));
+        context.put("generatedDate", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss:SSS")));
         StringWriter writer = new StringWriter();
         mustache.execute(writer, context);
         return writer.toString();
     }
 
 
-    public String createTimesheetListHtml(@NotNull Context applicationContext, @NotNull List<TimesheetEntryDto> timesheetEntryDtoList) {
+    public String createTimesheetListHtml(@NotNull Long timesheetId, @NotNull Context applicationContext) {
+        List<TimesheetEntryDto> timesheetEntryDtoList = getTimesheetEntryDtoListReadyForBilling(timesheetId);
         Double sumBilledHours = timesheetEntryDtoList.stream().mapToDouble(TimesheetEntryDto::getWorkedMinutes).sum() / 60;
         Integer numberOfWorkedDays = timesheetEntryDtoList.stream().filter(e -> e.getWorkedMinutes() != null && e.getWorkedMinutes() > 0).collect(Collectors.toList()).size();
         MustacheFactory mf = new DefaultMustacheFactory();

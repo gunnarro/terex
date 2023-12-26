@@ -33,7 +33,7 @@
     </div>
     <div class="row mt-3">
         <div class="col-md">
-            <h3>{{invoiceAttachmentTitle}} {invoiceBillingPeriod}}</h3>
+            <h3>{{invoiceAttachmentTitle}} {{invoiceBillingPeriod}}</h3>
         </div>
     </div>
     <!-- information -->
@@ -83,6 +83,7 @@
                 <div class="panel-body">
                     <div class="table-responsive">
                         <table class="table table-condensed">
+                            <caption></cation>
                             <thead>
                             <tr>
                                 <th class="text-center">År</th>
@@ -137,9 +138,14 @@
     </div>
     <!-- footer -->
     <div class="row">
-            <div class="col-md fs-6 text-muted">
-                <p class="float-start">&copy; 2023 powered by <a class="text-reset" href="https://github.com/gunnarro/terex">TeRex</a></p>
+        <div class="col-md">
+            <div class="fs-6 text-muted">
+                <p class="float-end">&copy; 2023 powered by <a class="text-reset" href="https://github.com/gunnarro/terex">TeRex</a></p>
             </div>
+            <div class="fs-6 text-muted">
+                <span>generated {{generatedDate}}</span>
+            </div>
+        </div>
     </div>
 </div>
 </body>

@@ -187,3 +187,5 @@ Iapp/src/main/java/com/gunnarro/android/terex/domain/dto/TimesheetDto.java,c/3/
 Sapp/src/test/java/com/gunnarro/android/terex/domain/mapper/TimesheetMapperTest.java,b/6/b6f8eca402db2dd97c5eb4171b52e530bb9fe649
 ~
 Napp/src/main/java/com/gunnarro/android/terex/repository/ProjectRepository.java,c/d/cd2c658b4e9e6057b8eda5abdf75ef41b74e800e
+^
+.app/src/test/invoice-timesheet-attachment.html,c/2/c2b221a5ce38d07a2d859f28a3e342f8bbd7d997
