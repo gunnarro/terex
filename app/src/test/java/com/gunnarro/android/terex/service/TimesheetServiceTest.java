@@ -14,9 +14,11 @@ import android.content.Context;
 import android.content.res.AssetManager;
 
 import com.gunnarro.android.terex.TestData;
+import com.gunnarro.android.terex.domain.dto.TimesheetEntryDto;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
+import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
 import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.repository.TimesheetRepository;
@@ -350,11 +352,11 @@ class TimesheetServiceTest {
         when(timesheetRepositoryMock.getTimesheet(anyLong())).thenReturn(timesheet);
         when(timesheetRepositoryMock.getTimesheetEntryList(anyLong())).thenReturn(timesheetEntryList);
 
-        List<TimesheetEntry> timesheetEntryListReadyForBilling = timesheetService.getTimesheetEntryListReadyForBilling(23L);
-        String templateHtml = timesheetService.createTimesheetListHtml(applicationContextMock, timesheetEntryListReadyForBilling);
+        List<TimesheetEntryDto> timesheetEntryDtoListReadyForBilling = timesheetService.getTimesheetEntryDtoListReadyForBilling(23L);
+        String templateHtml = timesheetService.createTimesheetListHtml(applicationContextMock, timesheetEntryDtoListReadyForBilling);
         Assertions.assertNotNull(templateHtml);
         System.out.println(templateHtml);
-      //  saveToFile("src/test/" + InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.getFileName() + ".html", templateHtml);
+        saveToFile("src/test/" + InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.getFileName() + ".html", templateHtml);
     }
 
     // FIXME

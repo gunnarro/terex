@@ -10,11 +10,11 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
 import com.gunnarro.android.terex.R;
+import com.gunnarro.android.terex.domain.dto.TimesheetEntryDto;
 import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.InvoiceAttachment;
 import com.gunnarro.android.terex.domain.entity.SpinnerItem;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
-import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.service.InvoiceService;
@@ -27,7 +27,6 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -152,9 +151,9 @@ public class InvoiceNewFragment extends BaseFragment {
      */
     private double createClientTimesheetAttachment(Long invoiceId, Long timesheetId) {
         try {
-            List<TimesheetEntry> timesheetEntryList = timesheetService.getTimesheetEntryListReadyForBilling(timesheetId);
-            double sumBilledHours = timesheetEntryList.stream().mapToDouble(TimesheetEntry::getWorkedMinutes).sum() / 60;
-            String timesheetAttachmentHtml = timesheetService.createTimesheetListHtml(requireContext(), timesheetEntryList);
+            List<TimesheetEntryDto> timesheetEntryDtoList = timesheetService.getTimesheetEntryDtoListReadyForBilling(timesheetId);
+            double sumBilledHours = timesheetEntryDtoList.stream().mapToDouble(TimesheetEntryDto::getWorkedMinutes).sum() / 60;
+            String timesheetAttachmentHtml = timesheetService.createTimesheetListHtml(requireContext(), timesheetEntryDtoList);
             String timesheetAttachmentFileName = InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.name().toLowerCase() + "_attachment_" + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
             InvoiceAttachment clientTimesheetAttachment = new InvoiceAttachment();
             clientTimesheetAttachment.setInvoiceId(invoiceId);

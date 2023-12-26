@@ -247,10 +247,10 @@ public class TimesheetService {
      * This so the timesheet contains an entry for all days in the month.
      * Added entries will not have any impact the timesheet calculated fields.
      */
-    public List<TimesheetEntry> getTimesheetEntryListReadyForBilling(Long timesheetId) {
+    public List<TimesheetEntryDto> getTimesheetEntryDtoListReadyForBilling(Long timesheetId) {
         List<TimesheetEntry> timesheetEntryList = timesheetRepository.getTimesheetEntryList(timesheetId);
          populateTimesheetList(timesheetId,timesheetEntryList);
-         return timesheetEntryList;
+         return TimesheetMapper.toTimesheetEntryDtoList(timesheetEntryList);
     }
 
     // ----------------------------------------
@@ -362,17 +362,18 @@ public class TimesheetService {
     }
 
 
-    public String createTimesheetListHtml(@NotNull Context applicationContext, @NotNull List<TimesheetEntry> timesheetEntryList) {
-        double sumBilledHours = timesheetEntryList.stream().mapToDouble(TimesheetEntry::getWorkedMinutes).sum() / 60;
+    public String createTimesheetListHtml(@NotNull Context applicationContext, @NotNull List<TimesheetEntryDto> timesheetEntryDtoList) {
+        Double sumBilledHours = timesheetEntryDtoList.stream().mapToDouble(TimesheetEntryDto::getWorkedMinutes).sum() / 60;
+        Integer numberOfWorkedDays = timesheetEntryDtoList.stream().filter(e -> e.getWorkedMinutes() != null && e.getWorkedMinutes() > 0).collect(Collectors.toList()).size();
         MustacheFactory mf = new DefaultMustacheFactory();
         Mustache mustache = mf.compile(new StringReader(loadMustacheTemplate(applicationContext, InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET)), "");
         Map<String, Object> context = new HashMap<>();
         context.put("title", "Timeliste for konsulentbistand");
         // FIXME get date from timesheet
-        context.put("timesheetPeriod", timesheetEntryList.get(0).getWorkdayDate().format(DateTimeFormatter.ofPattern("yyyy/MM")));
-        context.put("timesheetEntryList", timesheetEntryList);
-        context.put("totalWorkDays", timesheetEntryList.size());
-        context.put("sunBilledHours", Double.toString(sumBilledHours));
+        context.put("timesheetPeriod", timesheetEntryDtoList.get(0).getWorkdayDate().format(DateTimeFormatter.ofPattern("yyyy/MM")));
+        context.put("timesheetEntryDtoList", timesheetEntryDtoList);
+        context.put("numberOfWorkedDays", numberOfWorkedDays);
+        context.put("sunBilledHours", sumBilledHours);
         context.put("generatedDate", LocalDate.now().format(DateTimeFormatter.ISO_DATE));
         StringWriter writer = new StringWriter();
         mustache.execute(writer, context);
@@ -440,8 +441,8 @@ public class TimesheetService {
     private TimesheetEntryDto mapToTimesheetEntryDto(TimesheetEntry timesheetEntry) {
         TimesheetEntryDto timesheetEntryDto = new TimesheetEntryDto();
         timesheetEntryDto.setComments(timesheetEntry.getComment());
-        timesheetEntryDto.setFromTime(timesheetEntry.getFromTime().toString());
-        timesheetEntryDto.setToTime(timesheetEntry.getToTime().toString());
+        timesheetEntryDto.setFromTime(timesheetEntry.getFromTime());
+        timesheetEntryDto.setToTime(timesheetEntry.getToTime());
         timesheetEntryDto.setWorkdayDate(timesheetEntry.getWorkdayDate());
         return timesheetEntryDto;
     }

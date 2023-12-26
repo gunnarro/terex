@@ -51,6 +51,7 @@ public class TimesheetEntry extends BaseEntity {
     public enum TimesheetEntryStatusEnum {
         OPEN, CLOSED
     }
+
     @PrimaryKey(autoGenerate = true)
     private Long id;
 
@@ -153,10 +154,6 @@ public class TimesheetEntry extends BaseEntity {
         return workdayDate;
     }
 
-    public String getWorkdayDateDay() {
-        return workdayDate.format(DateTimeFormatter.ofPattern("dd"));
-    }
-
     public void setWorkdayDate(@NonNull LocalDate workdayDate) {
         this.workdayDate = workdayDate;
     }
@@ -246,9 +243,6 @@ public class TimesheetEntry extends BaseEntity {
         this.type = type;
     }
 
-    public String getWorkDateDay() {
-        return workdayDate.format(DateTimeFormatter.ofPattern("EEE"));
-    }
     public boolean isRegularWorkDay() {
         return type.equals(TimesheetEntryTypeEnum.REGULAR.name());
     }
@@ -260,7 +254,6 @@ public class TimesheetEntry extends BaseEntity {
     public boolean isBilled() {
         return status.equals(TimesheetEntryStatusEnum.CLOSED.name());
     }
-
 
     public static TimesheetEntry createDefault(Long timesheetId, LocalDate workDayDate) {
         TimesheetEntry timesheetEntry = new TimesheetEntry();

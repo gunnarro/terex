@@ -1,14 +1,19 @@
 package com.gunnarro.android.terex.domain.dto;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class TimesheetEntryDto {
 
     private LocalDate workdayDate;
-    private String fromTime;
-    private String toTime;
-    private String workedHours;
+    private LocalTime fromTime;
+    private LocalTime toTime;
+    private Integer workedMinutes;
     private String comments;
+
+    public TimesheetEntryDto() {
+    }
 
     public LocalDate getWorkdayDate() {
         return workdayDate;
@@ -18,28 +23,28 @@ public class TimesheetEntryDto {
         this.workdayDate = workdayDate;
     }
 
-    public String getFromTime() {
+    public LocalTime getFromTime() {
         return fromTime;
     }
 
-    public void setFromTime(String fromTime) {
+    public void setFromTime(LocalTime fromTime) {
         this.fromTime = fromTime;
     }
 
-    public String getToTime() {
+    public LocalTime getToTime() {
         return toTime;
     }
 
-    public void setToTime(String toTime) {
+    public void setToTime(LocalTime toTime) {
         this.toTime = toTime;
     }
 
-    public String getWorkedHours() {
-        return workedHours;
+    public Integer getWorkedMinutes() {
+        return workedMinutes;
     }
 
-    public void setWorkedHours(String workedHours) {
-        this.workedHours = workedHours;
+    public void setWorkedMinutes(Integer workedMinutes) {
+        this.workedMinutes = workedMinutes;
     }
 
     public String getComments() {
@@ -48,5 +53,18 @@ public class TimesheetEntryDto {
 
     public void setComments(String comments) {
         this.comments = comments;
+    }
+
+    // helper methods
+
+    public String getWorkedHours() {
+        if (workedMinutes != null && workedMinutes > 0) {
+            return Double.toString((double) workedMinutes / 60);
+        }
+        return null;
+    }
+
+    public String getWorkdayDateDay() {
+        return workdayDate.format(DateTimeFormatter.ofPattern("dd"));
     }
 }

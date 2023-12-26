@@ -1,12 +1,17 @@
 package com.gunnarro.android.terex.domain.mapper;
 
 import com.gunnarro.android.terex.domain.dto.TimesheetDto;
+import com.gunnarro.android.terex.domain.dto.TimesheetEntryDto;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
+import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class TimesheetMapper {
+
+    private TimesheetMapper() {
+    }
 
     public static TimesheetDto toTimesheetDto(Timesheet timesheet, Integer sumDays, Integer sumHours) {
         TimesheetDto timesheetDto = new TimesheetDto();
@@ -39,5 +44,19 @@ public class TimesheetMapper {
         timesheet.setWorkingDaysInMonth(timesheetDto.getWorkingDaysInMonth());
         timesheet.setWorkingHoursInMonth(timesheetDto.getWorkingHoursInMonth());
         return timesheet;
+    }
+
+    public static List<TimesheetEntryDto> toTimesheetEntryDtoList(List<TimesheetEntry> timesheetEntryList) {
+        return timesheetEntryList.stream().map(TimesheetMapper::toTimesheetEntryDto).collect(Collectors.toList());
+    }
+
+    public static TimesheetEntryDto toTimesheetEntryDto(TimesheetEntry timesheetEntry) {
+        TimesheetEntryDto timesheetEntryDto = new TimesheetEntryDto();
+        timesheetEntryDto.setWorkdayDate(timesheetEntry.getWorkdayDate());
+        timesheetEntryDto.setFromTime(timesheetEntry.getFromTime());
+        timesheetEntryDto.setToTime(timesheetEntry.getToTime());
+        timesheetEntryDto.setWorkedMinutes(timesheetEntry.getWorkedMinutes());
+        timesheetEntryDto.setComments(timesheetEntry.getComment());
+        return timesheetEntryDto;
     }
 }
