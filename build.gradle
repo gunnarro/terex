@@ -67,13 +67,13 @@ ext {
     androidx_preference = '1.2.1'
     androidx_lifecycle_livedata_ktx = '2.6.2'
     androidx_lifecycle_viewmodel_ktx = '2.6.2'
-    androidx_annotation = '1.7.0'
-    androidx_navigation_fragment = '2.7.5'
-    androidx_navigation_ui = '2.7.5'
+    androidx_annotation = '1.7.1'
+    androidx_navigation_fragment = '2.7.6'
+    androidx_navigation_ui = '2.7.6'
     // androidx.navigation.safe_args = '2.7.5'
     // google
     google_android_material = '1.12.0-alpha02'
-    google_dagger_hilt_android = '2.49'
+    google_dagger_hilt_android = '2.50'
     // xml
     //jackson_databind = '2.15.2'
     //jackson_datatype_jsr310 = '2.15.2'
@@ -87,7 +87,7 @@ ext {
     // For Identity Credential APIs
     androidx_security_identity_credential = '1.0.0-alpha03'
     // For App Authentication APIs
-    androidx_security_app_authenticator = '1.0.0-alpha02'
+    androidx_security_app_authenticator = '1.0.0-alpha03'
     // for unit tests
     junit_vintage_engine = '5.10.1'
     junit_jupiter = '5.10.1'
@@ -102,7 +102,7 @@ ext {
     itextpdf_html2pdf = "5.0.2"
     fasterxml_jackson = "2.14.3"
     projectlombok_lombok = "1.18.30"
-    kotlin_kotlin_bom = '1.9.21'
+    kotlin_kotlin_bom = '1.9.22'
     reactivex_rxjava2_rxjava = '2.2.21'
     reactivex_rxjava2_rxandroid = "2.1.1"
     material_calendar_view = "1.9.0"

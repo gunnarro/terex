@@ -149,11 +149,6 @@ dependencies {
 
     compileOnly "org.projectlombok:lombok:$projectlombok_lombok"
     annotationProcessor "org.projectlombok:lombok:$projectlombok_lombok"
-  // changed to gson
-  //  implementation "com.fasterxml.jackson.core:jackson-core:$fasterxml_jackson"
-  //  implementation "com.fasterxml.jackson.core:jackson-databind:$fasterxml_jackson"
-  //  implementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$fasterxml_jackson"
-  //  implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$fasterxml_jackson"
 
     // html to pdf
     // https://mvnrepository.com/artifact/com.itextpdf/kernel
