@@ -191,3 +191,5 @@ Napp/src/main/java/com/gunnarro/android/terex/repository/ProjectRepository.java
 Papp/src/main/java/com/gunnarro/android/terex/domain/dto/TimesheetSummaryDto.java,6/e/6e72a3265404b818720a404adc605c8fb3e884a4
 X
 (gradle/wrapper/gradle-wrapper.properties,f/b/fbe448ebfc3eb2d4e308f6b8b043666f5b57235e
+U
+%.github/workflows/android-release.yml,e/3/e36f09c91c11173fbb1f99705a854663d40f7d9b
