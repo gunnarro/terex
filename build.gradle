@@ -34,8 +34,10 @@ subprojects {
     apply plugin: "org.sonarqube"
     sonarqube {
         properties {
-            property 'sonar.coverage.jacoco.xmlReportPaths', '$projectDir.parentFile.path/build/reports/jacoco/codeCoverageReport/codeCoverageReport.xml'
-            property 'sonar.inclusions', 'com/gunnarro/'
+            //  property 'sonar.coverage.jacoco.xmlReportPaths', '$projectDir.parentFile.path/build/reports/jacoco/codeCoverageReport/codeCoverageReport.xml'
+               property 'sonar.android.lint.reportPaths', '$projectDir.parentFile.path/build/reports/lint-results-debug.xml'
+            file:///home/gunnarro/AndroidStudioProjects/terex-master/app/build/reports/lint-results-debug.html
+            //  property 'sonar.inclusions', 'com/gunnarro/'
         }
     }
 
@@ -129,6 +131,6 @@ jacocoTestReport {
     reports {
         xml.required = true
         html.required = true
-        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+     //   html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
     }
 }
