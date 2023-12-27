@@ -38,97 +38,97 @@ subprojects {
             property 'sonar.android.lint.reportPaths', '$projectDir.parentFile.path/build/reports/lint-results-debug.xml'
             //  property 'sonar.inclusions', 'com/gunnarro/'
         }
-
-        tasks.withType(Test).configureEach {
-            useJUnitPlatform()
-        }
     }
+    tasks.withType(Test).configureEach {
+        useJUnitPlatform()
+    }
+}
 
 // apply from: "$project.rootDir/sonar.gradle"
 
 // Define versions in a single place
-    ext {
-        compileSdkVersion = 34
-        // application library version
-        room_version = '2.6.1'
-        //kotlin_version = '1.6.0'
-        biometric_version = "1.1.0"
-        // android
-        android_arch_navigation = '1.0.0'
-        // androidx
-        androidx_appcompat = '1.6.1'
-        androidx_core_ktx = '1.12.0'
-        androidx_constraint_layout = '2.1.4'
-        androidx_lifecycle_extensions = '2.2.0'
-        androidx_legacy_support_v4 = '1.0.0'
-        androidx_drawerlayout = '1.2.0'
-        androidx_appcompat = '1.6.1'
-        androidx_recyclerview = '1.3.2'
-        androidx_preference = '1.2.1'
-        androidx_lifecycle_livedata_ktx = '2.6.2'
-        androidx_lifecycle_viewmodel_ktx = '2.6.2'
-        androidx_annotation = '1.7.0'
-        androidx_navigation_fragment = '2.7.5'
-        androidx_navigation_ui = '2.7.5'
-        // androidx.navigation.safe_args = '2.7.5'
-        // google
-        google_android_material = '1.12.0-alpha02'
-        google_dagger_hilt_android = '2.49'
-        // xml
-        //jackson_databind = '2.15.2'
-        //jackson_datatype_jsr310 = '2.15.2'
-        google_gson = '2.10.1'
-        // for password hashing
-        mkammerer_argon2_jvm = '2.11'
-        jasypt = '1.9.3'
-        // for password strength check
-        passay = '1.6.3'
-        gustav_passwordstrengthmeter = '0.4'
-        // For Identity Credential APIs
-        androidx_security_identity_credential = '1.0.0-alpha03'
-        // For App Authentication APIs
-        androidx_security_app_authenticator = '1.0.0-alpha02'
-        // for unit tests
-        junit_vintage_engine = '5.10.1'
-        junit_jupiter = '5.10.1'
-        mockito_inline = '5.2.0'
-        mockito_junit_jupiter = '5.8.0'
-        // for android instrumentation tests
-        androidx_junit = '1.1.5'
-        androidx_espresso_core = '3.5.1'
-        //
-        androidx_fragment_testing = '1.6.2'
-        itextpdf_kernel = '8.0.2'
-        itextpdf_html2pdf = "5.0.2"
-        fasterxml_jackson = "2.14.3"
-        projectlombok_lombok = "1.18.30"
-        kotlin_kotlin_bom = '1.9.21'
-        reactivex_rxjava2_rxjava = '2.2.21'
-        reactivex_rxjava2_rxandroid = "2.1.1"
-        material_calendar_view = "1.9.0"
-        jsoup = '1.17.1'
-        xhtmlrenderer_flying_saucer = "9.3.1"
-        spullara_mustache_java = "0.9.11"
-        android_database_sqlcipher = "4.5.4"
-        security_crypto = "1.1.0-alpha06"
-    }
+ext {
+    compileSdkVersion = 34
+    // application library version
+    room_version = '2.6.1'
+    //kotlin_version = '1.6.0'
+    biometric_version = "1.1.0"
+    // android
+    android_arch_navigation = '1.0.0'
+    // androidx
+    androidx_appcompat = '1.6.1'
+    androidx_core_ktx = '1.12.0'
+    androidx_constraint_layout = '2.1.4'
+    androidx_lifecycle_extensions = '2.2.0'
+    androidx_legacy_support_v4 = '1.0.0'
+    androidx_drawerlayout = '1.2.0'
+    androidx_appcompat = '1.6.1'
+    androidx_recyclerview = '1.3.2'
+    androidx_preference = '1.2.1'
+    androidx_lifecycle_livedata_ktx = '2.6.2'
+    androidx_lifecycle_viewmodel_ktx = '2.6.2'
+    androidx_annotation = '1.7.0'
+    androidx_navigation_fragment = '2.7.5'
+    androidx_navigation_ui = '2.7.5'
+    // androidx.navigation.safe_args = '2.7.5'
+    // google
+    google_android_material = '1.12.0-alpha02'
+    google_dagger_hilt_android = '2.49'
+    // xml
+    //jackson_databind = '2.15.2'
+    //jackson_datatype_jsr310 = '2.15.2'
+    google_gson = '2.10.1'
+    // for password hashing
+    mkammerer_argon2_jvm = '2.11'
+    jasypt = '1.9.3'
+    // for password strength check
+    passay = '1.6.3'
+    gustav_passwordstrengthmeter = '0.4'
+    // For Identity Credential APIs
+    androidx_security_identity_credential = '1.0.0-alpha03'
+    // For App Authentication APIs
+    androidx_security_app_authenticator = '1.0.0-alpha02'
+    // for unit tests
+    junit_vintage_engine = '5.10.1'
+    junit_jupiter = '5.10.1'
+    mockito_inline = '5.2.0'
+    mockito_junit_jupiter = '5.8.0'
+    // for android instrumentation tests
+    androidx_junit = '1.1.5'
+    androidx_espresso_core = '3.5.1'
+    //
+    androidx_fragment_testing = '1.6.2'
+    itextpdf_kernel = '8.0.2'
+    itextpdf_html2pdf = "5.0.2"
+    fasterxml_jackson = "2.14.3"
+    projectlombok_lombok = "1.18.30"
+    kotlin_kotlin_bom = '1.9.21'
+    reactivex_rxjava2_rxjava = '2.2.21'
+    reactivex_rxjava2_rxandroid = "2.1.1"
+    material_calendar_view = "1.9.0"
+    jsoup = '1.17.1'
+    xhtmlrenderer_flying_saucer = "9.3.1"
+    spullara_mustache_java = "0.9.11"
+    android_database_sqlcipher = "4.5.4"
+    security_crypto = "1.1.0-alpha06"
+}
 
 // default reportsDirectory $buildDir/reports/jacoco
-    jacoco {
-        toolVersion = "0.8.8"
-    }
+jacoco {
+    toolVersion = "0.8.8"
+}
 
 // report is always generated after tests run
-    test {
-        finalizedBy jacocoTestReport // report is always generated after tests run
-    }
+test {
+    finalizedBy jacocoTestReport // report is always generated after tests run
+}
 
 // test goal is required to run before generating the report
-    jacocoTestReport {
-        dependsOn test
-        reports {
-            xml.required = true
-            html.required = true
-            //   html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
-        }
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+        html.required = true
+        //   html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
     }
+}
