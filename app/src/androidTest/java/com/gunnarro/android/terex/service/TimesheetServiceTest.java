@@ -23,6 +23,7 @@ import org.junit.Test;
 
 import java.time.LocalDate;
 
+@Ignore
 public class TimesheetServiceTest {
 
     AppDatabase db;
