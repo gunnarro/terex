@@ -45,7 +45,7 @@ class TimesheetMapperTest {
 
         TimesheetSummaryDto timesheetSummaryDto = TimesheetMapper.toTimesheetSummaryDto(timesheetSummaryList.get(0));
         assertEquals("01.12", timesheetSummaryDto.getFromDateDDMM());
-        assertEquals("9375.0", timesheetSummaryDto.getTotalBilledAmount());
+        assertEquals("9375.00", timesheetSummaryDto.getTotalBilledAmount());
         assertEquals("12", timesheetSummaryDto.getFromDateMM());
         assertEquals("48", timesheetSummaryDto.getWeekInYear().toString());
         assertEquals("7.5", timesheetSummaryDto.getTotalWorkedHours());
