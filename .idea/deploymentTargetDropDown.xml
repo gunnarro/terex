@@ -11,9 +11,6 @@
       <entry key="newTimesheet()">
         <State />
       </entry>
-      <entry key="newTimesheet_already_exist()">
-        <State />
-      </entry>
     </value>
   </component>
 </project>

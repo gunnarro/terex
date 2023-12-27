@@ -109,8 +109,6 @@ P
  app/src/main/AndroidManifest.xml,8/c/8c55c3ccc257e5907959013f99656e4c8ec3903e
 {
 Kapp/src/main/java/com/gunnarro/android/terex/domain/entity/SpinnerItem.java,3/9/39c49fd8d516dba095d5b60c227a746f63b2ed25
-P
- app/release/output-metadata.json,0/7/079ee2b81fdfd2faf349bcf552fe1a1bc16be431
 }
 Mapp/src/main/java/com/gunnarro/android/terex/domain/dbview/TimesheetView.java,b/2/b21aa27f7bda670e7473545fe1c262946c31b030
 z
@@ -189,3 +187,5 @@ Sapp/src/test/java/com/gunnarro/android/terex/domain/mapper/TimesheetMapperTest.
 Napp/src/main/java/com/gunnarro/android/terex/repository/ProjectRepository.java,c/d/cd2c658b4e9e6057b8eda5abdf75ef41b74e800e
 ^
 .app/src/test/invoice-timesheet-attachment.html,c/2/c2b221a5ce38d07a2d859f28a3e342f8bbd7d997
+€
+Papp/src/main/java/com/gunnarro/android/terex/domain/dto/TimesheetSummaryDto.java,6/e/6e72a3265404b818720a404adc605c8fb3e884a4

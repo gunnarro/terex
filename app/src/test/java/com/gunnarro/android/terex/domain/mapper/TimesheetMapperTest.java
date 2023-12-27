@@ -4,7 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.gunnarro.android.terex.TestData;
 import com.gunnarro.android.terex.domain.dto.TimesheetEntryDto;
+import com.gunnarro.android.terex.domain.dto.TimesheetSummaryDto;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
+import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
 
 import org.junit.jupiter.api.Test;
 
@@ -20,5 +22,14 @@ class TimesheetMapperTest {
 
         List<TimesheetEntryDto> timesheetEntryDtoList = TimesheetMapper.toTimesheetEntryDtoList(timesheetEntryList);
         assertEquals(21, timesheetEntryDtoList.size());
+    }
+
+    @Test
+    void toTimesheetSummaryDtoList() {
+        LocalDate localDate = LocalDate.of(2023, 12, 1);
+        List<TimesheetSummary> timesheetSummaryList = TestData.buildTimesheetSummaryByWeek(localDate.getYear(), localDate.getMonthValue());
+
+        List<TimesheetSummaryDto> timesheetSummaryDtoList = TimesheetMapper.toTimesheetSummaryDtoList(timesheetSummaryList);
+        assertEquals(5, timesheetSummaryDtoList.size());
     }
 }

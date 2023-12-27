@@ -352,8 +352,7 @@ class TimesheetServiceTest {
 
         String templateHtml = timesheetService.createTimesheetListHtml(23L, applicationContextMock);
         Assertions.assertNotNull(templateHtml);
-        System.out.println(templateHtml);
-     //   saveToFile("src/test/" + InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.getFileName() + ".html", templateHtml);
+        saveToFile("src/test/" + InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.getFileName() + ".html", templateHtml);
     }
 
     @Test
@@ -363,7 +362,6 @@ class TimesheetServiceTest {
         AssetManager assetManagerMock = mock(AssetManager.class);
         when(assetManagerMock.open(anyString())).thenReturn(new FileInputStream(mustacheTemplateFile));
         when(applicationContextMock.getAssets()).thenReturn(assetManagerMock);
-      //  List<TimesheetSummary> timesheetSummaryList = TestData.buildTimesheetSummaryByWeek(2023, 1);
 
         when(timesheetRepositoryMock.getTimesheetEntryList(anyLong())).thenReturn(TestData.generateTimesheetEntries(2023, 12));
         String templateHtml = timesheetService.createTimesheetSummaryHtml(23L, applicationContextMock);

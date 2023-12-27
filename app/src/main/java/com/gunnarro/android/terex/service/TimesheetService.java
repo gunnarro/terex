@@ -355,12 +355,12 @@ public class TimesheetService {
         context.put("company", TimesheetService.getCompany(null));
         context.put("client", TimesheetService.getClient(null));
         context.put("timesheetProjectCode", "techlead-catalystone-solution-as");
-        context.put("timesheetSummaryList", timesheetSummaryList);
-        context.put("totalBilledHours", totalBilledHours);
-        context.put("totalBilledAmount", totalBilledAmount);
-        context.put("vatInPercent",  vat + "%");
-        context.put("totalVat", totalVat);
-        context.put("totalBilledAmountWithVat", totalBilledAmountWithVat);
+        context.put("timesheetSummaryList", TimesheetMapper.toTimesheetSummaryDtoList(timesheetSummaryList));
+        context.put("totalBilledHours", String.format("%.1f", totalBilledHours));
+        context.put("totalBilledAmount", String.format("%.2f", totalBilledAmount));
+        context.put("vatInPercent",  String.format("%.0f",vat));
+        context.put("totalVat", String.format("%.2f", totalVat));
+        context.put("totalBilledAmountWithVat", String.format("%.2f", totalBilledAmountWithVat));
         context.put("generatedDate", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss:SSS")));
         StringWriter writer = new StringWriter();
         mustache.execute(writer, context);
@@ -377,10 +377,10 @@ public class TimesheetService {
         Map<String, Object> context = new HashMap<>();
         context.put("title", "Timeliste for konsulentbistand");
         // FIXME get date from timesheet
-        context.put("timesheetPeriod", timesheetEntryDtoList.get(0).getWorkdayDate().format(DateTimeFormatter.ofPattern("yyyy/MM")));
+        context.put("timesheetPeriod", timesheetEntryDtoList.get(0).getWorkdayDate().format(DateTimeFormatter.ofPattern("MM/yyyy")));
         context.put("timesheetEntryDtoList", timesheetEntryDtoList);
         context.put("numberOfWorkedDays", numberOfWorkedDays);
-        context.put("sunBilledHours", sumBilledHours);
+        context.put("sunBilledHours", String.format("%.1f", sumBilledHours));
         context.put("generatedDate", LocalDate.now().format(DateTimeFormatter.ISO_DATE));
         StringWriter writer = new StringWriter();
         mustache.execute(writer, context);
@@ -444,15 +444,6 @@ public class TimesheetService {
         return timesheetSummary;
     }
 
-
-    private TimesheetEntryDto mapToTimesheetEntryDto(TimesheetEntry timesheetEntry) {
-        TimesheetEntryDto timesheetEntryDto = new TimesheetEntryDto();
-        timesheetEntryDto.setComments(timesheetEntry.getComment());
-        timesheetEntryDto.setFromTime(timesheetEntry.getFromTime());
-        timesheetEntryDto.setToTime(timesheetEntry.getToTime());
-        timesheetEntryDto.setWorkdayDate(timesheetEntry.getWorkdayDate());
-        return timesheetEntryDto;
-    }
 
     public static Company getCompany(Long timesheetId) {
         Company company = new Company();

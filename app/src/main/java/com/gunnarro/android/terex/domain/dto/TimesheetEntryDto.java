@@ -59,12 +59,16 @@ public class TimesheetEntryDto {
 
     public String getWorkedHours() {
         if (workedMinutes != null && workedMinutes > 0) {
-            return Double.toString((double) workedMinutes / 60);
+            return String.format("%.1f", workedMinutes / 60);
         }
         return null;
     }
 
     public String getWorkdayDateDay() {
-        return workdayDate.format(DateTimeFormatter.ofPattern("dd"));
+        if (workdayDate.getDayOfMonth() < 10) {
+            return workdayDate.format(DateTimeFormatter.ofPattern("d"));
+        } else {
+            return workdayDate.format(DateTimeFormatter.ofPattern("dd"));
+        }
     }
 }

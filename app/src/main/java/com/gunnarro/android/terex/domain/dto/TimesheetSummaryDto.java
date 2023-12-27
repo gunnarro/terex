@@ -1,71 +1,36 @@
-package com.gunnarro.android.terex.domain.entity;
-
-import androidx.room.ColumnInfo;
-import androidx.room.Entity;
-import androidx.room.Index;
-import androidx.room.PrimaryKey;
-import androidx.room.TypeConverters;
-
-import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
-import com.gunnarro.android.terex.domain.converter.LocalDateTimeConverter;
-
-import org.jetbrains.annotations.NotNull;
+package com.gunnarro.android.terex.domain.dto;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Objects;
 
 /**
  * Used to hold weekly summary for a timesheet.
  */
-@TypeConverters({LocalDateConverter.class, LocalDateTimeConverter.class})
-@Entity(tableName = "timesheet_summary", indices = {@Index(value = {"timesheet_id", "year", "week_in_year"},
-        unique = true)})
-public class TimesheetSummary extends BaseEntity {
+public class TimesheetSummaryDto {
 
-    @PrimaryKey(autoGenerate = true)
-    private Long id;
     /**
      * Hold a unique reference to the timesheet that is used as the basis for the summary
      */
-    @NotNull
-    @ColumnInfo(name = "timesheet_id")
     private Long timesheetId;
-    @NotNull
-    @ColumnInfo(name = "year")
+
     private Integer year;
-    @NotNull
-    @ColumnInfo(name = "week_in_year")
+
     private Integer weekInYear;
-    @ColumnInfo(name = "from_date")
+
     private LocalDate fromDate;
-    @ColumnInfo(name = "to_date")
+
     private LocalDate toDate;
-    @ColumnInfo(name = "total_worked_days", defaultValue = "0")
     private Integer totalWorkedDays = 0;
-    @ColumnInfo(name = "total_days_off", defaultValue = "0")
     private Integer totalDaysOff = 0;
-    @ColumnInfo(name = "total_sick_leave_days", defaultValue = "0")
     private Integer totalSickLeaveDays = 0;
-    @ColumnInfo(name = "total_worked_hours", defaultValue = "0")
     private double totalWorkedHours = 0;
-    @ColumnInfo(name = "total_billed_amount", defaultValue = "0")
     private double totalBilledAmount = 0;
     /**
      * ISO 427 currency code
      */
-    @ColumnInfo(name = "currency", defaultValue = "NOK")
     private String currency;
 
-    public TimesheetSummary() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public TimesheetSummaryDto() {
     }
 
     public Long getTimesheetId() {
@@ -92,16 +57,8 @@ public class TimesheetSummary extends BaseEntity {
         this.weekInYear = weekInYear;
     }
 
-    public LocalDate getFromDate() {
-        return fromDate;
-    }
-
     public void setFromDate(LocalDate fromDate) {
         this.fromDate = fromDate;
-    }
-
-    public LocalDate getToDate() {
-        return toDate;
     }
 
     public void setToDate(LocalDate toDate) {
@@ -132,20 +89,16 @@ public class TimesheetSummary extends BaseEntity {
         this.totalSickLeaveDays = totalSickLeaveDays;
     }
 
-    public double getTotalWorkedHours() {
-        return totalWorkedHours;
+    public String getTotalWorkedHours() {
+        return String.format("%.1f", totalWorkedHours);
     }
 
     public void setTotalWorkedHours(double totalWorkedHours) {
         this.totalWorkedHours = totalWorkedHours;
     }
 
-    public double getTotalBilledAmount() {
-        return totalBilledAmount;
-    }
-
-    public String getTotalBilledAmountFormatted() {
-        return String.format("%.2f", totalBilledAmount);
+    public String getTotalBilledAmount() {
+        return String.format("%.1f", totalBilledAmount);
     }
 
     public void setTotalBilledAmount(double totalBilledAmount) {
@@ -160,7 +113,6 @@ public class TimesheetSummary extends BaseEntity {
         this.currency = currency;
     }
 
-    // helper methods
     public String getFromDateMM() {
         return fromDate.format(DateTimeFormatter.ofPattern("MM"));
     }
@@ -173,16 +125,4 @@ public class TimesheetSummary extends BaseEntity {
         return toDate.format(DateTimeFormatter.ofPattern("dd.MM"));
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        TimesheetSummary that = (TimesheetSummary) o;
-        return timesheetId.equals(that.timesheetId) && year.equals(that.year) && weekInYear.equals(that.weekInYear);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(timesheetId, year, weekInYear);
-    }
 }

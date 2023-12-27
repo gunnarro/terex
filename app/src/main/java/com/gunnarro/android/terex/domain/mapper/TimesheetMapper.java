@@ -2,8 +2,10 @@ package com.gunnarro.android.terex.domain.mapper;
 
 import com.gunnarro.android.terex.domain.dto.TimesheetDto;
 import com.gunnarro.android.terex.domain.dto.TimesheetEntryDto;
+import com.gunnarro.android.terex.domain.dto.TimesheetSummaryDto;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
+import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -58,5 +60,22 @@ public class TimesheetMapper {
         timesheetEntryDto.setWorkedMinutes(timesheetEntry.getWorkedMinutes());
         timesheetEntryDto.setComments(timesheetEntry.getComment());
         return timesheetEntryDto;
+    }
+
+    public static List<TimesheetSummaryDto> toTimesheetSummaryDtoList(List<TimesheetSummary> timesheetSummaryList) {
+        return timesheetSummaryList.stream().map(TimesheetMapper::toTimesheetSummaryDto).collect(Collectors.toList());
+    }
+
+    public static TimesheetSummaryDto toTimesheetSummaryDto(TimesheetSummary timesheetSummary) {
+        TimesheetSummaryDto timesheetSummaryDto = new TimesheetSummaryDto();
+        timesheetSummaryDto.setCurrency(timesheetSummary.getCurrency());
+        timesheetSummaryDto.setFromDate(timesheetSummary.getFromDate());
+        timesheetSummaryDto.setToDate(timesheetSummary.getToDate());
+        timesheetSummaryDto.setYear(timesheetSummary.getYear());
+        timesheetSummaryDto.setWeekInYear(timesheetSummary.getWeekInYear());
+        timesheetSummaryDto.setTotalWorkedHours(timesheetSummary.getTotalWorkedHours());
+        timesheetSummaryDto.setTotalBilledAmount(timesheetSummary.getTotalBilledAmount());
+        timesheetSummaryDto.setTotalWorkedDays(timesheetSummary.getTotalWorkedDays());
+        return timesheetSummaryDto;
     }
 }
