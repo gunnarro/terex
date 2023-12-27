@@ -1,4 +1,4 @@
-package com.gunnarro.android.terex.domain.entity;
+package com.gunnarro.android.terex.domain.dto;
 
 import androidx.annotation.NonNull;
 

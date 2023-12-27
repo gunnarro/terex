@@ -12,7 +12,7 @@ import android.widget.AutoCompleteTextView;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.InvoiceAttachment;
-import com.gunnarro.android.terex.domain.entity.SpinnerItem;
+import com.gunnarro.android.terex.domain.dto.SpinnerItem;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.service.InvoiceService;

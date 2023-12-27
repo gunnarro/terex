@@ -1,21 +1,17 @@
 
 p
-java:S3008."SRename this field "INSTANCE" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(½ßõÊ8¬´î¶Ê1
+java:S3008-"SRename this field "INSTANCE" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(½ßõÊ8¬´î¶Ê1
 »
-java:S6548,"˜A Singleton implementation was detected. Make sure the use of the Singleton pattern is required and the implementation is the right one for the context.(ŒÚ‹Òüÿÿÿÿ8°´î¶Ê1
+java:S6548+"˜A Singleton implementation was detected. Make sure the use of the Singleton pattern is required and the implementation is the right one for the context.(ŒÚ‹Òüÿÿÿÿ8°´î¶Ê1
 t
-java:S3077."WUse a thread-safe type; adding "volatile" is not enough to make this field thread-safe.(½ßõÊ8±´î¶Ê1
-X	java:S125T"<This block of commented-out lines of code should be removed.(‘Š¨õ8·´î¶Ê1
-h
-java:S1854]"FRemove this useless assignment to local variable "recruitmentCompany".(Äï€úüÿÿÿÿ8·´î¶Ê1
+java:S3077-"WUse a thread-safe type; adding "volatile" is not enough to make this field thread-safe.(½ßõÊ8±´î¶Ê1
+X	java:S125S"<This block of commented-out lines of code should be removed.(‘Š¨õ8·´î¶Ê1
+X	java:S125_"<This block of commented-out lines of code should be removed.(¹†»ù8¹´î¶Ê1
+X	java:S125h"<This block of commented-out lines of code should be removed.(»Ó°8¹´î¶Ê1
+]	java:S125r"<This block of commented-out lines of code should be removed.(¾”¼ôüÿÿÿÿ8º´î¶Ê1
 Y
-java:S1481]"7Remove this unused "recruitmentCompany" local variable.(Äï€úüÿÿÿÿ8¸´î¶Ê1
-X	java:S125a"<This block of commented-out lines of code should be removed.(¹†»ù8¹´î¶Ê1
-X	java:S125j"<This block of commented-out lines of code should be removed.(»Ó°8¹´î¶Ê1
-]	java:S125t"<This block of commented-out lines of code should be removed.(¾”¼ôüÿÿÿÿ8º´î¶Ê1
-Y
-java:S3985y"7Remove this unused private "PopulateDbAsyncTask" class.(õ¾­îýÿÿÿÿ8»´î¶Ê1
+java:S3985w"7Remove this unused private "PopulateDbAsyncTask" class.(õ¾­îýÿÿÿÿ8»´î¶Ê1
 S
-java:S1874y"1Remove this use of "AsyncTask"; it is deprecated.(õ¾­îýÿÿÿÿ8»´î¶Ê1
+java:S1874w"1Remove this use of "AsyncTask"; it is deprecated.(õ¾­îýÿÿÿÿ8»´î¶Ê1
 R
-java:S1068W"0Remove this unused "roomCallback" private field.(²€§ìúÿÿÿÿ8½´î¶Ê1
+java:S1068V"0Remove this unused "roomCallback" private field.(²€§ìúÿÿÿÿ8½´î¶Ê1

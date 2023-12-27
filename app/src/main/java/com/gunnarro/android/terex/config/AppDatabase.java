@@ -15,7 +15,6 @@ import com.gunnarro.android.terex.domain.entity.Company;
 import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.InvoiceAttachment;
 import com.gunnarro.android.terex.domain.entity.Project;
-import com.gunnarro.android.terex.domain.entity.RecruitmentCompany;
 import com.gunnarro.android.terex.domain.entity.RegisterWork;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
@@ -90,7 +89,6 @@ public abstract class AppDatabase extends RoomDatabase {
             super.onCreate(db);
             Log.d("RoomDatabase.Callback", "start init database");
             // Create recruitment companies
-            RecruitmentCompany recruitmentCompany = new RecruitmentCompany();
             Company company = new Company();
             company.setName("Norway Consulting AS");
             company.setOrganizationNumber("");

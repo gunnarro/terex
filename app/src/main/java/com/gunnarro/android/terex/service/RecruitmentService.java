@@ -1,11 +1,5 @@
 package com.gunnarro.android.terex.service;
 
-import com.gunnarro.android.terex.domain.entity.RecruitmentCompany;
-
-import java.text.DateFormatSymbols;
-import java.util.Calendar;
-import java.util.List;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 

@@ -197,3 +197,21 @@ w
 Gapp/src/androidTest/java/com/gunnarro/android/terex/AppContextTest.java,6/c/6c9e4aeb02bf00f93f44f6de735ed85be2de19d9
 M
 app/src/androidTest/README.md,3/7/37f894a2965adaf62fe43afcc75a168dd633e35b
+x
+Happ/src/main/java/com/gunnarro/android/terex/service/ProjectService.java,1/3/13db1a794efdee48a62e2db24160a0e6df1dc1d3
+y
+Iapp/src/main/java/com/gunnarro/android/terex/service/DocumentService.java,2/a/2a9af3274ed547defdea336720f7776cabfd4a12
+{
+Kapp/src/main/java/com/gunnarro/android/terex/repository/RecruitmentDao.java,4/a/4a089f382c2470e9e5f861944547dc076e3b86da
+‚
+Rapp/src/main/java/com/gunnarro/android/terex/repository/RecruitmentRepository.java,a/c/acaa30d66590c9f92cd8a3776299e236d3908f0a
+x
+Happ/src/main/java/com/gunnarro/android/terex/domain/entity/Contract.java,7/e/7e8ab21b96cd892e8be1937e786803701bcfdd04
+z
+Japp/src/main/java/com/gunnarro/android/terex/domain/entity/Employment.java,7/3/73ada02864a925b955c3950dd318c4bfc910fbad
+v
+Fapp/src/main/java/com/gunnarro/android/terex/domain/entity/Person.java,4/f/4f01cea963304a1d1cdfa8b83eb0fc7987c04098
+w
+Gapp/src/main/java/com/gunnarro/android/terex/domain/entity/Project.java,7/5/7539525b4e142a4389d7441de430b5fed0d725cc
+x
+Happ/src/main/java/com/gunnarro/android/terex/domain/dto/SpinnerItem.java,9/2/92d27ff26ad5efedba50a04126599731cde58ce6

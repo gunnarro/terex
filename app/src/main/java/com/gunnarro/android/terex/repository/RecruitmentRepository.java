@@ -2,9 +2,6 @@ package com.gunnarro.android.terex.repository;
 
 import android.app.Application;
 
-import com.gunnarro.android.terex.config.AppDatabase;
-import com.gunnarro.android.terex.domain.entity.RecruitmentCompany;
-
 import java.util.List;
 
 import javax.inject.Inject;
