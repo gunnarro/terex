@@ -28,11 +28,12 @@
             android:id="@+id/timesheet_add_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="start|bottom"
-            android:layout_margin="16dp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="56dp"
             android:contentDescription="@string/btn_add"
             android:src="@drawable/ic_add_white_24dp"
-            app:backgroundTint="@color/color_bg_tint_btn"
+            app:fabSize="normal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 

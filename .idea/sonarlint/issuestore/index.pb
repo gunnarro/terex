@@ -193,8 +193,6 @@ X
 (gradle/wrapper/gradle-wrapper.properties,f/b/fbe448ebfc3eb2d4e308f6b8b043666f5b57235e
 U
 %.github/workflows/android-release.yml,e/3/e36f09c91c11173fbb1f99705a854663d40f7d9b
-€
-Papp/src/androidTest/java/com/gunnarro/android/terex/ExampleInstrumentedTest.java,6/b/6babaa3ef8563603fee4e49cc69057a1572aa50a
 w
 Gapp/src/androidTest/java/com/gunnarro/android/terex/AppContextTest.java,6/c/6c9e4aeb02bf00f93f44f6de735ed85be2de19d9
 M

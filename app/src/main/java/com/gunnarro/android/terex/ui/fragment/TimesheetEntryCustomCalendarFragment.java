@@ -56,7 +56,7 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
         Long timesheetId = getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY);
         // calendarView.setSelectedDates(selectedDates);
         //@Deprecated("Use setCalendarDays(List<CalendarDay>) with isEnabled = false")
-       // calendarView.setDisabledDays(createSelectedDates(timesheetId));
+        //calendarView.setDisabledDays(createSelectedDates(timesheetId));
         calendarView.setCalendarDays(createSelectedDates(timesheetId));
         //  @Deprecated("Use setCalendarDays() instead")
       //  calendarView.setEvents(createEventDays(timesheetId));

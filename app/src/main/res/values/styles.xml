@@ -1,8 +1,10 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.Material3.Light">
         <!-- Customize your theme here. -->
+        <item name="android:windowFullscreen">true</item>
+        <!-- custom component colors -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -10,7 +12,6 @@
         <item name="android:textViewStyle">@style/RobotoTextViewStyle</item>
         <item name="android:buttonStyle">@style/RobotoButtonStyle</item>
         <item name="android:switchStyle">@style/RobotoSwitchStyle</item>
-        <item name="android:windowFullscreen">true</item>
     </style>
 
     <style name="RobotoTextViewStyle" parent="android:Widget.TextView">
@@ -30,157 +31,9 @@
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
-    <!-- The default font for RecyclerView items is too small.
-   The margin is a simple delimiter between the words. -->
-    <style name="credential_list_header">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_marginBottom">2sp</item>
-        <item name="android:paddingLeft">8sp</item>
-        <item name="android:background">@android:color/holo_orange_light</item>
-        <item name="android:textAppearance">@android:style/TextAppearance.DeviceDefault.Medium
-        </item>
-    </style>
-
-    <!-- The default font for RecyclerView items is too small.
-    The margin is a simple delimiter between the words. -->
-    <style name="credential_list_body">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_marginBottom">8sp</item>
-        <item name="android:paddingLeft">8sp</item>
-        <item name="android:background">@android:color/holo_blue_bright</item>
-        <item name="android:textAppearance">@android:style/TextAppearance.DeviceDefault</item>
-    </style>
-
+    <!-- alert dialog custom style -->
     <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorAccent">@color/colorPrimary</item>
-    </style>
-
-    <style name="CustomTextViewLabelStyle" parent="Widget.MaterialComponents.TextView">
-        <item name="android:textColor">@color/colorLabel</item>
-        <item name="android:fontFamily">sans-serif-black</item>
-        <item name="android:textSize">14sp</item>
-    </style>
-
-    <style name="CustomTextViewStyle" parent="Widget.MaterialComponents.TextView">
-        <item name="android:textColor">@color/colorText</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:textSize">14sp</item>
-    </style>
-
-    <style name="CustomTextInputReadOnlyLayout" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
-        <!-- not editable -->
-        <item name="android:enabled">true</item>
-        <!-- no background, no boarder -->
-        <item name="boxBackgroundMode">none</item>
-        <!-- The color of the label when it is collapsed and the text field is active -->
-        <item name="hintTextColor">@color/colorPrimary</item>
-        <!-- The color of the label in all other text field states (such as resting and disabled) -->
-        <item name="android:textColorHint">@color/colorLabel</item>
-        <!-- -->
-        <item name="boxCollapsedPaddingTop">0dp</item>
-        <item name="android:paddingTop">0dp</item>
-        <item name="android:paddingBottom">0dp</item>
-        <item name="android:paddingStart" tools:ignore="NewApi">0dp</item>
-        <item name="android:paddingEnd" tools:ignore="NewApi">0dp</item>
-        <item name="android:paddingLeft">0dp</item>
-        <item name="android:paddingRight">0dp</item>
-    </style>
-
-    <style name="CustomTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
-        <!-- no background, no boarder -->
-        <item name="boxBackgroundMode">none</item>
-        <!-- box background color -->
-        <item name="boxBackgroundColor">@color/colorBackground</item>
-        <!-- border color -->
-        <item name="boxStrokeColor">@color/colorBackground</item>
-        <!-- The color of the label when it is collapsed and the text field is active -->
-        <item name="hintTextColor">@color/colorPrimary</item>
-        <!-- The color of the label in all other text field states (such as resting and disabled) -->
-        <item name="android:textColorHint">@color/colorPrimary</item>
-
-    </style>
-
-    <style name="CustomTextInputEditText" parent="Widget.MaterialComponents.TextInputEditText.FilledBox">
-        <item name="android:paddingTop">0dp</item>
-        <item name="android:paddingBottom">0dp</item>
-        <item name="android:paddingStart" tools:ignore="NewApi">0dp</item>
-        <item name="android:paddingEnd" tools:ignore="NewApi">0dp</item>
-        <item name="android:paddingLeft">0dp</item>
-        <item name="android:paddingRight">0dp</item>
-        <!-- Edit text's default text size is 16sp which currently equals to 22dp total line height -->
-        <item name="android:layout_height">22dp</item>
-    </style>
-
-    <style name="CustomIconButton" parent="Widget.Material3.Button.IconButton">
-        <!-- no background, no boarder -->
-        <item name="boxBackgroundMode">filled</item>
-        <!-- By default button will use the accent colour of your theme for the buttons filled -->
-        <item name="colorAccent">@color/color_btn_hover</item>
-        <!-- Used to apply a tint to the background of the button. If you wish to change the
-        background color of the button, use this attribute instead of background. -->
-        <item name="backgroundTint">@color/colorBackground</item>
-        <item name="paddingStart">0sp</item>
-        <item name="paddingEnd">0sp</item>
-        <item name="android:paddingBottom">0sp</item>
-        <item name="android:paddingTop">0sp</item>
-        <item name="iconGravity">textStart</item>
-        <!-- box background color -->
-        <!-- item name="boxBackgroundColor">@color/colorBackground</item -->
-        <!-- border color -->
-        <!-- item name="boxStrokeColor">@color/colorBackground</item -->
-    </style>
-
-    <!-- The default font for RecyclerView items is too small.
-   The margin is a simple delimiter between the words. -->
-    <style name="timesheet_list_header">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_marginBottom">8dp</item>
-        <item name="android:paddingLeft">8dp</item>
-        <item name="android:background">@android:color/holo_orange_light</item>
-        <item name="android:textAppearance">@android:style/TextAppearance.DeviceDefault.Medium
-        </item>
-    </style>
-
-    <!-- The default font for RecyclerView items is too small.
-    The margin is a simple delimiter between the words. -->
-    <style name="timesheet_list_body">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_marginBottom">8dp</item>
-        <item name="android:paddingLeft">8dp</item>
-        <item name="android:background">@android:color/holo_blue_bright</item>
-        <item name="android:textAppearance">@android:style/TextAppearance.DeviceDefault</item>
-    </style>
-
-
-    <!-- The default font for RecyclerView items is too small.
-The margin is a simple delimiter between the words. -->
-    <style name="invoice_list_header">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_marginBottom">8dp</item>
-        <item name="android:paddingLeft">8dp</item>
-        <item name="android:background">@android:color/holo_orange_light</item>
-        <item name="android:textAppearance">@android:style/TextAppearance.DeviceDefault.Medium
-        </item>
-    </style>
-
-    <!-- The default font for RecyclerView items is too small.
-    The margin is a simple delimiter between the words. -->
-    <style name="invoice_list_body">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_marginBottom">8dp</item>
-        <item name="android:paddingLeft">8dp</item>
-        <item name="android:background">@android:color/holo_blue_bright</item>
-        <item name="android:textAppearance">@android:style/TextAppearance.DeviceDefault</item>
-    </style>
-
-    <style name="toolbar_popup_menu_style" parent="AppTheme.PopupOverlay">
-        <item name="android:background">@android:color/holo_blue_bright</item>
-        <item name="android:textAppearance">@android:style/TextAppearance.DeviceDefault</item>
-    </style>
-
-    <style name="toolbar_style" parent="Widget.MaterialComponents.Toolbar">
-        <item name="android:background">@android:color/holo_blue_bright</item>
-        <item name="android:textAppearance">@android:style/TextAppearance.DeviceDefault</item>
     </style>
 
     <style name="AlertDialogTheme">

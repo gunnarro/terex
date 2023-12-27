@@ -32,8 +32,8 @@
             android:layout_gravity="start|bottom"
             android:layout_margin="16dp"
             android:contentDescription="@string/btn_add"
-            android:src="@drawable/ic_check_black_24dp"
-            app:backgroundTint="@color/color_bg_tint_btn"
+            android:src="@drawable/ic_add_black_24dp"
+            app:fabSize="normal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -43,11 +43,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
             android:layout_margin="16dp"
-            android:layout_marginEnd="108dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="108dp"
             android:contentDescription="@string/btn_calendar"
-            android:src="@drawable/ic_add_white_24dp"
-            app:backgroundTint="@color/color_bg_tint_btn"
+            android:src="@drawable/ic_calendar_month_24"
+            app:fabSize="normal"
             app:layout_constraintBottom_toTopOf="@+id/timesheet_entry_add_btn"
             app:layout_constraintEnd_toEndOf="@+id/timesheet_entry_add_btn"
             app:layout_constraintStart_toStartOf="@+id/timesheet_entry_add_btn" />
