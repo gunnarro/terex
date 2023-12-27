@@ -1,6 +1,7 @@
 [![Android CI](https://github.com/gunnarro/terex/actions/workflows/android.yml/badge.svg)](https://github.com/gunnarro/terex/actions/workflows/android.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=gunnarro_terex&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=gunnarro_terex)
 [![Android Release](https://github.com/gunnarro/terex/actions/workflows/android-release.yml/badge.svg)](https://github.com/gunnarro/terex/actions/workflows/android-release.yml)
+[![Known Vulnerabilities](https://snyk.io/test/github/gunnarro/terex/badge.svg)](https://snyk.io/test/github/gunnarro/terex)
 
 # TeRex
 Android time tracking app.
