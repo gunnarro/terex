@@ -93,7 +93,7 @@ class InvoiceServiceTest {
     @Test
     void buildInvoiceSummary() {
         TimesheetService timesheetService = new TimesheetService(applicationContextMock);
-        List<TimesheetSummary> timesheetSummaries = TestData.buildTimesheetSummaryByWeek(2023, 2);
+        List<TimesheetSummary> timesheetSummaries = TestData.buildTimesheetSummaryByWeek(23L, 2023, 2);
         assertEquals(5, timesheetSummaries.size());
         assertEquals(0, timesheetSummaries.get(0).getTimesheetId());
         assertEquals(24187.5, timesheetSummaries.get(0).getTotalBilledAmount());

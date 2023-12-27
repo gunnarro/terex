@@ -26,7 +26,7 @@ import java.util.stream.Stream;
 
 public class TestData {
 
-    public static List<TimesheetSummary> buildTimesheetSummaryByWeek(Integer year, Integer month) {
+    public static List<TimesheetSummary> buildTimesheetSummaryByWeek(Long timesheetId, Integer year, Integer month) {
         Map<Integer, List<TimesheetEntry>> weekMap = new HashMap<>();
         generateTimesheetEntries(year, month).forEach(t -> {
             int week = getWeek(t.getWorkdayDate());
@@ -39,6 +39,7 @@ public class TestData {
 
         weekMap.forEach((k, e) -> {
             TimesheetSummary timesheetSummary = new TimesheetSummary();
+            timesheetSummary.setTimesheetId(timesheetId);
             timesheetSummary.setCreatedDate(LocalDateTime.now());
             timesheetSummary.setLastModifiedDate(LocalDateTime.now());
             timesheetSummary.setFromDate(e.get(0).getWorkdayDate());

@@ -24,7 +24,6 @@ import com.gunnarro.android.terex.utility.Utility;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -369,8 +368,6 @@ class TimesheetServiceTest {
        // saveToFile("src/test/" + InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getFileName() + ".html", templateHtml);
     }
 
-    //FIXME
-    @Disabled
     @Test
     void createTimesheetSummaryAttachmentHtml() throws IOException {
         File mustacheTemplateFile = new File("src/main/assets/" + InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getTemplate());
@@ -378,9 +375,12 @@ class TimesheetServiceTest {
         AssetManager assetManagerMock = mock(AssetManager.class);
         when(assetManagerMock.open(anyString())).thenReturn(new FileInputStream(mustacheTemplateFile));
         when(applicationContextMock.getAssets()).thenReturn(assetManagerMock);
-        List<TimesheetSummary> timesheetSummaryList = TestData.buildTimesheetSummaryByWeek(2023, 1);
-        String templateHtml = timesheetService.createTimesheetSummaryAttachmentHtml(applicationContextMock, timesheetSummaryList);
+
+        List<TimesheetSummary> timesheetSummaryList = TestData.buildTimesheetSummaryByWeek(23L, 2023, 1);
+        when(timesheetRepositoryMock.getTimesheetSummary(anyLong())).thenReturn(timesheetSummaryList);
+        String templateHtml = timesheetService.createTimesheetSummaryAttachmentHtml(23L, applicationContextMock);
         Assertions.assertNotNull(templateHtml);
+        // saveToFile("src/test/" + InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getFileName() + ".html", templateHtml);
     }
 
     private void saveToFile(String filePath, String content) throws IOException {

@@ -89,7 +89,7 @@ public class TimesheetService {
     public TimesheetDto getTimesheetDto(Long timesheetId) {
         TimesheetWithEntries timesheet = getTimesheetWithEntries(timesheetId);
         Integer sumDays = timesheet.getTimesheetEntryList().size();
-        Integer sumHours = timesheet.getTimesheetEntryList().stream().mapToInt(TimesheetEntry::getWorkedMinutes).sum()/60;
+        Integer sumHours = timesheet.getTimesheetEntryList().stream().mapToInt(TimesheetEntry::getWorkedMinutes).sum() / 60;
         return TimesheetMapper.toTimesheetDto(timesheet.getTimesheet(), sumDays, sumHours);
     }
 
@@ -248,8 +248,8 @@ public class TimesheetService {
      */
     public List<TimesheetEntryDto> getTimesheetEntryDtoListReadyForBilling(Long timesheetId) {
         List<TimesheetEntry> timesheetEntryList = timesheetRepository.getTimesheetEntryList(timesheetId);
-         populateTimesheetList(timesheetId,timesheetEntryList);
-         return TimesheetMapper.toTimesheetEntryDtoList(timesheetEntryList);
+        populateTimesheetList(timesheetId, timesheetEntryList);
+        return TimesheetMapper.toTimesheetEntryDtoList(timesheetEntryList);
     }
 
     // ----------------------------------------
@@ -312,7 +312,8 @@ public class TimesheetService {
     }
 
 
-    public String createTimesheetSummaryAttachmentHtml(Context applicationContext, List<TimesheetSummary> timesheetSummaryList) {
+    public String createTimesheetSummaryAttachmentHtml(@NotNull Long timesheetId, @NotNull Context applicationContext) {
+        List<TimesheetSummary> timesheetSummaryList = getTimesheetSummary(timesheetId);
         double totalBilledAmount = timesheetSummaryList.stream().mapToDouble(TimesheetSummary::getTotalBilledAmount).sum();
         double totalBilledHours = timesheetSummaryList.stream().mapToDouble(TimesheetSummary::getTotalWorkedHours).sum();
         double totalVat = totalBilledAmount * 0.25;
@@ -339,12 +340,12 @@ public class TimesheetService {
     }
 
 
-    public String createTimesheetSummaryHtml(Long timesheetId, Context applicationContext) {
+    public String createTimesheetSummaryHtml(@NotNull Long timesheetId, @NotNull Context applicationContext) {
         List<TimesheetSummary> timesheetSummaryList = createTimesheetSummary(timesheetId, "WEEK");
         double totalBilledAmount = timesheetSummaryList.stream().mapToDouble(TimesheetSummary::getTotalBilledAmount).sum();
         double totalBilledHours = timesheetSummaryList.stream().mapToDouble(TimesheetSummary::getTotalWorkedHours).sum();
         double vat = 25;
-        double totalVat = totalBilledAmount * (vat/100);
+        double totalVat = totalBilledAmount * (vat / 100);
         double totalBilledAmountWithVat = totalBilledAmount + totalVat;
         MustacheFactory mf = new DefaultMustacheFactory();
         Mustache mustache = mf.compile(new StringReader(loadMustacheTemplate(applicationContext, InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY_2)), "");
@@ -358,7 +359,7 @@ public class TimesheetService {
         context.put("timesheetSummaryList", TimesheetMapper.toTimesheetSummaryDtoList(timesheetSummaryList));
         context.put("totalBilledHours", String.format("%.1f", totalBilledHours));
         context.put("totalBilledAmount", String.format("%.2f", totalBilledAmount));
-        context.put("vatInPercent",  String.format("%.0f",vat));
+        context.put("vatInPercent", String.format("%.0f", vat));
         context.put("totalVat", String.format("%.2f", totalVat));
         context.put("totalBilledAmountWithVat", String.format("%.2f", totalBilledAmountWithVat));
         context.put("generatedDate", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss:SSS")));

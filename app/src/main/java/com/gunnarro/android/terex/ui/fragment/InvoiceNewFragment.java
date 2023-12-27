@@ -10,12 +10,10 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
 import com.gunnarro.android.terex.R;
-import com.gunnarro.android.terex.domain.dto.TimesheetEntryDto;
 import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.InvoiceAttachment;
 import com.gunnarro.android.terex.domain.entity.SpinnerItem;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
-import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.service.InvoiceService;
 import com.gunnarro.android.terex.service.TimesheetService;
@@ -118,14 +116,13 @@ public class InvoiceNewFragment extends BaseFragment {
         return invoiceId;
     }
 
-    private double createTimesheetSummaryAttachment(Long invoiceId) {
+    private void createTimesheetSummaryAttachment(Long invoiceId) {
         try {
             Invoice invoice = invoiceService.getInvoice(invoiceId);
-            Log.d("createTimesheetSummaryAttachment", "timesheetSummary week: " + invoice.getTimesheetSummaryList());
-            double sumBilledHours = invoice.getTimesheetSummaryList().stream().mapToDouble(TimesheetSummary::getTotalWorkedHours).sum();
+            Log.d("createTimesheetSummaryAttachment", "timesheetId=" + invoice.getTimesheetId());
 
-            String invoiceSummaryHtml = timesheetService.createTimesheetSummaryAttachmentHtml(requireContext(), invoice.getTimesheetSummaryList());
-            Log.d("createInvoiceSummaryAttachment", "" + invoiceSummaryHtml);
+            String invoiceSummaryHtml = timesheetService.createTimesheetSummaryAttachmentHtml(invoice.getTimesheetId(), requireContext());
+            Log.d("createInvoiceSummaryAttachment", invoiceSummaryHtml);
             String invoiceAttachmentFileName = InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.name().toLowerCase() + "_attachment_" + invoice.getBillingDate().format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
             InvoiceAttachment timesheetSummaryAttachment = new InvoiceAttachment();
@@ -135,7 +132,6 @@ public class InvoiceNewFragment extends BaseFragment {
             timesheetSummaryAttachment.setAttachmentFileType("html");
             timesheetSummaryAttachment.setAttachmentFileContent(invoiceSummaryHtml.getBytes(StandardCharsets.UTF_8));
             invoiceService.saveInvoiceAttachment(timesheetSummaryAttachment);
-            return sumBilledHours;
         } catch (Exception e) {
             throw new TerexApplicationException(String.format("Error crating invoice attachment, invoice ref=%s", invoiceId), "50023", e);
         }

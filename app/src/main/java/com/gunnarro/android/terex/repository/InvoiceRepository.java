@@ -61,9 +61,7 @@ public class InvoiceRepository {
         try {
             CompletionService<Invoice> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
             service.submit(() -> {
-                Invoice invoice = invoiceDao.getInvoice(invoiceId);
-                invoice.setTimesheetSummaryList(timesheetSummaryDao.getTimesheetSummaries(invoice.getTimesheetId()));
-                return invoice;
+                return invoiceDao.getInvoice(invoiceId);
             });
             Future<Invoice> future = service.take();
             return future != null ? future.get() : null;

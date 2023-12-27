@@ -13,7 +13,6 @@ import com.gunnarro.android.terex.repository.InvoiceRepository;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Objects;
 
 import lombok.Getter;
@@ -27,6 +26,13 @@ import lombok.Setter;
 @Entity(tableName = "invoice", indices = {@Index(value = {"client_id", "timesheet_id"},
         unique = true)})
 public class Invoice extends BaseEntity {
+
+    /*
+     * Invoicing Period means monthly or annually as specified in the confirmation invoice from the Company.
+     */
+    public enum InvoicePeriodEnum {
+        MONTH
+    }
 
     @PrimaryKey(autoGenerate = true)
     private Long id;
@@ -48,6 +54,7 @@ public class Invoice extends BaseEntity {
     @NotNull
     @ColumnInfo(name = "invoice_status", defaultValue = "OPEN")
     private String status;
+
     @NotNull
     @ColumnInfo(name = "billing_date")
     private LocalDate billingDate;
@@ -81,8 +88,6 @@ public class Invoice extends BaseEntity {
     @NotNull
     @ColumnInfo(name = "invoice_period", defaultValue = "monthly")
     private String invoicePeriod;
-
-    private transient List<TimesheetSummary> timesheetSummaryList;
 
     public Long getId() {
         return id;
@@ -162,14 +167,6 @@ public class Invoice extends BaseEntity {
 
     public void setAmount(double amount) {
         this.amount = amount;
-    }
-
-    public List<TimesheetSummary> getTimesheetSummaryList() {
-        return timesheetSummaryList;
-    }
-
-    public void setTimesheetSummaryList(List<TimesheetSummary> timesheetSummaryList) {
-        this.timesheetSummaryList = timesheetSummaryList;
     }
 
     public LocalDate getBillingPeriodStartDate() {

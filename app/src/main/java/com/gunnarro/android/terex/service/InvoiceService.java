@@ -96,7 +96,7 @@ public class InvoiceService {
         invoice.setStatus(InvoiceRepository.InvoiceStatusEnum.NEW.name());
         // The date when the customer is billed
         invoice.setBillingDate(LocalDate.now());
-        invoice.setInvoicePeriod("month");
+        invoice.setInvoicePeriod(Invoice.InvoicePeriodEnum.MONTH.name());
         invoice.setBillingPeriodStartDate(null);
         invoice.setBillingPeriodEndDate(null);
         // due date is defaulted to 10 days after billing date
