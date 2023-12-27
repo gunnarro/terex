@@ -280,15 +280,12 @@ public class TimesheetService {
         }
 
         List<TimesheetSummary> timesheetSummaryByWeek = createTimesheetSummary(timesheetId, "WEEK");
-        Log.d("createTimesheetSummary", "timesheet summary by week: " + timesheetSummaryByWeek);
         // close the timesheet after invoice have been generated, is not possible to do any form of changes on the time list.
         timesheet.setStatus(Timesheet.TimesheetStatusEnum.BILLED.name());
         saveTimesheet(timesheet);
 
         // then close all timesheet entries by setting status to billed
-        timesheetEntryList.forEach(e -> {
-            timesheetRepository.closeTimesheetEntry(e.getId());
-        });
+        timesheetEntryList.forEach(e -> timesheetRepository.closeTimesheetEntry(e.getId()));
         return timesheetSummaryByWeek;
     }
 
@@ -357,11 +354,11 @@ public class TimesheetService {
         context.put("client", TimesheetService.getClient(null));
         context.put("timesheetProjectCode", "techlead-catalystone-solution-as");
         context.put("timesheetSummaryList", TimesheetMapper.toTimesheetSummaryDtoList(timesheetSummaryList));
-        context.put("totalBilledHours", String.format("%.1f", totalBilledHours));
-        context.put("totalBilledAmount", String.format("%.2f", totalBilledAmount));
-        context.put("vatInPercent", String.format("%.0f", vat));
-        context.put("totalVat", String.format("%.2f", totalVat));
-        context.put("totalBilledAmountWithVat", String.format("%.2f", totalBilledAmountWithVat));
+        context.put("totalBilledHours", String.format(Locale.getDefault(), "%.1f", totalBilledHours));
+        context.put("totalBilledAmount", String.format(Locale.getDefault(), "%.2f", totalBilledAmount));
+        context.put("vatInPercent", String.format(Locale.getDefault(), "%.0f", vat));
+        context.put("totalVat", String.format(Locale.getDefault(), "%.2f", totalVat));
+        context.put("totalBilledAmountWithVat", String.format(Locale.getDefault(), "%.2f", totalBilledAmountWithVat));
         context.put("generatedDate", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss:SSS")));
         StringWriter writer = new StringWriter();
         mustache.execute(writer, context);
@@ -381,7 +378,7 @@ public class TimesheetService {
         context.put("timesheetPeriod", timesheetEntryDtoList.get(0).getWorkdayDate().format(DateTimeFormatter.ofPattern("MM/yyyy")));
         context.put("timesheetEntryDtoList", timesheetEntryDtoList);
         context.put("numberOfWorkedDays", numberOfWorkedDays);
-        context.put("sunBilledHours", String.format("%.1f", sumBilledHours));
+        context.put("sunBilledHours", String.format(Locale.getDefault(), "%.1f", sumBilledHours));
         context.put("generatedDate", LocalDate.now().format(DateTimeFormatter.ISO_DATE));
         StringWriter writer = new StringWriter();
         mustache.execute(writer, context);
@@ -462,9 +459,9 @@ public class TimesheetService {
         return company;
     }
 
-    public static Company getClient(Long timesheetId) {
+    public static Company getClient(Long clientId) {
         Company client = new Company();
-        client.setId(20L);
+        client.setId(clientId);
         client.setName("Norway Consulting AS");
         client.setOrganizationNumber("");
         Address address = new Address();
