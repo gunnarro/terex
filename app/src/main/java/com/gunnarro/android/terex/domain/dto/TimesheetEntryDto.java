@@ -59,7 +59,7 @@ public class TimesheetEntryDto {
 
     public String getWorkedHours() {
         if (workedMinutes != null && workedMinutes > 0) {
-            return String.format("%.1f", workedMinutes / 60);
+            return String.format("%.1f", (double)workedMinutes / 60);
         }
         return null;
     }

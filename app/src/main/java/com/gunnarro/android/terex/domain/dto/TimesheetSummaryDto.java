@@ -98,7 +98,7 @@ public class TimesheetSummaryDto {
     }
 
     public String getTotalBilledAmount() {
-        return String.format("%.1f", totalBilledAmount);
+        return String.format("%.2f", totalBilledAmount);
     }
 
     public void setTotalBilledAmount(double totalBilledAmount) {

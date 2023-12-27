@@ -27,9 +27,9 @@ import kotlin.random.Random;
 public class InvoiceService {
 
     public enum InvoiceAttachmentTypesEnum {
-        CLIENT_TIMESHEET("html/template/norway-consulting-timesheet.mustache"),
-        TIMESHEET_SUMMARY_2("html/template/timesheet-summary.mustache"),
-        TIMESHEET_SUMMARY("html/template/invoice-timesheet-attachment.mustache");
+        CLIENT_TIMESHEET("template/html/norway-consulting-timesheet.mustache"),
+        TIMESHEET_SUMMARY_2("template/html/timesheet-summary.mustache"),
+        TIMESHEET_SUMMARY("template/html/invoice-timesheet-attachment.mustache");
 
         private final String template;
         InvoiceAttachmentTypesEnum(String template) {
