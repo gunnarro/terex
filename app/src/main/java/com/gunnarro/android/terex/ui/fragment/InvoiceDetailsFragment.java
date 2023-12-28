@@ -2,7 +2,6 @@ package com.gunnarro.android.terex.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Environment;
 import android.print.PrintAttributes;
 import android.print.PrintDocumentAdapter;
 import android.print.PrintJob;
@@ -24,12 +23,10 @@ import androidx.annotation.NonNull;
 
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.service.InvoiceService;
-import com.gunnarro.android.terex.utility.PdfUtility;
 import com.gunnarro.android.terex.utility.Utility;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -145,14 +142,6 @@ public class InvoiceDetailsFragment extends BaseFragment {
         webView.loadDataWithBaseURL("file:///android_asset/", new String(invoiceAttachmentHtml), "text/html", "UTF-8", null);
     }
 
-    private void returnToInvoiceList() {
-        requireActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.nav_content_frame, InvoiceListFragment.class, null)
-                .setReorderingAllowed(true)
-                .commit();
-    }
-
     private void exportAttachment(String invoiceAttachmentType, String fileName) {
         String invoiceAttachmentFileName = fileName + "_" + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
         PrintManager printManager = (PrintManager) getActivity().getSystemService(Context.PRINT_SERVICE);
@@ -167,30 +156,5 @@ public class InvoiceDetailsFragment extends BaseFragment {
 
         PrintJob printJob = printManager.print(invoiceAttachmentFileName, printAdapter, printAttributes);
         Log.d("", "printJob status=" + printJob.isCompleted());
-        java.io.File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM + "/PDFTest/");
-/*
-        byte[] invoiceAttachmentHtml = null;
-        try {
-            invoiceAttachmentHtml = invoiceService.getInvoiceAttachment(invoiceId, invoiceAttachmentType, "html").getAttachmentFileContent();
-        } catch (Exception e) {
-            showInfoDialog("Error", String.format("Application error!%sError: %s%s Please report.", e.getMessage(), System.lineSeparator(), System.lineSeparator()));
-        }
-        try {
-            String invoiceAttachmentFileName = fileName + "_" + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
-            PdfUtility.saveFile(new String(invoiceAttachmentHtml), PdfUtility.getLocalDir() + "/" + invoiceAttachmentFileName + ".pdf");
-            showInfoDialog("Info", String.format("%s Exported to %s", selectedInvoiceAttachmentType, invoiceAttachmentFileName));
-        } catch (Exception e) {
-            showInfoDialog("Error", String.format("Export to pdf failed! file=%s, error=%s", fileName, e.getMessage()));
-        }
-
- */
-    }
-
-    /**
-     * content://com.android.providers.downloads.documents/document/downloads
-     */
-    private String readInvoiceFile(LocalDate invoiceDate) throws IOException {
-        String invoiceFileName = "invoice_attachment_" + invoiceDate.format(DateTimeFormatter.ISO_DATE) + ".html";
-        return PdfUtility.readFile(PdfUtility.getLocalDir() + "/" + invoiceFileName);
     }
 }

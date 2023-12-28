@@ -27,8 +27,8 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class AdminFragment extends Fragment {
 
-    private final static String INVOICE_TIMESHEET_SUMMARY_ATTACHMENT_TEMPLATE = "template/html/invoice-timesheet-attachment.mustache";
-    private final static String RECRUITMENT_TIMESHEET_TEMPLATE = "template/html/norway-consulting-timesheet.mustache";
+    private static final String INVOICE_TIMESHEET_SUMMARY_ATTACHMENT_TEMPLATE = "template/html/invoice-timesheet-attachment.mustache";
+    private static final String RECRUITMENT_TIMESHEET_TEMPLATE = "template/html/norway-consulting-timesheet.mustache";
     // @Inject
     private InvoiceService invoiceService;
 

@@ -443,9 +443,9 @@ public class TimesheetService {
     }
 
 
-    public static Company getCompany(Long timesheetId) {
+    public static Company getCompany(Long companyId) {
         Company company = new Company();
-        company.setId(10L);
+        company.setId(companyId);
         company.setName("gunnarro:as");
         company.setOrganizationNumber("828 707 922");
         company.setBankAccountNumber("9230 26 98831");
