@@ -32,7 +32,7 @@ allprojects {
 
 subprojects {
     apply plugin: "org.sonarqube"
-    sonarqube {
+    sonar {
         properties {
             //  property 'sonar.coverage.jacoco.xmlReportPaths', '$projectDir.parentFile.path/build/reports/jacoco/codeCoverageReport/codeCoverageReport.xml'
             property 'sonar.android.lint.reportPaths', '$projectDir.parentFile.path/build/reports/lint-results-debug.xml'
