@@ -12,7 +12,7 @@ import com.gunnarro.android.terex.domain.converter.LocalDateTimeConverter;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -28,13 +28,10 @@ public class TimesheetSummary extends BaseEntity {
     /**
      * Hold a unique reference to the timesheet that is used as the basis for the summary
      */
-    @NotNull
     @ColumnInfo(name = "timesheet_id")
     private Long timesheetId;
-    @NotNull
     @ColumnInfo(name = "year")
     private Integer year;
-    @NotNull
     @ColumnInfo(name = "week_in_year")
     private Integer weekInYear;
     @ColumnInfo(name = "from_date")
@@ -72,7 +69,7 @@ public class TimesheetSummary extends BaseEntity {
         return timesheetId;
     }
 
-    public void setTimesheetId(Long timesheetId) {
+    public void setTimesheetId(@NotNull Long timesheetId) {
         this.timesheetId = timesheetId;
     }
 
@@ -80,7 +77,7 @@ public class TimesheetSummary extends BaseEntity {
         return year;
     }
 
-    public void setYear(Integer year) {
+    public void setYear(@NotNull Integer year) {
         this.year = year;
     }
 
@@ -88,7 +85,7 @@ public class TimesheetSummary extends BaseEntity {
         return weekInYear;
     }
 
-    public void setWeekInYear(Integer weekInYear) {
+    public void setWeekInYear(@NotNull Integer weekInYear) {
         this.weekInYear = weekInYear;
     }
 
@@ -145,7 +142,7 @@ public class TimesheetSummary extends BaseEntity {
     }
 
     public String getTotalBilledAmountFormatted() {
-        return String.format("%.2f", totalBilledAmount);
+        return String.format(Locale.getDefault(), "%.2f", totalBilledAmount);
     }
 
     public void setTotalBilledAmount(double totalBilledAmount) {
@@ -158,19 +155,6 @@ public class TimesheetSummary extends BaseEntity {
 
     public void setCurrency(String currency) {
         this.currency = currency;
-    }
-
-    // helper methods
-    public String getFromDateMM() {
-        return fromDate.format(DateTimeFormatter.ofPattern("MM"));
-    }
-
-    public String getFromDateDDMM() {
-        return fromDate.format(DateTimeFormatter.ofPattern("dd.MM"));
-    }
-
-    public String getToDateDDMM() {
-        return toDate.format(DateTimeFormatter.ofPattern("dd.MM"));
     }
 
     @Override
