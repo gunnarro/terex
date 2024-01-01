@@ -45,9 +45,9 @@ public class TimesheetSummary extends BaseEntity {
     @ColumnInfo(name = "total_sick_leave_days", defaultValue = "0")
     private Integer totalSickLeaveDays = 0;
     @ColumnInfo(name = "total_worked_hours", defaultValue = "0")
-    private double totalWorkedHours = 0;
+    private Double totalWorkedHours = 0d;
     @ColumnInfo(name = "total_billed_amount", defaultValue = "0")
-    private double totalBilledAmount = 0;
+    private Double totalBilledAmount = 0d;
     /**
      * ISO 427 currency code
      */
@@ -129,15 +129,15 @@ public class TimesheetSummary extends BaseEntity {
         this.totalSickLeaveDays = totalSickLeaveDays;
     }
 
-    public double getTotalWorkedHours() {
+    public Double getTotalWorkedHours() {
         return totalWorkedHours;
     }
 
-    public void setTotalWorkedHours(double totalWorkedHours) {
+    public void setTotalWorkedHours(Double totalWorkedHours) {
         this.totalWorkedHours = totalWorkedHours;
     }
 
-    public double getTotalBilledAmount() {
+    public Double getTotalBilledAmount() {
         return totalBilledAmount;
     }
 
@@ -145,7 +145,7 @@ public class TimesheetSummary extends BaseEntity {
         return String.format(Locale.getDefault(), "%.2f", totalBilledAmount);
     }
 
-    public void setTotalBilledAmount(double totalBilledAmount) {
+    public void setTotalBilledAmount(Double totalBilledAmount) {
         this.totalBilledAmount = totalBilledAmount;
     }
 

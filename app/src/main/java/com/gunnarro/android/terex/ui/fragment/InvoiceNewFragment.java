@@ -10,9 +10,9 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
 import com.gunnarro.android.terex.R;
+import com.gunnarro.android.terex.domain.dto.SpinnerItem;
 import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.InvoiceAttachment;
-import com.gunnarro.android.terex.domain.dto.SpinnerItem;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.service.InvoiceService;
@@ -35,7 +35,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class InvoiceNewFragment extends BaseFragment {
 
-    // @Inject
     private InvoiceService invoiceService;
     private TimesheetService timesheetService;
 
@@ -47,8 +46,8 @@ public class InvoiceNewFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requireActivity().setTitle(R.string.title_invoice);
-        invoiceService = new InvoiceService(requireActivity().getApplicationContext());
-        timesheetService = new TimesheetService(requireActivity().getApplicationContext());
+        invoiceService = new InvoiceService();
+        timesheetService = new TimesheetService();
     }
 
     @Override
@@ -105,7 +104,7 @@ public class InvoiceNewFragment extends BaseFragment {
      * @param timesheetId to be created invoice for
      */
     private Long createInvoice(@NotNull Long timesheetId) {
-        Long invoiceId = invoiceService.createInvoice(TimesheetService.getCompany(timesheetId), TimesheetService.getClient(timesheetId), timesheetId);
+        Long invoiceId = invoiceService.createInvoice(timesheetId);
         if (invoiceId == null) {
             showInfoDialog("Info", "No timesheet found! timesheetId=" + timesheetId);
         }

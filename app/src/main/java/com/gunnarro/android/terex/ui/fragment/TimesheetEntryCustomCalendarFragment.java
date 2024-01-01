@@ -44,7 +44,7 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requireActivity().setTitle(R.string.title_timesheet_calendar);
-        timesheetService = new TimesheetService(getContext());
+        timesheetService = new TimesheetService();
         Log.d(Utility.buildTag(getClass(), "onCreate"), "");
     }
 

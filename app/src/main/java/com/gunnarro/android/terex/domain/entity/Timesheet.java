@@ -55,6 +55,9 @@ public class Timesheet extends BaseEntity {
     @PrimaryKey(autoGenerate = true)
     private Long id;
 
+    @ColumnInfo(name = "project_id")
+    private Long projectId;
+
     /**
      * Must be unique, typically one timesheet per month.
      * the ref is composed with: clientName_projectCode_year_month
@@ -62,9 +65,15 @@ public class Timesheet extends BaseEntity {
 //    @NotNull
     @ColumnInfo(name = "timesheet_ref")
     private String timesheetRef;
+
     @NotNull
     @ColumnInfo(name = "client_name")
     private String clientName;
+
+    /**
+     * use projectId
+     */
+    @Deprecated
     @NotNull
     @ColumnInfo(name = "project_code")
     private String projectCode;
@@ -97,6 +106,14 @@ public class Timesheet extends BaseEntity {
 
     public void setId(@NotNull Long id) {
         this.id = id;
+    }
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
     }
 
     public String getTimesheetRef() {
@@ -228,6 +245,7 @@ public class Timesheet extends BaseEntity {
         Timesheet timesheet = new Timesheet();
         timesheet.setClientName(clientName);
         timesheet.setProjectCode(projectCode);
+        timesheet.setProjectId(1L);
         timesheet.setStatus(Timesheet.TimesheetStatusEnum.NEW.name());
         timesheet.setYear(timesheetDate.getYear());
         timesheet.setMonth(timesheetDate.getMonthValue());

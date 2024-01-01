@@ -6,26 +6,35 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Transaction;
 import androidx.room.Update;
 
 import com.gunnarro.android.terex.domain.entity.Project;
+import com.gunnarro.android.terex.domain.entity.ProjectWithTimesheet;
 
 import java.util.List;
 
 @Dao
 public interface ProjectDao {
 
-    @Query("select * from project p order by company_name, project_name")
-    LiveData<List<Project>> getAllProjects();
-
-    @Query("select * from project p where p.project_status = :status order by company_name, project_name")
-    List<Project> getProjects(String status);
-
-    @Query("select * from project p where p.company_name = :companyName and p.project_name = :projectName order by company_name, project_name")
-    Project findProject(String companyName, String projectName);
+    /**
+     * use transactions since this method return a aggregate object
+     */
+    @Transaction
+    @Query("SELECT * FROM project WHERE id = :projectId")
+    ProjectWithTimesheet getProjectWithTimesheet(Long projectId);
 
     @Query("SELECT * FROM project p WHERE p.id = :projectId")
     Project getProject(long projectId);
+
+    @Query("select * from project p where p.consultant_id = :consultantCompanyId order by project_name")
+    LiveData<List<Project>> getAllProjects(Long consultantCompanyId);
+
+    @Query("select * from project p where p.consultant_id = :consultantCompanyId and p.project_status = :status order by project_name")
+    List<Project> getProjects(Long consultantCompanyId, String status);
+
+    @Query("select * from project p where p.consultant_id = :consultantId and p.project_name = :projectName order by consultant_id, project_name")
+    Project findProject(Long consultantId, String projectName);
 
     /**
      * @param project project to be inserted. Abort if conflict, i.e. silently drop the insert

@@ -1,10 +1,10 @@
-package com.gunnarro.android.terex.domain;
+package com.gunnarro.android.terex.domain.dto;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import com.gunnarro.android.terex.domain.entity.RegisterWork;
+import com.gunnarro.android.terex.domain.dto.RegisterWork;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 
 import org.junit.jupiter.api.Test;

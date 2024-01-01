@@ -1,0 +1,150 @@
+Table consultant_broker {
+    id long [primary key]
+}
+
+Table broker_consultant_lnk {
+    id long [primary key]
+    consultant_broker_id long
+    consultant_id long
+}
+
+Table consultant_project_lnk {
+    consultant_id long
+    project_id long
+}
+
+Table consultant {
+    id long [primary key]
+}
+
+Table client {
+    id long [primary key]
+    project_id long
+}
+
+Table business_contract {
+    id long [primary key]
+    consultant_broker long
+    consultant_id long
+    hired_date timestamp
+    start_date timestamp
+    end_date timestamp
+    hourly_rate integer
+    assignment_type varchar
+    assignment_description varchar
+}
+
+Table project {
+    id long [primary key]
+    consultant_broker_id long
+    client_id long
+    project_name varchar
+    project_start_date timestamp
+    project_end_date timestamp
+}
+
+Table company {
+    id long [primary key]
+    company_name integer
+    organization_number integer
+    bank_account_number integer
+    company_industry_type varchar
+}
+
+Table person {
+    id long [primary key]
+    first_name varchar
+    middle_name integer
+    last_name varchar
+    date_of_birth timestamp
+    social_security_number varchar
+    gender varchar
+    marital_status varchar
+}
+
+Table address {
+    id long [primary key]
+    street_name varchar
+    street_number integer
+    street_number_prefix varchar
+    post_code varchar
+    city varchar
+    country varchar
+    country_code varchar
+}
+
+Table contact_info {
+    id long [primary key]
+    mobile_number_country_code varchar
+    mobile_number varchar
+    email_address varchar
+}
+
+Table invoice {
+    id long [primary key]
+    timesheet_id integer
+    client_id integer
+    invoice_number integer
+    billing_date timestamp
+    invoice_status varchar
+    billing_period_start_date timestamp
+    billing_period_end_date timestamp
+    amount double
+}
+
+Table invoice_attachment {
+    id long [primary key]
+    invoice_id integer
+    attachment_file_name varchar
+    attachment_type varchar
+    attachment_file_type varchar
+    attachment_file_content blob
+}
+
+Table timesheet {
+    id long [primary key]
+    project_id integer
+    timesheet_ref varchar
+    client_name varchar
+    project_code varchar
+    year integer
+    month integer
+    from_date timestamp
+    to_date timestamp
+}
+
+Table timesheet_entry {
+    id long [primary key]
+    timesheet_id long
+    workday_date timestamp
+    start_time timestamp
+    end_time timestamp
+    workday_week integer
+}
+
+Table timesheet_summary {
+    id long [primary key]
+    timesheet_id long
+    year integer
+    week_in_year integer
+    from_date timestamp
+    to_date timestamp
+    total_worked_days integer
+    total_worked_hours double
+}
+
+
+Ref: project.consultant_broker_id > consultant_broker.id  // many-to-one
+
+// link table, many to many relations
+Ref: broker_consultant_lnk.consultant_id > consultant.id
+Ref: broker_consultant_lnk.consultant_broker_id > consultant_broker.id
+
+Ref: consultant_project_lnk.consultant_id > consultant.id
+Ref: consultant_project_lnk.project_id > project.id
+
+Ref: timesheet.project_id > project.id                  // many-to-one
+Ref: timesheet_entry.timesheet_id > timesheet.id        // many-to-one
+Ref: timesheet_summary.timesheet_id > timesheet.id      // many-to-one
+Ref: invoice.timesheet_id - timesheet.id                // one-to-one
+Ref: invoice_attachment.invoice_id > invoice.id         // many-to-one

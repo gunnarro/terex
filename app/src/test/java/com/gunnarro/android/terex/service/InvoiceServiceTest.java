@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import com.gunnarro.android.terex.TestData;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
+import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
 import com.gunnarro.android.terex.repository.InvoiceRepository;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -57,13 +58,13 @@ class InvoiceServiceTest {
         timesheetSummaryWeek1.setTotalDaysOff(0);
         timesheetSummaryWeek1.setTotalWorkedDays(5);
         timesheetSummaryWeek1.setTotalWorkedHours(37.5);
-        timesheetSummaryWeek1.setTotalBilledAmount(25000);
+        timesheetSummaryWeek1.setTotalBilledAmount(25000d);
 
         List<TimesheetSummary> timesheetSummaries = List.of(timesheetSummaryWeek1);
         Long timesheetId = 1L;
-        when(timesheetServiceMock.createTimesheetSummaryForBilling(anyLong())).thenReturn(timesheetSummaries);
+        when(timesheetServiceMock.createTimesheetSummaryForBilling(anyLong())).thenReturn(TimesheetMapper.toTimesheetSummaryDtoList(timesheetSummaries));
         when(invoiceRepositoryMock.saveInvoice(any())).thenReturn(23L);
-        Long invoiceId = invoiceService.createInvoice(TimesheetService.getClient(1L), TimesheetService.getCompany(2L), timesheetId );
+        Long invoiceId = invoiceService.createInvoice(timesheetId );
         assertEquals(23, invoiceId);
     }
 
@@ -73,7 +74,7 @@ class InvoiceServiceTest {
     @Disabled
     @Test
     void generateTimesheet() {
-        TimesheetService timesheetService = new TimesheetService(applicationContextMock);
+        TimesheetService timesheetService = new TimesheetService();
         List<TimesheetEntry> timesheetEntries = TestData.generateTimesheetEntries(2023, 2);
         assertEquals(19, timesheetEntries.size());
         assertEquals(30, timesheetEntries.get(0).getBreakInMin());
@@ -92,7 +93,7 @@ class InvoiceServiceTest {
     @Disabled
     @Test
     void buildInvoiceSummary() {
-        TimesheetService timesheetService = new TimesheetService(applicationContextMock);
+        TimesheetService timesheetService = new TimesheetService();
         List<TimesheetSummary> timesheetSummaries = TestData.buildTimesheetSummaryByWeek(23L, 2023, 2);
         assertEquals(5, timesheetSummaries.size());
         assertEquals(0, timesheetSummaries.get(0).getTimesheetId());

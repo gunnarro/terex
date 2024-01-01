@@ -29,7 +29,7 @@ public class TimesheetViewModel extends AndroidViewModel {
 
     public TimesheetViewModel(@NonNull Application application, Integer year) {
         super(application);
-        timesheetService = new TimesheetService(application);
+        timesheetService = new TimesheetService();
         timesheetList = timesheetService.getTimesheetListLiveData(year);
     }
 

@@ -2,6 +2,7 @@ package com.gunnarro.android.terex.domain.dto;
 
 public class TimesheetDto {
     private Long timesheetId;
+    private ProjectDto project;
     private Long invoiceNumber;
     private String clientName;
     private String projectCode;
@@ -144,5 +145,13 @@ public class TimesheetDto {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public ProjectDto getProject() {
+        return project;
+    }
+
+    public void setProject(ProjectDto project) {
+        this.project = project;
     }
 }

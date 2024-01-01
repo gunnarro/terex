@@ -15,6 +15,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.gunnarro.android.terex.R;
+import com.gunnarro.android.terex.config.AppDatabase;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.utility.Utility;
 
@@ -44,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Log.d(Utility.buildTag(getClass(), "onCreate"), "context: " + getApplicationContext());
         Log.d(Utility.buildTag(getClass(), "onCreate"), "app file dir: " + getApplicationContext().getFilesDir().getPath());
+        // init database
+        AppDatabase.init(getApplicationContext());
 
         if (!new File(getApplicationContext().getFilesDir().getPath()).exists()) {
             Log.d(Utility.buildTag(getClass(), "onCreate"), "app file dir missing! " + getApplicationContext().getFilesDir().getPath());

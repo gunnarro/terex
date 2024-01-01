@@ -1,4 +1,6 @@
-package com.gunnarro.android.terex.domain.entity;
+package com.gunnarro.android.terex.domain.dto;
+
+import com.gunnarro.android.terex.domain.entity.Timesheet;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

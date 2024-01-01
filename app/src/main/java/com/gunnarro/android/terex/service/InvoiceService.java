@@ -1,14 +1,13 @@
 package com.gunnarro.android.terex.service;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.room.Transaction;
 
+import com.gunnarro.android.terex.domain.dto.TimesheetSummaryDto;
 import com.gunnarro.android.terex.domain.entity.Company;
 import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.InvoiceAttachment;
-import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.repository.InvoiceRepository;
 
@@ -47,6 +46,9 @@ public class InvoiceService {
     private final TimesheetService timesheetService;
     private final InvoiceRepository invoiceRepository;
 
+    /**
+     * For unit test onlu
+     */
     public InvoiceService(InvoiceRepository invoiceRepository, TimesheetService timesheetService) {
         this.timesheetService = timesheetService;
         this.invoiceRepository = invoiceRepository;
@@ -56,9 +58,9 @@ public class InvoiceService {
      * default constructor
      */
     @Inject
-    public InvoiceService(Context applicationContext) {
-        this.timesheetService = new TimesheetService(applicationContext);
-        this.invoiceRepository = new InvoiceRepository(applicationContext);
+    public InvoiceService() {
+        this.timesheetService = new TimesheetService();
+        this.invoiceRepository = new InvoiceRepository();
     }
 
     public Invoice getInvoice(Long invoiceId) {
@@ -78,21 +80,16 @@ public class InvoiceService {
     }
 
     @Transaction
-    public Long createInvoice(Company company, @NotNull Company client, @NotNull Long timesheetId) {
+    public Long createInvoice(@NotNull Long timesheetId) {
         // first accumulate timesheet entries
-        List<TimesheetSummary> timesheetSummaries = timesheetService.createTimesheetSummaryForBilling(timesheetId);
-        // save the invoice summaries
-        timesheetSummaries.forEach(t -> {
-            timesheetService.saveTimesheetSummary(t);
-            Log.d("saved timesheet summary", "" + t);
-        });
+        List<TimesheetSummaryDto> timesheetSummaryDtoList = timesheetService.createTimesheetSummaryForBilling(timesheetId);
         // there after create the invoice
         Invoice invoice = new Invoice();
         invoice.setInvoiceNumber(Random.Default.nextInt(100, 10000));
         invoice.setTimesheetId(timesheetId);
-        invoice.setClientId(client.getId());
+        //invoice.setClientId(client.getId());
         // ensure that a timesheet is only billed once.
-        invoice.setReference(String.format("%s-%s", client.getName(), timesheetId));
+        //invoice.setReference(String.format("%s-%s", client.getName(), timesheetId));
         invoice.setStatus(InvoiceRepository.InvoiceStatusEnum.NEW.name());
         // The date when the customer is billed
         invoice.setBillingDate(LocalDate.now());
@@ -101,15 +98,12 @@ public class InvoiceService {
         invoice.setBillingPeriodEndDate(null);
         // due date is defaulted to 10 days after billing date
         invoice.setDueDate(invoice.getBillingDate().plusDays(10));
-        double sumAmount = timesheetSummaries.stream().mapToDouble(TimesheetSummary::getTotalBilledAmount).sum();
+        //fixme do this in timesheet service
+        double sumAmount = timesheetSummaryDtoList.stream().mapToDouble(TimesheetSummaryDto::getBilledAmount).sum();
         invoice.setAmount(sumAmount);
         invoice.setCurrency("NOK");
         invoice.setStatus(InvoiceRepository.InvoiceStatusEnum.COMPLETED.name());
         return invoiceRepository.saveInvoice(invoice);
-    }
-
-    public void saveInvoice(@NotNull Invoice invoice) {
-        invoiceRepository.saveInvoice(invoice);
     }
 
     public List<InvoiceAttachmentTypesEnum> getInvoiceAttachmentTypes() {

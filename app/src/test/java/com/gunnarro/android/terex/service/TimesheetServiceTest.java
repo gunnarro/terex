@@ -14,11 +14,13 @@ import android.content.Context;
 import android.content.res.AssetManager;
 
 import com.gunnarro.android.terex.TestData;
+import com.gunnarro.android.terex.domain.dto.TimesheetSummaryDto;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
 import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
+import com.gunnarro.android.terex.repository.CompanyRepository;
 import com.gunnarro.android.terex.repository.TimesheetRepository;
 import com.gunnarro.android.terex.utility.Utility;
 
@@ -47,10 +49,12 @@ class TimesheetServiceTest {
 
     @Mock
     private TimesheetRepository timesheetRepositoryMock;
+    @Mock
+    private CompanyRepository companyRepositoryMock;
 
     @BeforeEach
     public void setup() {
-        timesheetService = new TimesheetService(timesheetRepositoryMock);
+        timesheetService = new TimesheetService(timesheetRepositoryMock,companyRepositoryMock);
     }
 
     @Test
@@ -298,38 +302,38 @@ class TimesheetServiceTest {
         when(timesheetRepositoryMock.getTimesheet(timesheetExisting.getId())).thenReturn(timesheetExisting);
         when(timesheetRepositoryMock.getTimesheetEntryList(timesheetEntry.getTimesheetId())).thenReturn(timesheetEntryList);
 
-        List<TimesheetSummary> timesheetSummaryList = timesheetService.createTimesheetSummaryForBilling(timesheetExisting.getId());
+        List<TimesheetSummaryDto> timesheetSummaryDtoList = timesheetService.createTimesheetSummaryForBilling(timesheetExisting.getId());
         // week 1
-        assertEquals(5, timesheetSummaryList.size());
-        assertEquals(23, timesheetSummaryList.get(0).getTimesheetId());
-        assertEquals(0, timesheetSummaryList.get(0).getTotalDaysOff());
-        assertEquals(3, timesheetSummaryList.get(0).getTotalWorkedDays().intValue());
-        assertEquals(22.5, timesheetSummaryList.get(0).getTotalWorkedHours());
-        assertEquals(28125.0, timesheetSummaryList.get(0).getTotalBilledAmount());
+        assertEquals(5, timesheetSummaryDtoList.size());
+        assertEquals(23, timesheetSummaryDtoList.get(0).getTimesheetId());
+        assertEquals(0, timesheetSummaryDtoList.get(0).getTotalDaysOff());
+        assertEquals(3, timesheetSummaryDtoList.get(0).getTotalWorkedDays().intValue());
+        assertEquals("22.5", timesheetSummaryDtoList.get(0).getTotalWorkedHours());
+        assertEquals("28125.00", timesheetSummaryDtoList.get(0).getTotalBilledAmount());
         // week 2
-        assertEquals(23, timesheetSummaryList.get(1).getTimesheetId());
-        assertEquals(0, timesheetSummaryList.get(1).getTotalDaysOff());
-        assertEquals(5, timesheetSummaryList.get(1).getTotalWorkedDays().intValue());
-        assertEquals(37.5, timesheetSummaryList.get(1).getTotalWorkedHours());
-        assertEquals(46875.0, timesheetSummaryList.get(1).getTotalBilledAmount());
+        assertEquals(23, timesheetSummaryDtoList.get(1).getTimesheetId());
+        assertEquals(0, timesheetSummaryDtoList.get(1).getTotalDaysOff());
+        assertEquals(5, timesheetSummaryDtoList.get(1).getTotalWorkedDays().intValue());
+        assertEquals("37.5", timesheetSummaryDtoList.get(1).getTotalWorkedHours());
+        assertEquals("46875.00", timesheetSummaryDtoList.get(1).getTotalBilledAmount());
         // week 3
-        assertEquals(23, timesheetSummaryList.get(2).getTimesheetId());
-        assertEquals(0, timesheetSummaryList.get(2).getTotalDaysOff());
-        assertEquals(5, timesheetSummaryList.get(2).getTotalWorkedDays().intValue());
-        assertEquals(37.5, timesheetSummaryList.get(2).getTotalWorkedHours());
-        assertEquals(46875.0, timesheetSummaryList.get(2).getTotalBilledAmount());
+        assertEquals(23, timesheetSummaryDtoList.get(2).getTimesheetId());
+        assertEquals(0, timesheetSummaryDtoList.get(2).getTotalDaysOff());
+        assertEquals(5, timesheetSummaryDtoList.get(2).getTotalWorkedDays().intValue());
+        assertEquals("37.5", timesheetSummaryDtoList.get(2).getTotalWorkedHours());
+        assertEquals("46875.00", timesheetSummaryDtoList.get(2).getTotalBilledAmount());
         // week 4
-        assertEquals(23, timesheetSummaryList.get(3).getTimesheetId());
-        assertEquals(0, timesheetSummaryList.get(3).getTotalDaysOff());
-        assertEquals(5, timesheetSummaryList.get(3).getTotalWorkedDays().intValue());
-        assertEquals(37.5, timesheetSummaryList.get(3).getTotalWorkedHours());
-        assertEquals(46875.0, timesheetSummaryList.get(3).getTotalBilledAmount());
+        assertEquals(23, timesheetSummaryDtoList.get(3).getTimesheetId());
+        assertEquals(0, timesheetSummaryDtoList.get(3).getTotalDaysOff());
+        assertEquals(5, timesheetSummaryDtoList.get(3).getTotalWorkedDays().intValue());
+        assertEquals("37.5", timesheetSummaryDtoList.get(3).getTotalWorkedHours());
+        assertEquals("46875.00", timesheetSummaryDtoList.get(3).getTotalBilledAmount());
         // week 5
-        assertEquals(23, timesheetSummaryList.get(4).getTimesheetId());
-        assertEquals(0, timesheetSummaryList.get(4).getTotalDaysOff());
-        assertEquals(3, timesheetSummaryList.get(4).getTotalWorkedDays().intValue());
-        assertEquals(22.5, timesheetSummaryList.get(4).getTotalWorkedHours());
-        assertEquals(28125.0, timesheetSummaryList.get(4).getTotalBilledAmount());
+        assertEquals(23, timesheetSummaryDtoList.get(4).getTimesheetId());
+        assertEquals(0, timesheetSummaryDtoList.get(4).getTotalDaysOff());
+        assertEquals(3, timesheetSummaryDtoList.get(4).getTotalWorkedDays().intValue());
+        assertEquals("22.5", timesheetSummaryDtoList.get(4).getTotalWorkedHours());
+        assertEquals("28125.00", timesheetSummaryDtoList.get(4).getTotalBilledAmount());
     }
 
     @Test
@@ -356,12 +360,17 @@ class TimesheetServiceTest {
 
     @Test
     void createTimesheetSummaryHtml() throws IOException {
+        Timesheet timesheet = new Timesheet();
+        timesheet.setId(23L);
+        timesheet.setFromDate(LocalDate.of(2023,12,1));
+        timesheet.setToDate(LocalDate.of(2023,12,31));
         File mustacheTemplateFile = new File("src/main/assets/" + InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getTemplate());
         Context applicationContextMock = mock(Context.class);
         AssetManager assetManagerMock = mock(AssetManager.class);
         when(assetManagerMock.open(anyString())).thenReturn(new FileInputStream(mustacheTemplateFile));
         when(applicationContextMock.getAssets()).thenReturn(assetManagerMock);
 
+        when(timesheetRepositoryMock.getTimesheet(anyLong())).thenReturn(timesheet);
         when(timesheetRepositoryMock.getTimesheetEntryList(anyLong())).thenReturn(TestData.generateTimesheetEntries(2023, 12));
         String templateHtml = timesheetService.createTimesheetSummaryHtml(23L, applicationContextMock);
         Assertions.assertNotNull(templateHtml);
@@ -370,6 +379,8 @@ class TimesheetServiceTest {
 
     @Test
     void createTimesheetSummaryAttachmentHtml() throws IOException {
+        Timesheet timesheet = Timesheet.createDefault("gunnarro", "test-project", 2023, 11);
+        timesheet.setId(23L);
         File mustacheTemplateFile = new File("src/main/assets/" + InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getTemplate());
         Context applicationContextMock = mock(Context.class);
         AssetManager assetManagerMock = mock(AssetManager.class);
@@ -377,6 +388,7 @@ class TimesheetServiceTest {
         when(applicationContextMock.getAssets()).thenReturn(assetManagerMock);
 
         List<TimesheetSummary> timesheetSummaryList = TestData.buildTimesheetSummaryByWeek(23L, 2023, 1);
+        when(timesheetRepositoryMock.getTimesheet(anyLong())).thenReturn(timesheet);
         when(timesheetRepositoryMock.getTimesheetSummary(anyLong())).thenReturn(timesheetSummaryList);
         String templateHtml = timesheetService.createTimesheetSummaryAttachmentHtml(23L, applicationContextMock);
         Assertions.assertNotNull(templateHtml);

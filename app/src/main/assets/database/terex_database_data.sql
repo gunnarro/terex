@@ -1,0 +1,21 @@
+INSERT INTO address (id, street_name, street_number, street_number_prefix, post_code, city, country, country_code)
+VALUES (1, "Stavangergata", "35", null, "0467", "Oslo", "Norge", "NO" )
+INSERT INTO address (id, street_name, street_number, street_number_prefix, post_code, city, country, country_code)
+VALUES (2, "Grensen", "16", null, "0159", "Oslo", "Norge", "NO" )
+
+INSERT INTO contact_info (id, email_address, mobile_number_country_code, mobile_number)
+VALUES (1, "gunnar_ronneberg@yahoo.no", "+47", "45465500")
+INSERT INTO contact_info (id, email_address, mobile_number_country_code, mobile_number)
+VALUES (2, "Anita@norway-consulting.no", "+47", "97301271")
+
+INSERT INTO person (id, first_name, middle_name, last_name, address_id, contact_info_id)
+VALUES (1, "Gunnar", null, "Rønneberg", null, 1)
+INSERT INTO person (id, first_name, middle_name, last_name, address_id, contact_info_id)
+VALUES (2, "Anita", null, "Lundtveit", null, 2)
+
+INSERT INTO company (id, company_name, organization_number, bank_account_number, address_id, contact_info_id, contact_person_id)
+VALUES (1, "gunnarro as", "828707922", "92302698831", 1, 1, 1)
+INSERT INTO company (id, company_name, organization_number, bank_account_number, address_id, contact_info_id, contact_person_id)
+VALUES (2, "Norway Consulting AS", "917616647", null, 2, 2, 2)
+INSERT INTO company (id, company_name, organization_number, bank_account_number, address_id, contact_info_id, contact_person_id)
+VALUES (3, "CatalystOne Solutions AS", " 986811095", null, -1, -1, -1)

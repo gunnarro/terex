@@ -23,7 +23,7 @@ public class InvoiceViewModel extends AndroidViewModel {
 
     public InvoiceViewModel(Application application) {
         super(application);
-        invoiceRepository = new InvoiceRepository(application);
+        invoiceRepository = new InvoiceRepository();
         invoices = invoiceRepository.getAllInvoices();
     }
 

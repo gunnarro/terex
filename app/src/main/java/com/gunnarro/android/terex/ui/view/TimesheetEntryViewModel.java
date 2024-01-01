@@ -24,7 +24,7 @@ public class TimesheetEntryViewModel extends AndroidViewModel {
 
     public TimesheetEntryViewModel(@NonNull Application application) {
         super(application);
-        timesheetService = new TimesheetService(application);
+        timesheetService = new TimesheetService();
     }
 
     public LiveData<List<TimesheetEntry>> getTimesheetEntryLiveData(Long timesheetId) {

@@ -2,6 +2,15 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="ConsultantBrokerServiceTest">
+        <State />
+      </entry>
+      <entry key="ProjectServiceTest">
+        <State />
+      </entry>
+      <entry key="TimesheetServiceTest">
+        <State />
+      </entry>
       <entry key="app">
         <State>
           <targetSelectedWithDropDown>
@@ -10,13 +19,16 @@
               <deviceKey>
                 <Key>
                   <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="$USER_HOME$/.android/avd/Nexus_6P_API_30.avd" />
+                  <value value="$USER_HOME$/.android/avd/Pixel_XL_API_34.avd" />
                 </Key>
               </deviceKey>
             </Target>
           </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2023-12-27T22:30:58.953911722Z" />
+          <timeTargetWasSelectedWithDropDown value="2023-12-29T10:14:06.729908819Z" />
         </State>
+      </entry>
+      <entry key="newAndUpdateConsultantBroker()">
+        <State />
       </entry>
     </value>
   </component>

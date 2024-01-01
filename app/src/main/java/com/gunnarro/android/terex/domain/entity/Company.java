@@ -1,45 +1,53 @@
 package com.gunnarro.android.terex.domain.entity;
 
 import androidx.room.ColumnInfo;
-import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
+
+import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
+import com.gunnarro.android.terex.domain.converter.LocalDateTimeConverter;
 
 import org.jetbrains.annotations.NotNull;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/**
- * Used as embedded
- */
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
-@Builder
-@Entity(tableName = "timesheet", indices = {@Index(value = {"organization_number"},
+@TypeConverters({LocalDateConverter.class, LocalDateTimeConverter.class})
+@Entity(tableName = "company", indices = {@Index(value = {"organization_number"},
         unique = true)})
-public class Company {
-    @NotNull
+public class Company extends BaseEntity {
     @PrimaryKey(autoGenerate = true)
-    Long id;
+    private Long id;
+
+    /**
+     * The foreign key in the child table will generally reference a primary key in the parent table.
+     */
+    @ColumnInfo(name = "address_id")
+    private Long addressId;
+
+    @ColumnInfo(name = "contact_info_id")
+    private Long contactInfoId;
+
+    @ColumnInfo(name = "contact_person_id")
+    private Long contactPersonId;
+
     @ColumnInfo(name = "company_name")
-    String name;
+    private String name;
     @ColumnInfo(name = "organization_number")
-    String organizationNumber;
+    private String organizationNumber;
     @ColumnInfo(name = "bank_account_number")
-    String bankAccountNumber;
-    @Embedded
-    Address businessAddress;
-    @Embedded
-    Contact contactInfo;
-    @Embedded
-    Person contactPerson;
+    private String bankAccountNumber;
+
+    /**
+     * Type of industry, for example consultant, broker, bank, telecom, etc
+     * I.e, what kind of services the company offers
+     */
+    @ColumnInfo(name = "company_industry_type")
+    private String companyIndustryType;
 
     @NotNull
     public Long getId() {
@@ -48,6 +56,30 @@ public class Company {
 
     public void setId(@NotNull Long id) {
         this.id = id;
+    }
+
+    public Long getAddressId() {
+        return addressId;
+    }
+
+    public void setAddressId(Long addressId) {
+        this.addressId = addressId;
+    }
+
+    public Long getContactInfoId() {
+        return contactInfoId;
+    }
+
+    public void setContactInfoId(Long contactInfoId) {
+        this.contactInfoId = contactInfoId;
+    }
+
+    public Long getContactPersonId() {
+        return contactPersonId;
+    }
+
+    public void setContactPersonId(Long contactPersonId) {
+        this.contactPersonId = contactPersonId;
     }
 
     public String getName() {
@@ -72,29 +104,5 @@ public class Company {
 
     public void setBankAccountNumber(String bankAccountNumber) {
         this.bankAccountNumber = bankAccountNumber;
-    }
-
-    public Address getBusinessAddress() {
-        return businessAddress;
-    }
-
-    public void setBusinessAddress(Address businessAddress) {
-        this.businessAddress = businessAddress;
-    }
-
-    public Contact getContactInfo() {
-        return contactInfo;
-    }
-
-    public void setContactInfo(Contact contactInfo) {
-        this.contactInfo = contactInfo;
-    }
-
-    public Person getContactPerson() {
-        return contactPerson;
-    }
-
-    public void setContactPerson(Person contactPerson) {
-        this.contactPerson = contactPerson;
     }
 }

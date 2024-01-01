@@ -1,4 +1,4 @@
-package com.gunnarro.android.terex.domain;
+package com.gunnarro.android.terex.domain.entity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;

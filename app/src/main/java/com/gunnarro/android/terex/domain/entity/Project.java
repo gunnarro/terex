@@ -10,8 +10,6 @@ import com.gunnarro.android.terex.domain.converter.LocalDateTimeConverter;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
-
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
@@ -19,15 +17,32 @@ import lombok.NoArgsConstructor;
 @Entity(tableName = "project")
 public class Project extends BaseEntity {
 
+    public enum ProjectStatusEnum {
+        ACTIVE, COMPLETED, TERMINATED
+    }
+
     @PrimaryKey(autoGenerate = true)
-    public Long id;
+    private Long id;
 
-    @ColumnInfo(name = "project_contract_id")
-    private Integer projectContractId;
+    /**
+     * The company that is the contact point between the consultant and the client
+     * <p>
+     * This id will be the same as user id.
+     */
+    @ColumnInfo(name = "consultant_broker_id")
+    private Long consultantBrokerId;
 
-    @NotNull
-    @ColumnInfo(name = "company_name")
-    private String companyName;
+    /**
+     * The consultant that is hired
+     */
+    @ColumnInfo(name = "consultant_id")
+    private Long consultantId;
+
+    /**
+     * The company that have hired the consultant
+     */
+    @ColumnInfo(name = "client_id")
+    private Long clientId;
 
     @NotNull
     @ColumnInfo(name = "project_name")
@@ -47,27 +62,37 @@ public class Project extends BaseEntity {
         this.id = id;
     }
 
-    public Integer getProjectContractId() {
-        return projectContractId;
+    public Long getConsultantBrokerId() {
+        return consultantBrokerId;
     }
 
-    public void setProjectContractId(Integer projectContractId) {
-        this.projectContractId = projectContractId;
+    public void setConsultantBrokerId(Long consultantBrokerId) {
+        this.consultantBrokerId = consultantBrokerId;
     }
 
-    public String getCompanyName() {
-        return companyName;
+    public Long getConsultantId() {
+        return consultantId;
     }
 
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
+    public void setConsultantId(Long consultantId) {
+        this.consultantId = consultantId;
     }
 
+    public Long getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(Long clientId) {
+        this.clientId = clientId;
+    }
+
+
+    @NotNull
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(@NotNull String name) {
         this.name = name;
     }
 
@@ -85,18 +110,5 @@ public class Project extends BaseEntity {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Project project = (Project) o;
-        return companyName.equals(project.companyName) && name.equals(project.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(companyName, name);
     }
 }

@@ -33,7 +33,7 @@ public class TimesheetSummaryFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requireActivity().setTitle(R.string.title_timesheet_summary);
-        timesheetService = new TimesheetService(requireActivity().getApplicationContext());
+        timesheetService = new TimesheetService();
     }
 
     @Override

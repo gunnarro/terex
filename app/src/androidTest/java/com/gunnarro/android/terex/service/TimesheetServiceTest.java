@@ -6,7 +6,6 @@ import static org.junit.Assert.assertThrows;
 
 import android.content.Context;
 
-import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 
 import com.gunnarro.android.terex.config.AppDatabase;
@@ -16,27 +15,21 @@ import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.repository.TimesheetRepository;
 
-
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.time.LocalDate;
 
-@Ignore
 public class TimesheetServiceTest {
-
-    AppDatabase db;
-    private TimesheetRepository timesheetRepository;
 
     private TimesheetService timesheetService;
 
     @Before
     public void setup() {
         Context appContext = ApplicationProvider.getApplicationContext();
-        db = Room.inMemoryDatabaseBuilder(appContext, AppDatabase.class).build();
-        timesheetRepository = new TimesheetRepository(appContext);
-        timesheetService = new TimesheetService(timesheetRepository);
+        AppDatabase.init(appContext);
+        timesheetService = new TimesheetService(new TimesheetRepository(), null);//fixme
     }
 
     @Test
@@ -55,6 +48,7 @@ public class TimesheetServiceTest {
         Timesheet timesheet = timesheetService.getTimesheet(timesheetId);
         assertEquals("gunnarro", timesheet.getClientName());
         assertEquals("terex", timesheet.getProjectCode());
+        assertEquals(1, timesheet.getProjectId().intValue());
         assertEquals(2023, timesheet.getYear().intValue());
         assertEquals(11, timesheet.getMonth().intValue());
         assertEquals("2023-11-01", timesheet.getFromDate().toString());

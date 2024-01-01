@@ -25,10 +25,12 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.gunnarro.android.terex.R;
+import com.gunnarro.android.terex.domain.dto.ConsultantBrokerDto;
+import com.gunnarro.android.terex.domain.dto.ProjectDto;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
-import com.gunnarro.android.terex.service.RecruitmentService;
+import com.gunnarro.android.terex.service.ConsultantBrokerService;
 import com.gunnarro.android.terex.service.TimesheetService;
 import com.gunnarro.android.terex.utility.Utility;
 
@@ -46,7 +48,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class TimesheetNewFragment extends BaseFragment implements View.OnClickListener {
 
     private TimesheetService timesheetService;
-    RecruitmentService recruitmentService = new RecruitmentService();
+    private ConsultantBrokerService consultantBrokerService;
 
     @Inject
     public TimesheetNewFragment() {
@@ -56,7 +58,8 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requireActivity().setTitle(R.string.title_timesheet);
-        timesheetService = new TimesheetService(requireActivity().getApplicationContext());
+        timesheetService = new TimesheetService();
+        consultantBrokerService = new ConsultantBrokerService();
     }
 
     @Override
@@ -71,14 +74,16 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
         //toolbar.setNavigationIcon(R.drawable.ic_arrow_left);
         //toolbar.setNavigationOnClickListener(v -> returnToTimesheetList());
 
-        String[] clients = recruitmentService.getRecruitmentNames();
-        String[] projects = recruitmentService.getProjectNames();
-        Timesheet timesheet = Timesheet.createDefault(clients[0], projects[0], LocalDate.now().getYear(), LocalDate.now().getMonthValue());
+        ConsultantBrokerDto consultantBrokerDto = consultantBrokerService.getConsultantBroker(1L);
+        String[] clients = consultantBrokerDto != null ? new String[]{consultantBrokerDto.getName()} : new String[]{};
+        String[] projects = consultantBrokerDto != null ? consultantBrokerDto.getProjects().stream().map(ProjectDto::getName).toArray(String[]::new) : new String[]{};
+
+        Timesheet timesheet = Timesheet.createDefault(clients.length > 0 ? clients[0] : null, projects.length > 0 ? projects[0] : null, LocalDate.now().getYear(), LocalDate.now().getMonthValue());
         // check if this is an existing or a new timesheet
         Long timesheetId = getArguments() != null ? getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY) : null;
         if (timesheetId != null && timesheetId > 0) {
             try {
-                timesheet = timesheetService.getTimesheet(timesheetId);//Utility.gsonMapper().fromJson(timesheetJson, Timesheet.class);
+                timesheet = timesheetService.getTimesheet(timesheetId);
                 Log.d(Utility.buildTag(getClass(), "onCreateView"), String.format("timesheet=%s", timesheet));
             } catch (Exception e) {
                 Log.e("Timesheet new error!", e.toString());
@@ -369,15 +374,14 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
         inflater.inflate(R.menu.timesheet_details_menu, menu);
         MenuItem viewTimesheetSummaryMenuItem = menu.findItem(R.id.timesheet_summary_menu_item);
         viewTimesheetSummaryMenuItem.setOnMenuItemClickListener(item -> {
-                    TextView timesheetIdView = requireView().findViewById(R.id.timesheet_new_id);
-                    Log.d("", ""+timesheetIdView.getText());
-                    long timesheetId = Long.parseLong(timesheetIdView.getText().toString());
-                    Bundle bundle = new Bundle();
-                    bundle.putLong(TimesheetListFragment.TIMESHEET_ID_KEY, timesheetId);
-                    navigateTo(R.id.nav_from_timesheet_details_to_timesheet_summary, bundle);
-                    return false;
-                }
-        );
+            TextView timesheetIdView = requireView().findViewById(R.id.timesheet_new_id);
+            Log.d("", String.format("%s", timesheetIdView.getText()));
+            long timesheetId = Long.parseLong(timesheetIdView.getText().toString());
+            Bundle bundle = new Bundle();
+            bundle.putLong(TimesheetListFragment.TIMESHEET_ID_KEY, timesheetId);
+            navigateTo(R.id.nav_from_timesheet_details_to_timesheet_summary, bundle);
+            return false;
+        });
 
         Log.d(Utility.buildTag(getClass(), "onCreateOptionsMenu"), "menu: " + menu);
     }

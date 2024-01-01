@@ -52,7 +52,7 @@ public class InvoiceDetailsFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requireActivity().setTitle(R.string.title_invoice_attachment);
-        invoiceService = new InvoiceService(requireActivity().getApplicationContext());
+        invoiceService = new InvoiceService();
     }
 
     @Override

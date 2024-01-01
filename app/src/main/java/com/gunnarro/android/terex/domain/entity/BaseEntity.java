@@ -21,7 +21,6 @@ public abstract class BaseEntity {
     @ColumnInfo(name = "last_modified_date")
     private LocalDateTime lastModifiedDate;
 
-
     @NonNull
     public LocalDateTime getCreatedDate() {
         return createdDate;

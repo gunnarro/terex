@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentResultListener;
 import androidx.lifecycle.LiveData;
@@ -39,6 +40,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class TimesheetListFragment extends BaseFragment implements ListOnItemClickListener, DialogActionListener {
+    // keys used for fragment communication
     public static final String TIMESHEET_REQUEST_KEY = "100";
     public static final String TIMESHEET_JSON_KEY = "timesheet_as_json";
     public static final String TIMESHEET_ID_KEY = "timesheet_id";
@@ -48,6 +50,8 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
     public static final String TIMESHEET_ACTION_DELETE = "timesheet_delete";
     public static final String TIMESHEET_ACTION_EDIT = "timesheet_edit";
     public static final String TIMESHEET_ACTION_VIEW = "timesheet_view";
+    public static final String CONSULTANT_BROKER_ID_KEY = "consultant_broker_id";
+    public static final String CONSULTANT_ID_KEY = "consultant_id";
 
     private TimesheetViewModel timesheetViewModel;
     private List<Integer> timesheetYears;
@@ -57,6 +61,25 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requireActivity().setTitle(R.string.title_timesheets);
+
+        // NB! Require API level 33 or higher. Will not be called by API level 32 and lower.
+        // This callback is only called when MyFragment is at least started
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (true) {
+                    Log.d("handleOnBackPressed", "custom navigate back to home");
+                    navigateTo(R.id.nav_home_fragment, null);
+                } else {
+                    Log.d("handleOnBackPressed", "use default navigation");
+                    // use default navigation
+                    requireActivity().getOnBackPressedDispatcher().onBackPressed();
+                }
+            }
+        };
+        // tell activity to use this navigate callback listener
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+
         // todo get from db
         timesheetYears = List.of(2023, 2024, 2025);
         selectedYear = LocalDate.now().getYear();
@@ -101,6 +124,14 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
         enableSwipeToRightAndViewItem(recyclerView);
         Log.d(Utility.buildTag(getClass(), "onCreateView"), "");
         return view;
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        //unregister listener here
+        //onBackPressedCallback.remove();
     }
 
     private Bundle createTimesheetBundle(Long timesheetId, Integer year) {
@@ -291,7 +322,6 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
      * Listener in order to handle list item click in the fragment.
      * This so the list adapter is decoupled from the business logic regarding item events.
      * Which is a cleaner model to let the fragment itself handle this.
-     *
      */
     @Override
     public void onItemClick(Bundle bundle) {

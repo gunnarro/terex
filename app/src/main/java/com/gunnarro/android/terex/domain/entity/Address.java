@@ -1,37 +1,38 @@
 package com.gunnarro.android.terex.domain.entity;
 
 import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
+import com.gunnarro.android.terex.domain.converter.LocalDateTimeConverter;
+
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/**
- * used as embedded
- */
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
-@Builder
-public class Address {
+@TypeConverters({LocalDateConverter.class, LocalDateTimeConverter.class})
+@Entity(tableName = "address")
+public class Address extends BaseEntity {
+    @PrimaryKey(autoGenerate = true)
+    private Long id;
     @ColumnInfo(name = "street_name")
-    String streetName;
+    private String streetName;
     @ColumnInfo(name = "street_number")
-    String streetNumber;
+    private String streetNumber;
     @ColumnInfo(name = "street_number_prefix")
-    String streetNumberPrefix;
+    private String streetNumberPrefix;
     @ColumnInfo(name = "post_code")
-    String postCode;
+    private String postCode;
     @ColumnInfo(name = "city")
-    String city;
+    private String city;
     @ColumnInfo(name = "country")
-    String country;
+    private String country;
     @ColumnInfo(name = "country_code")
-    String countryCode;
+    private String countryCode;
 
     public String getStreetName() {
         return streetName;

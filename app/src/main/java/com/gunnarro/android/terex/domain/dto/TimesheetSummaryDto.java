@@ -97,6 +97,9 @@ public class TimesheetSummaryDto {
         this.totalWorkedHours = totalWorkedHours;
     }
 
+    public double getBilledAmount() {
+        return totalBilledAmount;
+    }
     public String getTotalBilledAmount() {
         return String.format("%.2f", totalBilledAmount);
     }

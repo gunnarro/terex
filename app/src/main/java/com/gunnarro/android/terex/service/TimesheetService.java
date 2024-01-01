@@ -11,10 +11,7 @@ import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.gunnarro.android.terex.domain.dto.TimesheetDto;
 import com.gunnarro.android.terex.domain.dto.TimesheetEntryDto;
-import com.gunnarro.android.terex.domain.entity.Address;
-import com.gunnarro.android.terex.domain.entity.Company;
-import com.gunnarro.android.terex.domain.entity.Contact;
-import com.gunnarro.android.terex.domain.entity.Person;
+import com.gunnarro.android.terex.domain.dto.TimesheetSummaryDto;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
@@ -22,6 +19,7 @@ import com.gunnarro.android.terex.domain.entity.TimesheetWithEntries;
 import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
 import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
+import com.gunnarro.android.terex.repository.CompanyRepository;
 import com.gunnarro.android.terex.repository.TimesheetRepository;
 import com.gunnarro.android.terex.utility.Utility;
 
@@ -55,16 +53,20 @@ public class TimesheetService {
 
     private final TimesheetRepository timesheetRepository;
 
+    private final CompanyRepository companyRepository;
+
     /**
      * for unit test only
      */
-    public TimesheetService(TimesheetRepository timesheetRepository) {
+    public TimesheetService(TimesheetRepository timesheetRepository, CompanyRepository companyRepository) {
         this.timesheetRepository = timesheetRepository;
+        this.companyRepository = companyRepository;
     }
 
     @Inject
-    public TimesheetService(Context applicationContext) {
-        timesheetRepository = new TimesheetRepository(applicationContext);
+    public TimesheetService() {
+        timesheetRepository = new TimesheetRepository();
+        companyRepository = new CompanyRepository();
     }
 
 
@@ -90,6 +92,7 @@ public class TimesheetService {
         TimesheetWithEntries timesheet = getTimesheetWithEntries(timesheetId);
         Integer sumDays = timesheet.getTimesheetEntryList().size();
         Integer sumHours = timesheet.getTimesheetEntryList().stream().mapToInt(TimesheetEntry::getWorkedMinutes).sum() / 60;
+
         return TimesheetMapper.toTimesheetDto(timesheet.getTimesheet(), sumDays, sumHours);
     }
 
@@ -173,7 +176,7 @@ public class TimesheetService {
             if (timesheetEntryExisting != null && timesheetEntryExisting.isBilled()) {
                 throw new InputValidationException(String.format("timesheet entry have status billed, no changes is allowed. workday date=%s, status=%s", timesheetEntryExisting.getWorkdayDate(), timesheetEntryExisting.getStatus()), "40040", null);
             }
-
+            // the check if this is a new one or update of an existing
             if (timesheetEntryExisting != null) {
                 throw new InputValidationException(String.format("Workday already registered, timesheetId=%s, date=%s, hours=%s, status=%s", timesheetEntryExisting.getTimesheetId(), timesheetEntryExisting.getWorkdayDate(), timesheetEntry.getWorkedHours(), timesheetEntryExisting.getStatus()), "40040", null);
             }
@@ -261,13 +264,14 @@ public class TimesheetService {
     }
 
     public Long saveTimesheetSummary(TimesheetSummary timesheetSummary) {
+        Log.d("saved timesheet summary", "" + timesheetSummary);
         return timesheetRepository.saveTimesheetSummary(timesheetSummary);
     }
 
     /**
      * Used as invoice attachment
      */
-    public List<TimesheetSummary> createTimesheetSummaryForBilling(@NotNull Long timesheetId) {
+    public List<TimesheetSummaryDto> createTimesheetSummaryForBilling(@NotNull Long timesheetId) {
         // check timesheet status
         Timesheet timesheet = getTimesheet(timesheetId);
         if (!timesheet.isCompleted()) {
@@ -280,13 +284,14 @@ public class TimesheetService {
         }
 
         List<TimesheetSummary> timesheetSummaryByWeek = createTimesheetSummary(timesheetId, "WEEK");
+        timesheetSummaryByWeek.forEach(this::saveTimesheetSummary);
         // close the timesheet after invoice have been generated, is not possible to do any form of changes on the time list.
         timesheet.setStatus(Timesheet.TimesheetStatusEnum.BILLED.name());
         saveTimesheet(timesheet);
 
         // then close all timesheet entries by setting status to billed
         timesheetEntryList.forEach(e -> timesheetRepository.closeTimesheetEntry(e.getId()));
-        return timesheetSummaryByWeek;
+        return TimesheetMapper.toTimesheetSummaryDtoList(timesheetSummaryByWeek);
     }
 
     public List<TimesheetSummary> createTimesheetSummary(Long timesheetId, String by) {
@@ -310,6 +315,7 @@ public class TimesheetService {
 
 
     public String createTimesheetSummaryAttachmentHtml(@NotNull Long timesheetId, @NotNull Context applicationContext) {
+        Timesheet timesheet = getTimesheet(timesheetId);
         List<TimesheetSummary> timesheetSummaryList = getTimesheetSummary(timesheetId);
         double totalBilledAmount = timesheetSummaryList.stream().mapToDouble(TimesheetSummary::getTotalBilledAmount).sum();
         double totalBilledHours = timesheetSummaryList.stream().mapToDouble(TimesheetSummary::getTotalWorkedHours).sum();
@@ -321,8 +327,9 @@ public class TimesheetService {
         Map<String, Object> context = new HashMap<>();
         context.put("invoiceAttachmentTitle", "Vedlegg til faktura");
         context.put("invoiceBillingPeriod", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM")));
-        context.put("company", TimesheetService.getCompany(null));
-        context.put("client", TimesheetService.getClient(null));
+        context.put("timesheetPeriod", String.format("%s/%s", timesheet.getMonth(), timesheet.getYear()));
+        context.put("company", companyRepository.getCompany(1L));
+        context.put("client", companyRepository.getCompany(2L));
         context.put("timesheetProjectCode", "techlead-catalystone-solution-as");
         context.put("timesheetSummaryList", timesheetSummaryList);
         context.put("totalBilledHours", Double.toString(totalBilledHours));
@@ -338,6 +345,7 @@ public class TimesheetService {
 
 
     public String createTimesheetSummaryHtml(@NotNull Long timesheetId, @NotNull Context applicationContext) {
+        Timesheet timesheet = getTimesheet(timesheetId);
         List<TimesheetSummary> timesheetSummaryList = createTimesheetSummary(timesheetId, "WEEK");
         double totalBilledAmount = timesheetSummaryList.stream().mapToDouble(TimesheetSummary::getTotalBilledAmount).sum();
         double totalBilledHours = timesheetSummaryList.stream().mapToDouble(TimesheetSummary::getTotalWorkedHours).sum();
@@ -349,9 +357,9 @@ public class TimesheetService {
         Map<String, Object> context = new HashMap<>();
         context.put("invoiceAttachmentTitle", "Vedlegg til faktura");
         context.put("invoiceBillingPeriod", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM")));
-        context.put("timesheetPeriod", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM")));
-        context.put("company", TimesheetService.getCompany(null));
-        context.put("client", TimesheetService.getClient(null));
+        context.put("timesheetPeriod", String.format("%s/%s", timesheet.getMonth(), timesheet.getYear()));
+        context.put("company", companyRepository.getCompany(1L));
+        context.put("client", companyRepository.getCompany(2L));
         context.put("timesheetProjectCode", "techlead-catalystone-solution-as");
         context.put("timesheetSummaryList", TimesheetMapper.toTimesheetSummaryDtoList(timesheetSummaryList));
         context.put("totalBilledHours", String.format(Locale.getDefault(), "%.1f", totalBilledHours));
@@ -367,6 +375,7 @@ public class TimesheetService {
 
 
     public String createTimesheetListHtml(@NotNull Long timesheetId, @NotNull Context applicationContext) {
+        Timesheet timesheet = getTimesheet(timesheetId);
         List<TimesheetEntryDto> timesheetEntryDtoList = getTimesheetEntryDtoListReadyForBilling(timesheetId);
         Double sumBilledHours = timesheetEntryDtoList.stream().mapToDouble(TimesheetEntryDto::getWorkedMinutes).sum() / 60;
         Integer numberOfWorkedDays = timesheetEntryDtoList.stream().filter(e -> e.getWorkedMinutes() != null && e.getWorkedMinutes() > 0).collect(Collectors.toList()).size();
@@ -374,8 +383,7 @@ public class TimesheetService {
         Mustache mustache = mf.compile(new StringReader(loadMustacheTemplate(applicationContext, InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET)), "");
         Map<String, Object> context = new HashMap<>();
         context.put("title", "Timeliste for konsulentbistand");
-        // FIXME get date from timesheet
-        context.put("timesheetPeriod", timesheetEntryDtoList.get(0).getWorkdayDate().format(DateTimeFormatter.ofPattern("MM/yyyy")));
+        context.put("timesheetPeriod", String.format("%s/%s", timesheet.getMonth(), timesheet.getYear()));
         context.put("timesheetEntryDtoList", timesheetEntryDtoList);
         context.put("numberOfWorkedDays", numberOfWorkedDays);
         context.put("sunBilledHours", String.format(Locale.getDefault(), "%.1f", sumBilledHours));
@@ -440,44 +448,5 @@ public class TimesheetService {
             timesheetSummary.setTotalWorkedHours(timesheetSummary.getTotalWorkedHours() + (double) t.getWorkedMinutes() / 60);
         });
         return timesheetSummary;
-    }
-
-
-    public static Company getCompany(Long companyId) {
-        Company company = new Company();
-        company.setId(companyId);
-        company.setName("gunnarro:as");
-        company.setOrganizationNumber("828 707 922");
-        company.setBankAccountNumber("9230 26 98831");
-        Address address = new Address();
-        address.setStreetNumber("35");
-        address.setStreetName("Stavangergata");
-        address.setPostCode("0467");
-        address.setCity("Oslo");
-        address.setCountryCode("no");
-        company.setBusinessAddress(address);
-        return company;
-    }
-
-    public static Company getClient(Long clientId) {
-        Company client = new Company();
-        client.setId(clientId);
-        client.setName("Norway Consulting AS");
-        client.setOrganizationNumber("");
-        Address address = new Address();
-        address.setStreetNumber("16");
-        address.setStreetName("Grensen");
-        address.setPostCode("0159");
-        address.setCity("Oslo");
-        address.setCountryCode("no");
-        client.setBusinessAddress(address);
-        Person contactPerson = new Person();
-        contactPerson.setFirstName("Anita");
-        contactPerson.setLastName("Lundtveit");
-        client.setContactPerson(contactPerson);
-
-        Contact contactInfo = new Contact();
-        client.setContactInfo(contactInfo);
-        return client;
     }
 }

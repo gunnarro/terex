@@ -34,10 +34,10 @@ public class TimesheetRepository {
     // dependency. This adds complexity and much more code, and this sample is not about testing.
     // See the BasicSample in the android-architecture-components repository at
     // https://github.com/googlesamples
-    public TimesheetRepository(Context applicationContext) {
-        timesheetDao = AppDatabase.getDatabase(applicationContext).timesheetDao();
-        timesheetEntryDao = AppDatabase.getDatabase(applicationContext).timesheetEntryDao();
-        timesheetSummaryDao = AppDatabase.getDatabase(applicationContext).timesheetSummaryDao();
+    public TimesheetRepository() {
+        timesheetDao = AppDatabase.getDatabase().timesheetDao();
+        timesheetEntryDao = AppDatabase.getDatabase().timesheetEntryDao();
+        timesheetSummaryDao = AppDatabase.getDatabase().timesheetSummaryDao();
     }
 
 
@@ -75,7 +75,7 @@ public class TimesheetRepository {
         } catch (InterruptedException | ExecutionException e) {
             // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();
-            throw new TerexApplicationException("Error getting timesheet with entries list", e.getMessage(), e.getCause());
+            throw new TerexApplicationException("Error saving timesheet summary", e.getMessage(), e.getCause());
         }
     }
 
@@ -83,7 +83,6 @@ public class TimesheetRepository {
     public TimesheetWithEntries getTimesheetWithEntries(Long timesheetId) {
         try {
             CompletionService<TimesheetWithEntries> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
-            Log.d("getCurrentTimesheetWithEntries", String.format("timesheetId=%s", timesheetId));
             service.submit(() -> timesheetDao.getTimesheetWithEntries(timesheetId));
             Future<TimesheetWithEntries> future = service.take();
             return future != null ? future.get() : null;
@@ -109,7 +108,6 @@ public class TimesheetRepository {
 
     public Timesheet getTimesheet(String clientName, String projectCode, Integer year, Integer mount) {
         try {
-            Log.d("TimesheetRepository.getTimesheet", String.format("%s, %s, %s, %s", clientName, projectCode, year, mount));
             CompletionService<Timesheet> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
             service.submit(() -> timesheetDao.getTimesheet(clientName, projectCode, year, mount));
             Future<Timesheet> future = service.take();
@@ -180,7 +178,6 @@ public class TimesheetRepository {
     // Room executes all queries on a separate thread.
     // Observed LiveData will notify the observer when the data has changed.
     public LiveData<List<TimesheetEntry>> getTimesheetEntryListLiveData(Long timesheetId) {
-        Log.d("TimesheetRepository.getTimesheetEntryListLiveData", "refresh live data in fragment, timesheetId=" + timesheetId);
         try {
             CompletionService<LiveData<List<TimesheetEntry>>> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
             service.submit(() -> timesheetEntryDao.getTimesheetEntryListLiveData(timesheetId));

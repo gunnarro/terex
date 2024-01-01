@@ -2,11 +2,11 @@ package com.gunnarro.android.terex.domain.entity;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.Index;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
+import com.gunnarro.android.terex.domain.converter.LocalDateTimeConverter;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -17,28 +17,32 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@TypeConverters({LocalDateConverter.class})
-@Entity(tableName = "person", primaryKeys = {"id", "first_name", "last_name"}, indices = {@Index("idx_person"), @Index(value = {"id"})})
-public class Person {
-    @NotNull
+@TypeConverters({LocalDateConverter.class, LocalDateTimeConverter.class})
+@Entity(tableName = "person")
+public class Person extends BaseEntity {
+
     @PrimaryKey(autoGenerate = true)
-    public Long id;
+    private Long id;
+    @ColumnInfo(name = "address_id")
+    private Long addressId;
+    @ColumnInfo(name = "contact_info_id")
+    private Long contactInfoId;
     @NotNull
     @ColumnInfo(name = "first_name")
-    String firstName;
+    private String firstName;
     @ColumnInfo(name = "middle_name")
-    String middleName;
+    private String middleName;
     @NotNull
     @ColumnInfo(name = "last_name")
-    String lastName;
+    private String lastName;
     @ColumnInfo(name = "date_of_birth")
-    LocalDate dateOfBirth;
+    private LocalDate dateOfBirth;
     @ColumnInfo(name = "social_security_number")
-    String socialSecurityNumber;
+    private String socialSecurityNumber;
     @ColumnInfo(name = "gender")
-    String gender;
+    private String gender;
     @ColumnInfo(name = "marital_status")
-    String maritalStatus;
+    private String maritalStatus;
 
     @NotNull
     public Long getId() {

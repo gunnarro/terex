@@ -6,22 +6,16 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.text.DateFormatSymbols;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoField;
-import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.WeekFields;
-import java.util.Date;
 import java.util.Locale;
-import java.util.TimeZone;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -33,10 +27,7 @@ public class Utility {
     public static final Integer DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES = 8 * 60 - DEFAULT_DAILY_BREAK_IN_MINUTES;
     private static final Pattern POSITIVE_INTEGER_PATTERN = Pattern.compile("\\d+");
     public static final Integer DEFAULT_HOURLY_RATE = 1250;
-    private static final SimpleDateFormat dateFormatter;
     private static final String DATE_TIME_PATTERN = "dd-MM-yyyy HH:mm";
-    public static final String WORKDAY_DATE_PATTERN = "dd.MM.yyyy";
-    public static final String INVOICE_DATE_PATTERN = " yyyy MMMM";
     private static final String DATE_PATTERN = "dd-MM-yyyy";
     private static final String TIME_PATTERN = "HH:mm";
     private static String currentUUID;
@@ -63,10 +54,6 @@ public class Utility {
 
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_TIME_PATTERN, Locale.getDefault());
 
-    static {
-        dateFormatter = new SimpleDateFormat(DATE_TIME_PATTERN, Locale.getDefault());
-        dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-    }
 
     public static void genNewUUID() {
         currentUUID = java.util.UUID.randomUUID().toString();
@@ -78,21 +65,6 @@ public class Utility {
                 .append(", UUID=").append(currentUUID)
                 .append(", thread=").append(Thread.currentThread().getName())
                 .toString();
-    }
-
-    public static Date toDate(String dateStr) {
-        try {
-            return dateFormatter.parse(dateStr);
-        } catch (Exception e) {
-            throw new RuntimeException(e.toString());
-        }
-    }
-
-    public static String formatTime(long timeMs) {
-        if (timeMs >= 0) {
-            return dateFormatter.format(new Date(timeMs));
-        }
-        return "";
     }
 
     public static String formatDateTime(LocalDateTime localDateTime) {
@@ -155,21 +127,6 @@ public class Utility {
         return String.format("%s:%s", hh, mm);
     }
 
-    ;
-
-    public static String formatToDDMMYYYY(int year, int month, int day) {
-        String dd = String.format("%s", day);
-        String mm = String.format("%s", month);
-        if (day >= 0 && day < 10) {
-            dd = String.format("0%s", day);
-        }
-        if (month >= 0 && month < 10) {
-            mm = String.format("0%s", month);
-        }
-        return String.format("%s-%s-%s", dd, mm, year);
-    }
-
-
     public static boolean isInteger(String value) {
         if (value == null) {
             return false;
@@ -184,31 +141,6 @@ public class Utility {
         }
         return LocalDateTime.parse(dateTimeStr, dateTimeFormatter);
     }
-
-    public static void getFirstDayOfWeek() {
-        LocalDate today = LocalDate.now();
-
-        // Go backward to get Monday
-        LocalDate monday = today;
-        while (monday.getDayOfWeek() != DayOfWeek.MONDAY) {
-            monday = monday.minusDays(1);
-        }
-
-        // Go forward to get Sunday
-        LocalDate sunday = today;
-        while (sunday.getDayOfWeek() != DayOfWeek.SUNDAY) {
-            sunday = sunday.plusDays(1);
-        }
-
-        System.out.println("Today: " + today);
-        System.out.println("Monday of the Week: " + monday);
-        System.out.println("Sunday of the Week: " + sunday);
-    }
-
-    public static boolean isFirstDayOfWeek(LocalDate date) {
-        return date.getDayOfWeek().name().equals(DayOfWeek.MONDAY.name());
-    }
-
 
     public static LocalDate getFirstDayOfWeek(LocalDate date, Integer weekOfYear) {
         return LocalDate.of(date.getYear(), date.getMonthValue(), 1)
@@ -236,10 +168,6 @@ public class Utility {
         return firstDayOfWeek;
     }
 
-    public static Integer getWeek(LocalDate date) {
-        return date.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear());
-    }
-
     public static LocalDate getFirstDayOfMonth(LocalDate date) {
         return LocalDate.of(date.getYear(), date.getMonth(), 1);
     }
@@ -254,7 +182,6 @@ public class Utility {
 
     public static String[] getMonthNames() {
         return new String[]{"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
-        //return new DateFormatSymbols().getMonths();
     }
 
     /**

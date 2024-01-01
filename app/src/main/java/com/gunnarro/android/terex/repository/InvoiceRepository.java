@@ -1,6 +1,5 @@
 package com.gunnarro.android.terex.repository;
 
-import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -44,10 +43,10 @@ public class InvoiceRepository {
     // dependency. This adds complexity and much more code, and this sample is not about testing.
     // See the BasicSample in the android-architecture-components repository at
     // https://github.com/googlesamples
-    public InvoiceRepository(Context applicationContext) {
-        invoiceDao = AppDatabase.getDatabase(applicationContext).invoiceDao();
-        invoiceAttachmentDao = AppDatabase.getDatabase(applicationContext).invoiceAttachmentDao();
-        timesheetSummaryDao = AppDatabase.getDatabase(applicationContext).timesheetSummaryDao();
+    public InvoiceRepository() {
+        invoiceDao = AppDatabase.getDatabase().invoiceDao();
+        invoiceAttachmentDao = AppDatabase.getDatabase().invoiceAttachmentDao();
+        timesheetSummaryDao = AppDatabase.getDatabase().timesheetSummaryDao();
         allInvoices = invoiceDao.getAll();
     }
 
