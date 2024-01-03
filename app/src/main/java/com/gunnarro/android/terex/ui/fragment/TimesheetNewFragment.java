@@ -38,6 +38,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -217,6 +218,18 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
     private void saveTimesheet() {
         try {
             Timesheet timesheet = readTimesheetInputData();
+            ConsultantBrokerDto consultantBrokerDto = consultantBrokerService.findConsultantBroker(timesheet.getClientName());
+            if (consultantBrokerDto == null) {
+                // this was a new consultant broker, so save it
+                consultantBrokerDto = new ConsultantBrokerDto();
+                consultantBrokerDto.setName(timesheet.getClientName());
+                ProjectDto projectDto = new ProjectDto();
+                projectDto.setName(timesheet.getProjectCode());
+                consultantBrokerDto.setProjects(List.of(projectDto));
+                consultantBrokerService.saveConsultantBroker(consultantBrokerDto);
+            }
+            timesheet.getClientName();
+            timesheet.getProjectCode();
             timesheetService.saveTimesheet(timesheet);
             showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_saved_msg_format), timesheet.getTimesheetRef(), timesheet.getYear() + "-" + timesheet.getMonth()), R.color.color_snackbar_text_add);
             navigateTo(R.id.nav_from_timesheet_details_to_timesheet_list, null);

@@ -25,6 +25,7 @@ import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
+import com.gunnarro.android.terex.repository.ClientDao;
 import com.gunnarro.android.terex.repository.CompanyDao;
 import com.gunnarro.android.terex.repository.ConsultantBrokerDao;
 import com.gunnarro.android.terex.repository.InvoiceAttachmentDao;
@@ -113,6 +114,8 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract CompanyDao companyDao();
 
     public abstract ConsultantBrokerDao consultantBrokerDao();
+
+    public abstract ClientDao clientDao();
 
 
     // Called when the database is created for the first time. This is called after all the tables are created.

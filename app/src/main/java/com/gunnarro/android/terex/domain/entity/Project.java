@@ -2,6 +2,7 @@ package com.gunnarro.android.terex.domain.entity;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
@@ -14,7 +15,8 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @TypeConverters({LocalDateConverter.class, LocalDateTimeConverter.class})
-@Entity(tableName = "project")
+@Entity(tableName = "project", indices = {@Index(value = {"client_id", "project_name"},
+        unique = true)})
 public class Project extends BaseEntity {
 
     public enum ProjectStatusEnum {
@@ -23,20 +25,6 @@ public class Project extends BaseEntity {
 
     @PrimaryKey(autoGenerate = true)
     private Long id;
-
-    /**
-     * The company that is the contact point between the consultant and the client
-     * <p>
-     * This id will be the same as user id.
-     */
-    @ColumnInfo(name = "consultant_broker_id")
-    private Long consultantBrokerId;
-
-    /**
-     * The consultant that is hired
-     */
-    @ColumnInfo(name = "consultant_id")
-    private Long consultantId;
 
     /**
      * The company that have hired the consultant
@@ -62,22 +50,6 @@ public class Project extends BaseEntity {
         this.id = id;
     }
 
-    public Long getConsultantBrokerId() {
-        return consultantBrokerId;
-    }
-
-    public void setConsultantBrokerId(Long consultantBrokerId) {
-        this.consultantBrokerId = consultantBrokerId;
-    }
-
-    public Long getConsultantId() {
-        return consultantId;
-    }
-
-    public void setConsultantId(Long consultantId) {
-        this.consultantId = consultantId;
-    }
-
     public Long getClientId() {
         return clientId;
     }
@@ -85,7 +57,6 @@ public class Project extends BaseEntity {
     public void setClientId(Long clientId) {
         this.clientId = clientId;
     }
-
 
     @NotNull
     public String getName() {

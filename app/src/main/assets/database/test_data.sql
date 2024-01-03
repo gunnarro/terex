@@ -19,15 +19,16 @@ INSERT INTO company (id, created_date, last_modified_date, company_name, organiz
 INSERT INTO company (id, created_date, last_modified_date, company_name, organization_number, bank_account_number, address_id, contact_info_id, contact_person_id) VALUES (2, current_timestamp, current_timestamp, 'Norway Consulting AS', '917616647', null, 2, 2, 2)
 INSERT INTO company (id, created_date, last_modified_date, company_name, organization_number, bank_account_number, address_id, contact_info_id, contact_person_id) VALUES (3, current_timestamp, current_timestamp, 'CatalystOne Solutions AS', ' 986811095', null, null, null, null)
 
+-- update client data
+DELETE FROM client WHERE id > 0
+INSERT INTO client (id, created_date, last_modified_date, company_id) VALUES(1, current_timestamp, current_timestamp, 2)
+
 -- update project data
 DELETE FROM project WHERE id > 0
-INSERT INTO project (id, created_date, last_modified_date, consultant_broker_id, consultant_id, client_id, project_name, project_description, project_status) VALUES(1, current_timestamp, current_timestamp, 1, 2, 3, 'CatalystOne HRIS modernisering', 'Fra monlith til microservice arkitektur', 'ACTIVE')
+INSERT INTO project (id, created_date, last_modified_date, client_id, project_name, project_description, project_status) VALUES(1, current_timestamp, current_timestamp, 2, 'CatalystOne HRIS modernisering', 'Fra monlith til microservice arkitektur', 'ACTIVE')
 
 DELETE FROM consultant_broker WHERE id > 0
 INSERT INTO consultant_broker (id, created_date, last_modified_date, company_id, name, status) VALUES(1, current_timestamp, current_timestamp, 2, 'Norway Consulting AS', 'ACTIVE')
-
-DELETE FROM client WHERE id > 0
-INSERT INTO client (id, created_date, last_modified_date, company_id) VALUES(1, current_timestamp, current_timestamp, 3)
 
 DELETE FROM consultant WHERE id > 0
 INSERT INTO consultant (id, created_date, last_modified_date, company_id, name, status) VALUES(1, current_timestamp, current_timestamp, 1, 'gunnarro as', 'ACTIVE')

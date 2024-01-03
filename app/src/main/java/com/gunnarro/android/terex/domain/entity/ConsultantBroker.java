@@ -21,6 +21,7 @@ import lombok.Setter;
 @TypeConverters({LocalDateConverter.class, LocalDateTimeConverter.class})
 @Entity(tableName = "consultant_broker")
 public class ConsultantBroker extends BaseEntity {
+    public enum CosultantBrokerStatusEnum {ACTIVE}
 
     @PrimaryKey(autoGenerate = true)
     private Long id;
@@ -40,6 +41,14 @@ public class ConsultantBroker extends BaseEntity {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(Long companyId) {
+        this.companyId = companyId;
     }
 
     public String getName() {

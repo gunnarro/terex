@@ -3,6 +3,7 @@ package com.gunnarro.android.terex.domain.entity;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
@@ -15,11 +16,43 @@ import lombok.Setter;
 @Getter
 @Setter
 @TypeConverters({LocalDateConverter.class, LocalDateTimeConverter.class})
-@Entity(tableName = "client")
+@Entity(tableName = "client", indices = {@Index(value = {"company_id"},
+        unique = true)})
 public class Client extends BaseEntity {
 
     @PrimaryKey(autoGenerate = true)
     private Long id;
+
     @ColumnInfo(name = "company_id")
     private Long companyId;
+
+    @ColumnInfo(name = "status")
+    private String status;
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(Long companyId) {
+        this.companyId = companyId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+
 }

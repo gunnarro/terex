@@ -21,7 +21,7 @@ INSERT INTO company (id, created_date, last_modified_date, company_name, organiz
 
 -- update project data
 DELETE FROM project WHERE id > 0
-INSERT INTO project (id, created_date, last_modified_date, consultant_broker_id, consultant_id, client_id, project_contract_id, project_name, project_description, project_status) VALUES(1, current_timestamp, current_timestamp, 1, 2, 3, null, 'CatalystOne HRIS modernisering', 'Fra monlith til microservice arkitektur', 'ACTIVE')
+INSERT INTO project (id, created_date, last_modified_date, client_id, project_contract_id, project_name, project_description, project_status) VALUES(1, current_timestamp, current_timestamp, 2, null, 'CatalystOne HRIS modernisering', 'Fra monlith til microservice arkitektur', 'ACTIVE')
 
 DELETE FROM consultant_broker WHERE id > 0
 INSERT INTO consultant_broker (id, created_date, last_modified_date, name, status) VALUES(1, current_timestamp, current_timestamp, 1, 'Norway Consulting AS', 'ACTIVE')

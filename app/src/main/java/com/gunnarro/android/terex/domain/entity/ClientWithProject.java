@@ -17,37 +17,33 @@ import lombok.Setter;
 @Getter
 @Setter
 @TypeConverters({LocalDateConverter.class, LocalDateTimeConverter.class})
-@Entity(tableName = "consultant_broker")
-public class ConsultantBrokerWithProject {
-
+@Entity(tableName = "client")
+public class ClientWithProject {
 
     @Embedded
-    private ConsultantBroker consultantBroker;
+    private Client client;
 
-    public ConsultantBrokerWithProject() {
+    public ClientWithProject() {
     }
 
     @Ignore
-    public ConsultantBrokerWithProject(ConsultantBroker consultantBroker, List<Project> projectList) {
-        this.consultantBroker = consultantBroker;
+    public ClientWithProject(Client client, List<Project> projectList) {
+        this.client = client;
         this.projectList = projectList;
     }
 
-    @Relation(
-            parentColumn = "id",
-            entityColumn = "client_id"
-    )
+    @Relation(parentColumn = "company_id", entityColumn = "id")
+    private Company company;
 
-
-
+    @Relation(parentColumn = "id", entityColumn = "client_id")
     private List<Project> projectList;
 
-    public ConsultantBroker getConsultantBroker() {
-        return consultantBroker;
+    public Client getClient() {
+        return client;
     }
 
-    public void setConsultantBroker(ConsultantBroker consultantBroker) {
-        this.consultantBroker = consultantBroker;
+    public void setClient(Client client) {
+        this.client = client;
     }
 
     public List<Project> getProjectList() {

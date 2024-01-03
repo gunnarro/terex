@@ -27,14 +27,14 @@ public interface ProjectDao {
     @Query("SELECT * FROM project p WHERE p.id = :projectId")
     Project getProject(long projectId);
 
-    @Query("select * from project p where p.consultant_id = :consultantCompanyId order by project_name")
-    LiveData<List<Project>> getAllProjects(Long consultantCompanyId);
+    @Query("select * from project p where p.client_id = :clientId order by project_name")
+    LiveData<List<Project>> getAllProjects(Long clientId);
 
-    @Query("select * from project p where p.consultant_id = :consultantCompanyId and p.project_status = :status order by project_name")
-    List<Project> getProjects(Long consultantCompanyId, String status);
+    @Query("select * from project p where p.client_id = :clientId and p.project_status = :status order by project_name")
+    List<Project> getProjects(Long clientId, String status);
 
-    @Query("select * from project p where p.consultant_id = :consultantId and p.project_name = :projectName order by consultant_id, project_name")
-    Project findProject(Long consultantId, String projectName);
+    @Query("select * from project p where p.client_id = :clientId and p.project_name = :projectName order by project_name")
+    Project findProject(Long clientId, String projectName);
 
     /**
      * @param project project to be inserted. Abort if conflict, i.e. silently drop the insert

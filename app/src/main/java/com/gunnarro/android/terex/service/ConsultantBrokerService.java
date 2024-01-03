@@ -1,11 +1,11 @@
 package com.gunnarro.android.terex.service;
 
 
-import android.content.Context;
 import android.util.Log;
 
 import com.gunnarro.android.terex.domain.dto.ConsultantBrokerDto;
 import com.gunnarro.android.terex.domain.entity.ConsultantBroker;
+import com.gunnarro.android.terex.domain.entity.ConsultantBrokerWithProject;
 import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.repository.ConsultantBrokerRepository;
@@ -20,6 +20,7 @@ import javax.inject.Singleton;
 @Singleton
 public class ConsultantBrokerService {
 
+    private final ProjectService projectService;
     private final ConsultantBrokerRepository consultantBrokerRepository;
 
     /**
@@ -28,15 +29,21 @@ public class ConsultantBrokerService {
     @Inject
     public ConsultantBrokerService(ConsultantBrokerRepository consultantBrokerRepository) {
         this.consultantBrokerRepository = consultantBrokerRepository;
+        this.projectService = new ProjectService();
     }
 
     @Inject
     public ConsultantBrokerService() {
-        consultantBrokerRepository = new ConsultantBrokerRepository();
+        this.consultantBrokerRepository = new ConsultantBrokerRepository();
+        this.projectService = new ProjectService();
     }
 
     public ConsultantBrokerDto getConsultantBroker(Long consultantBrokerId) {
-       return TimesheetMapper.toConsultantBrokerDto(consultantBrokerRepository.getConsultantBroker(consultantBrokerId));
+        return TimesheetMapper.toConsultantBrokerDto(consultantBrokerRepository.getConsultantBroker(consultantBrokerId));
+    }
+
+    public ConsultantBrokerDto findConsultantBroker(String name) {
+        return TimesheetMapper.toConsultantBrokerDto(new ConsultantBrokerWithProject(consultantBrokerRepository.findConsultantBroker(name), null));
     }
 
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures
@@ -55,9 +62,12 @@ public class ConsultantBrokerService {
             Long id;
             if (consultantBrokerExisting == null) {
                 consultantBroker.setCreatedDate(LocalDateTime.now());
+                consultantBroker.setStatus(ConsultantBroker.CosultantBrokerStatusEnum.ACTIVE.name());
                 id = consultantBrokerRepository.insertConsultantBroker(consultantBroker);
             } else {
                 consultantBroker.setCreatedDate(consultantBrokerExisting.getCreatedDate());
+                consultantBroker.setStatus(consultantBrokerExisting.getStatus());
+                consultantBroker.setCompanyId(consultantBrokerExisting.getCompanyId());
                 consultantBrokerRepository.updateConsultantBroker(consultantBroker);
                 id = consultantBrokerExisting.getId();
             }

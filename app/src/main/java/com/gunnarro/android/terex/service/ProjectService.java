@@ -31,6 +31,11 @@ public class ProjectService {
         this.projectRepository = projectRepository;
     }
 
+    @Inject
+    public ProjectService() {
+        this.projectRepository = new ProjectRepository();
+    }
+
     public ProjectDto getProject(Long projectId) {
         return TimesheetMapper.toProjectDto(projectRepository.getProject(projectId));
     }
@@ -52,7 +57,7 @@ public class ProjectService {
     // that you're not doing any long running operations on the main thread, blocking the UI.
     public Long saveProject(@NotNull final Project project) {
         try {
-            Project projectExisting = projectRepository.findProject(project.getConsultantBrokerId(), project.getName());
+            Project projectExisting = projectRepository.findProject(project.getClientId(), project.getName());
             Log.d("ProjectRepository.saveProject", String.format("%s", projectExisting));
             Long id;
             if (projectExisting == null) {

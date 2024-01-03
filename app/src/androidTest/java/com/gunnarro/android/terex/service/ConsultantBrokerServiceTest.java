@@ -66,7 +66,7 @@ public class ConsultantBrokerServiceTest {
         // check updated
         ConsultantBrokerDto updatedConsultantBrokerDto = consultantBrokerService.getConsultantBroker(id);
         assertEquals("updated gunnarro consulting broker", updatedConsultantBrokerDto.getName());
-        assertEquals("DEACTIVATED", updatedConsultantBrokerDto.getStatus());
+        assertEquals("ACTIVE", updatedConsultantBrokerDto.getStatus());
 
     }
 }

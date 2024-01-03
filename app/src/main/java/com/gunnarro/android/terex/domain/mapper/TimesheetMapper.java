@@ -1,10 +1,13 @@
 package com.gunnarro.android.terex.domain.mapper;
 
+import com.gunnarro.android.terex.domain.dto.ClientDto;
 import com.gunnarro.android.terex.domain.dto.ConsultantBrokerDto;
 import com.gunnarro.android.terex.domain.dto.ProjectDto;
 import com.gunnarro.android.terex.domain.dto.TimesheetDto;
 import com.gunnarro.android.terex.domain.dto.TimesheetEntryDto;
 import com.gunnarro.android.terex.domain.dto.TimesheetSummaryDto;
+import com.gunnarro.android.terex.domain.entity.Client;
+import com.gunnarro.android.terex.domain.entity.ClientWithProject;
 import com.gunnarro.android.terex.domain.entity.ConsultantBroker;
 import com.gunnarro.android.terex.domain.entity.ConsultantBrokerWithProject;
 import com.gunnarro.android.terex.domain.entity.Project;
@@ -144,4 +147,11 @@ public class TimesheetMapper {
         return consultantBroker;
     }
 
+    public static Client fromClientDto(ClientDto clientDto) {
+        return null;
+    }
+
+    public static ClientDto toClientDto(ClientWithProject client) {
+        return null;
+    }
 }

@@ -26,7 +26,6 @@ public class CompanyRepository {
         companyDao = AppDatabase.getDatabase().companyDao();
     }
 
-
     public List<Company> getCompanies() {
         try {
             CompletionService<List<Company>> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);

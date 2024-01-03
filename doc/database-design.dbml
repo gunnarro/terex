@@ -19,6 +19,7 @@ Table consultant {
 
 Table client {
     id long [primary key]
+    company_id [not null, unique]
     project_id long
 }
 
@@ -148,3 +149,7 @@ Ref: timesheet_entry.timesheet_id > timesheet.id        // many-to-one
 Ref: timesheet_summary.timesheet_id > timesheet.id      // many-to-one
 Ref: invoice.timesheet_id - timesheet.id                // one-to-one
 Ref: invoice_attachment.invoice_id > invoice.id         // many-to-one
+
+// composite foreign key example
+// Ref: ecommerce.merchant_periods.(merchant_id, country_code) > ecommerce.merchants.(id, country_code)
+
