@@ -2,6 +2,12 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="Tests in 'com.gunnarro.android.terex.service'">
+        <State />
+      </entry>
+      <entry key="TimesheetServiceTest">
+        <State />
+      </entry>
       <entry key="app">
         <State>
           <targetSelectedWithDropDown>
@@ -17,6 +23,9 @@
           </targetSelectedWithDropDown>
           <timeTargetWasSelectedWithDropDown value="2023-12-29T10:14:06.729908819Z" />
         </State>
+      </entry>
+      <entry key="getTimesheetsByStatus()">
+        <State />
       </entry>
     </value>
   </component>
