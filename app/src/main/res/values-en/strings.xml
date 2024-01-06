@@ -1,0 +1,145 @@
+<resources>
+    <string name="app_name">TeRex</string>
+    <!-- titles -->
+    <string name="title_home">TeRex Time Tracing</string>
+    <string name="title_admin">Administration</string>
+    <string name="title_timesheets">Timesheets</string>
+    <string name="title_timesheet">Timesheet</string>
+    <string name="title_timesheet_entries">Timesheet entries</string>
+    <string name="title_register_work">Register Work</string>
+    <string name="title_invoices">Invoices</string>
+    <string name="title_invoice">Invoice</string>
+    <string name="title_project">Project</string>
+    <string name="title_timesheet_calendar">Timesheet calendar</string>
+    <string name="title_timesheet_new">New timesheet</string>
+    <string name="title_invoice_attachment">Invoice attachment</string>
+    <string name="title_settings">Settings</string>
+
+    <!-- labels -->
+    <string name="lbl_description">Description</string>
+    <string name="lbl_timesheet">Timesheet</string>
+    <string name="lbl_invoice">Invoice</string>
+    <string name="lbl_client">Client</string>
+    <string name="lbl_title">Title</string>
+    <string name="lbl_project">Project</string>
+    <string name="lbl_hourly_rate">Hourly rate</string>
+    <string name="lbl_from_date_time">From</string>
+    <string name="lbl_to_date_time">To</string>
+    <string name="lbl_break">Break</string>
+    <string name="lbl_status">Status</string>
+    <string name="lbl_comment">Comment</string>
+    <string name="lbl_system">System</string>
+    <string name="lbl_username">Username</string>
+    <string name="lbl_password">Password</string>
+    <string name="lbl_url">Url</string>
+    <string name="lbl_project_name">Project name</string>
+    <string name="lbl_timesheet_name">Timesheet name</string>
+    <string name="lbl_worked_days">Worked days</string>
+    <string name="lbl_worked_hours">Worked hours</string>
+    <string name="lbl_of">of</string>
+    <string name="lbl_export_to_pdf">Export to pdf</string>
+    <string name="lbl_required">Required</string>
+
+    <!-- button names -->
+    <string name="btn_save">Save</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_add">Add</string>
+    <string name="btn_back">Back</string>
+    <string name="btn_create">Create</string>
+    <string name="btn_calendar">Calendar</string>
+    <string name="btn_email">Send email</string>
+    <string name="btn_view">View</string>
+    <string name="btn_ok">Ok</string>
+
+    <!-- dialog messages -->
+    <string name="msg_delete_timesheet">Delete timesheet. Note that all registered hours will also be deleted. It is not possible to revert the deletion.</string>
+    <string name="msg_confirm_delete">Confirm delete timesheet.</string>
+
+    <!-- invoice -->
+    <string name="lbl_company_name">Firma</string>
+    <string name="lbl_business_address">Forretningsadresse</string>
+    <string name="lbl_organization_number">Organisasjonsnummer</string>
+    <string name="lbl_bank_account_number">Bankonto</string>
+    <string name="lbl_invoice_reference">Fakturareferanse</string>
+    <string name="lbl_invoice_number">Fakturanummer</string>
+
+    <string name="lbl_client_name">Kunde</string>
+    <string name="lbl_client_address">Adresse</string>
+    <string name="lbl_client_phone_number">Telefon</string>
+    <string name="lbl_client_organization_number">Organisasjonsnummer</string>
+    <string name="lbl_invoice_project_code">Prosjektkode</string>
+    <string name="lbl_client_contact_person">Kontaktperson</string>
+
+    <string name="lbl_billing_date">Billing date</string>
+    <string name="lbl_billed_amount">Amount</string>
+
+    <string name="txt_colon">:</string>
+    <string name="txt_empty"></string>
+    <string name="lbl_workday_date">Date</string>
+    <string name="lbl_to_time">To time</string>
+    <string name="lbl_from_time">From time</string>
+    <string name="lbl_from_date">From date</string>
+    <string name="lbl_to_date">To date</string>
+    <string name="lbl_year">Year</string>
+    <string name="lbl_month">Month</string>
+    <string name="lbl_day">Day</string>
+    <string name="hh_mm">HH:mm</string>
+    <string name="dd_mm_yyyy">dd-MM-yyyy</string>
+    <string name="btn_delete">Delete</string>
+    <string name="title_item_list">Items</string>
+    <string name="title_item_detail">Item Detail</string>
+    <string name="title_select_from_time">Select from time</string>
+    <string name="title_select_to_time">Select to time</string>
+    <string name="title_select_workday_date">Select workday date</string>
+
+    <string name="prompt_created_date">Created date</string>
+    <string name="prompt_last_modified_date">Last modified date</string>
+    <string name="prompt_client">Client</string>
+    <string name="prompt_project">Project</string>
+
+    <string name="info_timesheet_list_added_entry" formatted="false">Added new entry to timesheet</string>
+    <string name="info_timesheet_list_updated_entry" formatted="false">Updated timesheet entry</string>
+    <string name="info_timesheet_list_deleted_entry" formatted="false">Deleted entry from timesheet</string>
+
+    <string name="info_timesheet_list_add_msg_format" formatted="false">Added %s, %s</string>
+    <string name="info_timesheet_list_saved_msg_format" formatted="false">Saved %s, %s</string>
+    <string name="info_timesheet_list_update_msg_format" formatted="false">Updated %s, %s</string>
+    <string name="info_timesheet_list_delete_msg_format" formatted="false">Deleted %s</string>
+
+    <!-- CalendarView values -->
+    <string name="material_calendar_monday">Mon</string>
+    <string name="material_calendar_tuesday">Tue</string>
+    <string name="material_calendar_wednesday">Wen</string>
+    <string name="material_calendar_thursday">Thu</string>
+    <string name="material_calendar_friday">Fri</string>
+    <string name="material_calendar_saturday">Sat</string>
+    <string name="material_calendar_sunday">Sun</string>
+    <string name="lbl_invoice_attachment">Invoice attachment</string>
+    <string name="prompt_description">Description</string>
+
+    <array name="material_calendar_months_array">
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
+    </array>
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+
+    <!-- Preferences -->
+    <string name="title_history">History</string>
+    <string name="timesheet_status_billed">Billed</string>
+    <string name="timesheet_status_completed">Completed</string>
+    <string name="timesheet_status_active">Active</string>
+    <string name="timesheet_status_new">New</string>
+    <string name="title_timesheet_summary">Timesheet Summary</string>
+
+</resources>
