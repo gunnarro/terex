@@ -35,7 +35,8 @@ subprojects {
     sonar {
         properties {
             //  property 'sonar.coverage.jacoco.xmlReportPaths', '$projectDir.parentFile.path/build/reports/jacoco/codeCoverageReport/codeCoverageReport.xml'
-            property 'sonar.android.lint.reportPaths', '$projectDir.parentFile.path/build/reports/lint-results-debug.xml'
+
+            roperty 'sonar.androidLint.reportPaths', '$projectDir.parentFile.path/build/reports/lint-results-debug.xml'
             //  property 'sonar.inclusions', 'com/gunnarro/'
         }
     }
