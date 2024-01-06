@@ -53,7 +53,7 @@ jobs:
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: ./gradlew clean build # jacocoTestReport sonar --warning-mode all
+      run: ./gradlew test jacocoTestReport sonar --warning-mode all
 
     - name: debug report path
       run: pwd & ls -l app/build/reports/*
