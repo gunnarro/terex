@@ -241,3 +241,6 @@ w
 Gapp/src/main/java/com/gunnarro/android/terex/domain/dto/AddressDto.java,3/0/3063dfd43ce9b61bcdcd036264671451baec433d
 }
 Mapp/src/main/java/com/gunnarro/android/terex/domain/entity/ClientDetails.java,1/f/1f0e040db06295a025ae540760aefc40578c33f5
+:
+
+.gitignore,a/5/a5cc2925ca8258af241be7e5b0381edf30266302
