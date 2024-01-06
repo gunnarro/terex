@@ -169,10 +169,15 @@ public class TimesheetMapper {
 
 
     public static CompanyDto toCompanyDto(CompanyDetails companyDetails) {
+        if (companyDetails == null) {
+            return null;
+        }
         CompanyDto companyDto = new CompanyDto();
-        companyDto.setId(companyDetails.getCompany().getId());
-        companyDto.setOrganizationNumber(companyDetails.getCompany().getOrganizationNumber());
-        companyDto.setCompanyIndustryType(companyDetails.getCompany().getCompanyIndustryType());
+        if (companyDetails.getCompany() != null) {
+            companyDto.setId(companyDetails.getCompany().getId());
+            companyDto.setOrganizationNumber(companyDetails.getCompany().getOrganizationNumber());
+            companyDto.setCompanyIndustryType(companyDetails.getCompany().getCompanyIndustryType());
+        }
         companyDto.setAddress(toAddressDto(companyDetails.getCompanyAddress()));
         companyDto.setContactPerson(toPersonDto(companyDetails.getContactPerson()));
         companyDto.setContactInfo(toContactInfoDto(companyDetails.getCompanyContactInfo()));
@@ -180,6 +185,9 @@ public class TimesheetMapper {
     }
 
     private static ContactInfoDto toContactInfoDto(ContactInfo contactInfo) {
+        if (contactInfo == null) {
+            return null;
+        }
         ContactInfoDto contactInfoDto = new ContactInfoDto();
         contactInfoDto.setId(contactInfo.getId());
         contactInfoDto.setEmailAddress(contactInfo.getEmailAddress());
