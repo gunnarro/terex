@@ -20,7 +20,6 @@ import lombok.Setter;
 @Entity(tableName = "consultant_broker")
 public class ConsultantBrokerWithProject {
 
-
     @Embedded
     private ConsultantBroker consultantBroker;
 
@@ -37,9 +36,6 @@ public class ConsultantBrokerWithProject {
             parentColumn = "id",
             entityColumn = "client_id"
     )
-
-
-
     private List<Project> projectList;
 
     public ConsultantBroker getConsultantBroker() {

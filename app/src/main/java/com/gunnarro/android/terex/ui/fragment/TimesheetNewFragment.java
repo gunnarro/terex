@@ -228,14 +228,16 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
                 consultantBrokerDto.setProjects(List.of(projectDto));
                 consultantBrokerService.saveConsultantBroker(consultantBrokerDto);
             }
-            timesheet.getClientName();
-            timesheet.getProjectCode();
+          //  timesheet.getClientName();
+          //  timesheet.getProjectCode();
             timesheetService.saveTimesheet(timesheet);
             showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_saved_msg_format), timesheet.getTimesheetRef(), timesheet.getYear() + "-" + timesheet.getMonth()), R.color.color_snackbar_text_add);
             navigateTo(R.id.nav_from_timesheet_details_to_timesheet_list, null);
         } catch (TerexApplicationException | InputValidationException ex) {
-            showInfoDialog("Info", String.format("%s", ex.getMessage()));
+            ex.printStackTrace();
+            showInfoDialog("Error", String.format("%s", ex.getMessage()));
         } catch (Exception e) {
+            e.printStackTrace();
             showInfoDialog("Error", String.format("%s", e.getCause()));
         }
     }

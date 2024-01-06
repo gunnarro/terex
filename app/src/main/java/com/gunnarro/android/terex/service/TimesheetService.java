@@ -374,6 +374,7 @@ public class TimesheetService {
     }
 
 
+
     public String createTimesheetListHtml(@NotNull Long timesheetId, @NotNull Context applicationContext) {
         Timesheet timesheet = getTimesheet(timesheetId);
         List<TimesheetEntryDto> timesheetEntryDtoList = getTimesheetEntryDtoListReadyForBilling(timesheetId);

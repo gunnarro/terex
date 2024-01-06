@@ -1,15 +1,23 @@
 package com.gunnarro.android.terex.domain.mapper;
 
+import com.gunnarro.android.terex.domain.dto.AddressDto;
 import com.gunnarro.android.terex.domain.dto.ClientDto;
+import com.gunnarro.android.terex.domain.dto.CompanyDto;
 import com.gunnarro.android.terex.domain.dto.ConsultantBrokerDto;
+import com.gunnarro.android.terex.domain.dto.ContactInfoDto;
+import com.gunnarro.android.terex.domain.dto.PersonDto;
 import com.gunnarro.android.terex.domain.dto.ProjectDto;
 import com.gunnarro.android.terex.domain.dto.TimesheetDto;
 import com.gunnarro.android.terex.domain.dto.TimesheetEntryDto;
 import com.gunnarro.android.terex.domain.dto.TimesheetSummaryDto;
+import com.gunnarro.android.terex.domain.entity.Address;
 import com.gunnarro.android.terex.domain.entity.Client;
-import com.gunnarro.android.terex.domain.entity.ClientWithProject;
+import com.gunnarro.android.terex.domain.entity.ClientDetails;
+import com.gunnarro.android.terex.domain.entity.CompanyDetails;
 import com.gunnarro.android.terex.domain.entity.ConsultantBroker;
 import com.gunnarro.android.terex.domain.entity.ConsultantBrokerWithProject;
+import com.gunnarro.android.terex.domain.entity.ContactInfo;
+import com.gunnarro.android.terex.domain.entity.Person;
 import com.gunnarro.android.terex.domain.entity.Project;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
@@ -125,7 +133,7 @@ public class TimesheetMapper {
     }
 
     public static ConsultantBrokerDto toConsultantBrokerDto(ConsultantBrokerWithProject consultantBrokerWithProject) {
-        if (consultantBrokerWithProject == null) {
+        if (consultantBrokerWithProject == null || consultantBrokerWithProject.getConsultantBroker() == null) {
             return null;
         }
         ConsultantBrokerDto consultantBrokerDto = new ConsultantBrokerDto();
@@ -147,11 +155,70 @@ public class TimesheetMapper {
         return consultantBroker;
     }
 
+    public static ClientDto toClientDto(ClientDetails clientDetails) {
+        ClientDto clientDto = new ClientDto();
+        clientDto.setCompanyDto(toCompanyDto(clientDetails.getCompany()));
+        clientDto.setProjectList(toProjectDtoList(clientDetails.getProjectList()));
+        return clientDto;
+    }
+
+
     public static Client fromClientDto(ClientDto clientDto) {
         return null;
     }
 
-    public static ClientDto toClientDto(ClientWithProject client) {
-        return null;
+
+    public static CompanyDto toCompanyDto(CompanyDetails companyDetails) {
+        CompanyDto companyDto = new CompanyDto();
+        companyDto.setId(companyDetails.getCompany().getId());
+        companyDto.setOrganizationNumber(companyDetails.getCompany().getOrganizationNumber());
+        companyDto.setCompanyIndustryType(companyDetails.getCompany().getCompanyIndustryType());
+        companyDto.setAddress(toAddressDto(companyDetails.getCompanyAddress()));
+        companyDto.setContactPerson(toPersonDto(companyDetails.getContactPerson()));
+        companyDto.setContactInfo(toContactInfoDto(companyDetails.getCompanyContactInfo()));
+        return companyDto;
+    }
+
+    private static ContactInfoDto toContactInfoDto(ContactInfo contactInfo) {
+        ContactInfoDto contactInfoDto = new ContactInfoDto();
+        contactInfoDto.setId(contactInfo.getId());
+        contactInfoDto.setEmailAddress(contactInfo.getEmailAddress());
+        contactInfoDto.setMobileNumber(contactInfo.getMobileNumber());
+        contactInfoDto.setMobileNumberCountryCode(contactInfo.getMobileNumberCountryCode());
+        return contactInfoDto;
+    }
+
+    public static PersonDto toPersonDto(Person person) {
+        if (person == null) {
+            return null;
+        }
+        PersonDto personDto = new PersonDto();
+        personDto.setId(person.getId());
+        personDto.setGender(person.getGender());
+        personDto.setFirstName(person.getFirstName());
+        personDto.setMiddleName(person.getMiddleName());
+        personDto.setLastName(person.getLastName());
+        personDto.setGender(personDto.getGender());
+        personDto.setDateOfBirth(person.getDateOfBirth());
+        personDto.setSocialSecurityNumber(person.getSocialSecurityNumber());
+        personDto.setMaritalStatus(person.getMaritalStatus());
+        personDto.setContactInfoId(null);
+        return personDto;
+    }
+
+    public static AddressDto toAddressDto(Address address) {
+        if (address == null) {
+            return null;
+        }
+        AddressDto addressDto = new AddressDto();
+        addressDto.setId(address.getId());
+        addressDto.setCity(address.getCity());
+        addressDto.setCountry(address.getCountry());
+        addressDto.setCountryCode(address.getCountryCode());
+        addressDto.setPostCode(address.getPostCode());
+        addressDto.setStreetName(address.getStreetName());
+        addressDto.setStreetNumber(address.getStreetNumber());
+        addressDto.setStreetNumberPrefix(address.getStreetNumberPrefix());
+        return addressDto;
     }
 }

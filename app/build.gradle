@@ -52,14 +52,16 @@ android {
         release {
             // signingConfig signingConfigs.release
             minifyEnabled false
+            applicationIdSuffix '.release'
+            versionNameSuffix '.release'
             // proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-        
-        debug{
+
+        debug {
             applicationIdSuffix ".debug"
             versionNameSuffix "-debug"
         }
-        
+
         beta {
             // signingConfig signingConfigs.release
             applicationIdSuffix ".beta"
@@ -152,8 +154,8 @@ dependencies {
 
     // html to pdf
     // https://mvnrepository.com/artifact/com.itextpdf/kernel
-   // implementation("com.itextpdf:kernel:$itextpdf_kernel")
-   // implementation("com.itextpdf:html2pdf:$itextpdf_html2pdf")
+    // implementation("com.itextpdf:kernel:$itextpdf_kernel")
+    // implementation("com.itextpdf:html2pdf:$itextpdf_html2pdf")
 
     // Room components
     //noinspection GradleDependency

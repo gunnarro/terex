@@ -3,59 +3,57 @@
     <!-- titles -->
     <string name="title_home">TeRex Time Tracing</string>
     <string name="title_admin">Administration</string>
-    <string name="title_timesheets">Timesheets</string>
-    <string name="title_timesheet">Timesheet</string>
-    <string name="title_timesheet_entries">Timesheet entries</string>
-    <string name="title_register_work">Register Work</string>
-    <string name="title_invoices">Invoices</string>
-    <string name="title_invoice">Invoice</string>
-    <string name="title_project">Project</string>
-    <string name="title_credential">Credential Store</string>
-    <string name="title_credential_register">Credential Store</string>
-    <string name="title_timesheet_calendar">Timesheet calendar</string>
-    <string name="title_timesheet_new">New timesheet</string>
-    <string name="title_invoice_attachment">Invoice attachment</string>
-    <string name="title_settings">Settings</string>
+    <string name="title_timesheets">Timelister</string>
+    <string name="title_timesheet">Timeliste</string>
+    <string name="title_timesheet_entries">Timelisteoppføring</string>
+    <string name="title_register_work">Registrer arbeid</string>
+    <string name="title_invoices">Faktura</string>
+    <string name="title_invoice">Faktura</string>
+    <string name="title_project">Prosjekt</string>
+    <string name="title_timesheet_calendar">Timeliste kalender</string>
+    <string name="title_timesheet_new">Ny timeliste</string>
+    <string name="title_invoice_attachment">Faktura vedlegg</string>
+    <string name="title_settings">Instillinger</string>
 
     <!-- labels -->
-    <string name="lbl_description">Description</string>
-    <string name="lbl_timesheet">Timesheet</string>
-    <string name="lbl_invoice">Invoice</string>
-    <string name="lbl_client">Client</string>
-    <string name="lbl_title">Title</string>
-    <string name="lbl_project">Project</string>
-    <string name="lbl_hourly_rate">Hourly rate</string>
-    <string name="lbl_from_date_time">From</string>
-    <string name="lbl_to_date_time">To</string>
-    <string name="lbl_break">Break</string>
+    <string name="lbl_description">Beskrivelse</string>
+    <string name="lbl_timesheet">Timeliste</string>
+    <string name="lbl_invoice">Faltura</string>
+    <string name="lbl_client">Klient</string>
+    <string name="lbl_title">Tittel</string>
+    <string name="lbl_project">Prosjekt</string>
+    <string name="lbl_hourly_rate">Timepris</string>
+    <string name="lbl_from_date_time">Fra</string>
+    <string name="lbl_to_date_time">Til</string>
+    <string name="lbl_break">Pause</string>
     <string name="lbl_status">Status</string>
-    <string name="lbl_comment">Comment</string>
+    <string name="lbl_comment">Kommentar</string>
     <string name="lbl_system">System</string>
-    <string name="lbl_username">Username</string>
-    <string name="lbl_password">Password</string>
+    <string name="lbl_username">Brukernavn</string>
+    <string name="lbl_password">Passord</string>
     <string name="lbl_url">Url</string>
-    <string name="lbl_project_name">Project name</string>
-    <string name="lbl_timesheet_name">Timesheet name</string>
-    <string name="lbl_worked_days">Worked days</string>
-    <string name="lbl_worked_hours">Worked hours</string>
-    <string name="lbl_of">of</string>
-    <string name="lbl_export_to_pdf">Export to pdf</string>
-    <string name="lbl_required">Required</string>
+    <string name="lbl_project_name">Prosjket navn</string>
+    <string name="lbl_timesheet_name">Timeliste navn</string>
+    <string name="lbl_worked_days">Arbeided dager</string>
+    <string name="lbl_worked_hours">Arbeided timer</string>
+    <string name="lbl_of">av</string>
+    <string name="lbl_export_to_pdf">Eksport til pdf</string>
+    <string name="lbl_required">obligatorisk</string>
 
     <!-- button names -->
-    <string name="btn_save">Save</string>
-    <string name="btn_cancel">Cancel</string>
-    <string name="btn_add">Add</string>
-    <string name="btn_back">Back</string>
-    <string name="btn_create">Create</string>
-    <string name="btn_calendar">Calendar</string>
-    <string name="btn_email">Send email</string>
-    <string name="btn_view">View</string>
+    <string name="btn_save">Lagre</string>
+    <string name="btn_cancel">Avbryt</string>
+    <string name="btn_add">Legg til</string>
+    <string name="btn_back">Tilbake</string>
+    <string name="btn_create">Opprett</string>
+    <string name="btn_calendar">Kalender</string>
+    <string name="btn_email">Send epost</string>
+    <string name="btn_view">Vis</string>
     <string name="btn_ok">Ok</string>
 
     <!-- dialog messages -->
     <string name="msg_delete_timesheet">Delete timesheet. Note that all registered hours will also be deleted. It is not possible to revert the deletion.</string>
-    <string name="msg_confirm_delete">Confirm delete timesheet.</string>
+    <string name="msg_confirm_delete">Bekreft sletting av timeliste.</string>
 
     <!-- invoice -->
     <string name="lbl_company_name">Firma</string>
@@ -72,86 +70,76 @@
     <string name="lbl_invoice_project_code">Prosjektkode</string>
     <string name="lbl_client_contact_person">Kontaktperson</string>
 
-    <string name="lbl_billing_date">Billing date</string>
-    <string name="lbl_billed_amount">Amount</string>
+    <string name="lbl_billing_date">Fakturadato</string>
+    <string name="lbl_billed_amount">Beløp</string>
 
     <string name="txt_colon">:</string>
     <string name="txt_empty"></string>
-    <string name="lbl_workday_date">Date</string>
-    <string name="lbl_to_time">To time</string>
-    <string name="lbl_from_time">From time</string>
-    <string name="lbl_from_date">From date</string>
-    <string name="lbl_to_date">To date</string>
-    <string name="lbl_year">Year</string>
-    <string name="lbl_month">Month</string>
-    <string name="lbl_day">Day</string>
+    <string name="lbl_workday_date">Dato</string>
+    <string name="lbl_to_time">Til klokkeslett</string>
+    <string name="lbl_from_time">Fra klokkeslett</string>
+    <string name="lbl_from_date">Fra dato</string>
+    <string name="lbl_to_date">Til dato</string>
+    <string name="lbl_year">År</string>
+    <string name="lbl_month">Måned</string>
+    <string name="lbl_day">Dag</string>
     <string name="hh_mm">HH:mm</string>
     <string name="dd_mm_yyyy">dd-MM-yyyy</string>
-    <string name="btn_delete">Delete</string>
-    <string name="title_activity_item_detail_host">ItemDetailHostActivity</string>
+    <string name="btn_delete">Slett</string>
     <string name="title_item_list">Items</string>
     <string name="title_item_detail">Item Detail</string>
-    <string name="title_select_from_time">Select from time</string>
-    <string name="title_select_to_time">Select to time</string>
-    <string name="title_select_workday_date">Select workday date</string>
+    <string name="title_select_from_time">Velg fra tid</string>
+    <string name="title_select_to_time">Velg til tid</string>
+    <string name="title_select_workday_date">Velg arbeidsdag dato</string>
 
-    <string name="prompt_created_date">Created date</string>
-    <string name="prompt_last_modified_date">Last modified date</string>
-    <string name="prompt_client">Client</string>
-    <string name="prompt_project">Project</string>
+    <string name="prompt_created_date">Opprettet dato</string>
+    <string name="prompt_last_modified_date">Endret dato</string>
+    <string name="prompt_client">Klient</string>
+    <string name="prompt_project">Prosjekt</string>
 
-    <string name="info_timesheet_list_added_entry" formatted="false">Added new entry to timesheet</string>
-    <string name="info_timesheet_list_updated_entry">Updated timesheet entry</string>
-    <string name="info_timesheet_list_deleted_entry">Deleted entry from timesheet</string>
+    <string name="info_timesheet_list_added_entry" formatted="false">Lagt til ny oppføring på timeliste</string>
+    <string name="info_timesheet_list_updated_entry" formatted="false">Oppdatert timeliste oppføring</string>
+    <string name="info_timesheet_list_deleted_entry" formatted="false">Slettet oppføring fra timeliste</string>
 
-    <string name="info_timesheet_list_add_msg_format">Added %s, %s</string>
+    <string name="info_timesheet_list_add_msg_format" formatted="false">Added %s, %s</string>
     <string name="info_timesheet_list_saved_msg_format" formatted="false">Saved %s, %s</string>
-    <string name="info_timesheet_list_update_msg_format">Updated %s, %s</string>
-    <string name="info_timesheet_list_delete_msg_format">Deleted %s</string>
+    <string name="info_timesheet_list_update_msg_format" formatted="false">Updated %s, %s</string>
+    <string name="info_timesheet_list_delete_msg_format" formatted="false">Deleted %s</string>
 
     <!-- CalendarView values -->
-    <string name="material_calendar_monday">Mon</string>
-    <string name="material_calendar_tuesday">Tue</string>
-    <string name="material_calendar_wednesday">Wen</string>
-    <string name="material_calendar_thursday">Thu</string>
-    <string name="material_calendar_friday">Fri</string>
-    <string name="material_calendar_saturday">Sat</string>
-    <string name="material_calendar_sunday">Sun</string>
-    <string name="lbl_invoice_attachment">Invoice attachment</string>
-    <string name="prompt_description">Description</string>
+    <string name="material_calendar_monday">Man</string>
+    <string name="material_calendar_tuesday">Tir</string>
+    <string name="material_calendar_wednesday">Ons</string>
+    <string name="material_calendar_thursday">Tor</string>
+    <string name="material_calendar_friday">Fre</string>
+    <string name="material_calendar_saturday">Lør</string>
+    <string name="material_calendar_sunday">Søn</string>
+    <string name="lbl_invoice_attachment">Faktura vedlegg</string>
+    <string name="prompt_description">Beskrivelse</string>
 
     <array name="material_calendar_months_array">
-        <item>January</item>
-        <item>February</item>
-        <item>March</item>
+        <item>Januar</item>
+        <item>Februar</item>
+        <item>Mars</item>
         <item>April</item>
-        <item>May</item>
-        <item>June</item>
-        <item>July</item>
+        <item>Mai</item>
+        <item>Juni</item>
+        <item>Juli</item>
         <item>August</item>
         <item>September</item>
-        <item>October</item>
+        <item>Oktober</item>
         <item>November</item>
-        <item>December</item>
+        <item>Desember</item>
     </array>
     <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
+    <string name="messages_header">Melding</string>
 
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
-
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
-    <string name="title_history">History</string>
-    <string name="timesheet_status_billed">Billed</string>
-    <string name="timesheet_status_completed">Completed</string>
-    <string name="timesheet_status_active">Active</string>
-    <string name="timesheet_status_new">New</string>
-    <string name="title_timesheet_summary">Timesheet Summary</string>
+    <!-- Preferences -->
+    <string name="title_history">Historie</string>
+    <string name="timesheet_status_billed">Fakturert</string>
+    <string name="timesheet_status_completed">Utført</string>
+    <string name="timesheet_status_active">Aktive</string>
+    <string name="timesheet_status_new">Ny</string>
+    <string name="title_timesheet_summary">Timeliste oppsummering</string>
 
 </resources>

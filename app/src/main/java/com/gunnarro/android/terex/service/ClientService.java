@@ -5,7 +5,7 @@ import android.util.Log;
 
 import com.gunnarro.android.terex.domain.dto.ClientDto;
 import com.gunnarro.android.terex.domain.entity.Client;
-import com.gunnarro.android.terex.domain.entity.ClientWithProject;
+import com.gunnarro.android.terex.domain.entity.ClientDetails;
 import com.gunnarro.android.terex.domain.entity.ConsultantBroker;
 import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
@@ -40,11 +40,23 @@ public class ClientService {
     }
 
     public ClientDto getClient(Long clientId) {
-        return TimesheetMapper.toClientDto(clientRepository.getClient(clientId));
+        Client client = clientRepository.getClient(clientId);
+        if (client != null) {
+            ClientDetails clientDetails = new ClientDetails();
+            clientDetails.setClient(client);
+            return TimesheetMapper.toClientDto(clientDetails);
+        }
+        return null;
     }
 
     public ClientDto findClient(String name) {
-        return TimesheetMapper.toClientDto(new ClientWithProject(clientRepository.findClient(name), null));
+        Client client = clientRepository.findClient(name);
+        if (client != null) {
+            ClientDetails clientDetails = new ClientDetails();
+            clientDetails.setClient(client);
+            return TimesheetMapper.toClientDto(clientDetails);
+        }
+        return null;
     }
 
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures
@@ -55,7 +67,7 @@ public class ClientService {
             if (clientDto.getId() == null) {
                 clientExisting = clientRepository.findClient(clientDto.getName());
             } else {
-                clientExisting = clientRepository.getClient(clientDto.getId()).getClient();
+                clientExisting = clientRepository.getClient(clientDto.getId());
             }
             Log.d("saveClient", String.format("existingClient=%s", clientExisting));
             Client client = TimesheetMapper.fromClientDto(clientDto);

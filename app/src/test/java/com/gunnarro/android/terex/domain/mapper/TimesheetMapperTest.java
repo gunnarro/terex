@@ -4,10 +4,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import com.gunnarro.android.terex.TestData;
+import com.gunnarro.android.terex.domain.dto.ClientDto;
 import com.gunnarro.android.terex.domain.dto.ConsultantBrokerDto;
 import com.gunnarro.android.terex.domain.dto.ProjectDto;
 import com.gunnarro.android.terex.domain.dto.TimesheetEntryDto;
 import com.gunnarro.android.terex.domain.dto.TimesheetSummaryDto;
+import com.gunnarro.android.terex.domain.entity.Client;
+import com.gunnarro.android.terex.domain.entity.ClientDetails;
+import com.gunnarro.android.terex.domain.entity.Company;
+import com.gunnarro.android.terex.domain.entity.CompanyDetails;
 import com.gunnarro.android.terex.domain.entity.ConsultantBroker;
 import com.gunnarro.android.terex.domain.entity.ConsultantBrokerWithProject;
 import com.gunnarro.android.terex.domain.entity.Project;
@@ -16,6 +21,7 @@ import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
 
 import org.junit.jupiter.api.Test;
 
+import java.sql.Time;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -120,5 +126,15 @@ class TimesheetMapperTest {
         assertEquals("gunnarro consultant broker", consultantBroker.getName());
         assertEquals("ACTIVE", consultantBroker.getStatus());
 
+    }
+
+    @Test
+    void toClientDto() {
+        ClientDetails clientDetails = new ClientDetails();
+        clientDetails.setClient(new Client());
+        clientDetails.setCompany(new CompanyDetails());
+        clientDetails.setProjectList(List.of(new Project()));
+        ClientDto clientDto = TimesheetMapper.toClientDto(clientDetails);
+        assertEquals("", clientDto.getName());
     }
 }

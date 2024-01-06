@@ -13,7 +13,6 @@ import java.util.List;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-@TypeConverters({LocalDateConverter.class, LocalDateTimeConverter.class})
 @Entity(tableName = "project")
 public class ProjectWithTimesheet {
 

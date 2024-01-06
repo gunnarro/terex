@@ -9,7 +9,6 @@ import androidx.room.Transaction;
 import androidx.room.Update;
 
 import com.gunnarro.android.terex.domain.entity.Client;
-import com.gunnarro.android.terex.domain.entity.ClientWithProject;
 
 import java.util.List;
 
@@ -22,20 +21,19 @@ public interface ClientDao {
      */
     @Transaction
     @Query("SELECT * FROM client WHERE id = :clientId")
-    ClientWithProject getClientWithProjects(Long clientId);
+    Client getClient(Long clientId);
 
     @Transaction
     @Query("SELECT * FROM client")
-    List<ClientWithProject> getClientsWithProjects();
+    List<Client> getClientList();
 
     @Query("SELECT * FROM client")
     List<Client> getClients();
 
-
     @Query("SELECT * FROM client c WHERE c.id = :clientId")
     Client getClient(long clientId);
 
-    @Query("SELECT * FROM client c INNER JOIN company cmp ON c.company_id = cmp.id WHERE cmp.company_name = :name")
+    @Query("SELECT * FROM client c WHERE c.id = :name")
     Client findClient(String name);
 
     /**

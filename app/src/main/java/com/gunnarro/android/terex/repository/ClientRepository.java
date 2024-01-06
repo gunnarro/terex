@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.gunnarro.android.terex.config.AppDatabase;
 import com.gunnarro.android.terex.domain.entity.Client;
-import com.gunnarro.android.terex.domain.entity.ClientWithProject;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 
 import java.util.List;
@@ -24,11 +23,11 @@ public class ClientRepository {
         clientDao = AppDatabase.getDatabase().clientDao();
     }
 
-    public List<ClientWithProject> getClients() {
+    public List<Client> getClients() {
         try {
-            CompletionService<List<ClientWithProject>> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
-            service.submit(clientDao::getClientsWithProjects);
-            Future<List<ClientWithProject>> future = service.take();
+            CompletionService<List<Client>> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
+            service.submit(clientDao::getClients);
+            Future<List<Client>> future = service.take();
             return future != null ? future.get() : null;
         } catch (InterruptedException | ExecutionException e) {
             // Something crashed, therefore restore interrupted state before leaving.
@@ -37,11 +36,11 @@ public class ClientRepository {
         }
     }
 
-    public ClientWithProject getClient(Long clientId) {
+    public Client getClient(Long clientId) {
         try {
-            CompletionService<ClientWithProject> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
-            service.submit(() -> clientDao.getClientWithProjects(clientId));
-            Future<ClientWithProject> future = service.take();
+            CompletionService<Client> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
+            service.submit(() -> clientDao.getClient(clientId));
+            Future<Client> future = service.take();
             return future != null ? future.get() : null;
         } catch (InterruptedException | ExecutionException e) {
             // Something crashed, therefore restore interrupted state before leaving.

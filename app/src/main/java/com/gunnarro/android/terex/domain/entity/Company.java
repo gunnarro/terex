@@ -9,8 +9,6 @@ import androidx.room.TypeConverters;
 import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
 import com.gunnarro.android.terex.domain.converter.LocalDateTimeConverter;
 
-import org.jetbrains.annotations.NotNull;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -49,12 +47,11 @@ public class Company extends BaseEntity {
     @ColumnInfo(name = "company_industry_type")
     private String companyIndustryType;
 
-    @NotNull
     public Long getId() {
         return id;
     }
 
-    public void setId(@NotNull Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -104,5 +101,13 @@ public class Company extends BaseEntity {
 
     public void setBankAccountNumber(String bankAccountNumber) {
         this.bankAccountNumber = bankAccountNumber;
+    }
+
+    public String getCompanyIndustryType() {
+        return companyIndustryType;
+    }
+
+    public void setCompanyIndustryType(String companyIndustryType) {
+        this.companyIndustryType = companyIndustryType;
     }
 }

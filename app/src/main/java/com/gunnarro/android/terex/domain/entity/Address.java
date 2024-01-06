@@ -34,6 +34,14 @@ public class Address extends BaseEntity {
     @ColumnInfo(name = "country_code")
     private String countryCode;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getStreetName() {
         return streetName;
     }

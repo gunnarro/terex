@@ -60,7 +60,7 @@ import java.util.concurrent.Executors;
 public abstract class AppDatabase extends RoomDatabase {
     // marking the instance as volatile to ensure atomic access to the variable
     // The Java volatile keyword guarantees visibility of changes to variables across threads
-    private static volatile AppDatabase INSTANCE;
+    private static AppDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 10;
     public static final ExecutorService databaseExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
@@ -75,7 +75,7 @@ public abstract class AppDatabase extends RoomDatabase {
                             AppDatabase.class, "terex_database")
                     // use this during development
                     .fallbackToDestructiveMigration()
-                    .allowMainThreadQueries()
+                    //.allowMainThreadQueries()
                     //.createFromAsset("database/terex_database_data.sql")
                     //.addMigrations(getMigration(context, 16,17))
                     .addCallback(roomCallback)
@@ -88,7 +88,7 @@ public abstract class AppDatabase extends RoomDatabase {
      * and DB config must only be initialized once.
      * If it is acceptable to lose existing data when a migration path is missing, call the fallbackToDestructiveMigration()
      */
-    public static AppDatabase getDatabase() {
+    public static synchronized AppDatabase getDatabase() {
         if (INSTANCE == null) {
             throw new TerexApplicationException("", "Database not initialized. You should call AppDatabase.init(context) in the MainActivity.", null);
         }
