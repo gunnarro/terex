@@ -56,4 +56,5 @@ jobs:
       run: ./gradlew test jacocoTestReport sonar --warning-mode all
 
     - name: debug report path
-      run: ls -l app/build/reports
+      run: ls -l app/build/reports/
+
