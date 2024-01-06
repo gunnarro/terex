@@ -47,7 +47,7 @@ jobs:
       run: chmod +x gradlew
 
     - name: debug build path
-      run: pwd & ls -l % ls -l
+      run: pwd & ls -l & ls -l
 
     - name: Build and analyze
       env:
