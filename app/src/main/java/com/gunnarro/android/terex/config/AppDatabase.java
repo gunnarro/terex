@@ -13,12 +13,12 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import com.gunnarro.android.terex.domain.dbview.TimesheetView;
 import com.gunnarro.android.terex.domain.entity.Address;
 import com.gunnarro.android.terex.domain.entity.Client;
-import com.gunnarro.android.terex.domain.entity.Company;
 import com.gunnarro.android.terex.domain.entity.Consultant;
 import com.gunnarro.android.terex.domain.entity.ConsultantBroker;
 import com.gunnarro.android.terex.domain.entity.ContactInfo;
 import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.InvoiceAttachment;
+import com.gunnarro.android.terex.domain.entity.Organization;
 import com.gunnarro.android.terex.domain.entity.Person;
 import com.gunnarro.android.terex.domain.entity.Project;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
@@ -26,10 +26,10 @@ import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.repository.ClientDao;
-import com.gunnarro.android.terex.repository.CompanyDao;
 import com.gunnarro.android.terex.repository.ConsultantBrokerDao;
 import com.gunnarro.android.terex.repository.InvoiceAttachmentDao;
 import com.gunnarro.android.terex.repository.InvoiceDao;
+import com.gunnarro.android.terex.repository.OrganizationDao;
 import com.gunnarro.android.terex.repository.ProjectDao;
 import com.gunnarro.android.terex.repository.TimesheetDao;
 import com.gunnarro.android.terex.repository.TimesheetEntryDao;
@@ -51,7 +51,7 @@ import java.util.concurrent.Executors;
         ContactInfo.class,
         Address.class,
         Person.class,
-        Company.class,
+        Organization.class,
         InvoiceAttachment.class,
         ConsultantBroker.class,
         Client.class,
@@ -66,6 +66,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
     protected AppDatabase() {
         super();
+        androidx.sqlite.db.SupportSQLiteDatabase db;
     }
 
     public static void init(final Context context) {
@@ -90,7 +91,7 @@ public abstract class AppDatabase extends RoomDatabase {
      */
     public static synchronized AppDatabase getDatabase() {
         if (INSTANCE == null) {
-            throw new TerexApplicationException("", "Database not initialized. You should call AppDatabase.init(context) in the MainActivity.", null);
+            throw new TerexApplicationException("Database not initialized. You should call AppDatabase.init(context) in the MainActivity.", "50050", null);
         }
         return INSTANCE;
     }
@@ -111,9 +112,10 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract InvoiceAttachmentDao invoiceAttachmentDao();
 
-    public abstract CompanyDao companyDao();
+    public abstract OrganizationDao organizationDao();
 
     public abstract ConsultantBrokerDao consultantBrokerDao();
+
 
     public abstract ClientDao clientDao();
 

@@ -15,9 +15,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @TypeConverters({LocalDateConverter.class, LocalDateTimeConverter.class})
-@Entity(tableName = "company", indices = {@Index(value = {"organization_number"},
+@Entity(tableName = "organization", indices = {@Index(value = {"organization_number"},
         unique = true)})
-public class Company extends BaseEntity {
+public class Organization extends BaseEntity {
     @PrimaryKey(autoGenerate = true)
     private Long id;
 
@@ -33,19 +33,10 @@ public class Company extends BaseEntity {
     @ColumnInfo(name = "contact_person_id")
     private Long contactPersonId;
 
-    @ColumnInfo(name = "company_name")
+    @ColumnInfo(name = "organization_name")
     private String name;
     @ColumnInfo(name = "organization_number")
     private String organizationNumber;
-    @ColumnInfo(name = "bank_account_number")
-    private String bankAccountNumber;
-
-    /**
-     * Type of industry, for example consultant, broker, bank, telecom, etc
-     * I.e, what kind of services the company offers
-     */
-    @ColumnInfo(name = "company_industry_type")
-    private String companyIndustryType;
 
     public Long getId() {
         return id;
@@ -95,6 +86,14 @@ public class Company extends BaseEntity {
         this.organizationNumber = organizationNumber;
     }
 
+    public String getOrganizationIndustryType() {
+        return organizationIndustryType;
+    }
+
+    public void setOrganizationIndustryType(String organizationIndustryType) {
+        this.organizationIndustryType = organizationIndustryType;
+    }
+
     public String getBankAccountNumber() {
         return bankAccountNumber;
     }
@@ -103,11 +102,16 @@ public class Company extends BaseEntity {
         this.bankAccountNumber = bankAccountNumber;
     }
 
-    public String getCompanyIndustryType() {
-        return companyIndustryType;
-    }
+    /**
+     * Type of industry, for example consultant, broker, bank, telecom, etc
+     * I.e, what kind of services the company offers
+     */
+    @ColumnInfo(name = "organization_industry_type")
+    private String organizationIndustryType;
 
-    public void setCompanyIndustryType(String companyIndustryType) {
-        this.companyIndustryType = companyIndustryType;
-    }
+    @ColumnInfo(name = "bank_account_number")
+    private String bankAccountNumber;
+
+
+
 }

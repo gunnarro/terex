@@ -17,7 +17,7 @@ public class ClientDetails {
     private List<Project> projectList;
 
     @Ignore
-    private CompanyDetails company;
+    private OrganizationDetails organizationDetails;
 
     public Client getClient() {
         return client;
@@ -27,19 +27,19 @@ public class ClientDetails {
         this.client = client;
     }
 
-    public CompanyDetails getCompany() {
-        return company;
-    }
-
-    public void setCompany(CompanyDetails company) {
-        this.company = company;
-    }
-
     public List<Project> getProjectList() {
         return projectList;
     }
 
     public void setProjectList(List<Project> projectList) {
         this.projectList = projectList;
+    }
+
+    public OrganizationDetails getOrganizationDetails() {
+        return organizationDetails;
+    }
+
+    public void setOrganizationDetails(OrganizationDetails organizationDetails) {
+        this.organizationDetails = organizationDetails;
     }
 }

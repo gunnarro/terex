@@ -26,6 +26,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -122,7 +123,7 @@ public class InvoiceNewFragment extends BaseFragment {
 
             String invoiceSummaryHtml = timesheetService.createTimesheetSummaryAttachmentHtml(invoice.getTimesheetId(), requireContext());
             Log.d("createInvoiceSummaryAttachment", invoiceSummaryHtml);
-            String invoiceAttachmentFileName = InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.name().toLowerCase() + "_attachment_" + invoice.getBillingDate().format(DateTimeFormatter.ofPattern("yyyy-MM"));
+            String invoiceAttachmentFileName = InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.name().toLowerCase(Locale.getDefault()) + "_attachment_" + invoice.getBillingDate().format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
             InvoiceAttachment timesheetSummaryAttachment = new InvoiceAttachment();
             timesheetSummaryAttachment.setInvoiceId(invoiceId);
@@ -143,7 +144,7 @@ public class InvoiceNewFragment extends BaseFragment {
     private void createClientTimesheetAttachment(Long invoiceId, Long timesheetId) {
         try {
             String timesheetAttachmentHtml = timesheetService.createTimesheetListHtml(timesheetId, requireContext());
-            String timesheetAttachmentFileName = InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.name().toLowerCase() + "_attachment_" + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
+            String timesheetAttachmentFileName = InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.name().toLowerCase(Locale.getDefault()) + "_attachment_" + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
             InvoiceAttachment clientTimesheetAttachment = new InvoiceAttachment();
             clientTimesheetAttachment.setInvoiceId(invoiceId);
             clientTimesheetAttachment.setAttachmentType(InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.name());

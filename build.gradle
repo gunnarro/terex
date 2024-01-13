@@ -12,8 +12,8 @@ buildscript {
 }
 
 plugins {
-    id 'com.android.application' version '8.2.0' apply false
-    id 'com.android.library' version '8.2.0' apply false
+    id 'com.android.application' version '8.2.1' apply false
+    id 'com.android.library' version '8.2.1' apply false
     id 'androidx.navigation.safeargs' version '2.7.5' apply false
     // id 'org.jetbrains.kotlin.android' version '1.5.31' apply false
     id "org.sonarqube" version "4.4.1.3373"
@@ -28,6 +28,27 @@ java {
 
 allprojects {
 
+    // default reportsDirectory $buildDir/reports/jacoco
+    jacoco {
+        toolVersion = "0.8.8"
+        reportsDirectory = layout.buildDirectory.dir('app/build/reports')
+    }
+
+// report is always generated after tests run
+    test {
+        enabled = true
+        finalizedBy jacocoTestReport // report is always generated after tests run
+    }
+
+// test goal is required to run before generating the report
+    jacocoTestReport {
+        dependsOn test
+        reports {
+            xml.required = true
+            html.required = true
+            //   html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+        }
+    }
 }
 
 subprojects {
@@ -35,8 +56,11 @@ subprojects {
     sonar {
         properties {
             //  property 'sonar.coverage.jacoco.xmlReportPaths', '$projectDir.parentFile.path/build/reports/jacoco/codeCoverageReport/codeCoverageReport.xml'
-            property 'sonar.junit.reportPaths', 'build/jacoco/jacoco.xml'
-            property 'sonar.androidLint.reportPaths', 'build/reports/lint-results-debug.xml'
+            property "sonar.androidLint.reportPaths", "build/reports/lint-results-debug.xml"
+            property "sonar.exclusions", "**/*Test*/**, build/**, *.json, **/*test*/**, **/.gradle/**, **/R.class"
+            property "sonar.java.coveragePlugin", "jacoco"
+            property "sonar.junit.reportPaths", "**/test-results/**/*.xml"
+            property "sonar.coverage.jacoco.xmlReportPaths", "**/jacocoTestReport/jacocoTestReport.xml"
             //  property 'sonar.inclusions', 'com/gunnarro/'
         }
     }
@@ -66,14 +90,14 @@ ext {
     androidx_appcompat = '1.6.1'
     androidx_recyclerview = '1.3.2'
     androidx_preference = '1.2.1'
-    androidx_lifecycle_livedata_ktx = '2.6.2'
-    androidx_lifecycle_viewmodel_ktx = '2.6.2'
+    androidx_lifecycle_livedata_ktx = '2.7.0'
+    androidx_lifecycle_viewmodel_ktx = '2.7.0'
     androidx_annotation = '1.7.1'
     androidx_navigation_fragment = '2.7.6'
     androidx_navigation_ui = '2.7.6'
     // androidx.navigation.safe_args = '2.7.5'
     // google
-    google_android_material = '1.12.0-alpha02'
+    google_android_material = '1.12.0-alpha03'
     google_dagger_hilt_android = '2.50'
     // xml
     //jackson_databind = '2.15.2'
@@ -114,22 +138,3 @@ ext {
     security_crypto = "1.1.0-alpha06"
 }
 
-// default reportsDirectory $buildDir/reports/jacoco
-jacoco {
-    toolVersion = "0.8.8"
-}
-
-// report is always generated after tests run
-test {
-    finalizedBy jacocoTestReport // report is always generated after tests run
-}
-
-// test goal is required to run before generating the report
-jacocoTestReport {
-    dependsOn test
-    reports {
-        xml.required = true
-        html.required = true
-        //   html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
-    }
-}

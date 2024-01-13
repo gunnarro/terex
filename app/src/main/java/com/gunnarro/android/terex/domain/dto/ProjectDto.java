@@ -4,6 +4,7 @@ import java.util.List;
 
 public class ProjectDto {
     private Long id;
+    private Long clientId;
     private String name;
     private String description;
     private String status;
@@ -16,6 +17,14 @@ public class ProjectDto {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(Long clientId) {
+        this.clientId = clientId;
     }
 
     public String getName() {

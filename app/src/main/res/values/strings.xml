@@ -49,7 +49,7 @@
     <string name="btn_calendar">Kalender</string>
     <string name="btn_email">Send epost</string>
     <string name="btn_view">Vis</string>
-    <string name="btn_ok">Ok</string>
+    <string name="btn_ok">OK</string>
 
     <!-- dialog messages -->
     <string name="msg_delete_timesheet">Delete timesheet. Note that all registered hours will also be deleted. It is not possible to revert the deletion.</string>
@@ -74,7 +74,7 @@
     <string name="lbl_billed_amount">Beløp</string>
 
     <string name="txt_colon">:</string>
-    <string name="txt_empty"></string>
+    <string name="txt_empty" />
     <string name="lbl_workday_date">Dato</string>
     <string name="lbl_to_time">Til klokkeslett</string>
     <string name="lbl_from_time">Fra klokkeslett</string>

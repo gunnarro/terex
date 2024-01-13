@@ -21,6 +21,10 @@ public class ContactInfo extends BaseEntity {
     private Long id;
     @ColumnInfo(name = "mobile_number")
     private String mobileNumber;
+    @ColumnInfo(name = "mobile_number_country_code")
+    private String mobileNumberCountryCode;
+    @ColumnInfo(name = "email_address")
+    private String emailAddress;
 
     public Long getId() {
         return id;
@@ -46,18 +50,11 @@ public class ContactInfo extends BaseEntity {
         this.mobileNumberCountryCode = mobileNumberCountryCode;
     }
 
-    public Integer getEmailAddress() {
+    public String getEmailAddress() {
         return emailAddress;
     }
 
-    public void setEmailAddress(Integer emailAddress) {
+    public void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
     }
-
-    @ColumnInfo(name = "mobile_number_country_code")
-    private String mobileNumberCountryCode;
-    @ColumnInfo(name = "email_address")
-    private Integer emailAddress;
-
-
 }

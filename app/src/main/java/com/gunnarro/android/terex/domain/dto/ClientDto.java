@@ -2,13 +2,20 @@ package com.gunnarro.android.terex.domain.dto;
 
 import java.util.List;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Builder
 public class ClientDto {
     private Long id;
     private String name;
     private String status;
-
-    private CompanyDto companyDto;
-
+    private OrganizationDto companyDto;
     private List<ProjectDto> projectList;
 
     public Long getId() {
@@ -35,11 +42,11 @@ public class ClientDto {
         this.status = status;
     }
 
-    public CompanyDto getCompanyDto() {
+    public OrganizationDto getCompanyDto() {
         return companyDto;
     }
 
-    public void setCompanyDto(CompanyDto companyDto) {
+    public void setCompanyDto(OrganizationDto companyDto) {
         this.companyDto = companyDto;
     }
 

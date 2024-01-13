@@ -83,16 +83,17 @@ android {
         abortOnError false
         warning 'InvalidPackage'
     }
-
     packagingOptions {
-        exclude("META-INF/LICENSE-LGPL-3.txt")
-        exclude("META-INF/LICENSE-GPL-3.txt")
-        exclude("META-INF/LICENSE-W3C-TEST")
-        exclude("META-INF/LICENSE-LGPL-2.1.txt")
-        exclude("META-INF/LICENSE-GPL-2.txt")
+        resources {
+            excludes += ['META-INF/LICENSE-LGPL-3.txt', 'META-INF/LICENSE-GPL-3.txt', 'META-INF/LICENSE-W3C-TEST', 'META-INF/LICENSE-LGPL-2.1.txt', 'META-INF/LICENSE-GPL-2.txt']
+        }
     }
 
+
 }
+
+
+
 
 dependencies {
     // quickfix for kotlin duplicate class error message
@@ -139,16 +140,17 @@ dependencies {
     //noinspection GradleDependency
     //  implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jackson_datatype_jsr310"
     // for password hashing
-    implementation "de.mkammerer:argon2-jvm:$mkammerer_argon2_jvm"
-    implementation "org.jasypt:jasypt:$jasypt"
+    //implementation "de.mkammerer:argon2-jvm:$mkammerer_argon2_jvm"
+    //implementation "org.jasypt:jasypt:$jasypt"
 
     // for rx eventbus
-    implementation "io.reactivex.rxjava2:rxjava:$reactivex_rxjava2_rxjava"
-    implementation "io.reactivex.rxjava2:rxandroid:$reactivex_rxjava2_rxandroid"
+//    implementation "io.reactivex.rxjava2:rxjava:$reactifsauvex_rxjava2_rxjava"
+//    implementation "io.reactivex.rxjava2:rxandroid:$reactivex_rxjava2_rxandroid"
 
     // calendar
     implementation "com.applandeo:material-calendar-view:$material_calendar_view"
 
+    // lombok
     compileOnly "org.projectlombok:lombok:$projectlombok_lombok"
     annotationProcessor "org.projectlombok:lombok:$projectlombok_lombok"
 
@@ -171,8 +173,8 @@ dependencies {
     // for fingerprint login
     implementation "androidx.biometric:biometric:$rootProject.biometric_version"
     // for pdf
-    implementation "org.jsoup:jsoup:$jsoup"
-    implementation "org.xhtmlrenderer:flying-saucer-pdf-openpdf:$xhtmlrenderer_flying_saucer"
+    //implementation "org.jsoup:jsoup:$jsoup"
+    //implementation "org.xhtmlrenderer:flying-saucer-pdf-openpdf:$xhtmlrenderer_flying_saucer"
     //implementation "org.xhtmlrenderer:flying-saucer-core:$xhtmlrenderer_flying_saucer"
     //implementation "com.openhtmltopdf:openhtmltopdf-core:1.0.10"
     //implementation "com.openhtmltopdf:openhtmltopdf-pdfbox:1.0.10"

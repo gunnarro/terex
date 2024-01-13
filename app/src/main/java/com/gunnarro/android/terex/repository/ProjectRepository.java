@@ -98,7 +98,7 @@ public class ProjectRepository {
 
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures
     // that you're not doing any long running operations on the main thread, blocking the UI.
-    public Long insertProject(Project project) throws InterruptedException, ExecutionException {
+    public Long insert(Project project) throws InterruptedException, ExecutionException {
         Log.d("insertProject", "project: " + project);
         CompletionService<Long> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
         service.submit(() -> projectDao.insert(project));
@@ -106,7 +106,7 @@ public class ProjectRepository {
         return future != null ? future.get() : null;
     }
 
-    public Integer updateProject(Project project) throws InterruptedException, ExecutionException {
+    public Integer update(Project project) throws InterruptedException, ExecutionException {
         Log.d("updateProject", "project: " + project);
         CompletionService<Integer> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
         service.submit(() -> projectDao.update(project));

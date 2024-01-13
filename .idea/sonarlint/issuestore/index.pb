@@ -244,3 +244,21 @@ Mapp/src/main/java/com/gunnarro/android/terex/domain/entity/ClientDetails.java,
 :
 
 .gitignore,a/5/a5cc2925ca8258af241be7e5b0381edf30266302
+{
+Kapp/src/test/java/com/gunnarro/android/terex/service/ClientServiceTest.java,e/4/e4c363a4fd71eecb416c91b305b0fc4de737abc5
+|
+Lapp/src/main/java/com/gunnarro/android/terex/domain/entity/Organization.java,a/3/a37eb17ad7cc0c9b99b2cc7ce3191eca8b7a4f3e
+|
+Lapp/src/main/java/com/gunnarro/android/terex/domain/dto/OrganizationDto.java,9/9/99dd97e3b8e86d270b2ff8126441c1bf136c4973
+É
+Sapp/src/main/java/com/gunnarro/android/terex/domain/entity/OrganizationDetails.java,9/3/931234e88fffe51ec24b23c84846c4d89b2414cd
+|
+Lapp/src/test/java/com/gunnarro/android/terex/service/ProjectServiceTest.java,f/1/f108bee065763ea6fad66f41b9d592602714990a
+É
+Sapp/src/main/java/com/gunnarro/android/terex/repository/OrganizationRepository.java,7/a/7a9a976d98ce50f8aaa70fc4985f9104a23c25ca
+|
+Lapp/src/main/java/com/gunnarro/android/terex/repository/OrganizationDao.java,5/9/5917443893d672da94bd3d6aca6f05419503e239
+}
+Mapp/src/main/java/com/gunnarro/android/terex/service/OrganizationService.java,f/9/f94f8b2ea552238c39929e7bd992ccbdaa078d30
+Å
+Qapp/src/test/java/com/gunnarro/android/terex/service/OrganizationServiceTest.java,f/7/f76bb040555a88d627c88597de77601e5ce5f29e

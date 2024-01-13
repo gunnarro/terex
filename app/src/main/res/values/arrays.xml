@@ -5,7 +5,7 @@
     <string-array name="timesheet_statuses">
         <item>Open</item>
         <item>Billed</item>
-        <item>Payed</item>
+        <item>Paid</item>
     </string-array>
 
     <string-array name="years">

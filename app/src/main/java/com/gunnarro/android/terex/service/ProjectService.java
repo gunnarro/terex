@@ -55,7 +55,8 @@ public class ProjectService {
 
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures
     // that you're not doing any long running operations on the main thread, blocking the UI.
-    public Long saveProject(@NotNull final Project project) {
+    public Long saveProject(@NotNull final ProjectDto projectDto) {
+        Project project = TimesheetMapper.fromProjectDto(projectDto);
         try {
             Project projectExisting = projectRepository.findProject(project.getClientId(), project.getName());
             Log.d("ProjectRepository.saveProject", String.format("%s", projectExisting));
@@ -63,13 +64,13 @@ public class ProjectService {
             if (projectExisting == null) {
                 project.setCreatedDate(LocalDateTime.now());
                 project.setLastModifiedDate(LocalDateTime.now());
-                id = projectRepository.insertProject(project);
+                id = projectRepository.insert(project);
                 Log.d("", "inserted new project: " + id + " - " + project.getName());
             } else {
                 project.setId(projectExisting.getId());
                 project.setCreatedDate(projectExisting.getCreatedDate());
                 project.setLastModifiedDate(LocalDateTime.now());
-                projectRepository.updateProject(project);
+                projectRepository.update(project);
                 id = project.getId();
                 Log.d("", "updated project: " + id + " - " + project.getName());
             }
@@ -77,7 +78,7 @@ public class ProjectService {
         } catch (Exception e) {
             // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();
-            throw new TerexApplicationException("Error saving project!", e.getMessage(), e.getCause());
+            throw new TerexApplicationException("Error saving project! " + e.getMessage(), "50050", e.getCause());
         }
     }
 }

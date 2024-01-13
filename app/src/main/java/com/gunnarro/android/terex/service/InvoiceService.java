@@ -1,11 +1,8 @@
 package com.gunnarro.android.terex.service;
 
-import android.content.Context;
-
 import androidx.room.Transaction;
 
 import com.gunnarro.android.terex.domain.dto.TimesheetSummaryDto;
-import com.gunnarro.android.terex.domain.entity.Company;
 import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.InvoiceAttachment;
 import com.gunnarro.android.terex.exception.TerexApplicationException;

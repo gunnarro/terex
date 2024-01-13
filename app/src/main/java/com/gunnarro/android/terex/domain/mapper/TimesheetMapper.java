@@ -2,9 +2,9 @@ package com.gunnarro.android.terex.domain.mapper;
 
 import com.gunnarro.android.terex.domain.dto.AddressDto;
 import com.gunnarro.android.terex.domain.dto.ClientDto;
-import com.gunnarro.android.terex.domain.dto.CompanyDto;
 import com.gunnarro.android.terex.domain.dto.ConsultantBrokerDto;
 import com.gunnarro.android.terex.domain.dto.ContactInfoDto;
+import com.gunnarro.android.terex.domain.dto.OrganizationDto;
 import com.gunnarro.android.terex.domain.dto.PersonDto;
 import com.gunnarro.android.terex.domain.dto.ProjectDto;
 import com.gunnarro.android.terex.domain.dto.TimesheetDto;
@@ -13,10 +13,10 @@ import com.gunnarro.android.terex.domain.dto.TimesheetSummaryDto;
 import com.gunnarro.android.terex.domain.entity.Address;
 import com.gunnarro.android.terex.domain.entity.Client;
 import com.gunnarro.android.terex.domain.entity.ClientDetails;
-import com.gunnarro.android.terex.domain.entity.CompanyDetails;
 import com.gunnarro.android.terex.domain.entity.ConsultantBroker;
 import com.gunnarro.android.terex.domain.entity.ConsultantBrokerWithProject;
 import com.gunnarro.android.terex.domain.entity.ContactInfo;
+import com.gunnarro.android.terex.domain.entity.Organization;
 import com.gunnarro.android.terex.domain.entity.Person;
 import com.gunnarro.android.terex.domain.entity.Project;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
@@ -117,10 +117,24 @@ public class TimesheetMapper {
         }
         ProjectDto projectDto = new ProjectDto();
         projectDto.setId(project.getId());
+        projectDto.setClientId(project.getClientId());
         projectDto.setName(project.getName());
         projectDto.setDescription(project.getDescription());
         projectDto.setStatus(project.getStatus());
         return projectDto;
+    }
+
+    public static Project fromProjectDto(ProjectDto projectDto) {
+        if (projectDto == null) {
+            return null;
+        }
+        Project project = new Project();
+        project.setId(projectDto.getId());
+        project.setClientId(projectDto.getClientId());
+        project.setName(projectDto.getName());
+        project.setDescription(projectDto.getDescription());
+        project.setStatus(projectDto.getStatus());
+        return project;
     }
 
     public static ProjectDto toProjectDto(Project project, List<Timesheet> timesheetList) {
@@ -157,7 +171,7 @@ public class TimesheetMapper {
 
     public static ClientDto toClientDto(ClientDetails clientDetails) {
         ClientDto clientDto = new ClientDto();
-        clientDto.setCompanyDto(toCompanyDto(clientDetails.getCompany()));
+        // clientDto.setCompanyDto(toCompanyDto(clientDetails.getCompany()));
         clientDto.setProjectList(toProjectDtoList(clientDetails.getProjectList()));
         return clientDto;
     }
@@ -168,23 +182,37 @@ public class TimesheetMapper {
     }
 
 
-    public static CompanyDto toCompanyDto(CompanyDetails companyDetails) {
-        if (companyDetails == null) {
-            return null;
-        }
-        CompanyDto companyDto = new CompanyDto();
-        if (companyDetails.getCompany() != null) {
-            companyDto.setId(companyDetails.getCompany().getId());
-            companyDto.setOrganizationNumber(companyDetails.getCompany().getOrganizationNumber());
-            companyDto.setCompanyIndustryType(companyDetails.getCompany().getCompanyIndustryType());
-        }
-        companyDto.setAddress(toAddressDto(companyDetails.getCompanyAddress()));
-        companyDto.setContactPerson(toPersonDto(companyDetails.getContactPerson()));
-        companyDto.setContactInfo(toContactInfoDto(companyDetails.getCompanyContactInfo()));
-        return companyDto;
+    public static List<OrganizationDto> toOrganizationDtoList(List<Organization> organizations) {
+        return List.of();
     }
 
-    private static ContactInfoDto toContactInfoDto(ContactInfo contactInfo) {
+    public static Organization fromOrganizationDto(OrganizationDto organizationDto) {
+        if (organizationDto == null) {
+            return null;
+        }
+        Organization organization = new Organization();
+        organization.setId(organizationDto.getId());
+        organization.setName(organizationDto.getName());
+        organization.setOrganizationNumber(organizationDto.getOrganizationNumber());
+        organization.setOrganizationIndustryType(organizationDto.getIndustryType());
+        organization.setBankAccountNumber(organizationDto.getBankAccountNumber());
+        return organization;
+    }
+
+    public static OrganizationDto toOrganizationDto(Organization organization) {
+        if (organization == null) {
+            return null;
+        }
+        OrganizationDto organizationDto = new OrganizationDto();
+        organizationDto.setId(organization.getId());
+        organizationDto.setName(organization.getName());
+        organizationDto.setOrganizationNumber(organization.getOrganizationNumber());
+        organizationDto.setIndustryType(organization.getOrganizationIndustryType());
+        organizationDto.setBankAccountNumber(organization.getBankAccountNumber());
+        return organizationDto;
+    }
+
+    public static ContactInfoDto toContactInfoDto(ContactInfo contactInfo) {
         if (contactInfo == null) {
             return null;
         }
@@ -229,4 +257,6 @@ public class TimesheetMapper {
         addressDto.setStreetNumberPrefix(address.getStreetNumberPrefix());
         return addressDto;
     }
+
+
 }

@@ -19,7 +19,7 @@ import com.gunnarro.android.terex.domain.entity.TimesheetWithEntries;
 import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
 import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
-import com.gunnarro.android.terex.repository.CompanyRepository;
+import com.gunnarro.android.terex.repository.OrganizationRepository;
 import com.gunnarro.android.terex.repository.TimesheetRepository;
 import com.gunnarro.android.terex.utility.Utility;
 
@@ -53,20 +53,20 @@ public class TimesheetService {
 
     private final TimesheetRepository timesheetRepository;
 
-    private final CompanyRepository companyRepository;
+    private final OrganizationRepository organizationRepository;
 
     /**
      * for unit test only
      */
-    public TimesheetService(TimesheetRepository timesheetRepository, CompanyRepository companyRepository) {
+    public TimesheetService(TimesheetRepository timesheetRepository, OrganizationRepository organizationRepository) {
         this.timesheetRepository = timesheetRepository;
-        this.companyRepository = companyRepository;
+        this.organizationRepository = organizationRepository;
     }
 
     @Inject
     public TimesheetService() {
         timesheetRepository = new TimesheetRepository();
-        companyRepository = new CompanyRepository();
+        organizationRepository = new OrganizationRepository();
     }
 
 
@@ -328,8 +328,8 @@ public class TimesheetService {
         context.put("invoiceAttachmentTitle", "Vedlegg til faktura");
         context.put("invoiceBillingPeriod", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM")));
         context.put("timesheetPeriod", String.format("%s/%s", timesheet.getMonth(), timesheet.getYear()));
-        context.put("company", companyRepository.getCompany(1L));
-        context.put("client", companyRepository.getCompany(2L));
+        context.put("company", organizationRepository.getOrganization(1L));
+        context.put("client", organizationRepository.getOrganization(2L));
         context.put("timesheetProjectCode", "techlead-catalystone-solution-as");
         context.put("timesheetSummaryList", timesheetSummaryList);
         context.put("totalBilledHours", Double.toString(totalBilledHours));
@@ -358,8 +358,8 @@ public class TimesheetService {
         context.put("invoiceAttachmentTitle", "Vedlegg til faktura");
         context.put("invoiceBillingPeriod", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM")));
         context.put("timesheetPeriod", String.format("%s/%s", timesheet.getMonth(), timesheet.getYear()));
-        context.put("company", companyRepository.getCompany(1L));
-        context.put("client", companyRepository.getCompany(2L));
+        context.put("company", organizationRepository.getOrganization(1L));
+        context.put("client", organizationRepository.getOrganization(2L));
         context.put("timesheetProjectCode", "techlead-catalystone-solution-as");
         context.put("timesheetSummaryList", TimesheetMapper.toTimesheetSummaryDtoList(timesheetSummaryList));
         context.put("totalBilledHours", String.format(Locale.getDefault(), "%.1f", totalBilledHours));
@@ -372,6 +372,7 @@ public class TimesheetService {
         mustache.execute(writer, context);
         return writer.toString();
     }
+
 
 
 

@@ -49,7 +49,7 @@
     <string name="btn_calendar">Calendar</string>
     <string name="btn_email">Send email</string>
     <string name="btn_view">View</string>
-    <string name="btn_ok">Ok</string>
+    <string name="btn_ok">OK</string>
 
     <!-- dialog messages -->
     <string name="msg_delete_timesheet">Delete timesheet. Note that all registered hours will also be deleted. It is not possible to revert the deletion.</string>
@@ -74,7 +74,7 @@
     <string name="lbl_billed_amount">Amount</string>
 
     <string name="txt_colon">:</string>
-    <string name="txt_empty"></string>
+    <string name="txt_empty" />
     <string name="lbl_workday_date">Date</string>
     <string name="lbl_to_time">To time</string>
     <string name="lbl_from_time">From time</string>

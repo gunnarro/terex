@@ -55,4 +55,21 @@
         <item name="android:textColor">@android:color/holo_blue_light</item>
         <item name="android:textSize">12sp</item>
     </style>
+
+    <!-- custom shapes -->
+    <style name="Widget.MyApp.MaterialButtonTopLeftCut" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.MyApp.Button.corner.cut</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlay.MyApp.Button.corner.cut" parent="">
+        <item name="cornerFamilyTopLeft">cut</item>
+        <item name="cornerSizeTopLeft">48dp</item>
+    </style>
+
+    <style name="CornerCutTopLeft" parent="">
+        <item name="cornerSizeTopRight">5%</item>
+        <item name="cornerFamilyTopRight">rounded</item>
+    </style>
+
+
 </resources>

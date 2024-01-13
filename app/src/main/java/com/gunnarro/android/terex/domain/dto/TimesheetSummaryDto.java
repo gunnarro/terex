@@ -2,6 +2,7 @@ package com.gunnarro.android.terex.domain.dto;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 /**
  * Used to hold weekly summary for a timesheet.
@@ -90,7 +91,7 @@ public class TimesheetSummaryDto {
     }
 
     public String getTotalWorkedHours() {
-        return String.format("%.1f", totalWorkedHours);
+        return String.format(Locale.getDefault(),"%.1f", totalWorkedHours);
     }
 
     public void setTotalWorkedHours(double totalWorkedHours) {
@@ -101,7 +102,7 @@ public class TimesheetSummaryDto {
         return totalBilledAmount;
     }
     public String getTotalBilledAmount() {
-        return String.format("%.2f", totalBilledAmount);
+        return String.format(Locale.getDefault(),"%.2f", totalBilledAmount);
     }
 
     public void setTotalBilledAmount(double totalBilledAmount) {

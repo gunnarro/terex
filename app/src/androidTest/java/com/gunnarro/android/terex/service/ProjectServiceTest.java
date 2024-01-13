@@ -40,17 +40,17 @@ public class ProjectServiceTest {
     }
 
     @Test
-    public void getProject() {
+    public void saveProject() {
         assertNull(projectService.getProject(1L));
         assertNull(projectService.getProjectWithTimesheet(1L));
 
-        Project project = new Project();
-        project.setName("gunnarro timesheet project");
-        project.setClientId(1L);
-        project.setDescription("develop a timesheet app");
-        project.setStatus(Project.ProjectStatusEnum.ACTIVE.name());
+        ProjectDto newProjectDto = new ProjectDto();
+        newProjectDto.setName("gunnarro timesheet project");
+        newProjectDto.setId(null);// for new projects id is not set
+        newProjectDto.setDescription("develop a timesheet app");
+        newProjectDto.setStatus(Project.ProjectStatusEnum.ACTIVE.name());
 
-        Long projectId = projectService.saveProject(project);
+        Long projectId = projectService.saveProject(newProjectDto);
         assertEquals(1, projectId.intValue());
 
         ProjectDto projectDto = projectService.getProjectWithTimesheet(projectId);

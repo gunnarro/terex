@@ -1,100 +1,94 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/timesheet_entry_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
+    android:background="@drawable/list_view_cell_shape"
+    android:columnCount="2"
+    android:elevation="2dp"
+    android:rowCount="1"
     tools:context="com.gunnarro.android.terex.ui.MainActivity">
+    <!-- first row, icon left aligned -->
+    <TextView
+        android:id="@+id/timesheet_entry_line_1_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:maxLines="3"
+        android:text="25"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
-    <RelativeLayout
-        android:id="@+id/timesheet_entry_layout"
+    <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:background="@drawable/list_view_cell_shape"
-        android:columnCount="2"
-        android:elevation="2dp"
-        android:rowCount="1">
-        <!-- first row, icon left aligned -->
-        <TextView
-            android:id="@+id/timesheet_entry_line_1_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:fontFamily="sans-serif-medium"
-            android:gravity="center"
-            android:maxLines="3"
-            android:text="25"
-            android:textAlignment="center"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+        android:layout_margin="10dp"
+        android:layout_toEndOf="@id/timesheet_entry_line_1_status"
+        android:stretchColumns="1,1">
 
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:layout_toEndOf="@id/timesheet_entry_line_1_status"
-            android:stretchColumns="1,1">
+        <TableRow>
 
-            <TableRow>
+            <TextView
+                android:id="@+id/timesheet_entry_line_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_span="1"
+                android:gravity="start"
+                android:text="HRIS modenrization"
+                android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/timesheet_entry_line_header"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:layout_span="1"
-                    android:gravity="start"
-                    android:text="HRIS modenrization"
-                    android:textStyle="bold" />
+            <ImageView
+                android:id="@+id/ic_timesheet_entry_row_delete"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_gravity="end"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="7dp"
+                android:contentDescription="@string/btn_view"
+                android:elevation="1dp"
+                android:src="@drawable/ic_delete_red_24dp" />
 
-                <ImageView
-                    android:id="@+id/ic_timesheet_entry_row_delete"
-                    android:layout_width="14dp"
-                    android:layout_height="14dp"
-                    android:layout_gravity="end"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginEnd="7dp"
-                    android:contentDescription="@string/btn_view"
-                    android:elevation="1dp"
-                    android:src="@drawable/ic_delete_red_24dp" />
+        </TableRow>
 
-            </TableRow>
+        <TableRow>
 
-            <TableRow>
+            <TextView
+                android:id="@+id/timesheet_entry_line_1_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:gravity="start"
+                android:text="08:00 - 15:30" />
 
-                <TextView
-                    android:id="@+id/timesheet_entry_line_1_label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:gravity="start"
-                    android:text="08:00 - 15:30" />
+            <TextView
+                android:id="@+id/timesheet_entry_line_1_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:text="7,5 timer" />
+        </TableRow>
 
-                <TextView
-                    android:id="@+id/timesheet_entry_line_1_value"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:text="7,5 timer" />
-            </TableRow>
+        <TableRow>
 
-            <TableRow>
+            <TextView
+                android:id="@+id/timesheet_entry_line_2_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:gravity="start"
+                android:text="Timepris" />
 
-                <TextView
-                    android:id="@+id/timesheet_entry_line_2_label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:gravity="start"
-                    android:text="Timepris" />
-
-                <TextView
-                    android:id="@+id/timesheet_entry_line_2_value"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:text="8.345,00 Kr" />
-            </TableRow>
-        </TableLayout>
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/timesheet_entry_line_2_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:text="8.345,00 Kr" />
+        </TableRow>
+    </TableLayout>
 </RelativeLayout>

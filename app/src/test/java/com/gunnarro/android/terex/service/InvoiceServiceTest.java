@@ -27,9 +27,6 @@ class InvoiceServiceTest {
     private InvoiceService invoiceService;
 
     @Mock
-    android.content.Context applicationContextMock;
-
-    @Mock
     private TimesheetService timesheetServiceMock;
 
     @Mock

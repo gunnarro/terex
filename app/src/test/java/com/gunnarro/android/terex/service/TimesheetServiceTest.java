@@ -20,7 +20,7 @@ import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
 import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
-import com.gunnarro.android.terex.repository.CompanyRepository;
+import com.gunnarro.android.terex.repository.OrganizationRepository;
 import com.gunnarro.android.terex.repository.TimesheetRepository;
 import com.gunnarro.android.terex.utility.Utility;
 
@@ -50,11 +50,11 @@ class TimesheetServiceTest {
     @Mock
     private TimesheetRepository timesheetRepositoryMock;
     @Mock
-    private CompanyRepository companyRepositoryMock;
+    private OrganizationRepository OrganizationRepositoryMock;
 
     @BeforeEach
     public void setup() {
-        timesheetService = new TimesheetService(timesheetRepositoryMock,companyRepositoryMock);
+        timesheetService = new TimesheetService(timesheetRepositoryMock, OrganizationRepositoryMock);
     }
 
     @Test
@@ -340,8 +340,8 @@ class TimesheetServiceTest {
     void createTimesheetListHtml() throws IOException {
         Timesheet timesheet = new Timesheet();
         timesheet.setId(23L);
-        timesheet.setFromDate(LocalDate.of(2023,12,1));
-        timesheet.setToDate(LocalDate.of(2023,12,31));
+        timesheet.setFromDate(LocalDate.of(2023, 12, 1));
+        timesheet.setToDate(LocalDate.of(2023, 12, 31));
 
         File mustacheTemplateFile = new File("src/main/assets/" + InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.getTemplate());
         Context applicationContextMock = mock(Context.class);
@@ -362,8 +362,8 @@ class TimesheetServiceTest {
     void createTimesheetSummaryHtml() throws IOException {
         Timesheet timesheet = new Timesheet();
         timesheet.setId(23L);
-        timesheet.setFromDate(LocalDate.of(2023,12,1));
-        timesheet.setToDate(LocalDate.of(2023,12,31));
+        timesheet.setFromDate(LocalDate.of(2023, 12, 1));
+        timesheet.setToDate(LocalDate.of(2023, 12, 31));
         File mustacheTemplateFile = new File("src/main/assets/" + InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getTemplate());
         Context applicationContextMock = mock(Context.class);
         AssetManager assetManagerMock = mock(AssetManager.class);
@@ -374,7 +374,7 @@ class TimesheetServiceTest {
         when(timesheetRepositoryMock.getTimesheetEntryList(anyLong())).thenReturn(TestData.generateTimesheetEntries(2023, 12));
         String templateHtml = timesheetService.createTimesheetSummaryHtml(23L, applicationContextMock);
         Assertions.assertNotNull(templateHtml);
-       // saveToFile("src/test/" + InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getFileName() + ".html", templateHtml);
+        // saveToFile("src/test/" + InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getFileName() + ".html", templateHtml);
     }
 
     @Test

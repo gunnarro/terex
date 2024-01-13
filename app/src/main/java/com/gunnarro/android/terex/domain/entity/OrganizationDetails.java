@@ -2,23 +2,16 @@ package com.gunnarro.android.terex.domain.entity;
 
 import androidx.room.Embedded;
 import androidx.room.Entity;
-import androidx.room.Index;
 import androidx.room.Relation;
-import androidx.room.TypeConverters;
 
-import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
-import com.gunnarro.android.terex.domain.converter.LocalDateTimeConverter;
-
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @NoArgsConstructor
-@Entity(tableName = "company")
-public class CompanyDetails {
+@Entity(tableName = "organization")
+public class OrganizationDetails {
 
     @Embedded
-    private Company company;
+    private Organization organization;
 
     @Relation(parentColumn = "address_id", entityColumn = "id")
     private Address companyAddress;
@@ -29,12 +22,12 @@ public class CompanyDetails {
     @Relation(parentColumn = "contact_person_id", entityColumn = "id")
     private Person contactPerson;
 
-    public Company getCompany() {
-        return company;
+    public Organization getOrganization() {
+        return organization;
     }
 
-    public void setCompany(Company company) {
-        this.company = company;
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
     }
 
     public Address getCompanyAddress() {

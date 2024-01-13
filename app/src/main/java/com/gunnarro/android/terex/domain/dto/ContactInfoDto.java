@@ -7,7 +7,7 @@ public class ContactInfoDto {
 
     private String mobileNumberCountryCode;
 
-    private Integer emailAddress;
+    private String emailAddress;
 
     public Long getId() {
         return id;
@@ -33,11 +33,11 @@ public class ContactInfoDto {
         this.mobileNumberCountryCode = mobileNumberCountryCode;
     }
 
-    public Integer getEmailAddress() {
+    public String getEmailAddress() {
         return emailAddress;
     }
 
-    public void setEmailAddress(Integer emailAddress) {
+    public void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
     }
 }

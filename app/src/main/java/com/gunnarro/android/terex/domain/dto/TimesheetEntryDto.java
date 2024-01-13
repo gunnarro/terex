@@ -3,6 +3,7 @@ package com.gunnarro.android.terex.domain.dto;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 public class TimesheetEntryDto {
 
@@ -59,7 +60,7 @@ public class TimesheetEntryDto {
 
     public String getWorkedHours() {
         if (workedMinutes != null && workedMinutes > 0) {
-            return String.format("%.1f", (double)workedMinutes / 60);
+            return String.format(Locale.getDefault(), "%.1f", (double) workedMinutes / 60);
         }
         return null;
     }
