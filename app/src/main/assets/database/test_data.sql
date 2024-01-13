@@ -13,11 +13,11 @@ DELETE FROM person WHERE id > 0
 INSERT INTO person (id, created_date, last_modified_date, first_name, middle_name, last_name, address_id, contact_info_id) VALUES (1, current_timestamp, current_timestamp, 'Gunnar', null, 'Rønneberg', null, 1)
 INSERT INTO person (id, created_date, last_modified_date, first_name, middle_name, last_name, address_id, contact_info_id) VALUES (2, current_timestamp, current_timestamp, 'Anita', null, 'Lundtveit', null, 2)
 
--- update company table data
-DELETE FROM company WHERE id > 0
-INSERT INTO company (id, created_date, last_modified_date, company_name, organization_number, bank_account_number, address_id, contact_info_id, contact_person_id) VALUES (1, current_timestamp, current_timestamp, 'gunnarro as', '828707922', '92302698831', 1, 1, 1)
-INSERT INTO company (id, created_date, last_modified_date, company_name, organization_number, bank_account_number, address_id, contact_info_id, contact_person_id) VALUES (2, current_timestamp, current_timestamp, 'Norway Consulting AS', '917616647', null, 2, 2, 2)
-INSERT INTO company (id, created_date, last_modified_date, company_name, organization_number, bank_account_number, address_id, contact_info_id, contact_person_id) VALUES (3, current_timestamp, current_timestamp, 'CatalystOne Solutions AS', ' 986811095', null, null, null, null)
+-- update organization table data
+-- DELETE FROM organization WHERE id > 0
+-- INSERT INTO organization (id, created_date, last_modified_date, company_name, organization_number, bank_account_number, address_id, contact_info_id, contact_person_id) VALUES (1, current_timestamp, current_timestamp, 'gunnarro as', '828707922', '92302698831', 1, 1, 1)
+-- INSERT INTO organization (id, created_date, last_modified_date, company_name, organization_number, bank_account_number, address_id, contact_info_id, contact_person_id) VALUES (2, current_timestamp, current_timestamp, 'Norway Consulting AS', '917616647', null, 2, 2, 2)
+-- INSERT INTO organization (id, created_date, last_modified_date, company_name, organization_number, bank_account_number, address_id, contact_info_id, contact_person_id) VALUES (3, current_timestamp, current_timestamp, 'CatalystOne Solutions AS', ' 986811095', null, null, null, null)
 
 -- update client data
 DELETE FROM client WHERE id > 0

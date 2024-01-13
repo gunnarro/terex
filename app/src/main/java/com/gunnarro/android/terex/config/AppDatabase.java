@@ -27,6 +27,7 @@ import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.repository.ClientDao;
 import com.gunnarro.android.terex.repository.ConsultantBrokerDao;
+import com.gunnarro.android.terex.repository.ContactInfoDao;
 import com.gunnarro.android.terex.repository.InvoiceAttachmentDao;
 import com.gunnarro.android.terex.repository.InvoiceDao;
 import com.gunnarro.android.terex.repository.OrganizationDao;
@@ -34,6 +35,8 @@ import com.gunnarro.android.terex.repository.ProjectDao;
 import com.gunnarro.android.terex.repository.TimesheetDao;
 import com.gunnarro.android.terex.repository.TimesheetEntryDao;
 import com.gunnarro.android.terex.repository.TimesheetSummaryDao;
+import com.gunnarro.android.terex.repository.PersonDao;
+import com.gunnarro.android.terex.repository.AddressDao;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -116,9 +119,13 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract ConsultantBrokerDao consultantBrokerDao();
 
-
     public abstract ClientDao clientDao();
 
+    public abstract PersonDao personDao();
+
+    public abstract AddressDao addressDao();
+
+    public abstract ContactInfoDao contactInfoDao();
 
     // Called when the database is created for the first time. This is called after all the tables are created.
     private static final RoomDatabase.Callback roomCallback = new RoomDatabase.Callback() {

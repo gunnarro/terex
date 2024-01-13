@@ -1,0 +1,69 @@
+package com.gunnarro.android.terex.service;
+
+
+import android.util.Log;
+
+import com.gunnarro.android.terex.domain.dto.PersonDto;
+import com.gunnarro.android.terex.domain.entity.Person;
+import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
+import com.gunnarro.android.terex.exception.TerexApplicationException;
+import com.gunnarro.android.terex.repository.PersonRepository;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.time.LocalDateTime;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
+public class PersonService {
+
+    private final PersonRepository personRepository;
+
+    /**
+     * For unit test only
+     */
+    @Inject
+    public PersonService(PersonRepository personRepository) {
+        this.personRepository = personRepository;
+    }
+
+    @Inject
+    public PersonService() {
+        this.personRepository = new PersonRepository();
+    }
+
+    public PersonDto getPerson(Long personId) {
+        return TimesheetMapper.toPersonDto(personRepository.getPerson(personId));
+    }
+
+    // You must call this on a non-UI thread or your app will throw an exception. Room ensures
+    // that you're not doing any long running operations on the main thread, blocking the UI.
+    public Long save(@NotNull final PersonDto personDto) {
+        Person person = TimesheetMapper.fromPersonDto(personDto);
+        try {
+            Person personExisting = personRepository.findPerson(personDto.getFirstName(), personDto.getMiddleName(), person.getLastName());
+            Log.d("save person", String.format("%s", personExisting));
+            Long id;
+            if (personExisting == null) {
+                person.setCreatedDate(LocalDateTime.now());
+                person.setLastModifiedDate(LocalDateTime.now());
+                id = personRepository.insert(person);
+                Log.d("", "inserted new person: " + id + " - " + person);
+            } else {
+                person.setId(personExisting.getId());
+                person.setCreatedDate(personExisting.getCreatedDate());
+                person.setLastModifiedDate(LocalDateTime.now());
+                personRepository.update(person);
+                id = person.getId();
+                Log.d("", "updated person: " + id + " - " + person);
+            }
+            return id;
+        } catch (Exception e) {
+            // Something crashed, therefore restore interrupted state before leaving.
+            Thread.currentThread().interrupt();
+            throw new TerexApplicationException("Error saving organization! " + e.getMessage(), "50050", e.getCause());
+        }
+    }
+}

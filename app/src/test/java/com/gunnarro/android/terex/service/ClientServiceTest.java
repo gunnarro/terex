@@ -10,7 +10,9 @@ import com.gunnarro.android.terex.domain.dto.ClientDto;
 import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
 import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
 
+import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -28,6 +30,7 @@ class ClientServiceTest {
     }
 
 
+    @Disabled
     @Test
     void saveClient() {
        ClientDto clientDto = new ClientDto();

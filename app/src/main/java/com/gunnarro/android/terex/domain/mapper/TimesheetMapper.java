@@ -234,13 +234,31 @@ public class TimesheetMapper {
         personDto.setFirstName(person.getFirstName());
         personDto.setMiddleName(person.getMiddleName());
         personDto.setLastName(person.getLastName());
-        personDto.setGender(personDto.getGender());
+        personDto.setGender(person.getGender());
         personDto.setDateOfBirth(person.getDateOfBirth());
         personDto.setSocialSecurityNumber(person.getSocialSecurityNumber());
         personDto.setMaritalStatus(person.getMaritalStatus());
         personDto.setContactInfoId(null);
         return personDto;
     }
+
+    public static Person fromPersonDto(PersonDto personDto) {
+        if (personDto == null) {
+            return null;
+        }
+        Person person = new Person();
+        person.setId(personDto.getId());
+        person.setGender(personDto.getGender());
+        person.setFirstName(personDto.getFirstName());
+        person.setMiddleName(personDto.getMiddleName());
+        person.setLastName(personDto.getLastName());
+        person.setGender(personDto.getGender());
+        person.setDateOfBirth(personDto.getDateOfBirth());
+        person.setSocialSecurityNumber(personDto.getSocialSecurityNumber());
+        person.setMaritalStatus(personDto.getMaritalStatus());
+        return person;
+    }
+
 
     public static AddressDto toAddressDto(Address address) {
         if (address == null) {
@@ -257,6 +275,5 @@ public class TimesheetMapper {
         addressDto.setStreetNumberPrefix(address.getStreetNumberPrefix());
         return addressDto;
     }
-
 
 }
