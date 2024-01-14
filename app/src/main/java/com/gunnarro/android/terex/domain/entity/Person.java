@@ -2,6 +2,7 @@ package com.gunnarro.android.terex.domain.entity;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.TypeConverters;
 
 import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
@@ -17,7 +18,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @TypeConverters({LocalDateConverter.class, LocalDateTimeConverter.class})
-@Entity(tableName = "person")
+@Entity(tableName = "person", indices = {@Index(value = {"first_name"}, unique = true)})
 public class Person extends BaseEntity {
 
     @ColumnInfo(name = "address_id")
@@ -97,4 +98,21 @@ public class Person extends BaseEntity {
         this.maritalStatus = maritalStatus;
     }
 
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Person{");
+        sb.append("id=").append(getId());
+        sb.append(", addressId=").append(addressId);
+        sb.append(", contactInfoId=").append(contactInfoId);
+        sb.append(", firstName='").append(firstName).append('\'');
+        sb.append(", middleName='").append(middleName).append('\'');
+        sb.append(", lastName='").append(lastName).append('\'');
+        sb.append(", dateOfBirth=").append(dateOfBirth);
+        sb.append(", socialSecurityNumber='").append(socialSecurityNumber).append('\'');
+        sb.append(", gender='").append(gender).append('\'');
+        sb.append(", maritalStatus='").append(maritalStatus).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

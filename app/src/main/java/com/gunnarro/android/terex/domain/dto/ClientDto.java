@@ -13,9 +13,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ClientDto {
     private Long id;
-    private String name;
     private String status;
-    private OrganizationDto companyDto;
+    private OrganizationDto organizationDto;
     private List<ProjectDto> projectList;
 
     public Long getId() {
@@ -26,14 +25,6 @@ public class ClientDto {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getStatus() {
         return status;
     }
@@ -42,12 +33,12 @@ public class ClientDto {
         this.status = status;
     }
 
-    public OrganizationDto getCompanyDto() {
-        return companyDto;
+    public OrganizationDto getOrganizationDto() {
+        return organizationDto;
     }
 
-    public void setCompanyDto(OrganizationDto companyDto) {
-        this.companyDto = companyDto;
+    public void setOrganizationDto(OrganizationDto organizationDto) {
+        this.organizationDto = organizationDto;
     }
 
     public List<ProjectDto> getProjectList() {

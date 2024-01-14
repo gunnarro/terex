@@ -268,3 +268,9 @@ Napp/src/main/java/com/gunnarro/android/terex/repository/AddressRepository.java
 Rapp/src/main/java/com/gunnarro/android/terex/repository/ContactInfoRepository.java,4/6/460c6cdd86bc06e42bb23df2c54244bf1adda32d
 w
 Gapp/src/main/java/com/gunnarro/android/terex/service/PersonService.java,5/c/5c9e186faddd6b304fe21c20914a9ac860504adc
+|
+Lapp/src/test/java/com/gunnarro/android/terex/service/AddressServiceTest.java,1/8/18639d7fe16814862b4a74b3c80fe7f0a861a8ce
+{
+Kapp/src/test/java/com/gunnarro/android/terex/service/PersonServiceTest.java,b/3/b3ef7592b18a25a008a4fcbd67633181ce509637
+‚
+Rapp/src/androidTest/java/com/gunnarro/android/terex/service/PersonServiceTest.java,e/4/e4d9af33f5e7a9a5c99236a826faf818c0363deb

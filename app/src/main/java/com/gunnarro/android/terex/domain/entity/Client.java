@@ -15,22 +15,22 @@ import lombok.Setter;
 @Getter
 @Setter
 @TypeConverters({LocalDateConverter.class, LocalDateTimeConverter.class})
-@Entity(tableName = "client", indices = {@Index(value = {"company_id"},
+@Entity(tableName = "client", indices = {@Index(value = {"organization_id"},
         unique = true)})
 public class Client extends BaseEntity {
 
-    @ColumnInfo(name = "company_id")
-    private Long companyId;
+    @ColumnInfo(name = "organization_id")
+    private Long organizationId;
 
     @ColumnInfo(name = "status")
     private String status;
 
-    public Long getCompanyId() {
-        return companyId;
+    public Long getOrganizationId() {
+        return organizationId;
     }
 
-    public void setCompanyId(Long companyId) {
-        this.companyId = companyId;
+    public void setOrganizationId(Long organizationId) {
+        this.organizationId = organizationId;
     }
 
     public String getStatus() {
@@ -40,6 +40,4 @@ public class Client extends BaseEntity {
     public void setStatus(String status) {
         this.status = status;
     }
-
-
 }

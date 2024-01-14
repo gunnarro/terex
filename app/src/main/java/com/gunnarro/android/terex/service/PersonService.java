@@ -43,21 +43,26 @@ public class PersonService {
     public Long save(@NotNull final PersonDto personDto) {
         Person person = TimesheetMapper.fromPersonDto(personDto);
         try {
-            Person personExisting = personRepository.findPerson(personDto.getFirstName(), personDto.getMiddleName(), person.getLastName());
-            Log.d("save person", String.format("%s", personExisting));
+            Person personExisting = null;
+             if (person.getId() == null) {
+                 personExisting = personRepository.findPerson(person.getFirstName(), person.getMiddleName(), person.getLastName());
+             } else {
+                 personExisting = personRepository.getPerson(person.getId());
+             }
+            Log.d("save person", String.format("existingPerson=%s", personExisting));
             Long id;
             if (personExisting == null) {
                 person.setCreatedDate(LocalDateTime.now());
                 person.setLastModifiedDate(LocalDateTime.now());
                 id = personRepository.insert(person);
-                Log.d("", "inserted new person: " + id + " - " + person);
+                Log.d("", "inserted new person, id=" + id + " - " + person);
             } else {
                 person.setId(personExisting.getId());
                 person.setCreatedDate(personExisting.getCreatedDate());
                 person.setLastModifiedDate(LocalDateTime.now());
                 personRepository.update(person);
                 id = person.getId();
-                Log.d("", "updated person: " + id + " - " + person);
+                Log.d("", "updated person, Id=" + id + " - " + person);
             }
             return id;
         } catch (Exception e) {

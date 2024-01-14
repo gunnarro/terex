@@ -178,7 +178,11 @@ public class TimesheetMapper {
 
 
     public static Client fromClientDto(ClientDto clientDto) {
-        return null;
+        Client client = new Client();
+        client.setId(clientDto.getId());
+        client.setOrganizationId(clientDto.getOrganizationDto().getId());
+        client.setStatus(clientDto.getStatus());
+        return client;
     }
 
 

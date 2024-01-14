@@ -21,7 +21,7 @@ import javax.inject.Singleton;
 @Singleton
 public class ClientService {
 
-    private final ProjectService projectService;
+   // private final ProjectService projectService;
     private final ClientRepository clientRepository;
 
     /**
@@ -30,13 +30,13 @@ public class ClientService {
     @Inject
     public ClientService(ClientRepository clientRepository) {
         this.clientRepository = clientRepository;
-        this.projectService = new ProjectService();
+        //this.projectService = new ProjectService();
     }
 
     @Inject
     public ClientService() {
         this.clientRepository = new ClientRepository();
-        this.projectService = new ProjectService();
+        //this.projectService = new ProjectService();
     }
 
     public ClientDto getClient(Long clientId) {
@@ -65,7 +65,7 @@ public class ClientService {
         try {
             Client clientExisting;
             if (clientDto.getId() == null) {
-                clientExisting = clientRepository.findClient(clientDto.getName());
+                clientExisting = clientRepository.findClient(clientDto.getOrganizationDto().getName());
             } else {
                 clientExisting = clientRepository.getClient(clientDto.getId());
             }
@@ -80,7 +80,7 @@ public class ClientService {
             } else {
                 client.setCreatedDate(clientExisting.getCreatedDate());
                 client.setStatus(clientExisting.getStatus());
-                client.setCompanyId(clientExisting.getCompanyId());
+                client.setOrganizationId(clientExisting.getOrganizationId());
                 clientRepository.update(client);
                 id = clientExisting.getId();
             }
@@ -88,7 +88,7 @@ public class ClientService {
         } catch (Exception e) {
             // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();
-            throw new TerexApplicationException("Error saving client!", e.getMessage(), e.getCause());
+            throw new TerexApplicationException("Error saving client!" + e.getMessage(), "50050", e.getCause());
         }
     }
 }

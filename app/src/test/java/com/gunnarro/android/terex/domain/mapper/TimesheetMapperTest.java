@@ -159,7 +159,7 @@ class TimesheetMapperTest {
         clientDetails.setClient(new Client());
         clientDetails.setProjectList(List.of(new Project()));
         ClientDto clientDto = TimesheetMapper.toClientDto(clientDetails);
-        assertNull(clientDto.getName());
+   //     assertNull(clientDto.getName());
     //  assertNull(clientDto.getCompanyDto());
     //    assertNull(clientDto.getCompanyDto().getName());
     //    assertNull(clientDto.getCompanyDto().getOrganizationNumber());
