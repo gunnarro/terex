@@ -19,7 +19,7 @@ Table consultant {
 
 Table client {
     id long [primary key]
-    company_id [not null, unique]
+    organization_id [not null, unique]
     project_id long
 }
 
@@ -44,12 +44,12 @@ Table project {
     project_end_date timestamp
 }
 
-Table company {
+Table organization {
     id long [primary key]
-    company_name integer
+    organization_name integer
     organization_number integer
+    organization_industry_type varchar
     bank_account_number integer
-    company_industry_type varchar
 }
 
 Table person {

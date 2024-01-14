@@ -3,7 +3,6 @@ package com.gunnarro.android.terex.domain.entity;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
@@ -17,9 +16,6 @@ import lombok.NoArgsConstructor;
 @TypeConverters({LocalDateConverter.class, LocalDateTimeConverter.class})
 @Entity(tableName = "contract")
 public class Contract extends BaseEntity {
-
-    @PrimaryKey(autoGenerate = true)
-    private Long id;
 
     @NonNull
     @ColumnInfo(name = "start_date")

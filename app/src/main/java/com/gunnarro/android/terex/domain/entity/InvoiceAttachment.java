@@ -3,7 +3,6 @@ package com.gunnarro.android.terex.domain.entity;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Index;
-import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import com.gunnarro.android.terex.domain.converter.LocalDateTimeConverter;
@@ -23,9 +22,6 @@ import lombok.Setter;
 @Entity(tableName = "invoice_attachment", indices = {@Index(value = {"invoice_id", "attachment_type", "attachment_file_name", "attachment_file_type"},
         unique = true)})
 public class InvoiceAttachment extends BaseEntity {
-    @PrimaryKey(autoGenerate = true)
-    private Long id;
-
     @NotNull
     @ColumnInfo(name = "invoice_id")
     private Long invoiceId;
@@ -44,14 +40,6 @@ public class InvoiceAttachment extends BaseEntity {
     @NotNull
     @ColumnInfo(name = "attachment_file_content", typeAffinity = ColumnInfo.BLOB)
     private byte[] attachmentFileContent;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     @NotNull
     public Long getInvoiceId() {
@@ -113,7 +101,8 @@ public class InvoiceAttachment extends BaseEntity {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("InvoiceAttachment{");
-        sb.append("id=").append(id);
+        sb.append("id=").append(getId());
+        sb.append(", uuid=").append(getUuid());
         sb.append(", invoiceId=").append(invoiceId);
         sb.append(", attachmentFileName='").append(attachmentFileName).append('\'');
         sb.append(", attachmentType='").append(attachmentType).append('\'');

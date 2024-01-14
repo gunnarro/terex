@@ -1,21 +1,23 @@
 
 e
-java:S6355L"HAdd 'since' and/or 'forRemoval' arguments to the @Deprecated annotation.(õˆúš8ïö·Ë1
+java:S6355I"HAdd 'since' and/or 'forRemoval' arguments to the @Deprecated annotation.(õˆúš8ïö·Ë1
 W
-java:S1133O"5Do not forget to remove this deprecated code someday.(¼×ûÿÿÿÿ8ïö·Ë1
+java:S1133L"5Do not forget to remove this deprecated code someday.(¼×ûÿÿÿÿ8ïö·Ë1
 J
-java:S1123O"(Add the missing @deprecated Javadoc tag.(¼×ûÿÿÿÿ8ïö·Ë1
+java:S1123L"(Add the missing @deprecated Javadoc tag.(¼×ûÿÿÿÿ8ïö·Ë1
+U
+java:S1874~"3Remove this use of "projectCode"; it is deprecated.(ÿù úÿÿÿÿ8’ïö·Ë1
+Q
+java:S1874‚"3Remove this use of "projectCode"; it is deprecated.(€ÏĞõ8’ïö·Ë1
 V
-java:S1874Š"3Remove this use of "projectCode"; it is deprecated.(ÿù úÿÿÿÿ8’ïö·Ë1
+java:S1874ä"3Remove this use of "projectCode"; it is deprecated.(ñ“¯Õûÿÿÿÿ8—ïö·Ë1
 Q
-java:S1874"3Remove this use of "projectCode"; it is deprecated.(€ÏĞõ8’ïö·Ë1
+java:S1874ı"3Remove this use of "projectCode"; it is deprecated.(¿ñÇü8šïö·Ë1
+Q
+java:S1874ı"3Remove this use of "projectCode"; it is deprecated.(¿ñÇü8šïö·Ë1
 V
-java:S1874ğ"3Remove this use of "projectCode"; it is deprecated.(ñ“¯Õûÿÿÿÿ8—ïö·Ë1
+java:S1874‚"3Remove this use of "projectCode"; it is deprecated.(¸±½†úÿÿÿÿ8šïö·Ë1
 Q
-java:S1874‰"3Remove this use of "projectCode"; it is deprecated.(¿ñÇü8šïö·Ë1
-Q
-java:S1874‰"3Remove this use of "projectCode"; it is deprecated.(¿ñÇü8šïö·Ë1
-V
-java:S1874"3Remove this use of "projectCode"; it is deprecated.(¸±½†úÿÿÿÿ8šïö·Ë1
-Q
-java:S1874˜"3Remove this use of "projectCode"; it is deprecated.(œİ¯Û8œïö·Ë1
+java:S1874"3Remove this use of "projectCode"; it is deprecated.(œİ¯Û8œïö·Ë1
+W
+java:S1128"5Remove this unused import 'androidx.room.PrimaryKey'.(¨¿áçüÿÿÿÿ8Ï›’ÆĞ1

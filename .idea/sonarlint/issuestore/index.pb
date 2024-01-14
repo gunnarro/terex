@@ -12,8 +12,6 @@ Gapp/src/main/java/com/gunnarro/android/terex/repository/InvoiceDao.java,b/4/b4
 }
 Mapp/src/main/java/com/gunnarro/android/terex/ui/view/TimesheetViewHolder.java,9/d/9d804b3154acdec8fdd282a1bdc0c82ffcf4197e
 w
-Gapp/src/main/java/com/gunnarro/android/terex/domain/entity/Company.java,c/f/cfac4ee148db992906f62598bc96548989d1e1e6
-w
 Gapp/src/main/java/com/gunnarro/android/terex/domain/entity/Address.java,e/d/edc96dc63758a7d589cce2e6f25451a86e57e8d4
 ~
 Napp/src/main/java/com/gunnarro/android/terex/domain/entity/TimesheetEntry.java,4/6/46bbe21ddea65018179e36bdef631bab75fe4008
@@ -171,10 +169,6 @@ Kapp/src/main/java/com/gunnarro/android/terex/domain/entity/ContactInfo.java,2/
 Lapp/src/main/java/com/gunnarro/android/terex/config/DbMigrationFrom1To2.java,2/3/239c9650a060d8eb9e3c43c52107061a41be2152
 x
 Happ/src/main/java/com/gunnarro/android/terex/domain/entity/Contract.java,7/e/7e8ab21b96cd892e8be1937e786803701bcfdd04
-w
-Gapp/src/main/java/com/gunnarro/android/terex/repository/CompanyDao.java,f/7/f789c32aef36979d48ab957fc1a3e12101edecaf
-~
-Napp/src/main/java/com/gunnarro/android/terex/repository/CompanyRepository.java,5/3/53179734f1ae326cda7d2a3d1a1ef7b08991b1fb
 H
 doc/database-design.dbml,e/7/e7de12232e9e973272d655734c3bfe9fd7c35d9f
 w
@@ -217,8 +211,6 @@ Iapp/src/main/java/com/gunnarro/android/terex/domain/dto/RegisterWork.java,b/f/
 Mapp/src/test/java/com/gunnarro/android/terex/domain/dto/RegisterWorkTest.java,e/7/e7635e8606896e4bcb23c514cdeb077794af52d1
 ‚
 Rapp/src/test/java/com/gunnarro/android/terex/domain/entity/TimesheetEntryTest.java,6/7/6738d6552ec2e7b6ff67df62356d89b0f328bdf5
-{
-Kapp/src/test/java/com/gunnarro/android/terex/domain/entity/CompanyTest.java,f/8/f8168acbb553cdb5b08ad8dfec6a25fa8257c838
 v
 Fapp/src/main/java/com/gunnarro/android/terex/domain/dto/ClientDto.java,f/c/fc4e647f053c70dbd49cb345e089aee0cd123ee6
 w
@@ -231,8 +223,6 @@ w
 Gapp/src/main/java/com/gunnarro/android/terex/service/ClientService.java,8/1/81f86a81863b3bf2a9f94d976f7430901985bfcd
 ‚
 Rapp/src/androidTest/java/com/gunnarro/android/terex/service/ClientServiceTest.java,5/0/50742e4e96b7ea354e6d18885ce1d1c9a504f7c6
-~
-Napp/src/main/java/com/gunnarro/android/terex/domain/entity/CompanyDetails.java,c/9/c9fef6cb87b0b575bd5024e8461951d86a7e147e
 v
 Fapp/src/main/java/com/gunnarro/android/terex/domain/dto/PersonDto.java,e/3/e3f9459a0a959b981223b35a35570d2ee28ee2e3
 {

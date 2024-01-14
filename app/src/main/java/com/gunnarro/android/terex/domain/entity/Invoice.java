@@ -3,7 +3,6 @@ package com.gunnarro.android.terex.domain.entity;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Index;
-import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
@@ -34,8 +33,6 @@ public class Invoice extends BaseEntity {
         MONTH
     }
 
-    @PrimaryKey(autoGenerate = true)
-    private Long id;
     /**
      * Hold a unique reference to the timesheet that is used as the basis for the invoice
      */
@@ -88,14 +85,6 @@ public class Invoice extends BaseEntity {
     @NotNull
     @ColumnInfo(name = "invoice_period", defaultValue = "monthly")
     private String invoicePeriod;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public Long getTimesheetId() {
         return timesheetId;

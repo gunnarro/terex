@@ -3,7 +3,6 @@ package com.gunnarro.android.terex.domain.entity;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Index;
-import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
@@ -18,8 +17,6 @@ import lombok.Setter;
 @Entity(tableName = "organization", indices = {@Index(value = {"organization_number"},
         unique = true)})
 public class Organization extends BaseEntity {
-    @PrimaryKey(autoGenerate = true)
-    private Long id;
 
     /**
      * The foreign key in the child table will generally reference a primary key in the parent table.
@@ -37,14 +34,6 @@ public class Organization extends BaseEntity {
     private String name;
     @ColumnInfo(name = "organization_number")
     private String organizationNumber;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public Long getAddressId() {
         return addressId;
@@ -111,7 +100,6 @@ public class Organization extends BaseEntity {
 
     @ColumnInfo(name = "bank_account_number")
     private String bankAccountNumber;
-
 
 
 }

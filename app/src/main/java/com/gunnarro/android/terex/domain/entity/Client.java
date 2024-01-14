@@ -4,7 +4,6 @@ package com.gunnarro.android.terex.domain.entity;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Index;
-import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
@@ -20,23 +19,11 @@ import lombok.Setter;
         unique = true)})
 public class Client extends BaseEntity {
 
-    @PrimaryKey(autoGenerate = true)
-    private Long id;
-
     @ColumnInfo(name = "company_id")
     private Long companyId;
 
     @ColumnInfo(name = "status")
     private String status;
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public Long getCompanyId() {
         return companyId;

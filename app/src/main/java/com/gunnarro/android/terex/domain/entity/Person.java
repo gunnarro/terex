@@ -2,7 +2,6 @@ package com.gunnarro.android.terex.domain.entity;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
@@ -21,8 +20,6 @@ import lombok.Setter;
 @Entity(tableName = "person")
 public class Person extends BaseEntity {
 
-    @PrimaryKey(autoGenerate = true)
-    private Long id;
     @ColumnInfo(name = "address_id")
     private Long addressId;
     @ColumnInfo(name = "contact_info_id")
@@ -43,15 +40,6 @@ public class Person extends BaseEntity {
     private String gender;
     @ColumnInfo(name = "marital_status")
     private String maritalStatus;
-
-    @NotNull
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(@NotNull Long id) {
-        this.id = id;
-    }
 
     public String getFirstName() {
         return firstName;

@@ -52,9 +52,6 @@ public class Timesheet extends BaseEntity {
         }
     }
 
-    @PrimaryKey(autoGenerate = true)
-    private Long id;
-
     @ColumnInfo(name = "project_id")
     private Long projectId;
 
@@ -98,15 +95,6 @@ public class Timesheet extends BaseEntity {
     private String status;
     @ColumnInfo(name = "description")
     private String description;
-
-    @NotNull
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(@NotNull Long id) {
-        this.id = id;
-    }
 
     public Long getProjectId() {
         return projectId;
@@ -274,7 +262,8 @@ public class Timesheet extends BaseEntity {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Timesheet{");
-        sb.append("id=").append(id);
+        sb.append("id=").append(getId());
+        sb.append(", uuid='").append(getUuid()).append('\'');
         sb.append(", timesheetRef='").append(timesheetRef).append('\'');
         sb.append(", clientName='").append(clientName).append('\'');
         sb.append(", projectCode='").append(projectCode).append('\'');

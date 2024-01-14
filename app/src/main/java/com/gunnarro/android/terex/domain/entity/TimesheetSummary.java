@@ -3,7 +3,6 @@ package com.gunnarro.android.terex.domain.entity;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Index;
-import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
@@ -23,8 +22,6 @@ import java.util.Objects;
         unique = true)})
 public class TimesheetSummary extends BaseEntity {
 
-    @PrimaryKey(autoGenerate = true)
-    private Long id;
     /**
      * Hold a unique reference to the timesheet that is used as the basis for the summary
      */
@@ -55,14 +52,6 @@ public class TimesheetSummary extends BaseEntity {
     private String currency;
 
     public TimesheetSummary() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Long getTimesheetId() {

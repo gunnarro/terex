@@ -5,7 +5,6 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
-import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
@@ -50,9 +49,6 @@ public class TimesheetEntry extends BaseEntity {
     public enum TimesheetEntryStatusEnum {
         OPEN, CLOSED
     }
-
-    @PrimaryKey(autoGenerate = true)
-    private Long id;
 
     /**
      * Hold a unique reference to the timesheet that is entry is assigned to.
@@ -113,11 +109,6 @@ public class TimesheetEntry extends BaseEntity {
     @ColumnInfo(name = "use_as_default", defaultValue = "0")
     private Integer useAsDefault;
 
-
-    public Long getId() {
-        return id;
-    }
-
     @NonNull
     public Long getTimesheetId() {
         return timesheetId;
@@ -125,10 +116,6 @@ public class TimesheetEntry extends BaseEntity {
 
     public void setTimesheetId(@NonNull Long timesheetId) {
         this.timesheetId = timesheetId;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     @NonNull
@@ -306,7 +293,8 @@ public class TimesheetEntry extends BaseEntity {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("TimesheetEntry{");
-        sb.append("id=").append(id);
+        sb.append("id=").append(getId());
+        sb.append(", uuid=").append(getUuid());
         sb.append(", timesheetId=").append(timesheetId);
         sb.append(", createdDate=").append(getCreatedDate());
         sb.append(", lastModifiedDate=").append(getLastModifiedDate());

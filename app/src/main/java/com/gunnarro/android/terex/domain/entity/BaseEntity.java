@@ -2,8 +2,10 @@ package com.gunnarro.android.terex.domain.entity;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
+import androidx.room.PrimaryKey;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public abstract class BaseEntity {
 
@@ -14,12 +16,34 @@ public abstract class BaseEntity {
     public static final int SET_DEFAULT = 4;
     public static final int CASCADE = 5;
 
+    @PrimaryKey(autoGenerate = true)
+    private Long id;
+    @NonNull
+    @ColumnInfo(name = "uuid")
+    private String uuid = UUID.randomUUID().toString();
     @NonNull
     @ColumnInfo(name = "created_date")
     private LocalDateTime createdDate;
     @NonNull
     @ColumnInfo(name = "last_modified_date")
     private LocalDateTime lastModifiedDate;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @NonNull
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(@NonNull String uuid) {
+        this.uuid = uuid;
+    }
 
     @NonNull
     public LocalDateTime getCreatedDate() {
@@ -38,5 +62,4 @@ public abstract class BaseEntity {
     public void setLastModifiedDate(@NonNull LocalDateTime lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
-
 }

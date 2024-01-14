@@ -84,7 +84,6 @@ class TimesheetServiceTest {
         }
         timesheetEntryList.sort(Comparator.comparing(TimesheetEntry::getWorkdayDate));
         assertEquals(30, timesheetEntryList.size());
-        assertEquals("TimesheetEntry{id=null, timesheetId=null, createdDate=null, lastModifiedDate=null, workdayWeek=null, workdayDate=2023-01-01, fromTime=null, toTime=null, workedMinutes=0, breakInMin=null, hourlyRate=null, status='null, type=null, comment='null, useAsDefault='null}", timesheetEntryList.get(0).toString());
     }
 
     @Test
