@@ -25,11 +25,13 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.gunnarro.android.terex.R;
+import com.gunnarro.android.terex.domain.dto.ClientDto;
 import com.gunnarro.android.terex.domain.dto.ConsultantBrokerDto;
 import com.gunnarro.android.terex.domain.dto.ProjectDto;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
+import com.gunnarro.android.terex.service.ClientService;
 import com.gunnarro.android.terex.service.ConsultantBrokerService;
 import com.gunnarro.android.terex.service.TimesheetService;
 import com.gunnarro.android.terex.utility.Utility;
@@ -39,6 +41,7 @@ import org.jetbrains.annotations.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -49,8 +52,8 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class TimesheetNewFragment extends BaseFragment implements View.OnClickListener {
 
     private TimesheetService timesheetService;
-    private ConsultantBrokerService consultantBrokerService;
-
+   // private ConsultantBrokerService consultantBrokerService;
+    private ClientService clientService;
     @Inject
     public TimesheetNewFragment() {
     }
@@ -60,7 +63,8 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
         super.onCreate(savedInstanceState);
         requireActivity().setTitle(R.string.title_timesheet);
         timesheetService = new TimesheetService();
-        consultantBrokerService = new ConsultantBrokerService();
+      //  consultantBrokerService = new ConsultantBrokerService();
+        clientService = new ClientService();
     }
 
     @Override
@@ -75,9 +79,16 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
         //toolbar.setNavigationIcon(R.drawable.ic_arrow_left);
         //toolbar.setNavigationOnClickListener(v -> returnToTimesheetList());
 
-        ConsultantBrokerDto consultantBrokerDto = consultantBrokerService.getConsultantBroker(1L);
-        String[] clients = consultantBrokerDto != null ? new String[]{consultantBrokerDto.getName()} : new String[]{};
-        String[] projects = consultantBrokerDto != null ? consultantBrokerDto.getProjects().stream().map(ProjectDto::getName).toArray(String[]::new) : new String[]{};
+        // with consultant brokers - deprecated
+        //ConsultantBrokerDto consultantBrokerDto = consultantBrokerService.getConsultantBroker(1L);
+        //String[] clients = consultantBrokerDto != null ? new String[]{consultantBrokerDto.getName()} : new String[]{};
+        //String[] projects = consultantBrokerDto != null ? consultantBrokerDto.getProjects().stream().map(ProjectDto::getName).toArray(String[]::new) : new String[]{};
+
+        ClientDto clientDto = clientService.getClient(1L);
+        //String[] clients = clientDtos.stream().collect()
+        //String[] clients = clientDtos.stream().map(ClientDto::getName).toArray(String[]::new);
+        String[] clients = new String[] {clientDto.getName()};
+        String[] projects = clientDto.getProjectList().stream().map(ProjectDto::getName).toArray(String[]::new);
 
         Timesheet timesheet = Timesheet.createDefault(clients.length > 0 ? clients[0] : null, projects.length > 0 ? projects[0] : null, LocalDate.now().getYear(), LocalDate.now().getMonthValue());
         // check if this is an existing or a new timesheet
@@ -218,7 +229,8 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
     private void saveTimesheet() {
         try {
             Timesheet timesheet = readTimesheetInputData();
-            ConsultantBrokerDto consultantBrokerDto = consultantBrokerService.findConsultantBroker(timesheet.getClientName());
+           /* deprecated
+             ConsultantBrokerDto consultantBrokerDto = consultantBrokerService.findConsultantBroker(timesheet.getClientName());
             if (consultantBrokerDto == null) {
                 // this was a new consultant broker, so save it
                 consultantBrokerDto = new ConsultantBrokerDto();
@@ -228,6 +240,7 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
                 consultantBrokerDto.setProjects(List.of(projectDto));
                 consultantBrokerService.saveConsultantBroker(consultantBrokerDto);
             }
+            */
           //  timesheet.getClientName();
           //  timesheet.getProjectCode();
             timesheetService.saveTimesheet(timesheet);

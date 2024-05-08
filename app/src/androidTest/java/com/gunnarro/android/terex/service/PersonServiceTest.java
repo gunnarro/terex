@@ -55,7 +55,7 @@ public class PersonServiceTest {
         assertEquals("ole", personDto.getFirstName());
         assertEquals("gunnar", personDto.getMiddleName());
         assertEquals("hansen", personDto.getLastName());
-        assertEquals("M", personDto.getGender());
+      //  assertEquals("M", personDto.getGender());
 
         // update and save person
         personDto.setMiddleName("");
@@ -66,7 +66,7 @@ public class PersonServiceTest {
         assertEquals("ole", personDto.getFirstName());
         assertEquals("", personDto.getMiddleName());
         assertEquals("hansen", personDto.getLastName());
-        assertEquals("M", updatedPersonDto.getGender());
+        //assertEquals("M", updatedPersonDto.getGender());
     }
 
     private PersonDto createPersonDto() {
@@ -74,10 +74,6 @@ public class PersonServiceTest {
         personDto.setFirstName("ole");
         personDto.setMiddleName("gunnar");
         personDto.setLastName("hansen");
-        personDto.setSocialSecurityNumber("123456 12345");
-        personDto.setDateOfBirth(LocalDate.of(1990, 3, 23));
-        personDto.setMaritalStatus("U");
-        personDto.setGender("M");
         return personDto;
     }
 }

@@ -42,6 +42,22 @@ public class Person extends BaseEntity {
     @ColumnInfo(name = "marital_status")
     private String maritalStatus;
 
+    public Long getAddressId() {
+        return addressId;
+    }
+
+    public void setAddressId(Long addressId) {
+        this.addressId = addressId;
+    }
+
+    public Long getContactInfoId() {
+        return contactInfoId;
+    }
+
+    public void setContactInfoId(Long contactInfoId) {
+        this.contactInfoId = contactInfoId;
+    }
+
     public String getFirstName() {
         return firstName;
     }
@@ -97,7 +113,6 @@ public class Person extends BaseEntity {
     public void setMaritalStatus(String maritalStatus) {
         this.maritalStatus = maritalStatus;
     }
-
 
     @Override
     public String toString() {

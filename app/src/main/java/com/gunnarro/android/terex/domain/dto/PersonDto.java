@@ -1,14 +1,8 @@
 package com.gunnarro.android.terex.domain.dto;
 
-import java.time.LocalDate;
-
 public class PersonDto {
 
     private Long id;
-
-    private Long addressId;
-
-    private Long contactInfoId;
 
     private String firstName;
 
@@ -16,28 +10,16 @@ public class PersonDto {
 
     private String lastName;
 
+    private AddressDto address;
+
+    private ContactInfoDto contactInfo;
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getAddressId() {
-        return addressId;
-    }
-
-    public void setAddressId(Long addressId) {
-        this.addressId = addressId;
-    }
-
-    public Long getContactInfoId() {
-        return contactInfoId;
-    }
-
-    public void setContactInfoId(Long contactInfoId) {
-        this.contactInfoId = contactInfoId;
     }
 
     public String getFirstName() {
@@ -64,45 +46,19 @@ public class PersonDto {
         this.lastName = lastName;
     }
 
-    public LocalDate getDateOfBirth() {
-        return dateOfBirth;
+    public AddressDto getAddress() {
+        return address;
     }
 
-    public void setDateOfBirth(LocalDate dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
+    public void setAddress(AddressDto address) {
+        this.address = address;
     }
 
-    public String getSocialSecurityNumber() {
-        return socialSecurityNumber;
+    public ContactInfoDto getContactInfo() {
+        return contactInfo;
     }
 
-    public void setSocialSecurityNumber(String socialSecurityNumber) {
-        this.socialSecurityNumber = socialSecurityNumber;
+    public void setContactInfo(ContactInfoDto contactInfo) {
+        this.contactInfo = contactInfo;
     }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public String getMaritalStatus() {
-        return maritalStatus;
-    }
-
-    public void setMaritalStatus(String maritalStatus) {
-        this.maritalStatus = maritalStatus;
-    }
-
-    private LocalDate dateOfBirth;
-
-    private String socialSecurityNumber;
-
-    private String gender;
-
-    private String maritalStatus;
-
-
 }

@@ -14,6 +14,7 @@ import com.gunnarro.android.terex.repository.ClientRepository;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -21,22 +22,27 @@ import javax.inject.Singleton;
 @Singleton
 public class ClientService {
 
-   // private final ProjectService projectService;
+    private final ProjectService projectService;
     private final ClientRepository clientRepository;
 
     /**
-     * For unit test onlu
+     * For unit test only
      */
     @Inject
     public ClientService(ClientRepository clientRepository) {
         this.clientRepository = clientRepository;
-        //this.projectService = new ProjectService();
+        this.projectService = new ProjectService();
     }
 
     @Inject
     public ClientService() {
         this.clientRepository = new ClientRepository();
-        //this.projectService = new ProjectService();
+        this.projectService = new ProjectService();
+    }
+
+    public List<ClientDto> getClients() {
+        List<Client> clients = clientRepository.getClients();
+        return TimesheetMapper.toClientDtoList(clients);
     }
 
     public ClientDto getClient(Long clientId) {
@@ -65,7 +71,7 @@ public class ClientService {
         try {
             Client clientExisting;
             if (clientDto.getId() == null) {
-                clientExisting = clientRepository.findClient(clientDto.getOrganizationDto().getName());
+                clientExisting = clientRepository.findClient(clientDto.getName());
             } else {
                 clientExisting = clientRepository.getClient(clientDto.getId());
             }

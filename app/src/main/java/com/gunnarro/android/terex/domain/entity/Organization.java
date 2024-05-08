@@ -21,8 +21,11 @@ public class Organization extends BaseEntity {
     /**
      * The foreign key in the child table will generally reference a primary key in the parent table.
      */
-    @ColumnInfo(name = "address_id")
-    private Long addressId;
+    @ColumnInfo(name = "business_address_id")
+    private Long businessAddressId;
+
+    @ColumnInfo(name = "postal_address_id")
+    private Long postalAddressId;
 
     @ColumnInfo(name = "contact_info_id")
     private Long contactInfoId;
@@ -32,15 +35,34 @@ public class Organization extends BaseEntity {
 
     @ColumnInfo(name = "organization_name")
     private String name;
+
     @ColumnInfo(name = "organization_number")
     private String organizationNumber;
 
-    public Long getAddressId() {
-        return addressId;
+    /**
+     * Type of industry, for example consultant, broker, bank, telecom, etc
+     * I.e, what kind of services the company offers
+     */
+    @ColumnInfo(name = "organization_industry_type")
+    private String organizationIndustryType;
+
+    @ColumnInfo(name = "bank_account_number")
+    private String bankAccountNumber;
+
+    public Long getBusinessAddressId() {
+        return businessAddressId;
     }
 
-    public void setAddressId(Long addressId) {
-        this.addressId = addressId;
+    public void setBusinessAddressId(Long businessAddressId) {
+        this.businessAddressId = businessAddressId;
+    }
+
+    public Long getPostalAddressId() {
+        return postalAddressId;
+    }
+
+    public void setPostalAddressId(Long postalAddressId) {
+        this.postalAddressId = postalAddressId;
     }
 
     public Long getContactInfoId() {
@@ -90,16 +112,4 @@ public class Organization extends BaseEntity {
     public void setBankAccountNumber(String bankAccountNumber) {
         this.bankAccountNumber = bankAccountNumber;
     }
-
-    /**
-     * Type of industry, for example consultant, broker, bank, telecom, etc
-     * I.e, what kind of services the company offers
-     */
-    @ColumnInfo(name = "organization_industry_type")
-    private String organizationIndustryType;
-
-    @ColumnInfo(name = "bank_account_number")
-    private String bankAccountNumber;
-
-
 }

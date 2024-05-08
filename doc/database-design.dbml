@@ -19,7 +19,7 @@ Table consultant {
 
 Table client {
     id long [primary key]
-    organization_id [not null, unique]
+    organization_id long [not null, unique]
     project_id long
 }
 
@@ -134,6 +134,8 @@ Table timesheet_summary {
     total_worked_hours double
 }
 
+// one to one
+Ref: client.organization_id - organization.id
 
 Ref: project.consultant_broker_id > consultant_broker.id  // many-to-one
 

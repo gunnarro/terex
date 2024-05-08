@@ -2,7 +2,7 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="Tests in 'com.gunnarro.android.terex'">
+      <entry key="Tests in 'com.gunnarro.android.terex.service'">
         <State />
       </entry>
       <entry key="app">
@@ -21,7 +21,10 @@
           <timeTargetWasSelectedWithDropDown value="2023-12-29T10:14:06.729908819Z" />
         </State>
       </entry>
-      <entry key="savePerson()">
+      <entry key="getOrganization_not_found()">
+        <State />
+      </entry>
+      <entry key="saveOrganization()">
         <State />
       </entry>
     </value>

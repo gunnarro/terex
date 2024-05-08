@@ -82,7 +82,7 @@ ext {
     android_arch_navigation = '1.0.0'
     // androidx
     androidx_appcompat = '1.6.1'
-    androidx_core_ktx = '1.12.0'
+    androidx_core_ktx = '1.13.1'
     androidx_constraint_layout = '2.1.4'
     androidx_lifecycle_extensions = '2.2.0'
     androidx_legacy_support_v4 = '1.0.0'

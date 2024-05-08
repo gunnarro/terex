@@ -2,6 +2,7 @@ package com.gunnarro.android.terex.domain.entity;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.TypeConverters;
 
 import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
@@ -14,7 +15,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @TypeConverters({LocalDateConverter.class, LocalDateTimeConverter.class})
-@Entity(tableName = "address")
+@Entity(tableName = "address", indices = {@Index(value = {"street_name", "street_number", "street_number_prefix"},
+        unique = true)})
 public class Address extends BaseEntity {
     @ColumnInfo(name = "street_name")
     private String streetName;
@@ -22,8 +24,8 @@ public class Address extends BaseEntity {
     private String streetNumber;
     @ColumnInfo(name = "street_number_prefix")
     private String streetNumberPrefix;
-    @ColumnInfo(name = "post_code")
-    private String postCode;
+    @ColumnInfo(name = "postal_code")
+    private String postalCode;
     @ColumnInfo(name = "city")
     private String city;
     @ColumnInfo(name = "country")
@@ -55,12 +57,12 @@ public class Address extends BaseEntity {
         this.streetNumberPrefix = streetNumberPrefix;
     }
 
-    public String getPostCode() {
-        return postCode;
+    public String getPostalCode() {
+        return postalCode;
     }
 
-    public void setPostCode(String postCode) {
-        this.postCode = postCode;
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
     }
 
     public String getCity() {

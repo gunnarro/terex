@@ -35,6 +35,7 @@ public class PersonService {
     }
 
     public PersonDto getPerson(Long personId) {
+        Person person = personRepository.getPerson(personId);
         return TimesheetMapper.toPersonDto(personRepository.getPerson(personId));
     }
 

@@ -6,6 +6,9 @@ import com.gunnarro.android.terex.config.AppDatabase;
 import com.gunnarro.android.terex.domain.entity.Address;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.time.LocalDateTime;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
@@ -44,7 +47,7 @@ public class AddressRepository {
     public Address findAddress(String streetName, String streetNumber) {
         try {
             CompletionService<Address> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
-            service.submit(() -> addressDao.findAddress(streetName, streetNumber));
+            service.submit(() -> addressDao.findAddress(streetName));
             Future<Address> future = service.take();
             return future != null ? future.get() : null;
         } catch (InterruptedException | ExecutionException e) {
@@ -70,5 +73,31 @@ public class AddressRepository {
         service.submit(() -> addressDao.update(address));
         Future<Integer> future = service.take();
         return future != null ? future.get() : null;
+    }
+
+    public Long save(@NotNull final Address address) {
+        try {
+            Address addressExisting = findAddress(address.getStreetName(), null);
+            Log.d("save address", String.format("streetName=%s, streetNUmber=%s, isExisting=%s", address.getStreetName(), address.getStreetNumber(), addressExisting != null));
+            Long addressId;
+            if (addressExisting == null) {
+                address.setCreatedDate(LocalDateTime.now());
+                address.setLastModifiedDate(LocalDateTime.now());
+                addressId = insert(address);
+                Log.d("", "inserted new address: " + addressId + " - " + address.getStreetName());
+            } else {
+                address.setId(addressExisting.getId());
+                address.setCreatedDate(addressExisting.getCreatedDate());
+                address.setLastModifiedDate(LocalDateTime.now());
+                update(address);
+                addressId = address.getId();
+                Log.d("", "updated address: " + addressId + " - " + address.getStreetName());
+            }
+            return addressId;
+        } catch (Exception e) {
+            // Something crashed, therefore restore interrupted state before leaving.
+            Thread.currentThread().interrupt();
+            throw new TerexApplicationException("Error saving address! " + e.getMessage(), "50050", e.getCause());
+        }
     }
 }

@@ -12,11 +12,11 @@ import com.gunnarro.android.terex.domain.entity.ContactInfo;
 @Dao
 public interface ContactInfoDao {
 
-    @Query("SELECT * FROM contact_info c WHERE c.id = :contactId")
-    ContactInfo findContactInfo(Long contactId);
+    @Query("SELECT * FROM contact_info c WHERE c.mobile_number = :mobileNumber AND c.email_address = :emailAddress")
+    ContactInfo findContactInfo(String mobileNumber, String emailAddress);
 
-    @Query("SELECT * FROM contact_info c WHERE c.id = :contactId")
-    ContactInfo getContactInfo(Long contactId);
+    @Query("SELECT * FROM contact_info c WHERE c.id = :contactInfoId")
+    ContactInfo getContactInfo(Long contactInfoId);
 
     /**
      * @param contactInfo invoice file to be inserted. Abort if conflict, i.e. silently drop the insert

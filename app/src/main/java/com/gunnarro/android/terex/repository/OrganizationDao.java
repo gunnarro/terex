@@ -22,6 +22,7 @@ public interface OrganizationDao {
 
     @Query("SELECT * FROM organization o WHERE  o.organization_name = :organizationName")
     Organization findOrganization(String organizationName);
+
     /**
      * @param organization to be inserted. Abort if conflict, i.e. silently drop the insert
      * @return the id of the inserted invoice row

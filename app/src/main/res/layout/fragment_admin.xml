@@ -11,98 +11,39 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="10dp"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         tools:ignore="UselessParent">
 
-        <TextView
-            android:id="@+id/admin_register_work_section_header"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/cardview_dark_background"
-            android:gravity="center_vertical"
-            android:padding="5dp"
-            android:text="@string/title_admin"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/colorSection" />
-
-        <TableLayout
-            android:id="@+id/admin_register_work_tbl"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_client_new"
+            style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/admin_register_work_section_header"
-            android:stretchColumns="0,0, 1, 1">
-<!--
-            <TableRow>
-                <TextView
-                    android:padding="3dip"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:text="@string/lbl_timesheet" />
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
+            android:text="@string/lbl_client"
+            app:iconTint="@color/color_btn_bg_cancel" />
 
-                <Spinner
-                    android:id="@+id/admin_timesheet_month_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:entries="@array/months"
-                    android:padding="3dip" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_timesheet_month_spinner"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="@string/btn_create"
-                    app:iconTint="@color/color_btn_bg_cancel" />
-            </TableRow>
--->
-            <TableRow>
-                <TextView
-                    android:padding="3dip"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:text="@string/lbl_invoice" />
-
-                <Spinner
-                    android:id="@+id/admin_invoice_month_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:entries="@array/months"
-                    android:padding="3dip" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_create_invoice_attachment"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="@string/btn_create"
-                    app:iconTint="@color/color_btn_bg_cancel" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_invoice_attachment_send_email"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="Send email"
-                    app:iconTint="@color/color_btn_bg_cancel" />
-            </TableRow>
-        </TableLayout>
-
-        <LinearLayout
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_project_new"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_below="@id/btn_client_new"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/admin_register_work_tbl">
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
+            android:text="@string/lbl_project"
+            app:iconTint="@color/color_btn_bg_cancel" />
 
-            <WebView
-                android:id="@+id/invoice_overview_html"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:enabled="false"
-                android:lines="50"/>
-
-        </LinearLayout>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_settings"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_below="@id/btn_project_new"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
+            android:text="@string/title_settings"
+            app:iconTint="@color/color_btn_bg_cancel" />
     </RelativeLayout>
 </FrameLayout>

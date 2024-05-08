@@ -7,11 +7,13 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
-import com.gunnarro.android.terex.domain.dto.AddressDto;
+import com.gunnarro.android.terex.domain.dto.BusinessAddressDto;
 import com.gunnarro.android.terex.domain.dto.ClientDto;
 import com.gunnarro.android.terex.domain.dto.ContactInfoDto;
 import com.gunnarro.android.terex.domain.dto.OrganizationDto;
 import com.gunnarro.android.terex.domain.dto.PersonDto;
+import com.gunnarro.android.terex.domain.entity.Client;
+import com.gunnarro.android.terex.domain.entity.ClientDetails;
 import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
 import com.gunnarro.android.terex.repository.ClientRepository;
 
@@ -36,6 +38,18 @@ class ClientServiceTest {
         clientService = new ClientService(clientRepositoryMock);
     }
 
+
+    @Test
+    void getClient() {
+        Client client = new Client();
+        client.setId(23L);
+        client.setName("unit-test-org");
+        client.setOrganizationId(12345678L);
+        when(clientRepositoryMock.getClient(23L)).thenReturn(client);
+        ClientDto clientDto = clientService.getClient(23L);
+        assertEquals(client.getId(), clientDto.getId());
+        assertEquals(client.getName(), clientDto.getName());
+    }
 
     @Test
     void saveClient_new() throws ExecutionException, InterruptedException {
@@ -82,15 +96,14 @@ class ClientServiceTest {
         contectPersonDto.setFirstName("ole");
         contectPersonDto.setLastName("hansen");
 
-        AddressDto organizationAddress = new AddressDto();
-        organizationAddress.setStreetName("my-street");
-        organizationAddress.setStreetNumber("23");
-        organizationAddress.setStreetNumberPrefix("b");
+        BusinessAddressDto organizationAddress = new BusinessAddressDto();
+        organizationAddress.setAddress("my-street 120 e");
+
         organizationAddress.setCity("oslo");
         organizationAddress.setCountry("norway");
-        organizationAddress.setPostCode("0467");
+        organizationAddress.setPostalCode("0467");
 
-        organizationDto.setAddress(organizationAddress);
+        organizationDto.setBusinessAddress(organizationAddress);
         organizationDto.setContactPerson(contectPersonDto);
         organizationDto.setContactInfo(contactInfoDto);
         return organizationDto;

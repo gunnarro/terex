@@ -9,6 +9,7 @@ import androidx.room.Transaction;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
+import com.gunnarro.android.terex.config.AppDatabase;
 import com.gunnarro.android.terex.domain.dto.TimesheetDto;
 import com.gunnarro.android.terex.domain.dto.TimesheetEntryDto;
 import com.gunnarro.android.terex.domain.dto.TimesheetSummaryDto;
@@ -66,7 +67,7 @@ public class TimesheetService {
     @Inject
     public TimesheetService() {
         timesheetRepository = new TimesheetRepository();
-        organizationRepository = new OrganizationRepository();
+        organizationRepository = new OrganizationRepository(AppDatabase.getDatabase().organizationDao());
     }
 
 

@@ -1,5 +1,6 @@
 package com.gunnarro.android.terex.domain.entity;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -26,8 +27,8 @@ public class ConsultantBroker extends BaseEntity {
     @PrimaryKey(autoGenerate = true)
     private Long id;
 
-    @ColumnInfo(name = "company_id")
-    private Long companyId;
+    @ColumnInfo(name = "organization_id")
+    private Long organizationId;
 
     @ColumnInfo(name = "name")
     private String name;
@@ -43,12 +44,12 @@ public class ConsultantBroker extends BaseEntity {
         this.id = id;
     }
 
-    public Long getCompanyId() {
-        return companyId;
+    public Long getOrganizationId() {
+        return organizationId;
     }
 
-    public void setCompanyId(Long companyId) {
-        this.companyId = companyId;
+    public void setOrganizationId(Long organizationId) {
+        this.organizationId = organizationId;
     }
 
     public String getName() {
@@ -80,11 +81,13 @@ public class ConsultantBroker extends BaseEntity {
         return Objects.hash(name);
     }
 
+    @NonNull
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("ConsultantBroker{");
         sb.append("id=").append(id);
         sb.append(", name='").append(name).append('\'');
+        sb.append(", organizationId='").append(organizationId).append('\'');
         sb.append(", status='").append(status).append('\'');
         sb.append('}');
         return sb.toString();

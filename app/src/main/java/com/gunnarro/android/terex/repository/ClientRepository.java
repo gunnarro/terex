@@ -2,6 +2,8 @@ package com.gunnarro.android.terex.repository;
 
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
+
 import com.gunnarro.android.terex.config.AppDatabase;
 import com.gunnarro.android.terex.domain.entity.Client;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
@@ -19,8 +21,15 @@ public class ClientRepository {
 
     private final ClientDao clientDao;
 
+    private final LiveData<List<Client>> allClients;
+
     public ClientRepository() {
         clientDao = AppDatabase.getDatabase().clientDao();
+        allClients = clientDao.getAllClients();
+    }
+
+    public LiveData<List<Client>> getAllClients() {
+        return allClients;
     }
 
     public List<Client> getClients() {
@@ -52,7 +61,7 @@ public class ClientRepository {
     public Client findClient(String name) {
         try {
             CompletionService<Client> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
-            service.submit(() -> clientDao.findClient(name));
+            service.submit(() -> clientDao.findClientByName(name));
             Future<Client> future = service.take();
             return future != null ? future.get() : null;
         } catch (InterruptedException | ExecutionException e) {
@@ -65,7 +74,7 @@ public class ClientRepository {
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures
     // that you're not doing any long running operations on the main thread, blocking the UI.
     public Long insert(Client client) throws InterruptedException, ExecutionException {
-        Log.d("insert", "client: " + client);
+        Log.d("insert", "added new client: " + client);
         CompletionService<Long> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
         service.submit(() -> clientDao.insert(client));
         Future<Long> future = service.take();
@@ -73,7 +82,7 @@ public class ClientRepository {
     }
 
     public Integer update(Client client) throws InterruptedException, ExecutionException {
-        Log.d("update", "client: " + client);
+        Log.d("update", "updated client: " + client);
         CompletionService<Integer> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
         service.submit(() -> clientDao.update(client));
         Future<Integer> future = service.take();

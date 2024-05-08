@@ -3,22 +3,19 @@ package com.gunnarro.android.terex.ui.fragment;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.gunnarro.android.terex.R;
-import com.gunnarro.android.terex.exception.TerexApplicationException;
-import com.gunnarro.android.terex.service.InvoiceService;
 import com.gunnarro.android.terex.utility.Utility;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.io.File;
 
 import javax.inject.Inject;
 
@@ -27,10 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class AdminFragment extends Fragment {
 
-    private static final String INVOICE_TIMESHEET_SUMMARY_ATTACHMENT_TEMPLATE = "template/html/invoice-timesheet-attachment.mustache";
-    private static final String RECRUITMENT_TIMESHEET_TEMPLATE = "template/html/norway-consulting-timesheet.mustache";
-    // @Inject
-    private InvoiceService invoiceService;
+    private NavController navController;
 
     @Inject
     public AdminFragment() {
@@ -41,7 +35,6 @@ public class AdminFragment extends Fragment {
         super.onCreate(savedInstanceState);
         requireActivity().setTitle(R.string.title_admin);
         setHasOptionsMenu(true);
-        invoiceService = new InvoiceService();
         Log.d(Utility.buildTag(getClass(), "onCreate"), "");
     }
 
@@ -49,20 +42,17 @@ public class AdminFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_admin, container, false);
-        view.findViewById(R.id.btn_create_invoice_attachment).setOnClickListener(v -> {
-            try {
-                //
-            } catch (Exception e) {
-                throw new TerexApplicationException("application error!", "50050", e);
-            }
+
+        view.findViewById(R.id.btn_client_new).setOnClickListener(v -> {
+            navController.navigate(R.id.nav_from_admin_to_client_list);
         });
 
-        view.findViewById(R.id.btn_invoice_attachment_send_email).setOnClickListener(v -> {
-            try {
-                File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-            } catch (Exception e) {
-                throw new TerexApplicationException("application error!", "50050", e);
-            }
+        view.findViewById(R.id.btn_project_new).setOnClickListener(v -> {
+
+        });
+
+        view.findViewById(R.id.btn_settings).setOnClickListener(v -> {
+
         });
 
         Log.d(Utility.buildTag(getClass(), "onCreateView"), "");
@@ -75,6 +65,7 @@ public class AdminFragment extends Fragment {
     @Override
     public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        this.navController = Navigation.findNavController(view);
     }
 
 

@@ -41,10 +41,10 @@ public class ContactInfoRepository {
         }
     }
 
-    public ContactInfo findContactInfo(Long contactId) {
+    public ContactInfo findContactInfo(String mobileNumber, String emailAddress) {
         try {
             CompletionService<ContactInfo> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
-            service.submit(() -> contactInfoDao.findContactInfo(contactId));
+            service.submit(() -> contactInfoDao.findContactInfo(mobileNumber, emailAddress));
             Future<ContactInfo> future = service.take();
             return future != null ? future.get() : null;
         } catch (InterruptedException | ExecutionException e) {
@@ -65,7 +65,7 @@ public class ContactInfoRepository {
     }
 
     public Integer update(ContactInfo contactInfo) throws InterruptedException, ExecutionException {
-        Log.d("insert", "contactInfo: " + contactInfo);
+        Log.d("update", "contactInfo: " + contactInfo);
         CompletionService<Integer> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
         service.submit(() -> contactInfoDao.update(contactInfo));
         Future<Integer> future = service.take();

@@ -62,4 +62,16 @@ public abstract class BaseEntity {
     public void setLastModifiedDate(@NonNull LocalDateTime lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
+
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("BaseEntity{");
+        sb.append("id=").append(id);
+        sb.append(", uuid='").append(uuid).append('\'');
+        sb.append(", createdDate=").append(createdDate);
+        sb.append(", lastModifiedDate=").append(lastModifiedDate);
+        sb.append('}');
+        return sb.toString();
+    }
 }

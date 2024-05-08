@@ -7,11 +7,10 @@ public class OrganizationDto {
     private String organizationNumber;
     private String bankAccountNumber;
     private String industryType;
-
-    private AddressDto address;
-
+    private OrganizationStatusDto organizationStatusDto;
+    private BusinessAddressDto businessAddress;
+    private PostalAddressDto postalAddressDto;
     private PersonDto contactPerson;
-
     private ContactInfoDto contactInfo;
 
     public Long getId() {
@@ -54,12 +53,28 @@ public class OrganizationDto {
         this.industryType = industryType;
     }
 
-    public AddressDto getAddress() {
-        return address;
+    public OrganizationStatusDto getOrganizationStatusDto() {
+        return organizationStatusDto;
     }
 
-    public void setAddress(AddressDto address) {
-        this.address = address;
+    public void setOrganizationStatusDto(OrganizationStatusDto organizationStatusDto) {
+        this.organizationStatusDto = organizationStatusDto;
+    }
+
+    public BusinessAddressDto getBusinessAddress() {
+        return businessAddress;
+    }
+
+    public void setBusinessAddress(BusinessAddressDto businessAddress) {
+        this.businessAddress = businessAddress;
+    }
+
+    public PostalAddressDto getPostalAddressDto() {
+        return postalAddressDto;
+    }
+
+    public void setPostalAddressDto(PostalAddressDto postalAddressDto) {
+        this.postalAddressDto = postalAddressDto;
     }
 
     public PersonDto getContactPerson() {

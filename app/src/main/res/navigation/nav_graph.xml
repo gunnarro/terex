@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/nav_home_fragment">
+    app:startDestination="@id/home_fragment">
 
     <!-- start page navigation, application entry point -->
     <fragment
-        android:id="@+id/nav_home_fragment"
+        android:id="@+id/home_fragment"
         android:name="com.gunnarro.android.terex.ui.fragment.HomeFragment"
         tools:layout="@layout/fragment_home">
         <action
@@ -16,6 +16,52 @@
         <action
             android:id="@+id/nav_from_home_to_invoice_list"
             app:destination="@id/invoice_list_fragment" />
+        <action
+            android:id="@+id/nav_from_home_to_admin"
+            app:destination="@id/admin_fragment" />
+    </fragment>
+
+    <!-- client navigation -->
+    <fragment
+        android:id="@+id/client_list_fragment"
+        android:name="com.gunnarro.android.terex.ui.fragment.ClientListFragment"
+        android:label="client_list_fragment"
+        tools:layout="@layout/fragment_recycler_client_list">
+        <action
+            android:id="@+id/nav_from_client_list_to_client_details"
+            app:destination="@id/client_details_fragment">
+            <argument
+                android:name="clientId"
+                android:defaultValue="0L"
+                app:argType="long"
+                app:nullable="false" />
+        </action>
+        <action
+            android:id="@+id/nav_from_client_list_to_client_new"
+            app:destination="@id/client_new_fragment">
+            <argument
+                android:name="clientId"
+                android:defaultValue="0L"
+                app:argType="long"
+                app:nullable="false" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/client_details_fragment"
+        android:name="com.gunnarro.android.terex.ui.fragment.ClientNewFragment"
+        android:label="client_details_fragment"
+        tools:layout="@layout/fragment_client_new">
+    </fragment>
+
+    <fragment
+        android:id="@+id/client_new_fragment"
+        android:name="com.gunnarro.android.terex.ui.fragment.ClientNewFragment"
+        android:label="client_new_fragment"
+        tools:layout="@layout/fragment_client_new">
+        <action
+            android:id="@+id/nav_from_client_new_to_client_list"
+            app:destination="@id/client_list_fragment" />
     </fragment>
 
     <!-- timesheet navigation -->
@@ -165,6 +211,19 @@
         <action
             android:id="@+id/nav_from_invoice_details_to_invoice_list"
             app:destination="@id/invoice_list_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/admin_fragment"
+        android:name="com.gunnarro.android.terex.ui.fragment.AdminFragment"
+        android:label="admin_fragment"
+        tools:layout="@layout/fragment_admin">
+        <action
+            android:id="@+id/nav_from_admin_to_home"
+            app:destination="@id/home_fragment" />
+        <action
+            android:id="@+id/nav_from_admin_to_client_list"
+            app:destination="@id/client_list_fragment" />
     </fragment>
 
     <!-- preferences -->

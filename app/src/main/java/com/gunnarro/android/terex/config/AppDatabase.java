@@ -59,7 +59,7 @@ import java.util.concurrent.Executors;
         ConsultantBroker.class,
         Client.class,
         Consultant.class
-}, version = 1, views = {TimesheetView.class}, exportSchema = true)
+}, version = 3, views = {TimesheetView.class}, exportSchema = true)
 public abstract class AppDatabase extends RoomDatabase {
     // marking the instance as volatile to ensure atomic access to the variable
     // The Java volatile keyword guarantees visibility of changes to variables across threads
@@ -94,7 +94,7 @@ public abstract class AppDatabase extends RoomDatabase {
      */
     public static synchronized AppDatabase getDatabase() {
         if (INSTANCE == null) {
-            throw new TerexApplicationException("Database not initialized. You should call AppDatabase.init(context) in the MainActivity.", "50050", null);
+            throw   new TerexApplicationException("Database not initialized. You should call AppDatabase.init(context) in the MainActivity.", "50050", null);
         }
         return INSTANCE;
     }

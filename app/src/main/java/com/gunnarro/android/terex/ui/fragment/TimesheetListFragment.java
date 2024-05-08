@@ -69,7 +69,7 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
             public void handleOnBackPressed() {
                 if (true) {
                     Log.d("handleOnBackPressed", "custom navigate back to home");
-                    navigateTo(R.id.nav_home_fragment, null);
+                    navigateTo(R.id.home_fragment, null);
                 } else {
                     Log.d("handleOnBackPressed", "use default navigation");
                     // use default navigation

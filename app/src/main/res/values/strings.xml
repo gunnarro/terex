@@ -141,5 +141,27 @@
     <string name="timesheet_status_active">Aktive</string>
     <string name="timesheet_status_new">Ny</string>
     <string name="title_timesheet_summary">Timeliste oppsummering</string>
+    <string name="title_client_new">New Client</string>
+    <string name="btn_search">Search</string>
+    <string name="btn_lookup">Lookup</string>
+    <string name="lbl_organization_name">Organization name</string>
+    <string name="lbl_organization_address">Organization business address</string>
+    <string name="lbl_organization_postal_code">Postal code</string>
+    <string name="lbl_postal_code">Postal code</string>
+    <string name="lbl_address">Address</string>
+    <string name="lbl_city">City</string>
+    <string name="lbl_country">Country</string>
+    <string name="lbl_person_full_name">person full name</string>
+    <string name="lbl_mobile_number">Mobile number</string>
+    <string name="lbl_email_address">Email address</string>
+    <string name="lbl_org_contact_info_mobile_number">Organization mobile</string>
+    <string name="lbl_orog_contact_email_address">Organization email</string>
+    <string name="lbl_org_contact_email_address">Organization email</string>
+    <string name="lbl_contact_person_email">Contact person email</string>
+    <string name="lbl_contact_person_mobile">Contact person mobile</string>
+    <string name="lbl_contact_person_full_name">Contact person full name</string>
+    <string name="msg_delete_client">verify delete client</string>
+    <string name="info_client_saved_msg_format">saved client,orgNumber=%s,  orgName=%s</string>
+    <string name="title_clients">Clients</string>
 
 </resources>

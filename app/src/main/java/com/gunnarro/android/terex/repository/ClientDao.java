@@ -1,5 +1,6 @@
 package com.gunnarro.android.terex.repository;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -15,6 +16,8 @@ import java.util.List;
 @Dao
 public interface ClientDao {
 
+    @Query("SELECT * FROM client ORDER BY name ASC")
+    LiveData<List<Client>> getAllClients();
 
     /**
      * use transactions since this method return a aggregate object
@@ -33,8 +36,8 @@ public interface ClientDao {
     @Query("SELECT * FROM client c WHERE c.id = :clientId")
     Client getClient(long clientId);
 
-    @Query("SELECT * FROM client c WHERE c.id = :name")
-    Client findClient(String name);
+    @Query("SELECT * FROM client c WHERE c.name = :name")
+    Client findClientByName(String name);
 
     /**
      * @param client Client to be inserted. Abort if conflict, i.e. silently drop the insert

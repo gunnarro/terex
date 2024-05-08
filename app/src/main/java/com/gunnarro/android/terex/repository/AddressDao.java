@@ -12,8 +12,8 @@ import com.gunnarro.android.terex.domain.entity.Address;
 @Dao
 public interface AddressDao {
 
-    @Query("SELECT * FROM address a WHERE a.street_name = :streetName AND a.street_number = :streetNumber")
-    Address findAddress(String streetName, String streetNumber);
+    @Query("SELECT * FROM address a WHERE a.street_name = :streetName")
+    Address findAddress(String streetName);
 
     @Query("SELECT * FROM address a WHERE a.id = :addressId")
     Address getAddress(Long addressId);

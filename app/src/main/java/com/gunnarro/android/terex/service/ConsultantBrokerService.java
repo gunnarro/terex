@@ -67,7 +67,7 @@ public class ConsultantBrokerService {
             } else {
                 consultantBroker.setCreatedDate(consultantBrokerExisting.getCreatedDate());
                 consultantBroker.setStatus(consultantBrokerExisting.getStatus());
-                consultantBroker.setCompanyId(consultantBrokerExisting.getCompanyId());
+                consultantBroker.setOrganizationId(consultantBrokerExisting.getOrganizationId());
                 consultantBrokerRepository.updateConsultantBroker(consultantBroker);
                 id = consultantBrokerExisting.getId();
             }

@@ -15,6 +15,34 @@
         android:enabled="false"
         android:visibility="invisible" />
 
+    <TextView
+        android:id="@+id/client_new_org_id"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:enabled="false"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/client_new_business_addr_id"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:enabled="false"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/client_new_contact_person_id"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:enabled="false"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/client_new_contact_info_id"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:enabled="false"
+        android:visibility="invisible" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -22,81 +50,76 @@
         android:orientation="vertical"
         tools:ignore="UselessParent">
 
-        <!-- horizontal date layout -->
+        <!-- lookup organization -->
         <LinearLayout
-            android:id="@+id/client_date_layout"
+            android:id="@+id/lookup_org_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:baselineAligned="false"
-            android:orientation="horizontal"
+            android:baselineAligned="true"
+            android:orientation="vertical"
             tools:ignore="UselessParent">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/client_new_created_date_layout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:enabled="false"
-                android:hint="@string/prompt_created_date">
+                android:orientation="horizontal">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/client_new_created_date"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/client_new_search_org_number_layout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="1"
+                    android:enabled="true"
+                    android:hint="@string/lbl_organization_number">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/client_new_search_org_number"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:enabled="true"
+                        android:inputType="text" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/client_new_search_org_number_btn"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:enabled="false"
-                    android:inputType="text"
-                    android:text="" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/client_new_last_modified_date_layout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:enabled="false"
-                android:hint="@string/prompt_last_modified_date">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/client_new_last_modified_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:enabled="false"
-                    android:inputType="date"
-                    android:text="" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/btn_lookup"
+                    app:iconTint="@color/color_btn_bg_cancel" />
+            </LinearLayout>
         </LinearLayout>
 
-        <!-- organization -->
+        <!-- result organization lookup -->
         <LinearLayout
-            android:id="@+id/client_new_client_info_layout"
+            android:id="@+id/client_new_org_address_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/client_date_layout"
+            android:layout_below="@id/lookup_org_layout"
             android:layout_margin="10dp"
             android:baselineAligned="false"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             tools:ignore="UselessParent">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/client_new_name_layout"
+                android:id="@+id/client_new_org_name_layout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:layout_weight="1"
-                android:enabled="false"
-                android:hint="@string/lbl_year">
+                android:hint="@string/lbl_organization_name">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/client_new_name"
+                    android:id="@+id/client_new_org_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:enabled="false"
-                    android:inputType="text"
-                    android:text="name" />
+                    android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -106,29 +129,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:layout_weight="1"
-                android:enabled="false"
-                android:hint="@string/lbl_month">
+                android:hint="@string/lbl_organization_number">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/client_new_org_number"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:enabled="false"
-                    android:inputType="text"
-                    android:text="organization number" />
+                    android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
-
-        <!-- org address -->
-        <LinearLayout
-            android:id="@+id/client_new_org_address_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/client_new_client_info_layout"
-            android:layout_margin="10dp"
-            android:baselineAligned="false"
-            android:orientation="horizontal"
-            tools:ignore="UselessParent">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/client_new_org_street_name_layout"
@@ -137,32 +146,56 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:layout_weight="1"
-                android:hint="@string/lbl_day">
+                android:hint="@string/lbl_address">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/client_new_org_street_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:text="" />
+                    android:enabled="false"
+                    android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/client_new_org_city_layout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="5dp"
-                android:layout_weight="1"
-                android:hint="@string/lbl_day">
+                android:baselineAligned="false"
+                android:orientation="horizontal">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/client_new_org_city_name"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/client_new_org_postal_code_layout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:text="" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="1"
+                    android:hint="@string/lbl_postal_code">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/client_new_org_postal_code"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:enabled="false"
+                        android:inputType="text" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/client_new_org_city_layout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="1"
+                    android:hint="@string/lbl_city">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/client_new_org_city_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:enabled="false"
+                        android:inputType="text" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/client_new_org_country_layout"
@@ -171,143 +204,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:layout_weight="1"
-                android:hint="@string/lbl_day">
+                android:hint="@string/lbl_country">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/client_new_org_country"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:text="" />
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
-
-        <!-- org contact info -->
-        <LinearLayout
-            android:id="@+id/client_new_contact_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/client_new_org_address_layout"
-            android:layout_margin="10dp"
-            android:baselineAligned="false"
-            android:orientation="horizontal"
-            tools:ignore="UselessParent">
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/client_new_contact_full_name_layout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="5dp"
-                android:layout_weight="1"
-                android:hint="@string/lbl_day">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/client_new_contact_full_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="date"
-                    android:maxLength="2"
-                    android:text="" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/client_new_contact_mobile_layout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="5dp"
-                android:layout_weight="1"
-                android:hint="@string/lbl_day">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/client_new_contact_mobile"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="date"
-                    android:maxLength="2"
-                    android:text="" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/client_new_contact_email_layout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="5dp"
-                android:layout_weight="1"
-                android:hint="@string/lbl_day">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/client_new_contact_email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="date"
-                    android:maxLength="2"
-                    android:text="" />
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
-
-        <!-- org contact person -->
-        <LinearLayout
-            android:id="@+id/client_new_contact_person_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/client_new_contact_layout"
-            android:layout_margin="10dp"
-            android:baselineAligned="false"
-            android:orientation="horizontal"
-            tools:ignore="UselessParent">
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/client_new_contact_person_full_name_layout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="5dp"
-                android:layout_weight="1"
-                android:hint="@string/lbl_day">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/client_new_contact_person_full_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:text="" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/client_new_contact_person_mobile_layout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="5dp"
-                android:layout_weight="1"
-                android:hint="@string/lbl_day">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/client_new_contact_person_mobile"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:text="" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/client_new_contact_person_email_layout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="5dp"
-                android:layout_weight="1"
-                android:hint="@string/lbl_day">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/client_new_contact_person_email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:text="" />
+                    android:enabled="false"
+                    android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
@@ -315,21 +219,11 @@
             android:id="@+id/client_new_register_buttons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/client_new_contact_person_layout"
+            android:layout_below="@id/client_new_org_address_layout"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
             android:gravity="center"
             android:orientation="horizontal">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/client_new_delete_btn"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:layout_weight="1"
-                android:text="@string/btn_delete"
-                app:iconTint="@color/color_btn_bg_delete" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/client_new_cancel_btn"

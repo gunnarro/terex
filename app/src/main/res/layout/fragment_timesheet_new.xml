@@ -47,8 +47,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:enabled="false"
-                    android:inputType="text"
-                    android:text="11-11-2013" />
+                    android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -65,8 +64,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:enabled="false"
-                    android:inputType="date"
-                    android:text="18-11-2023" />
+                    android:inputType="date" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
