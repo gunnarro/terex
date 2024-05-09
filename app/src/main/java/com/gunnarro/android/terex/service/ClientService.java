@@ -22,7 +22,6 @@ import javax.inject.Singleton;
 @Singleton
 public class ClientService {
 
-    private final ProjectService projectService;
     private final ClientRepository clientRepository;
 
     /**
@@ -31,13 +30,11 @@ public class ClientService {
     @Inject
     public ClientService(ClientRepository clientRepository) {
         this.clientRepository = clientRepository;
-        this.projectService = new ProjectService();
     }
 
     @Inject
     public ClientService() {
         this.clientRepository = new ClientRepository();
-        this.projectService = new ProjectService();
     }
 
     public List<ClientDto> getClients() {

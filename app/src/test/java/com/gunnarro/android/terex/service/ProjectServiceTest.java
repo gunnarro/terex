@@ -37,9 +37,8 @@ class ProjectServiceTest {
     @Test
     void saveProject_new() throws ExecutionException, InterruptedException {
         ProjectDto projectDto = new ProjectDto();
-        projectDto.setName("timerex");
         projectDto.setClientId(1002L);
-
+        projectDto.setName("timerex");
         projectDto.setStatus(Project.ProjectStatusEnum.ACTIVE.name());
         projectDto.setDescription("develop a timesheet android app");
 

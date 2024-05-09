@@ -13,7 +13,6 @@ import com.gunnarro.android.terex.domain.dto.ContactInfoDto;
 import com.gunnarro.android.terex.domain.dto.OrganizationDto;
 import com.gunnarro.android.terex.domain.dto.PersonDto;
 import com.gunnarro.android.terex.domain.entity.Client;
-import com.gunnarro.android.terex.domain.entity.ClientDetails;
 import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
 import com.gunnarro.android.terex.repository.ClientRepository;
 
@@ -38,7 +37,6 @@ class ClientServiceTest {
         clientService = new ClientService(clientRepositoryMock);
     }
 
-
     @Test
     void getClient() {
         Client client = new Client();
@@ -54,6 +52,7 @@ class ClientServiceTest {
     @Test
     void saveClient_new() throws ExecutionException, InterruptedException {
         ClientDto clientDto = new ClientDto();
+        clientDto.setName("gunnarro as");
         clientDto.setStatus("ACTIVE");
         clientDto.setOrganizationDto(createOrganizationDto());
 
@@ -69,6 +68,7 @@ class ClientServiceTest {
     void saveClient_update() throws ExecutionException, InterruptedException {
         ClientDto clientDto = new ClientDto();
         clientDto.setId(100L);
+        clientDto.setName("gunnarro as");
         clientDto.setStatus("ACTIVE");
         clientDto.setOrganizationDto(createOrganizationDto());
 
@@ -108,5 +108,4 @@ class ClientServiceTest {
         organizationDto.setContactInfo(contactInfoDto);
         return organizationDto;
     }
-
 }
