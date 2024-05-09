@@ -30,9 +30,6 @@ public class Organization extends BaseEntity {
     @ColumnInfo(name = "contact_info_id")
     private Long contactInfoId;
 
-    @ColumnInfo(name = "contact_person_id")
-    private Long contactPersonId;
-
     @ColumnInfo(name = "organization_name")
     private String name;
 
@@ -71,14 +68,6 @@ public class Organization extends BaseEntity {
 
     public void setContactInfoId(Long contactInfoId) {
         this.contactInfoId = contactInfoId;
-    }
-
-    public Long getContactPersonId() {
-        return contactPersonId;
-    }
-
-    public void setContactPersonId(Long contactPersonId) {
-        this.contactPersonId = contactPersonId;
     }
 
     public String getName() {

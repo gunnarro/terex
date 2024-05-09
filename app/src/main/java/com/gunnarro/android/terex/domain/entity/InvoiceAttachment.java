@@ -1,5 +1,6 @@
 package com.gunnarro.android.terex.domain.entity;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Index;
@@ -98,6 +99,7 @@ public class InvoiceAttachment extends BaseEntity {
         return Objects.hash(invoiceId, attachmentFileName, attachmentType, attachmentFileType);
     }
 
+    @NonNull
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("InvoiceAttachment{");

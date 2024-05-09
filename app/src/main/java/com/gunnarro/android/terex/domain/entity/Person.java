@@ -1,5 +1,6 @@
 package com.gunnarro.android.terex.domain.entity;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Index;
@@ -114,6 +115,7 @@ public class Person extends BaseEntity {
         this.maritalStatus = maritalStatus;
     }
 
+    @NonNull
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Person{");

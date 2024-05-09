@@ -1,47 +1,7 @@
-Table consultant_broker {
-    id long [primary key]
-}
-
-Table broker_consultant_lnk {
-    id long [primary key]
-    consultant_broker_id long
-    consultant_id long
-}
-
-Table consultant_project_lnk {
-    consultant_id long
-    project_id long
-}
-
-Table consultant {
-    id long [primary key]
-}
-
 Table client {
     id long [primary key]
     organization_id long [not null, unique]
     project_id long
-}
-
-Table business_contract {
-    id long [primary key]
-    consultant_broker long
-    consultant_id long
-    hired_date timestamp
-    start_date timestamp
-    end_date timestamp
-    hourly_rate integer
-    assignment_type varchar
-    assignment_description varchar
-}
-
-Table project {
-    id long [primary key]
-    consultant_broker_id long
-    client_id long
-    project_name varchar
-    project_start_date timestamp
-    project_end_date timestamp
 }
 
 Table organization {
@@ -50,6 +10,14 @@ Table organization {
     organization_number integer
     organization_industry_type varchar
     bank_account_number integer
+}
+
+Table project {
+    id long [primary key]
+    client_id long
+    project_name varchar
+    project_start_date timestamp
+    project_end_date timestamp
 }
 
 Table person {
@@ -137,14 +105,14 @@ Table timesheet_summary {
 // one to one
 Ref: client.organization_id - organization.id
 
-Ref: project.consultant_broker_id > consultant_broker.id  // many-to-one
+Ref: project.client_id > client.id  // many-to-one
 
 // link table, many to many relations
-Ref: broker_consultant_lnk.consultant_id > consultant.id
-Ref: broker_consultant_lnk.consultant_broker_id > consultant_broker.id
+//Ref: broker_consultant_lnk.consultant_id > consultant.id
+//Ref: broker_consultant_lnk.consultant_broker_id > consultant_broker.id
 
-Ref: consultant_project_lnk.consultant_id > consultant.id
-Ref: consultant_project_lnk.project_id > project.id
+//Ref: consultant_project_lnk.consultant_id > consultant.id
+//Ref: consultant_project_lnk.project_id > project.id
 
 Ref: timesheet.project_id > project.id                  // many-to-one
 Ref: timesheet_entry.timesheet_id > timesheet.id        // many-to-one

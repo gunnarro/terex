@@ -47,10 +47,10 @@ public class OrganizationService {
         Address businessAddress = addressRepository.getAddress(organization.getBusinessAddressId());
         OrganizationDto organizationDto = TimesheetMapper.toOrganizationDto(organizationRepository.getOrganization(organizationId));
         ContactInfo orgContactInfo = contactInfoRepository.getContactInfo(organization.getContactInfoId());
-        Person contactPerson = personRepository.getPerson(organization.getContactPersonId());
+      //  Person contactPerson = personRepository.getPerson(organization.getContactPersonId());
 
         organizationDto.setBusinessAddress(TimesheetMapper.toABusinessAddressDto(businessAddress));
-        organizationDto.setContactPerson(TimesheetMapper.toPersonDto(contactPerson));
+    //    organizationDto.setContactPerson(TimesheetMapper.toPersonDto(contactPerson));
         organizationDto.setContactInfo(TimesheetMapper.toContactInfoDto(orgContactInfo));
         return organizationDto;
     }

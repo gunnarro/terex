@@ -60,7 +60,7 @@ class OrganizationRepositoryTest {
         organization.setBusinessAddressId(10L);
         organization.setPostalAddressId(11L);
         organization.setContactInfoId(22L);
-        organization.setContactPersonId(44L);
+      //  organization.setContactPersonId(44L);
         //organization.setIndustryType("SOFTWARE");
         return organization;
     }

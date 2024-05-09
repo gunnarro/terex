@@ -64,6 +64,7 @@ public abstract class BaseEntity {
     }
 
 
+    @NonNull
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("BaseEntity{");

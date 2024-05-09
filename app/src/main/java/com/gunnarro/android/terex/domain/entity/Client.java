@@ -28,6 +28,9 @@ public class Client extends BaseEntity {
     @ColumnInfo(name = "name")
     private String name;
 
+    @ColumnInfo(name = "contact_person_id")
+    private Long contactPersonId;
+
     @ColumnInfo(name = "status")
     private String status;
 
@@ -45,6 +48,14 @@ public class Client extends BaseEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Long getContactPersonId() {
+        return contactPersonId;
+    }
+
+    public void setContactPersonId(Long contactPersonId) {
+        this.contactPersonId = contactPersonId;
     }
 
     public String getStatus() {
