@@ -183,14 +183,36 @@ class TimesheetMapperTest {
     @Test
     void toClientDto() {
         ClientDetails clientDetails = new ClientDetails();
-        clientDetails.setClient(new Client());
-        clientDetails.setProjectList(List.of(new Project()));
+        Client client = new Client();
+        client.setId(2344L);
+        client.setName("gunnarro");
+        client.setOrganizationId(2222222L);
+        client.setStatus("ACTIVE");
+        clientDetails.setClient(client);
+
+        Project project1 = new Project();
+        project1.setClientId(client.getId());
+        project1.setName("terex app developing");
+        project1.setStatus(Project.ProjectStatusEnum.ACTIVE.name());
+        project1.setDescription("description");
+
+        Project project2 = new Project();
+        project2.setClientId(client.getId());
+        project2.setName("web developing");
+        project2.setStatus(Project.ProjectStatusEnum.ACTIVE.name());
+        project2.setDescription("description");
+
+        clientDetails.setProjectList(List.of(project1, project2));
         ClientDto clientDto = TimesheetMapper.toClientDto(clientDetails);
-        assertNull(clientDto.getName());
-        //  assertNull(clientDto.getCompanyDto());
-        //    assertNull(clientDto.getCompanyDto().getName());
-        //    assertNull(clientDto.getCompanyDto().getOrganizationNumber());
-        //    assertNull(clientDto.getCompanyDto().getBankAccountNumber());
+        assertEquals(clientDetails.getClient().getId(), clientDto.getId());
+        assertEquals(clientDetails.getClient().getName(), clientDto.getName());
+      //  assertEquals(clientDetails.getClient().getOrganizationId(), clientDto.getOrganizationDto().getId());
+        assertEquals(clientDetails.getClient().getStatus(), clientDto.getStatus());
+        assertEquals(2, clientDto.getProjectList().size());
+        assertEquals(project1.getClientId(), clientDto.getProjectList().get(0).getClientId());
+        assertEquals(project1.getName(), clientDto.getProjectList().get(0).getName());
+        assertEquals(project1.getStatus(), clientDto.getProjectList().get(0).getStatus());
+        assertEquals(project1.getDescription(), clientDto.getProjectList().get(0).getDescription());
     }
 
     @Test

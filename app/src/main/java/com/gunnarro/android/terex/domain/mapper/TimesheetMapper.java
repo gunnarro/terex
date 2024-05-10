@@ -195,7 +195,9 @@ public class TimesheetMapper {
         ClientDto clientDto = new ClientDto();
         clientDto.setId(clientDetails.getClient().getId());
         clientDto.setName(clientDetails.getClient().getName());
+        clientDto.setStatus(clientDetails.getClient().getStatus());
         clientDto.setProjectList(toProjectDtoList(clientDetails.getProjectList()));
+      //  clientDto.setOrganizationDto(toOrganizationDto(clientDetails.getOrganizationDetails()));
         return clientDto;
     }
 

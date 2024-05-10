@@ -14,6 +14,7 @@ import com.gunnarro.android.terex.DbHelper;
 import com.gunnarro.android.terex.config.AppDatabase;
 import com.gunnarro.android.terex.domain.dto.ClientDto;
 import com.gunnarro.android.terex.repository.ClientRepository;
+import com.gunnarro.android.terex.repository.ProjectRepository;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -30,11 +31,11 @@ public class ClientServiceTest {
         Context appContext = ApplicationProvider.getApplicationContext();
         AppDatabase appDatabase = Room.inMemoryDatabaseBuilder(appContext, AppDatabase.class).build();
         AppDatabase.init(appContext);
-        clientService = new ClientService(new ClientRepository());
+        clientService = new ClientService(new ClientRepository(), new ProjectRepository());
         // load test data
         List<String> sqlQueryList = DbHelper.readMigrationSqlQueryFile(appContext, "database/test_data.sql");
         sqlQueryList.forEach(query -> {
-            System.out.println(query);
+            System.out.println("DB test data sql query: : " + query);
             appDatabase.getOpenHelper().getWritableDatabase().execSQL(query);
         });
         assertTrue(appDatabase.getOpenHelper().getWritableDatabase().isDatabaseIntegrityOk());
@@ -42,8 +43,9 @@ public class ClientServiceTest {
 
     @Test
     public void getClient() {
-        ClientDto clientDto = clientService.getClient(23L);
-        assertNull(clientDto);
+        ClientDto clientDto = clientService.getClient(1L);
+        assertNotNull(clientDto);
+        assertEquals("gunnarro as", clientDto.getName());
     }
 
     @Ignore

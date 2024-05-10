@@ -56,10 +56,10 @@ public class ProjectRepository {
         }
     }
 
-    public List<Project> getProjects(Long consultantCompanyId, String status) {
+    public List<Project> getProjects(Long clientId, String status) {
         try {
             CompletionService<List<Project>> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
-            service.submit(() -> projectDao.getProjects(consultantCompanyId, status));
+            service.submit(() -> projectDao.getProjects(clientId, status));
             Future<List<Project>> future = service.take();
             return future != null ? future.get() : null;
         } catch (InterruptedException | ExecutionException e) {

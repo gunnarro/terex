@@ -1,6 +1,5 @@
 package com.gunnarro.android.terex.service;
 
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -13,8 +12,10 @@ import com.gunnarro.android.terex.domain.dto.ContactInfoDto;
 import com.gunnarro.android.terex.domain.dto.OrganizationDto;
 import com.gunnarro.android.terex.domain.dto.PersonDto;
 import com.gunnarro.android.terex.domain.entity.Client;
+import com.gunnarro.android.terex.domain.entity.Project;
 import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
 import com.gunnarro.android.terex.repository.ClientRepository;
+import com.gunnarro.android.terex.repository.ProjectRepository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,10 +33,12 @@ class ClientServiceTest {
 
     @Mock
     private ClientRepository clientRepositoryMock;
+    @Mock
+    private ProjectRepository projectRepositoryMock;
 
     @BeforeEach
     public void setup() {
-        clientService = new ClientService(clientRepositoryMock);
+        clientService = new ClientService(clientRepositoryMock, projectRepositoryMock);
     }
 
     @Test
@@ -43,10 +47,22 @@ class ClientServiceTest {
         client.setId(23L);
         client.setName("unit-test-org");
         client.setOrganizationId(12345678L);
-        when(clientRepositoryMock.getClient(23L)).thenReturn(client);
-        ClientDto clientDto = clientService.getClient(23L);
+
+        Project project = new Project();
+        project.setId(111L);
+        project.setClientId(client.getId());
+        project.setName("terex app development");
+        project.setStatus("ACTIVE");
+
+        when(clientRepositoryMock.getClient(client.getId())).thenReturn(client);
+        when(projectRepositoryMock.getProjects(client.getId(), Project.ProjectStatusEnum.ACTIVE.name())).thenReturn(List.of(project));
+        ClientDto clientDto = clientService.getClient(client.getId());
         assertEquals(client.getId(), clientDto.getId());
         assertEquals(client.getName(), clientDto.getName());
+        assertEquals(1, clientDto.getProjectList().size());
+        assertEquals(project.getClientId(), clientDto.getProjectList().get(0).getClientId());
+        assertEquals(project.getName(), clientDto.getProjectList().get(0).getName());
+        assertEquals(project.getStatus(), clientDto.getProjectList().get(0).getStatus());
     }
 
     @Test

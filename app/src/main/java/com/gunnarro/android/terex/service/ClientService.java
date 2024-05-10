@@ -7,9 +7,11 @@ import com.gunnarro.android.terex.domain.dto.ClientDto;
 import com.gunnarro.android.terex.domain.entity.Client;
 import com.gunnarro.android.terex.domain.entity.ClientDetails;
 import com.gunnarro.android.terex.domain.entity.ConsultantBroker;
+import com.gunnarro.android.terex.domain.entity.Project;
 import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.repository.ClientRepository;
+import com.gunnarro.android.terex.repository.ProjectRepository;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -23,18 +25,21 @@ import javax.inject.Singleton;
 public class ClientService {
 
     private final ClientRepository clientRepository;
+    private final ProjectRepository projectRepository;
 
     /**
      * For unit test only
      */
     @Inject
-    public ClientService(ClientRepository clientRepository) {
+    public ClientService(ClientRepository clientRepository, ProjectRepository projectRepository) {
         this.clientRepository = clientRepository;
+        this.projectRepository = projectRepository;
     }
 
     @Inject
     public ClientService() {
         this.clientRepository = new ClientRepository();
+        this.projectRepository = new ProjectRepository();
     }
 
     public List<ClientDto> getClients() {
@@ -44,9 +49,12 @@ public class ClientService {
 
     public ClientDto getClient(Long clientId) {
         Client client = clientRepository.getClient(clientId);
+        Log.d("getClient", "clientId=" + clientId + ", client=" + client);
         if (client != null) {
+            List<Project> projects = projectRepository.getProjects(client.getId(), Project.ProjectStatusEnum.ACTIVE.name());
             ClientDetails clientDetails = new ClientDetails();
             clientDetails.setClient(client);
+            clientDetails.setProjectList(projects);
             return TimesheetMapper.toClientDto(clientDetails);
         }
         return null;

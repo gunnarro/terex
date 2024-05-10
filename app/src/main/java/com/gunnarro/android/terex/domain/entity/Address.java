@@ -24,6 +24,9 @@ public class Address extends BaseEntity {
     private String streetNumber;
     @ColumnInfo(name = "street_number_prefix")
     private String streetNumberPrefix;
+    /**
+     * norwegian postal codes, which are 4-digit codes.
+     */
     @ColumnInfo(name = "postal_code")
     private String postalCode;
     @ColumnInfo(name = "city")

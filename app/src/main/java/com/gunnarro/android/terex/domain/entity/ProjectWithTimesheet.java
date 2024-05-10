@@ -3,10 +3,6 @@ package com.gunnarro.android.terex.domain.entity;
 import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.Relation;
-import androidx.room.TypeConverters;
-
-import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
-import com.gunnarro.android.terex.domain.converter.LocalDateTimeConverter;
 
 import java.util.List;
 

@@ -26,13 +26,11 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.dto.ClientDto;
-import com.gunnarro.android.terex.domain.dto.ConsultantBrokerDto;
 import com.gunnarro.android.terex.domain.dto.ProjectDto;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.service.ClientService;
-import com.gunnarro.android.terex.service.ConsultantBrokerService;
 import com.gunnarro.android.terex.service.TimesheetService;
 import com.gunnarro.android.terex.utility.Utility;
 
@@ -40,8 +38,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -85,8 +81,6 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
         //String[] projects = consultantBrokerDto != null ? consultantBrokerDto.getProjects().stream().map(ProjectDto::getName).toArray(String[]::new) : new String[]{};
 
         ClientDto clientDto = clientService.getClient(1L);
-        //String[] clients = clientDtos.stream().collect()
-        //String[] clients = clientDtos.stream().map(ClientDto::getName).toArray(String[]::new);
         String[] clients = new String[] {clientDto.getName()};
         String[] projects = clientDto.getProjectList().stream().map(ProjectDto::getName).toArray(String[]::new);
 
