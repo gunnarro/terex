@@ -35,7 +35,7 @@ public class ClientViewHolder extends RecyclerView.ViewHolder {
         } else
             line1StatusView.setTextColor(line1StatusView.getResources().getColor(R.color.invoice_status_completed, null));
     }*/
-        line1LabelView.setText("");
-        line1ValueView.setText("");
+        line1LabelView.setText("OrgId: " + client.getOrganizationId());
+        line1ValueView.setText("contactPersonId: " + client.getContactPersonId() != null ? "" + client.getContactPersonId() : "");
     }
 }

@@ -30,8 +30,8 @@ public class ClientListAdapter extends ListAdapter<Client, ClientViewHolder> imp
         ClientViewHolder viewHolder = ClientViewHolder.create(parent);
         viewHolder.itemView.findViewById(R.id.ic_client_row_view).setOnClickListener(v -> {
             Bundle bundle = new Bundle();
-            bundle.putString(ClientListFragment.CLIENT_ACTION_VIEW, "true");
             bundle.putLong(ClientListFragment.CLIENT_ID_KEY, getItem(viewHolder.getBindingAdapterPosition()).getId());
+            bundle.putString(ClientListFragment.CLIENT_ACTION_KEY, ClientListFragment.CLIENT_ACTION_EDIT);
             listOnItemClickListener.onItemClick(bundle);
         });
         return viewHolder;

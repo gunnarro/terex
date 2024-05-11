@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.fragment.ProjectNewFragment"
+    tools:ignore="ExtraText">
+
+    <!-- hidden fields -->
+    <TextView
+        android:id="@+id/client_project_client_id"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:enabled="false"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/client_project_project_id"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:enabled="false"
+        android:visibility="invisible" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
+
+        <!-- horizontal date layout -->
+        <LinearLayout
+            android:id="@+id/client_project_date_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/client_project_created_date_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:enabled="false"
+                android:hint="@string/prompt_created_date">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/client_project_created_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/client_project_last_modified_date_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:enabled="false"
+                android:hint="@string/prompt_last_modified_date">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/client_project_last_modified_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:inputType="date" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/client_project_input_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/client_project_date_layout"
+            android:layout_margin="10dp"
+            android:baselineAligned="false"
+            android:orientation="vertical"
+            tools:ignore="UselessParent">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/client_project_name_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/lbl_project_name">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/client_project_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLength="50"
+                    android:text="" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/client_project_description_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/lbl_comment">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/client_project_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLength="50"
+                    android:text="" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/client_project_status_spinner_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/lbl_status">
+
+                <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                    android:id="@+id/client_project_status_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="false"
+                    android:clickable="true"
+                    android:importantForAutofill="no"
+                    android:inputType="none"
+                    tools:ignore="KeyboardInaccessibleWidget" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/timesheet_entry_register_buttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/client_project_input_layout"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/client_project_delete_btn"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:text="@string/btn_delete"
+                app:iconTint="@color/color_btn_bg_delete" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/client_project_cancel_btn"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:text="@string/btn_cancel"
+                app:iconTint="@color/color_btn_bg_cancel" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/client_project_save_btn"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/btn_add"
+                app:iconTint="@color/color_btn_bg_add" />
+        </LinearLayout>
+    </RelativeLayout>
+</FrameLayout>

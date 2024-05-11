@@ -234,37 +234,6 @@ public class ClientNewFragment extends BaseFragment implements View.OnClickListe
     }
 
     private boolean isInputDataValid() {
-        /*
-        boolean hasValidationError = true;
-        AutoCompleteTextView clientSpinner = requireView().findViewById(R.id.timesheet_new_client_spinner);
-        if (!hasText(clientSpinner.getText())) {
-            clientSpinner.setError(getString(R.string.lbl_required));
-            hasValidationError = false;
-        }
-        AutoCompleteTextView projectSpinner = requireView().findViewById(R.id.timesheet_new_project_spinner);
-        if (!hasText(projectSpinner.getText())) {
-            projectSpinner.setError(getString(R.string.lbl_required));
-            hasValidationError = false;
-        }
-        AutoCompleteTextView statusSpinner = requireView().findViewById(R.id.timesheet_new_status_spinner);
-        if (!hasText(statusSpinner.getText())) {
-            statusSpinner.setError(getString(R.string.lbl_required));
-            hasValidationError = false;
-        }
-        AutoCompleteTextView yearSpinner = requireView().findViewById(R.id.timesheet_new_year_spinner);
-        if (!hasText(yearSpinner.getText())) {
-            yearSpinner.setError(getString(R.string.lbl_required));
-            hasValidationError = false;
-        }
-        AutoCompleteTextView monthSpinner = requireView().findViewById(R.id.timesheet_new_month_spinner);
-        if (!hasText(monthSpinner.getText())) {
-            monthSpinner.setError(getString(R.string.lbl_required));
-            hasValidationError = false;
-        }
-        // simply check if the timesheet already exist
-        return hasValidationError;
-
-         */
         return true;
     }
 

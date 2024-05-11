@@ -27,8 +27,8 @@ public interface ProjectDao {
     @Query("SELECT * FROM project p WHERE p.id = :projectId")
     Project getProject(long projectId);
 
-    @Query("select * from project p where p.client_id = :clientId order by project_name")
-    LiveData<List<Project>> getAllProjects(Long clientId);
+    @Query("select * from project p where p.client_id = :clientId and p.project_status = :status  order by project_name")
+    LiveData<List<Project>> getProjectsLiveData(Long clientId, String status);
 
     @Query("select * from project p where p.client_id = :clientId and p.project_status = :status order by project_name")
     List<Project> getProjects(Long clientId, String status);

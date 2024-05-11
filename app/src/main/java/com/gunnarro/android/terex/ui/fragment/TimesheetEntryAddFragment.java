@@ -45,11 +45,6 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requireActivity().setTitle(R.string.title_register_work);
@@ -201,8 +196,8 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
         statusSpinner.setText(timesheetEntry.getStatus());
 
         // TODO implement me
-       // AutoCompleteTextView typeSpinner = view.findViewById(R.id.timesheet_entry_type_spinner);
-       // typeSpinner.setText(timesheetEntry.getType());
+        // AutoCompleteTextView typeSpinner = view.findViewById(R.id.timesheet_entry_type_spinner);
+        // typeSpinner.setText(timesheetEntry.getType());
 
         EditText hourlyRateView = view.findViewById(R.id.timesheet_entry_hourly_rate);
         hourlyRateView.setText(String.format("%s", timesheetEntry.getHourlyRate()));

@@ -1,16 +1,13 @@
 package com.gunnarro.android.terex.ui.view;
 
 import android.app.Application;
-import android.app.KeyguardManager;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Transformations;
 
 import com.gunnarro.android.terex.domain.dto.TimesheetDto;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
-import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
 import com.gunnarro.android.terex.service.TimesheetService;
 
 import java.util.List;

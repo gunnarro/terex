@@ -50,9 +50,6 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
     public static final String TIMESHEET_ACTION_DELETE = "timesheet_delete";
     public static final String TIMESHEET_ACTION_EDIT = "timesheet_edit";
     public static final String TIMESHEET_ACTION_VIEW = "timesheet_view";
-    public static final String CONSULTANT_BROKER_ID_KEY = "consultant_broker_id";
-    public static final String CONSULTANT_ID_KEY = "consultant_id";
-
     private TimesheetViewModel timesheetViewModel;
     private List<Integer> timesheetYears;
     private Integer selectedYear = LocalDate.now().getYear();
@@ -126,14 +123,6 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
         return view;
     }
 
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        //unregister listener here
-        //onBackPressedCallback.remove();
-    }
-
     private Bundle createTimesheetBundle(Long timesheetId, Integer year) {
         Timesheet timesheet = timesheetViewModel.getTimesheet(timesheetId);
         if (timesheet == null) {
@@ -173,14 +162,14 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
             } else if (TIMESHEET_ACTION_VIEW.equals(action)) {
                 // redirect to timesheet entry list fragment
                 Bundle bundle = new Bundle();
-                bundle.putLong(TimesheetListFragment.TIMESHEET_ID_KEY, timesheet.getId());
-                bundle.putBoolean(TimesheetListFragment.TIMESHEET_READ_ONLY_KEY, timesheet.isBilled());
+                bundle.putLong(TIMESHEET_ID_KEY, timesheet.getId());
+                bundle.putBoolean(TIMESHEET_READ_ONLY_KEY, timesheet.isBilled());
                 openTimesheetEntryListView(bundle);
             } else if (TIMESHEET_ACTION_EDIT.equals(action)) {
                 // redirect to timesheet entry list fragment
                 Bundle bundle = new Bundle();
-                bundle.putString(TimesheetListFragment.TIMESHEET_JSON_KEY, timesheetJson);
-                bundle.putBoolean(TimesheetListFragment.TIMESHEET_READ_ONLY_KEY, timesheet.isBilled());
+                bundle.putString(TIMESHEET_JSON_KEY, timesheetJson);
+                bundle.putBoolean(TIMESHEET_READ_ONLY_KEY, timesheet.isBilled());
                 openTimesheetDetailsView(bundle);
             } else {
                 Log.w(Utility.buildTag(getClass(), "handleTimesheetActions"), "unknown action: " + action);
@@ -269,8 +258,8 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
                 int pos = viewHolder.getAbsoluteAdapterPosition();
                 List<Timesheet> list = listLiveData.getValue();
                 Bundle bundle = new Bundle();
-                bundle.putLong(TimesheetListFragment.TIMESHEET_ID_KEY, list.get(pos).getId());
-                bundle.putBoolean(TimesheetListFragment.TIMESHEET_READ_ONLY_KEY, list.get(pos).isBilled());
+                bundle.putLong(TIMESHEET_ID_KEY, list.get(pos).getId());
+                bundle.putBoolean(TIMESHEET_READ_ONLY_KEY, list.get(pos).isBilled());
                 openTimesheetDetailsView(bundle);
             }
         };
@@ -293,9 +282,6 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
         Log.i(Utility.buildTag(getClass(), "enableSwipeToLeftAndDeleteItem"), "enabled swipe handler for delete timesheet list item");
     }
 
-    /**
-     * Pick up confirm dialog fragment events
-     */
     @Override
     public void onDialogAction(int actionCode, Long entityId) {
         if (actionCode == DialogActionListener.OK_ACTION) {
@@ -303,7 +289,7 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
             deleteTimesheet(entityId);
         } else {
             // dismiss, do nothing, the user canceled the operation
-            Log.d(Utility.buildTag(getClass(), "onDialogAction"), "delete sms backup file action cancelled by user");
+            Log.d(Utility.buildTag(getClass(), "onDialogAction"), "action cancelled by user");
         }
     }
 

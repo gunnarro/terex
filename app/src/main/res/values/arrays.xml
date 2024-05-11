@@ -2,6 +2,14 @@
 <resources>
 
     <!-- timesheet -->
+    <string-array name="project_statuses">
+        <item>Open</item>
+        <item>Active</item>
+        <item>Closed</item>
+    </string-array>
+
+
+    <!-- timesheet -->
     <string-array name="timesheet_statuses">
         <item>Open</item>
         <item>Billed</item>

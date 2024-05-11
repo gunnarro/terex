@@ -163,5 +163,7 @@
     <string name="msg_delete_client">verify delete client</string>
     <string name="info_client_saved_msg_format">saved client,orgNumber=%s,  orgName=%s</string>
     <string name="title_clients">Clients</string>
+    <string name="title_projects">Projects</string>
+    <string name="title_project_new">New Project</string>
 
 </resources>

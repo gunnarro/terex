@@ -109,11 +109,11 @@ class TimesheetMapperTest {
 
         Project project = TimesheetMapper.fromProjectDto(projectDto);
 
-        assertEquals(1, project.getId().intValue());
-        assertEquals(1001, project.getClientId().intValue());
-        assertEquals("gunnarro timesheet project", project.getName());
-        assertEquals("develop a timesheet app", project.getDescription());
-        assertEquals(Project.ProjectStatusEnum.ACTIVE.name(), project.getStatus());
+        assertEquals(projectDto.getId(), project.getId().intValue());
+        assertEquals(projectDto.getClientId(), project.getClientId().intValue());
+        assertEquals(projectDto.getName(), project.getName());
+        assertEquals(projectDto.getDescription(), project.getDescription());
+        assertEquals(projectDto.getStatus(), project.getStatus());
     }
 
     @Test

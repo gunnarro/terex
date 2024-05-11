@@ -318,3 +318,17 @@ z
 Japp/src/main/java/com/gunnarro/android/terex/ui/view/ClientViewHolder.java,0/a/0a3cd1c4dad2b8506997fed4a657bce32856de7c
 N
 app/debug/output-metadata.json,6/d/6d0d047f57b3ed56db47b6d89a6ec6080e4cb494
+â
+Yapp/src/main/java/com/gunnarro/android/terex/ui/fragment/ClientProjectAddAddFragment.java,2/2/223adb36a0a8ff5592d6e6ca8bb2d9e2841ab48b
+
+Oapp/src/main/java/com/gunnarro/android/terex/ui/adapter/ProjectListAdapter.java,6/6/668960098ba251c32e2c42ff8f6c3058d762943d
+{
+Kapp/src/main/java/com/gunnarro/android/terex/ui/view/ProjectViewHolder.java,a/1/a18efb743c3be784d2f75b32363873476d5b9d58
+Å
+Qapp/src/main/java/com/gunnarro/android/terex/ui/fragment/ProjectListFragment.java,e/7/e71782502237647a89fe08ec8680f51e14269c55
+z
+Japp/src/main/java/com/gunnarro/android/terex/ui/view/ProjectViewModel.java,5/a/5aa5ef4746094b4425c004b1bca9142675f6301d
+É
+Sapp/src/main/java/com/gunnarro/android/terex/ui/fragment/ProjectAddAddFragment.java,7/1/71cb10afb8cf01a45925a5f8630965907cc5ccb2
+Ä
+Papp/src/main/java/com/gunnarro/android/terex/ui/fragment/ProjectNewFragment.java,c/a/ca1a80d312be7b44765420b7bcc98c914544389b

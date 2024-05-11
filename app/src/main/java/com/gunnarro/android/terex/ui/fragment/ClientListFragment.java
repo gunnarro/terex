@@ -12,8 +12,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.gunnarro.android.terex.R;
+import com.gunnarro.android.terex.domain.entity.Client;
+import com.gunnarro.android.terex.exception.InputValidationException;
+import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.ui.adapter.ClientListAdapter;
 import com.gunnarro.android.terex.ui.listener.ListOnItemClickListener;
 import com.gunnarro.android.terex.ui.view.ClientViewModel;
@@ -23,10 +27,14 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class ClientListFragment extends BaseFragment implements ListOnItemClickListener {
-    public static final String CLIENT_REQUEST_KEY = "300";
+    public static final String CLIENT_REQUEST_KEY = "400";
     public static final String CLIENT_ID_KEY = "client_id";
+    public static final String CLIENT_JSON_KEY = "client_json";
     public static final String CLIENT_ACTION_KEY = "client_action";
     public static final String CLIENT_ACTION_VIEW = "client_view";
+    public static final String CLIENT_ACTION_SAVE = "client_save";
+    public static final String CLIENT_ACTION_EDIT = "client_edit";
+    public static final String CLIENT_ACTION_DELETE = "client_delete";
     private ClientViewModel clientViewModel;
 
     @Override
@@ -71,13 +79,83 @@ public class ClientListFragment extends BaseFragment implements ListOnItemClickL
         if (bundle == null) {
             return;
         }
-        if (bundle.getLong(CLIENT_ID_KEY) > 0) {
-          //  navigateTo(R.id.nav_from_client_list_to_client_details, bundle);
+        if (bundle.getString(CLIENT_ACTION_KEY) != null) {
+            handleClientActions(bundle.getString(CLIENT_JSON_KEY), bundle.getString(CLIENT_ACTION_KEY));
+        } else {
+            Log.w("unknown action!", "unknown action: " + bundle);
         }
     }
 
+    private void handleClientActions(String clientJson, String action) {
+        Log.d(Utility.buildTag(getClass(), "handleClientActions"), String.format("action: %s, client: %s", action, clientJson));
+        try {
+            Client client = Utility.gsonMapper().fromJson(clientJson, Client.class);
+            if (CLIENT_ACTION_SAVE.equals(action)) {
+                //clientViewModel.saveClient(client);
+                showSnackbar(String.format("saved %s", client.getName()), R.color.color_snackbar_text_add);
+            } else if (CLIENT_ACTION_DELETE.equals(action)) {
+                if (client.getStatus().equals("ACTIVE")) {
+                    showInfoDialog("Info", "Can not delete client with status ACTIVE");
+                } else {
+                    confirmDeleteClientDialog(getString(R.string.msg_delete_timesheet), getString(R.string.msg_confirm_delete), client.getId());
+                }
+            } else if (CLIENT_ACTION_VIEW.equals(action)) {
+                // redirect to timesheet entry list fragment
+                Bundle bundle = new Bundle();
+                bundle.putLong(CLIENT_ID_KEY, client.getId());
+                //bundle.putBoolean(CLIENT_READ_ONLY_KEY, timesheet.isBilled());
+                openClientProjectListView(bundle);
+            } else if (CLIENT_ACTION_EDIT.equals(action)) {
+                // redirect to timesheet entry list fragment
+                Bundle bundle = new Bundle();
+                bundle.putString(CLIENT_JSON_KEY, clientJson);
+                //bundle.putBoolean(CLIENT_READ_ONLY_KEY, timesheet.isBilled());
+                openClientDetailsView(bundle);
+            } else {
+                Log.w(Utility.buildTag(getClass(), "handleClientActions"), "unknown action: " + action);
+                showInfoDialog("Info", String.format("Application error!%s Unknown action: %s%s Please report.", action, System.lineSeparator(), System.lineSeparator()));
+            }
+        } catch (TerexApplicationException | InputValidationException ex) {
+            showInfoDialog("Info", String.format("%s", ex.getMessage()));
+        } catch (Exception e) {
+            showInfoDialog("Error", String.format("%s", e.getCause()));
+        }
+    }
+
+    private void openClientDetailsView(Bundle bundle) {
+        navigateTo(R.id.nav_from_client_list_to_client_details, bundle);
+    }
+
+    private void openClientProjectListView(Bundle bundle) {
+        navigateTo(R.id.nav_from_client_list_to_project_list, bundle);
+    }
+
+    /*
+    * catch table item click
+     */
     @Override
     public void onItemClick(Bundle bundle) {
-      //  getNavController().navigate(R.id.nav_from_client_list_to_client_details, bundle);
+       getNavController().navigate(R.id.nav_from_client_list_to_project_list, bundle);
+    }
+
+    private void deleteClient(Long clientId) {
+        try {
+           // Client client = clientViewModel.getClient(clientId);
+           // clientViewModel.deleteClient(client);
+            showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_delete_msg_format), "not implemented"), R.color.color_snackbar_text_delete);
+        } catch (TerexApplicationException | InputValidationException e) {
+            showInfoDialog("Info", e.getMessage());
+        }
+    }
+
+    private void confirmDeleteClientDialog(final String title, final String message, final Long clientId) {
+        new MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(R.string.btn_ok, (dialogInterface, i) -> deleteClient(clientId))
+                .setNeutralButton(R.string.btn_cancel, (dialogInterface, i) -> {
+                    // nothing to do
+                })
+                .show();
     }
 }

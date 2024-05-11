@@ -1,7 +1,6 @@
 package com.gunnarro.android.terex.ui.adapter;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -12,11 +11,9 @@ import androidx.recyclerview.widget.ListAdapter;
 
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
-import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.ui.fragment.TimesheetEntryListFragment;
 import com.gunnarro.android.terex.ui.listener.ListOnItemClickListener;
 import com.gunnarro.android.terex.ui.view.TimesheetEntryViewHolder;
-import com.gunnarro.android.terex.utility.Utility;
 
 public class TimesheetEntryListAdapter extends ListAdapter<TimesheetEntry, TimesheetEntryViewHolder> implements AdapterView.OnItemClickListener {
 

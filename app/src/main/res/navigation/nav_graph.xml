@@ -45,6 +45,15 @@
                 app:argType="long"
                 app:nullable="false" />
         </action>
+        <action
+            android:id="@+id/nav_from_client_list_to_project_list"
+            app:destination="@id/project_list_fragment">
+            <argument
+                android:name="clientId"
+                android:defaultValue="0L"
+                app:argType="long"
+                app:nullable="false" />
+        </action>
     </fragment>
 
     <fragment
@@ -62,6 +71,33 @@
         <action
             android:id="@+id/nav_from_client_new_to_client_list"
             app:destination="@id/client_list_fragment" />
+    </fragment>
+
+    <!-- project navigation -->
+    <fragment
+        android:id="@+id/project_list_fragment"
+        android:name="com.gunnarro.android.terex.ui.fragment.ProjectListFragment"
+        android:label="project_list_fragment"
+        tools:layout="@layout/fragment_recycler_project_list">
+        <action
+            android:id="@+id/nav_from_project_list_to_project_new"
+            app:destination="@id/project_new_fragment">
+            <argument
+                android:name="clientId"
+                android:defaultValue="0L"
+                app:argType="long"
+                app:nullable="false" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/project_new_fragment"
+        android:name="com.gunnarro.android.terex.ui.fragment.ProjectNewFragment"
+        android:label="project_new_fragment"
+        tools:layout="@layout/fragment_project_new">
+        <action
+            android:id="@+id/nav_from_project_new_to_project_list"
+            app:destination="@id/project_list_fragment" />
     </fragment>
 
     <!-- timesheet navigation -->

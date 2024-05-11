@@ -3,6 +3,8 @@ package com.gunnarro.android.terex.service;
 
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
+
 import com.gunnarro.android.terex.domain.dto.ProjectDto;
 import com.gunnarro.android.terex.domain.entity.Project;
 import com.gunnarro.android.terex.domain.entity.ProjectWithTimesheet;
@@ -49,8 +51,8 @@ public class ProjectService {
         }
     }
 
-    public List<ProjectDto> getProjects() {
-        return TimesheetMapper.toProjectDtoList(projectRepository.getProjects(1l, ProjectRepository.ProjectStatusEnum.ACTIVE.name()));
+    public LiveData<List<Project>> getProjects(Long clientId, ProjectRepository.ProjectStatusEnum status) {
+        return projectRepository.getProjectsLiveData(clientId, status.name());
     }
 
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures

@@ -17,13 +17,11 @@ public class TimesheetViewHolder extends RecyclerView.ViewHolder {
     private static final int TITLE_MAX_LENGTH = 20;
     private final TextView timesheetLineHeaderView1;
     private final TextView timesheetLineHeaderView2;
-
     private final TextView timesheetLine1StatusView;
     private final TextView timesheetLine1LabelView;
     private final TextView timesheetLine1ValueView;
     private final TextView timesheetLine2LabelView;
     private final TextView timesheetLine2ValueView;
-
 
     private TimesheetViewHolder(View itemView) {
         super(itemView);

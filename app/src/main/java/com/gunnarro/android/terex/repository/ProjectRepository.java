@@ -1,8 +1,8 @@
 package com.gunnarro.android.terex.repository;
 
-import android.content.Context;
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Transaction;
 
 import com.gunnarro.android.terex.config.AppDatabase;
@@ -41,7 +41,6 @@ public class ProjectRepository {
         projectDao = AppDatabase.getDatabase().projectDao();
     }
 
-
     @Transaction
     public ProjectWithTimesheet getProjectWithTimesheet(Long projectId) {
         try {
@@ -56,6 +55,10 @@ public class ProjectRepository {
         }
     }
 
+    public LiveData<List<Project>> getProjectsLiveData(Long clientId, String status) {
+        return projectDao.getProjectsLiveData(clientId, status);
+    }
+
     public List<Project> getProjects(Long clientId, String status) {
         try {
             CompletionService<List<Project>> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
@@ -68,7 +71,6 @@ public class ProjectRepository {
             throw new TerexApplicationException("error getting projects!", "50050", e);
         }
     }
-
 
     public Project getProject(Long projectId) {
         try {

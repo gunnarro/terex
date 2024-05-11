@@ -48,8 +48,8 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class TimesheetNewFragment extends BaseFragment implements View.OnClickListener {
 
     private TimesheetService timesheetService;
-   // private ConsultantBrokerService consultantBrokerService;
     private ClientService clientService;
+
     @Inject
     public TimesheetNewFragment() {
     }
@@ -59,7 +59,7 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
         super.onCreate(savedInstanceState);
         requireActivity().setTitle(R.string.title_timesheet);
         timesheetService = new TimesheetService();
-      //  consultantBrokerService = new ConsultantBrokerService();
+        //  consultantBrokerService = new ConsultantBrokerService();
         clientService = new ClientService();
     }
 
@@ -81,7 +81,7 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
         //String[] projects = consultantBrokerDto != null ? consultantBrokerDto.getProjects().stream().map(ProjectDto::getName).toArray(String[]::new) : new String[]{};
 
         ClientDto clientDto = clientService.getClient(1L);
-        String[] clients = new String[] {clientDto.getName()};
+        String[] clients = new String[]{clientDto.getName()};
         String[] projects = clientDto.getProjectList().stream().map(ProjectDto::getName).toArray(String[]::new);
 
         Timesheet timesheet = Timesheet.createDefault(clients.length > 0 ? clients[0] : null, projects.length > 0 ? projects[0] : null, LocalDate.now().getYear(), LocalDate.now().getMonthValue());
@@ -235,8 +235,8 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
                 consultantBrokerService.saveConsultantBroker(consultantBrokerDto);
             }
             */
-          //  timesheet.getClientName();
-          //  timesheet.getProjectCode();
+            //  timesheet.getClientName();
+            //  timesheet.getProjectCode();
             timesheetService.saveTimesheet(timesheet);
             showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_saved_msg_format), timesheet.getTimesheetRef(), timesheet.getYear() + "-" + timesheet.getMonth()), R.color.color_snackbar_text_add);
             navigateTo(R.id.nav_from_timesheet_details_to_timesheet_list, null);

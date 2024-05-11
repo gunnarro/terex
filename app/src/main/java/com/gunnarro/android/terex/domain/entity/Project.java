@@ -10,6 +10,8 @@ import com.gunnarro.android.terex.domain.converter.LocalDateTimeConverter;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
@@ -69,5 +71,18 @@ public class Project extends BaseEntity {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Project project = (Project) o;
+        return Objects.equals(clientId, project.clientId) && Objects.equals(name, project.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(clientId, name);
     }
 }
