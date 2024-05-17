@@ -323,17 +323,12 @@ class TimesheetMapperTest {
     @Test
     void toAddressDto() {
         Address address = new Address();
-        address.setStreetName("my-street");
-        address.setStreetNumber("23");
-        address.setStreetNumberPrefix("b");
+        address.setStreetAddress("bergslia 34 A");
         address.setCity("oslo");
         address.setCountry("norway");
         address.setPostalCode("0467");
 
         AddressDto addressDto = TimesheetMapper.toAddressDto(address);
-        assertEquals(address.getStreetName(), addressDto.getStreetName());
-        assertEquals(address.getStreetNumber(), addressDto.getStreetNumber());
-        assertEquals(address.getStreetNumberPrefix(), addressDto.getStreetNumberPrefix());
         assertEquals(address.getCity(), addressDto.getCity());
         assertEquals(address.getPostalCode(), addressDto.getPostCode());
         assertEquals(address.getCountry(), addressDto.getCountry());

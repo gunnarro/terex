@@ -3,6 +3,7 @@ package com.gunnarro.android.terex.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -43,7 +44,8 @@ class OrganizationRepositoryTest {
     void saveOrganization_update() {
         Organization organization = createOrganization(100L);
         Organization existingOrganization = createOrganization(100L);
-        when(organizationDaoMock.findOrganization(anyString())).thenReturn(existingOrganization);
+
+        when(organizationDaoMock.getOrganization(anyLong())).thenReturn(existingOrganization);
 
         Long organizationId = organizationRepository.save(organization);
         assertEquals(100L, organizationId);
@@ -54,7 +56,7 @@ class OrganizationRepositoryTest {
         if (id != null) {
             organization.setId(id);
         }
-        organization.setName("gunnarro");
+        organization.setName("gunnarro as");
         organization.setOrganizationNumber("123456789");
         organization.setBankAccountNumber("23232323");
         organization.setBusinessAddressId(10L);

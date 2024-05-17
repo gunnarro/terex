@@ -3,7 +3,7 @@ package com.gunnarro.android.terex.domain.dto;
 public class BusinessAddressDto {
 
     private Long id;
-    private String address;
+    private String streetAddress;
     private String postalCode;
     private String city;
     private String country;
@@ -17,12 +17,12 @@ public class BusinessAddressDto {
         this.id = id;
     }
 
-    public String getAddress() {
-        return address;
+    public String getStreetAddress() {
+        return streetAddress;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setStreetAddress(String streetAddress) {
+        this.streetAddress = streetAddress;
     }
 
     public String getPostalCode() {

@@ -86,7 +86,7 @@ class OrganizationServiceTest {
         contectPersonDto.setLastName("hansen");
 
         BusinessAddressDto organizationAddress = new BusinessAddressDto();
-        organizationAddress.setAddress("my-street 34");
+        organizationAddress.setStreetAddress("my-street 34");
         organizationAddress.setCity("oslo");
         organizationAddress.setCountry("norway");
         organizationAddress.setPostalCode("0467");

@@ -200,7 +200,7 @@ public class TimesheetMapper {
         clientDto.setName(clientDetails.getClient().getName());
         clientDto.setStatus(clientDetails.getClient().getStatus());
         clientDto.setProjectList(toProjectDtoList(clientDetails.getProjectList()));
-        //clientDto.setOrganizationDto(toOrganizationDto(clientDetails.getOrganizationDetails()));
+      //  clientDto.setOrganizationDto(toOrganizationDto(clientDetails.getOrganizationDetails()));
         clientDto.setCntactPersonDto(toPersonDto(clientDetails.getContactPerson()));
         return clientDto;
     }
@@ -209,7 +209,7 @@ public class TimesheetMapper {
         Client client = new Client();
         client.setId(clientDto.getId());
         client.setName(clientDto.getName());
-        client.setOrganizationId(clientDto.getOrganizationDto().getId());
+        client.setOrganizationId(clientDto.getOrganizationDto() != null ? clientDto.getOrganizationDto().getId() : null);
         client.setStatus(clientDto.getStatus());
         client.setContactPersonId(clientDto.getCntactPersonDto() != null ? clientDto.getCntactPersonDto().getId() : null);
         return client;
@@ -225,6 +225,7 @@ public class TimesheetMapper {
         }
         Organization organization = new Organization();
         organization.setId(organizationDto.getId());
+        //organization.setUuid(organizationDto.getUuid());
         organization.setName(organizationDto.getName());
         organization.setOrganizationNumber(organizationDto.getOrganizationNumber());
         organization.setOrganizationIndustryType(organizationDto.getIndustryType());
@@ -241,6 +242,7 @@ public class TimesheetMapper {
         }
         OrganizationDto organizationDto = new OrganizationDto();
         organizationDto.setId(organization.getId());
+        //organizationDto.setUuid(organization.getUuid());
         organizationDto.setName(organization.getName());
         organizationDto.setOrganizationNumber(organization.getOrganizationNumber());
         organizationDto.setIndustryType(organization.getOrganizationIndustryType());
@@ -312,9 +314,7 @@ public class TimesheetMapper {
         addressDto.setCountry(address.getCountry());
         addressDto.setCountryCode(address.getCountryCode());
         addressDto.setPostCode(address.getPostalCode());
-        addressDto.setStreetName(address.getStreetName());
-        addressDto.setStreetNumber(address.getStreetNumber());
-        addressDto.setStreetNumberPrefix(address.getStreetNumberPrefix());
+        addressDto.setStreetAddress(address.getStreetAddress());
         return addressDto;
     }
 
@@ -324,11 +324,11 @@ public class TimesheetMapper {
         }
         BusinessAddressDto businessAddressDto = new BusinessAddressDto();
         businessAddressDto.setId(address.getId());
+        businessAddressDto.setStreetAddress(address.getStreetAddress());
         businessAddressDto.setCity(address.getCity());
         businessAddressDto.setCountry(address.getCountry());
         businessAddressDto.setCountryCode(address.getCountryCode());
         businessAddressDto.setPostalCode(address.getPostalCode());
-        businessAddressDto.setAddress(address.getStreetName() + address.getStreetNumber() + address.getStreetNumberPrefix());
         return businessAddressDto;
     }
 
@@ -338,11 +338,11 @@ public class TimesheetMapper {
         }
         Address businessAddress = new Address();
         businessAddress.setId(businessAddressDto.getId());
+        businessAddress.setStreetAddress(businessAddressDto.getStreetAddress());
         businessAddress.setCity(businessAddressDto.getCity());
         businessAddress.setCountry(businessAddressDto.getCountry());
         businessAddress.setCountryCode(businessAddressDto.getCountryCode());
         businessAddress.setPostalCode(businessAddressDto.getPostalCode());
-        businessAddress.setStreetName(businessAddressDto.getAddress());
         return businessAddress;
     }
 }

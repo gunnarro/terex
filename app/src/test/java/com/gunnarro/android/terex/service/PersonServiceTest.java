@@ -99,7 +99,7 @@ class PersonServiceTest {
         personDto.setContactInfo(contactInfoDto);
 
         AddressDto addressDto = new AddressDto();
-        addressDto.setStreetName("my-street 45");
+        addressDto.setStreetAddress("my-street 45");
         personDto.setAddress(addressDto);
         return personDto;
     }

@@ -8,6 +8,8 @@ import androidx.room.TypeConverters;
 import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
 import com.gunnarro.android.terex.domain.converter.LocalDateTimeConverter;
 
+import java.util.Objects;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,15 +17,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @TypeConverters({LocalDateConverter.class, LocalDateTimeConverter.class})
-@Entity(tableName = "address", indices = {@Index(value = {"street_name", "street_number", "street_number_prefix"},
+@Entity(tableName = "address", indices = {@Index(value = {"street_address"},
         unique = true)})
 public class Address extends BaseEntity {
-    @ColumnInfo(name = "street_name")
-    private String streetName;
-    @ColumnInfo(name = "street_number")
-    private String streetNumber;
-    @ColumnInfo(name = "street_number_prefix")
-    private String streetNumberPrefix;
+
+    @ColumnInfo(name = "street_address")
+    private String streetAddress;
     /**
      * norwegian postal codes, which are 4-digit codes.
      */
@@ -36,28 +35,12 @@ public class Address extends BaseEntity {
     @ColumnInfo(name = "country_code")
     private String countryCode;
 
-    public String getStreetName() {
-        return streetName;
+    public String getStreetAddress() {
+        return streetAddress;
     }
 
-    public void setStreetName(String streetName) {
-        this.streetName = streetName;
-    }
-
-    public String getStreetNumber() {
-        return streetNumber;
-    }
-
-    public void setStreetNumber(String streetNumber) {
-        this.streetNumber = streetNumber;
-    }
-
-    public String getStreetNumberPrefix() {
-        return streetNumberPrefix;
-    }
-
-    public void setStreetNumberPrefix(String streetNumberPrefix) {
-        this.streetNumberPrefix = streetNumberPrefix;
+    public void setStreetAddress(String streetAddress) {
+        this.streetAddress = streetAddress;
     }
 
     public String getPostalCode() {
@@ -90,5 +73,31 @@ public class Address extends BaseEntity {
 
     public void setCountryCode(String countryCode) {
         this.countryCode = countryCode;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Address address = (Address) o;
+        return Objects.equals(streetAddress, address.streetAddress);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(streetAddress);
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Address{");
+        sb.append("streetAddress='").append(streetAddress).append('\'');
+        sb.append(", postalCode='").append(postalCode).append('\'');
+        sb.append(", city='").append(city).append('\'');
+        sb.append(", country='").append(country).append('\'');
+        sb.append(", countryCode='").append(countryCode).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 }

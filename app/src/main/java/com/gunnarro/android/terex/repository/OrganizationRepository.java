@@ -3,6 +3,7 @@ package com.gunnarro.android.terex.repository;
 import android.util.Log;
 
 import com.gunnarro.android.terex.config.AppDatabase;
+import com.gunnarro.android.terex.domain.entity.Client;
 import com.gunnarro.android.terex.domain.entity.Organization;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 
@@ -54,6 +55,7 @@ public class OrganizationRepository {
     }
 
     public Organization findOrganization(String organizationName) {
+        Log.d("findOrganization", String.format("find by org name: %s", organizationName));
         try {
             CompletionService<Organization> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
             service.submit(() -> organizationDao.findOrganization(organizationName));
@@ -69,7 +71,7 @@ public class OrganizationRepository {
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures
     // that you're not doing any long running operations on the main thread, blocking the UI.
     public Long insert(Organization organization) throws InterruptedException, ExecutionException {
-        Log.d("insert", "organization: " + organization);
+        Log.d("insertOrganization", String.format("organization: %s", organization));
         CompletionService<Long> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
         service.submit(() -> organizationDao.insert(organization));
         Future<Long> future = service.take();
@@ -77,7 +79,7 @@ public class OrganizationRepository {
     }
 
     public Integer update(Organization organization) throws InterruptedException, ExecutionException {
-        Log.d("update", "organization: " + organization);
+        Log.d("updateOrganization", String.format("organization: %s", organization));
         CompletionService<Integer> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
         service.submit(() -> organizationDao.update(organization));
         Future<Integer> future = service.take();
@@ -88,21 +90,32 @@ public class OrganizationRepository {
     // that you're not doing any long running operations on the main thread, blocking the UI.
     public Long save(@NotNull final Organization organization) {
         try {
-            Organization organizationExisting = findOrganization(organization.getName());
-            Log.d("save organization", String.format("%s", organizationExisting));
+            Organization organizationExisting;
+            if (organization.getId() == null) {
+                organizationExisting = findOrganization(organization.getName());
+            } else {
+                organizationExisting = getOrganization(organization.getId());
+            }
+            Log.d("saveOrganization", String.format("existing org: %s", organizationExisting));
+            // only check for new organizations that do not have got an id yet.
+            if (organization.getId() == null) {
+                organizationExisting = findOrganization(organization.getName());
+            }
+
+            Log.d("saveOrganization", String.format("existing org: %s", organizationExisting));
             Long orgId;
             if (organizationExisting == null) {
                 organization.setCreatedDate(LocalDateTime.now());
                 organization.setLastModifiedDate(LocalDateTime.now());
                 orgId = insert(organization);
-                Log.d("", "inserted new organization: " + orgId + " - " + organization.getName());
+                Log.d("saveOrganization", String.format("inserted new organization: %s - %s ", orgId, organization.getName()));
             } else {
                 organization.setId(organizationExisting.getId());
                 organization.setCreatedDate(organizationExisting.getCreatedDate());
                 organization.setLastModifiedDate(LocalDateTime.now());
                 update(organization);
                 orgId = organization.getId();
-                Log.d("", "updated organization: " + orgId + " - " + organization.getName());
+                Log.d("saveOrganization", String.format("updated organization: %s - %s", orgId, organization.getName()));
             }
             return orgId;
         } catch (Exception e) {

@@ -32,7 +32,7 @@ public class BregMapper {
 
         StringJoiner address = new StringJoiner(",");
         enhet.getForretningsadresse().getAdresse().forEach(address::add);
-        businessAddressDto.setAddress(address.toString());
+        businessAddressDto.setStreetAddress(address.toString());
 
         businessAddressDto.setCity(enhet.getForretningsadresse().getKommune());
         businessAddressDto.setPostalCode(enhet.getForretningsadresse().getPostnummer());

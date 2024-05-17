@@ -1,7 +1,7 @@
 -- update address table data
 DELETE FROM address WHERE id > 0
-INSERT INTO address (id, uuid, created_date, last_modified_date, street_name, street_number, street_number_prefix, postal_code, city, country, country_code) VALUES (1, '', current_timestamp, current_timestamp, 'Stavangergata', '35', null, '0467', 'Oslo', 'Norge', 'NO' )
-INSERT INTO address (id, uuid, created_date, last_modified_date, street_name, street_number, street_number_prefix, postal_code, city, country, country_code) VALUES (2, '', current_timestamp, current_timestamp, 'Grensen', '16', null, '0159', 'Oslo', 'Norge', 'NO' )
+INSERT INTO address (id, uuid, created_date, last_modified_date, street_address, postal_code, city, country, country_code) VALUES (1, '', current_timestamp, current_timestamp, 'Stavangergata 35', '0467', 'Oslo', 'Norge', 'NO' )
+INSERT INTO address (id, uuid, created_date, last_modified_date, street_address, postal_code, city, country, country_code) VALUES (2, '', current_timestamp, current_timestamp, 'Grensen 16', '0159', 'Oslo', 'Norge', 'NO' )
 
 -- update contact info table data
 DELETE FROM contact_info WHERE id > 0

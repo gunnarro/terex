@@ -134,7 +134,7 @@ public class ClientNewFragment extends BaseFragment implements View.OnClickListe
         }
         ((TextView) view.findViewById(R.id.client_new_org_name)).setText(organizationDto.getName());
         ((TextView) view.findViewById(R.id.client_new_org_number)).setText(organizationDto.getOrganizationNumber());
-        ((TextView) view.findViewById(R.id.client_new_org_street_name)).setText(organizationDto.getBusinessAddress().getAddress());
+        ((TextView) view.findViewById(R.id.client_new_org_street_name)).setText(organizationDto.getBusinessAddress().getStreetAddress());
         ((TextView) view.findViewById(R.id.client_new_org_postal_code)).setText(organizationDto.getBusinessAddress().getPostalCode());
         ((TextView) view.findViewById(R.id.client_new_org_city_name)).setText(organizationDto.getBusinessAddress().getCity());
         ((TextView) view.findViewById(R.id.client_new_org_country)).setText(organizationDto.getBusinessAddress().getCountry());
@@ -147,7 +147,7 @@ public class ClientNewFragment extends BaseFragment implements View.OnClickListe
         emptyOrg.setName("");
         BusinessAddressDto emptyAddr = new BusinessAddressDto();
         emptyAddr.setId(null);
-        emptyAddr.setAddress("");
+        emptyAddr.setStreetAddress("");
         emptyAddr.setCity("");
         emptyAddr.setPostalCode("");
         emptyAddr.setCountry("");
@@ -205,7 +205,7 @@ public class ClientNewFragment extends BaseFragment implements View.OnClickListe
         if (businessAddrIdView.getText() != null && !businessAddrIdView.getText().toString().isBlank()) {
             businessAddressDto.setId(Long.parseLong(businessAddrIdView.getText().toString()));
         }
-        businessAddressDto.setAddress(((TextView) requireView().findViewById(R.id.client_new_org_street_name)).getText().toString());
+        businessAddressDto.setStreetAddress(((TextView) requireView().findViewById(R.id.client_new_org_street_name)).getText().toString());
         businessAddressDto.setPostalCode(((TextView) requireView().findViewById(R.id.client_new_org_postal_code)).getText().toString());
         businessAddressDto.setCity(((TextView) requireView().findViewById(R.id.client_new_org_city_name)).getText().toString());
         businessAddressDto.setCountry(((TextView) requireView().findViewById(R.id.client_new_org_country)).getText().toString());

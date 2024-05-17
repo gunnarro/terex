@@ -43,12 +43,15 @@ public class OrganizationService {
 
     public OrganizationDto getOrganization(Long organizationId) {
         Organization organization = organizationRepository.getOrganization(organizationId);
-        Address businessAddress = addressRepository.getAddress(organization.getBusinessAddressId());
-        OrganizationDto organizationDto = TimesheetMapper.toOrganizationDto(organizationRepository.getOrganization(organizationId));
-        PersonDto contactPersonDto = personService.getPerson(organization.getContactInfoId());
+        OrganizationDto organizationDto = null;
+        if (organization != null ) {
+            Address businessAddress = addressRepository.getAddress(organization.getBusinessAddressId());
+            organizationDto = TimesheetMapper.toOrganizationDto(organizationRepository.getOrganization(organizationId));
+            PersonDto contactPersonDto = personService.getPerson(organization.getContactInfoId());
 
-        organizationDto.setBusinessAddress(TimesheetMapper.toABusinessAddressDto(businessAddress));
-        organizationDto.setContactPerson(contactPersonDto);
+            organizationDto.setBusinessAddress(TimesheetMapper.toABusinessAddressDto(businessAddress));
+            organizationDto.setContactPerson(contactPersonDto);
+        }
         return organizationDto;
     }
 
@@ -58,8 +61,11 @@ public class OrganizationService {
 
     public Long save(@NotNull final OrganizationDto organizationDto) {
         Organization organization = TimesheetMapper.fromOrganizationDto(organizationDto);
-        Long addressId = addressRepository.save(TimesheetMapper.fromBusinessAddressDto(organizationDto.getBusinessAddress()));
-        organization.setBusinessAddressId(addressId);
+        if (organizationDto.getBusinessAddress() != null) {
+            Long addressId = addressRepository.save(TimesheetMapper.fromBusinessAddressDto(organizationDto.getBusinessAddress()));
+            organization.setBusinessAddressId(addressId);
+        }
+
         if (organization.getContactInfoId() != null) {
             Long contactInfoId = contactInfoService.save(organizationDto.getContactPerson().getContactInfo());
             organization.setContactInfoId(contactInfoId);
@@ -67,33 +73,5 @@ public class OrganizationService {
         return organizationRepository.save(organization);
     }
 
-    // You must call this on a non-UI thread or your app will throw an exception. Room ensures
-    // that you're not doing any long running operations on the main thread, blocking the UI.
-    /*
-    public Long saveDeprecated(@NotNull final OrganizationDto organizationDto) {
-        Organization organization = TimesheetMapper.fromOrganizationDto(organizationDto);
-        try {
-            Organization organizationExisting = organizationRepository.findOrganization(organization.getName());
-            Log.d("save organization", String.format("%s", organizationExisting));
-            Long id;
-            if (organizationExisting == null) {
-                organization.setCreatedDate(LocalDateTime.now());
-                organization.setLastModifiedDate(LocalDateTime.now());
-                id = organizationRepository.insert(organization);
-                Log.d("", "inserted new organization: " + id + " - " + organization.getName());
-            } else {
-                organization.setId(organizationExisting.getId());
-                organization.setCreatedDate(organizationExisting.getCreatedDate());
-                organization.setLastModifiedDate(LocalDateTime.now());
-                organizationRepository.update(organization);
-                id = organization.getId();
-                Log.d("", "updated organization: " + id + " - " + organization.getName());
-            }
-            return id;
-        } catch (Exception e) {
-            // Something crashed, therefore restore interrupted state before leaving.
-            Thread.currentThread().interrupt();
-            throw new TerexApplicationException("Error saving organization! " + e.getMessage(), "50050", e.getCause());
-        }
-    }*/
+
 }

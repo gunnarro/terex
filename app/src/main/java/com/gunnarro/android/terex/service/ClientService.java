@@ -94,14 +94,15 @@ public class ClientService {
                 id = clientRepository.insert(client);
             } else {
                 client.setCreatedDate(clientExisting.getCreatedDate());
-                client.setStatus(clientExisting.getStatus());
-                client.setOrganizationId(clientExisting.getOrganizationId());
+                client.setStatus(clientDto.getStatus());
+                //client.setOrganizationId(clientExisting.getOrganizationId());
                 clientRepository.update(client);
                 id = clientExisting.getId();
             }
             return id;
         } catch (Exception e) {
             // Something crashed, therefore restore interrupted state before leaving.
+            e.printStackTrace();
             Thread.currentThread().interrupt();
             throw new TerexApplicationException("Error saving client!" + e.getMessage(), "50050", e.getCause());
         }

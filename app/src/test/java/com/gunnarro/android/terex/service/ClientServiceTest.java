@@ -140,7 +140,7 @@ class ClientServiceTest {
         contectPersonDto.setFullName("ole hansen");
 
         BusinessAddressDto organizationAddress = new BusinessAddressDto();
-        organizationAddress.setAddress("my-street 120 e");
+        organizationAddress.setStreetAddress("my-street 120 e");
 
         organizationAddress.setCity("oslo");
         organizationAddress.setCountry("norway");

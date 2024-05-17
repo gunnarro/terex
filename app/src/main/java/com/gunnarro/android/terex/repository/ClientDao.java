@@ -13,15 +13,15 @@ import com.gunnarro.android.terex.domain.entity.Client;
 
 import java.util.List;
 
+/**
+ * NB! Use transactions if method return a aggregate object
+ */
 @Dao
 public interface ClientDao {
 
     @Query("SELECT * FROM client ORDER BY name ASC")
     LiveData<List<Client>> getAllClients();
 
-    /**
-     * use transactions since this method return a aggregate object
-     */
     @Transaction
     @Query("SELECT * FROM client WHERE id = :clientId")
     Client getClient(Long clientId);

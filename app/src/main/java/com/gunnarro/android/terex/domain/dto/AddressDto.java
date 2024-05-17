@@ -3,9 +3,7 @@ package com.gunnarro.android.terex.domain.dto;
 public class AddressDto {
 
     private Long id;
-    private String streetName;
-    private String streetNumber;
-    private String streetNumberPrefix;
+    private String streetAddress;
     private String postCode;
     private String city;
     private String country;
@@ -19,28 +17,12 @@ public class AddressDto {
         this.id = id;
     }
 
-    public String getStreetName() {
-        return streetName;
+    public String getStreetAddress() {
+        return streetAddress;
     }
 
-    public void setStreetName(String streetName) {
-        this.streetName = streetName;
-    }
-
-    public String getStreetNumber() {
-        return streetNumber;
-    }
-
-    public void setStreetNumber(String streetNumber) {
-        this.streetNumber = streetNumber;
-    }
-
-    public String getStreetNumberPrefix() {
-        return streetNumberPrefix;
-    }
-
-    public void setStreetNumberPrefix(String streetNumberPrefix) {
-        this.streetNumberPrefix = streetNumberPrefix;
+    public void setStreetAddress(String streetAddress) {
+        this.streetAddress = streetAddress;
     }
 
     public String getPostCode() {

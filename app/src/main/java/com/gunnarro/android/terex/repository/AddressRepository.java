@@ -44,10 +44,10 @@ public class AddressRepository {
         }
     }
 
-    public Address findAddress(String streetName, String streetNumber) {
+    public Address findAddress(String streetAddress) {
         try {
             CompletionService<Address> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
-            service.submit(() -> addressDao.findAddress(streetName));
+            service.submit(() -> addressDao.findAddress(streetAddress));
             Future<Address> future = service.take();
             return future != null ? future.get() : null;
         } catch (InterruptedException | ExecutionException e) {
@@ -77,21 +77,26 @@ public class AddressRepository {
 
     public Long save(@NotNull final Address address) {
         try {
-            Address addressExisting = findAddress(address.getStreetName(), null);
-            Log.d("save address", String.format("streetName=%s, streetNUmber=%s, isExisting=%s", address.getStreetName(), address.getStreetNumber(), addressExisting != null));
+            Address addressExisting;
+            if (address.getId() == null) {
+                addressExisting = findAddress(address.getStreetAddress());
+            } else {
+                addressExisting = getAddress(address.getId());
+            }
+            Log.d("saveAddress", String.format("streetAddress=%s, isExisting=%s", address.getStreetAddress(), addressExisting != null));
             Long addressId;
             if (addressExisting == null) {
                 address.setCreatedDate(LocalDateTime.now());
                 address.setLastModifiedDate(LocalDateTime.now());
                 addressId = insert(address);
-                Log.d("", "inserted new address: " + addressId + " - " + address.getStreetName());
+                Log.d("saveAddress", String.format("inserted new address: %s - %s", addressId, address.getStreetAddress()));
             } else {
                 address.setId(addressExisting.getId());
                 address.setCreatedDate(addressExisting.getCreatedDate());
                 address.setLastModifiedDate(LocalDateTime.now());
                 update(address);
                 addressId = address.getId();
-                Log.d("", "updated address: " + addressId + " - " + address.getStreetName());
+                Log.d("saveAddress", String.format("updated address: %s - %s", addressId, address.getStreetAddress()));
             }
             return addressId;
         } catch (Exception e) {

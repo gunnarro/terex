@@ -19,7 +19,7 @@ class BregServiceTest {
         assertEquals("Norge", organizationDto.getBusinessAddress().getCountry());
         assertEquals("NO", organizationDto.getBusinessAddress().getCountryCode());
         assertEquals("OSLO", organizationDto.getBusinessAddress().getCity());
-        assertEquals("Stavangergata 35", organizationDto.getBusinessAddress().getAddress());
+        assertEquals("Stavangergata 35", organizationDto.getBusinessAddress().getStreetAddress());
         //assertEquals("2023", organizationDto.getOrganizationStatusDto().getSisteInnsendteAarsregnskap());
     }
 }

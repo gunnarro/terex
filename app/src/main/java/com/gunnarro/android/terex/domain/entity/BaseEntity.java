@@ -5,7 +5,6 @@ import androidx.room.ColumnInfo;
 import androidx.room.PrimaryKey;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 public abstract class BaseEntity {
 
@@ -18,9 +17,9 @@ public abstract class BaseEntity {
 
     @PrimaryKey(autoGenerate = true)
     private Long id;
-    @NonNull
+    //@NonNull
     @ColumnInfo(name = "uuid")
-    private String uuid = UUID.randomUUID().toString();
+    private String uuid;// = UUID.randomUUID().toString(); // fixme can not be done like this, must ensure that only set once for an entity
     @NonNull
     @ColumnInfo(name = "created_date")
     private LocalDateTime createdDate;

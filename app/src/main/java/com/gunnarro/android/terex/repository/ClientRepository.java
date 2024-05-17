@@ -54,7 +54,7 @@ public class ClientRepository {
         } catch (InterruptedException | ExecutionException e) {
             // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();
-            throw new TerexApplicationException("error getting clients!", "50050", e);
+            throw new TerexApplicationException("error getting client!", "50050", e);
         }
     }
 
