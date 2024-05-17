@@ -6,11 +6,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.gunnarro.android.terex.TestData;
 import com.gunnarro.android.terex.domain.dto.AddressDto;
+import com.gunnarro.android.terex.domain.dto.BusinessAddressDto;
 import com.gunnarro.android.terex.domain.dto.ClientDto;
 import com.gunnarro.android.terex.domain.dto.ConsultantBrokerDto;
 import com.gunnarro.android.terex.domain.dto.ContactInfoDto;
 import com.gunnarro.android.terex.domain.dto.OrganizationDto;
 import com.gunnarro.android.terex.domain.dto.PersonDto;
+import com.gunnarro.android.terex.domain.dto.PostalAddressDto;
 import com.gunnarro.android.terex.domain.dto.ProjectDto;
 import com.gunnarro.android.terex.domain.dto.TimesheetEntryDto;
 import com.gunnarro.android.terex.domain.dto.TimesheetSummaryDto;
@@ -223,9 +225,15 @@ class TimesheetMapperTest {
         orgDto.setOrganizationNumber("828707933");
         clientDto.setOrganizationDto(orgDto);
         clientDto.setName("gunnarro as");
+        PersonDto contactPersonDto = new PersonDto();
+        contactPersonDto.setId(666L);
+        contactPersonDto.setFirstName("gunnar");
+        contactPersonDto.setLastName("ronneberg");
+        clientDto.setCntactPersonDto(contactPersonDto);
         Client client = TimesheetMapper.fromClientDto(clientDto);
         assertEquals(clientDto.getName(), client.getName());
         assertEquals(clientDto.getOrganizationDto().getId(), client.getOrganizationId());
+        assertEquals(clientDto.getCntactPersonDto().getId(), client.getContactPersonId());
     }
 
     @Test
@@ -250,17 +258,31 @@ class TimesheetMapperTest {
         organizationDto.setName("gunnarro:as");
         organizationDto.setBankAccountNumber("2323232323");
         organizationDto.setIndustryType("SOFTWARE");
+        PersonDto personDto = new PersonDto();
+        personDto.setId(333L);
+        organizationDto.setContactPerson(personDto);
+        PostalAddressDto postalAddressDto = new PostalAddressDto();
+        postalAddressDto.setId(444L);
+        organizationDto.setPostalAddressDto(postalAddressDto);
+        BusinessAddressDto businessAddressDto = new BusinessAddressDto();
+        businessAddressDto.setId(555L);
+        organizationDto.setBusinessAddress(businessAddressDto);
 
         Organization organization = TimesheetMapper.fromOrganizationDto(organizationDto);
         assertEquals(organizationDto.getName(), organization.getName());
         assertEquals(organizationDto.getOrganizationNumber(), organization.getOrganizationNumber());
         assertEquals(organizationDto.getBankAccountNumber(), organization.getBankAccountNumber());
         assertEquals(organizationDto.getIndustryType(), organization.getOrganizationIndustryType());
+        assertEquals(organizationDto.getContactPerson().getId(), organization.getContactInfoId());
+        assertEquals(organizationDto.getBusinessAddress().getId(), organization.getBusinessAddressId());
+        assertEquals(organizationDto.getPostalAddressDto().getId(), organization.getPostalAddressId());
+        assertEquals(organizationDto.getBankAccountNumber(), organization.getBankAccountNumber());
     }
 
     @Test
     void toPersonDto() {
         Person person = new Person();
+        person.setFullName("gunnar astor rønneberg");
         person.setFirstName("gunnar");
         person.setMiddleName("astor");
         person.setLastName("ronneberg");
@@ -268,11 +290,34 @@ class TimesheetMapperTest {
         person.setDateOfBirth(LocalDate.of(1990, 3, 23));
         person.setMaritalStatus("U");
         person.setGender("M");
+        person.setContactInfoId(45L);
+        person.setAddressId(88L);
 
         PersonDto personDto = TimesheetMapper.toPersonDto(person);
+        assertEquals(person.getFullName(), personDto.getFullName());
         assertEquals(person.getFirstName(), personDto.getFirstName());
         assertEquals(person.getMiddleName(), personDto.getMiddleName());
         assertEquals(person.getLastName(), personDto.getLastName());
+        assertNull(personDto.getContactInfo());
+        assertNull(personDto.getAddress());
+    }
+
+    @Test
+    void fromPersonDto() {
+        PersonDto personDto = new PersonDto();
+        personDto.setFullName("gunnar astor rønneberg");
+        personDto.setFirstName("gunnar");
+        personDto.setMiddleName("astor");
+        personDto.setLastName("ronneberg");
+
+
+        Person person = TimesheetMapper.fromPersonDto(personDto);
+        assertEquals(personDto.getFullName(), person.getFullName());
+        assertEquals(personDto.getFirstName(), person.getFirstName());
+        assertEquals(personDto.getMiddleName(), person.getMiddleName());
+        assertEquals(personDto.getLastName(), person.getLastName());
+        assertNull(personDto.getContactInfo());
+        assertNull(personDto.getAddress());
     }
 
     @Test

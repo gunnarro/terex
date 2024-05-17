@@ -4,9 +4,9 @@ package com.gunnarro.android.terex.service;
 import android.util.Log;
 
 import com.gunnarro.android.terex.domain.dto.ClientDto;
+import com.gunnarro.android.terex.domain.dto.PersonDto;
 import com.gunnarro.android.terex.domain.entity.Client;
 import com.gunnarro.android.terex.domain.entity.ClientDetails;
-import com.gunnarro.android.terex.domain.entity.ConsultantBroker;
 import com.gunnarro.android.terex.domain.entity.Project;
 import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
@@ -26,20 +26,21 @@ public class ClientService {
 
     private final ClientRepository clientRepository;
     private final ProjectRepository projectRepository;
+    private final PersonService personService;
 
     /**
      * For unit test only
      */
     @Inject
-    public ClientService(ClientRepository clientRepository, ProjectRepository projectRepository) {
+    public ClientService(ClientRepository clientRepository, ProjectRepository projectRepository, PersonService personService) {
         this.clientRepository = clientRepository;
         this.projectRepository = projectRepository;
+        this.personService = personService;
     }
 
     @Inject
     public ClientService() {
-        this.clientRepository = new ClientRepository();
-        this.projectRepository = new ProjectRepository();
+        this(new ClientRepository(), new ProjectRepository(), new PersonService());
     }
 
     public List<ClientDto> getClients() {
@@ -55,7 +56,10 @@ public class ClientService {
             ClientDetails clientDetails = new ClientDetails();
             clientDetails.setClient(client);
             clientDetails.setProjectList(projects);
-            return TimesheetMapper.toClientDto(clientDetails);
+            ClientDto clientDto = TimesheetMapper.toClientDto(clientDetails);
+            PersonDto contactPersonDto = personService.getPerson(client.getContactPersonId());
+            clientDto.setCntactPersonDto(contactPersonDto);
+            return clientDto;
         }
         return null;
     }
@@ -86,7 +90,7 @@ public class ClientService {
             Long id;
             if (clientExisting == null) {
                 client.setCreatedDate(LocalDateTime.now());
-                client.setStatus(ConsultantBroker.CosultantBrokerStatusEnum.ACTIVE.name());
+                client.setStatus(Client.ClientStatusEnum.ACTIVE.name());
                 id = clientRepository.insert(client);
             } else {
                 client.setCreatedDate(clientExisting.getCreatedDate());

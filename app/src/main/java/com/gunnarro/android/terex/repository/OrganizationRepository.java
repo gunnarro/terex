@@ -3,9 +3,7 @@ package com.gunnarro.android.terex.repository;
 import android.util.Log;
 
 import com.gunnarro.android.terex.config.AppDatabase;
-import com.gunnarro.android.terex.domain.dto.OrganizationDto;
 import com.gunnarro.android.terex.domain.entity.Organization;
-import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 
 import org.jetbrains.annotations.NotNull;

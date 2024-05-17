@@ -4,6 +4,10 @@ public class PersonDto {
 
     private Long id;
 
+    /**
+     * More suite for internalization, not all countries have first and last name
+     */
+    private String fullName;
     private String firstName;
 
     private String middleName;
@@ -20,6 +24,14 @@ public class PersonDto {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public String getFirstName() {

@@ -2,7 +2,6 @@ package com.gunnarro.android.terex.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import android.content.Context;
@@ -31,7 +30,7 @@ public class ClientServiceTest {
         Context appContext = ApplicationProvider.getApplicationContext();
         AppDatabase appDatabase = Room.inMemoryDatabaseBuilder(appContext, AppDatabase.class).build();
         AppDatabase.init(appContext);
-        clientService = new ClientService(new ClientRepository(), new ProjectRepository());
+        clientService = new ClientService(new ClientRepository(), new ProjectRepository(), new PersonService());
         // load test data
         List<String> sqlQueryList = DbHelper.readMigrationSqlQueryFile(appContext, "database/test_data.sql");
         sqlQueryList.forEach(query -> {
@@ -59,7 +58,7 @@ public class ClientServiceTest {
         // check new
         ClientDto clientDto = clientService.getClient(id);
         assertEquals(id, clientDto.getId());
-       // assertEquals("gunnarro:as", clientDto.getName());
+        // assertEquals("gunnarro:as", clientDto.getName());
         assertEquals("ACTIVE", clientDto.getStatus());
         // update
         ClientDto updateClientDto = new ClientDto();

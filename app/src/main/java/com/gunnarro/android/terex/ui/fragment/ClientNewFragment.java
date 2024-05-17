@@ -17,12 +17,15 @@ import androidx.core.content.ContextCompat;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.dto.BusinessAddressDto;
 import com.gunnarro.android.terex.domain.dto.ClientDto;
+import com.gunnarro.android.terex.domain.dto.ContactInfoDto;
 import com.gunnarro.android.terex.domain.dto.OrganizationDto;
+import com.gunnarro.android.terex.domain.dto.PersonDto;
 import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.integration.breg.BregService;
 import com.gunnarro.android.terex.service.ClientService;
 import com.gunnarro.android.terex.service.OrganizationService;
+import com.gunnarro.android.terex.service.PersonService;
 import com.gunnarro.android.terex.utility.Utility;
 
 import org.jetbrains.annotations.NotNull;
@@ -38,6 +41,8 @@ public class ClientNewFragment extends BaseFragment implements View.OnClickListe
     private ClientService clientService;
     private OrganizationService organizationService;
 
+    private PersonService personService;
+
     @Inject
     public ClientNewFragment() {
         bregService = new BregService();
@@ -49,6 +54,7 @@ public class ClientNewFragment extends BaseFragment implements View.OnClickListe
         requireActivity().setTitle(R.string.title_client_new);
         clientService = new ClientService();
         organizationService = new OrganizationService();
+        personService = new PersonService();
     }
 
     @Override
@@ -108,6 +114,8 @@ public class ClientNewFragment extends BaseFragment implements View.OnClickListe
             ClientDto clientDto = readClientInputData();
             Long organizationId = organizationService.save(clientDto.getOrganizationDto());
             clientDto.getOrganizationDto().setId(organizationId);
+            Long contactPersonId = personService.save(clientDto.getCntactPersonDto());
+            clientDto.getCntactPersonDto().setId(contactPersonId);
             clientService.saveClient(clientDto);
             showSnackbar(String.format(getResources().getString(R.string.info_client_saved_msg_format), clientDto.getOrganizationDto().getOrganizationNumber(), clientDto.getOrganizationDto().getName()), R.color.color_snackbar_text_add);
         } catch (TerexApplicationException | InputValidationException ex) {
@@ -211,25 +219,24 @@ public class ClientNewFragment extends BaseFragment implements View.OnClickListe
         orgContactInfoDto.setEmailAddress(((TextView) requireView().findViewById(R.id.client_new_org_contact_email)).getText().toString());
         orgContactInfoDto.setMobileNumberCountryCode("+47");
         orgContactInfoDto.setMobileNumber(((TextView) requireView().findViewById(R.id.client_new_org_contact_mobile)).getText().toString());
-
+*/
         PersonDto contactPersonDto = new PersonDto();
         TextView contactPersonIdView = requireView().findViewById(R.id.client_new_contact_person_id);
         if (contactPersonIdView.getText() != null && !contactPersonIdView.getText().toString().isBlank()) {
             contactPersonDto.setId(Long.parseLong(contactPersonIdView.getText().toString()));
         }
-        contactPersonDto.setFirstName(((TextView) requireView().findViewById(R.id.client_new_contact_person_full_name)).getText().toString());
+        contactPersonDto.setFullName(((TextView) requireView().findViewById(R.id.client_new_contact_person_full_name)).getText().toString());
         ContactInfoDto personContactInfo = new ContactInfoDto();
         personContactInfo.setEmailAddress(((TextView) requireView().findViewById(R.id.client_new_contact_person_email)).getText().toString());
         personContactInfo.setMobileNumberCountryCode("+47");
         personContactInfo.setMobileNumber(((TextView) requireView().findViewById(R.id.client_new_contact_person_mobile)).getText().toString());
         contactPersonDto.setContactInfo(personContactInfo);
-*/
+
         organizationDto.setBusinessAddress(businessAddressDto);
-  //      organizationDto.setContactInfo(orgContactInfoDto);
-  //      organizationDto.setContactPerson(contactPersonDto);
         // name of client is set equal to organization name
         clientDto.setName(organizationDto.getName());
         clientDto.setOrganizationDto(organizationDto);
+        clientDto.setCntactPersonDto(contactPersonDto);
         return clientDto;
     }
 

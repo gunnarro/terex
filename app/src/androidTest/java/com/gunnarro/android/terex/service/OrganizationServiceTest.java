@@ -14,10 +14,8 @@ import com.gunnarro.android.terex.domain.dto.BusinessAddressDto;
 import com.gunnarro.android.terex.domain.dto.ContactInfoDto;
 import com.gunnarro.android.terex.domain.dto.OrganizationDto;
 import com.gunnarro.android.terex.domain.dto.PersonDto;
-import com.gunnarro.android.terex.domain.entity.Organization;
 import com.gunnarro.android.terex.repository.AddressRepository;
 import com.gunnarro.android.terex.repository.OrganizationRepository;
-import com.gunnarro.android.terex.repository.PersonRepository;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +31,7 @@ public class OrganizationServiceTest {
         Context appContext = ApplicationProvider.getApplicationContext();
         AppDatabase appDatabase = Room.inMemoryDatabaseBuilder(appContext, AppDatabase.class).build();
         AppDatabase.init(appContext);
-        organizationService = new OrganizationService(new OrganizationRepository(appDatabase.organizationDao()), new AddressRepository());
+        organizationService = new OrganizationService(new OrganizationRepository(appDatabase.organizationDao()), new AddressRepository(), new ContactInfoService(), new PersonService());
         // load test data
         List<String> sqlQueryList = DbHelper.readMigrationSqlQueryFile(appContext, "database/test_data.sql");
         sqlQueryList.forEach(query -> {
@@ -65,7 +63,6 @@ public class OrganizationServiceTest {
         assertEquals("23232323", organizationDto.getContactInfo());
         assertEquals("23232323", organizationDto.getBusinessAddress());
         assertEquals("23232323", organizationDto.getContactPerson());
-
 
 
         // update and save person

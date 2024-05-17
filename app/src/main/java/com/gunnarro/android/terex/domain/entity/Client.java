@@ -22,6 +22,8 @@ import lombok.Setter;
         unique = true)})
 public class Client extends BaseEntity {
 
+    public enum ClientStatusEnum {ACTIVE, DEACTIVATED}
+
     @ColumnInfo(name = "organization_id")
     private Long organizationId;
 
@@ -79,11 +81,14 @@ public class Client extends BaseEntity {
         return Objects.hash(organizationId);
     }
 
+
     @NonNull
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Client{");
         sb.append("organizationId=").append(organizationId);
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", contactPersonId=").append(contactPersonId);
         sb.append(", status='").append(status).append('\'');
         sb.append('}');
         return sb.toString();

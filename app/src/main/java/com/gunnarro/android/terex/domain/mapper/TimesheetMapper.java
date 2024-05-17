@@ -188,6 +188,9 @@ public class TimesheetMapper {
         OrganizationDto orgDto = new OrganizationDto();
         orgDto.setId(client.getOrganizationId());
         clientDto.setOrganizationDto(orgDto);
+        PersonDto contactPersonDto = new PersonDto();
+        contactPersonDto.setId(client.getContactPersonId());
+        clientDto.setCntactPersonDto(contactPersonDto);
         return clientDto;
     }
 
@@ -197,7 +200,8 @@ public class TimesheetMapper {
         clientDto.setName(clientDetails.getClient().getName());
         clientDto.setStatus(clientDetails.getClient().getStatus());
         clientDto.setProjectList(toProjectDtoList(clientDetails.getProjectList()));
-      //  clientDto.setOrganizationDto(toOrganizationDto(clientDetails.getOrganizationDetails()));
+        //clientDto.setOrganizationDto(toOrganizationDto(clientDetails.getOrganizationDetails()));
+        clientDto.setCntactPersonDto(toPersonDto(clientDetails.getContactPerson()));
         return clientDto;
     }
 
@@ -207,6 +211,7 @@ public class TimesheetMapper {
         client.setName(clientDto.getName());
         client.setOrganizationId(clientDto.getOrganizationDto().getId());
         client.setStatus(clientDto.getStatus());
+        client.setContactPersonId(clientDto.getCntactPersonDto() != null ? clientDto.getCntactPersonDto().getId() : null);
         return client;
     }
 
@@ -225,9 +230,8 @@ public class TimesheetMapper {
         organization.setOrganizationIndustryType(organizationDto.getIndustryType());
         organization.setBankAccountNumber(organizationDto.getBankAccountNumber());
         organization.setBusinessAddressId(organizationDto.getBusinessAddress() != null ? organizationDto.getBusinessAddress().getId() : null);
-        organization.setBusinessAddressId(organizationDto.getPostalAddressDto() != null ? organizationDto.getPostalAddressDto().getId() : null);
-        organization.setBusinessAddressId(organizationDto.getContactPerson() != null ? organizationDto.getContactPerson().getId() : null);
-        organization.setBusinessAddressId(organizationDto.getContactInfo() != null ? organizationDto.getContactInfo().getId() : null);
+        organization.setPostalAddressId(organizationDto.getPostalAddressDto() != null ? organizationDto.getPostalAddressDto().getId() : null);
+        organization.setContactInfoId(organizationDto.getContactPerson() != null ? organizationDto.getContactPerson().getId() : null);
         return organization;
     }
 
@@ -275,6 +279,7 @@ public class TimesheetMapper {
         }
         PersonDto personDto = new PersonDto();
         personDto.setId(person.getId());
+        personDto.setFullName(person.getFullName());
         personDto.setFirstName(person.getFirstName());
         personDto.setMiddleName(person.getMiddleName());
         personDto.setLastName(person.getLastName());
@@ -287,10 +292,11 @@ public class TimesheetMapper {
         }
         Person person = new Person();
         person.setId(personDto.getId());
+        person.setFullName(personDto.getFullName());
         person.setFirstName(personDto.getFirstName());
         person.setMiddleName(personDto.getMiddleName());
         person.setLastName(personDto.getLastName());
-        person.setAddressId(personDto.getAddress() != null ?  personDto.getAddress().getId() : null);
+        person.setAddressId(personDto.getAddress() != null ? personDto.getAddress().getId() : null);
         person.setContactInfoId(personDto.getContactInfo() != null ? personDto.getContactInfo().getId() : null);
         return person;
     }

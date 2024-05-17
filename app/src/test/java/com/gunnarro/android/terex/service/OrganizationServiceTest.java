@@ -35,9 +35,15 @@ class OrganizationServiceTest {
     @Mock
     private AddressRepository addressRepositoryMock;
 
+    @Mock
+    private ContactInfoService contactInfoServiceMock;
+
+    @Mock
+    private PersonService personServiceMock;
+
     @BeforeEach
     public void setup() {
-        organizationService = new OrganizationService(organizationRepositoryMock, addressRepositoryMock);
+        organizationService = new OrganizationService(organizationRepositoryMock, addressRepositoryMock, contactInfoServiceMock, personServiceMock);
     }
 
 

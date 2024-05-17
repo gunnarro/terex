@@ -35,10 +35,12 @@ class ClientServiceTest {
     private ClientRepository clientRepositoryMock;
     @Mock
     private ProjectRepository projectRepositoryMock;
+    @Mock
+    private PersonService personServiceMock;
 
     @BeforeEach
     public void setup() {
-        clientService = new ClientService(clientRepositoryMock, projectRepositoryMock);
+        clientService = new ClientService(clientRepositoryMock, projectRepositoryMock, personServiceMock);
     }
 
     @Test
@@ -46,7 +48,21 @@ class ClientServiceTest {
         Client client = new Client();
         client.setId(23L);
         client.setName("unit-test-org");
+        client.setStatus(Client.ClientStatusEnum.ACTIVE.name());
         client.setOrganizationId(12345678L);
+        client.setContactPersonId(444L);
+
+        PersonDto personDto = new PersonDto();
+        personDto.setId(client.getContactPersonId());
+        personDto.setFullName("petter hansen");
+
+        ContactInfoDto contactInfoDto = new ContactInfoDto();
+        contactInfoDto.setId(4444L);
+        contactInfoDto.setEmailAddress("contact@gmail.org");
+        contactInfoDto.setMobileNumber("33445566");
+        contactInfoDto.setMobileNumberCountryCode("+47");
+
+        personDto.setContactInfo(contactInfoDto);
 
         Project project = new Project();
         project.setId(111L);
@@ -56,9 +72,21 @@ class ClientServiceTest {
 
         when(clientRepositoryMock.getClient(client.getId())).thenReturn(client);
         when(projectRepositoryMock.getProjects(client.getId(), Project.ProjectStatusEnum.ACTIVE.name())).thenReturn(List.of(project));
+        when(personServiceMock.getPerson(client.getContactPersonId())).thenReturn(personDto);
+
         ClientDto clientDto = clientService.getClient(client.getId());
         assertEquals(client.getId(), clientDto.getId());
         assertEquals(client.getName(), clientDto.getName());
+        assertEquals("ACTIVE", clientDto.getStatus());
+
+        assertEquals(client.getContactPersonId(), clientDto.getCntactPersonDto().getId());
+        assertEquals(client.getContactPersonId(), clientDto.getCntactPersonDto().getId());
+        assertEquals("petter hansen", clientDto.getCntactPersonDto().getFullName());
+        assertEquals(4444, clientDto.getCntactPersonDto().getContactInfo().getId());
+        assertEquals("contact@gmail.org", clientDto.getCntactPersonDto().getContactInfo().getEmailAddress());
+        assertEquals("+47", clientDto.getCntactPersonDto().getContactInfo().getMobileNumberCountryCode());
+        assertEquals("33445566", clientDto.getCntactPersonDto().getContactInfo().getMobileNumber());
+
         assertEquals(1, clientDto.getProjectList().size());
         assertEquals(project.getClientId(), clientDto.getProjectList().get(0).getClientId());
         assertEquals(project.getName(), clientDto.getProjectList().get(0).getName());
@@ -109,8 +137,7 @@ class ClientServiceTest {
         contactInfoDto.setMobileNumber("22334455");
 
         PersonDto contectPersonDto = new PersonDto();
-        contectPersonDto.setFirstName("ole");
-        contectPersonDto.setLastName("hansen");
+        contectPersonDto.setFullName("ole hansen");
 
         BusinessAddressDto organizationAddress = new BusinessAddressDto();
         organizationAddress.setAddress("my-street 120 e");

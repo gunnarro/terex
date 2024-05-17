@@ -215,11 +215,71 @@
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
+        <!-- org contact person -->
+        <LinearLayout
+            android:id="@+id/client_new_contact_person_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/client_new_org_address_layout"
+            android:layout_margin="10dp"
+            android:baselineAligned="false"
+            android:orientation="vertical"
+            tools:ignore="UselessParent">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/client_new_contact_person_full_name_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:hint="@string/lbl_contact_person_full_name">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/client_new_contact_person_full_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/client_new_contact_person_mobile_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:hint="@string/lbl_contact_person_mobile">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/client_new_contact_person_mobile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/client_new_contact_person_email_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:hint="@string/lbl_contact_person_email">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/client_new_contact_person_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
         <LinearLayout
             android:id="@+id/client_new_register_buttons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/client_new_org_address_layout"
+            android:layout_below="@id/client_new_contact_person_layout"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
             android:gravity="center"

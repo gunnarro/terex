@@ -2,13 +2,16 @@ package com.gunnarro.android.terex.service;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import com.gunnarro.android.terex.domain.dto.AddressDto;
 import com.gunnarro.android.terex.domain.dto.ContactInfoDto;
 import com.gunnarro.android.terex.domain.dto.PersonDto;
+import com.gunnarro.android.terex.domain.entity.Person;
 import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
 import com.gunnarro.android.terex.repository.PersonRepository;
 
@@ -18,6 +21,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.util.concurrent.ExecutionException;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,10 +31,37 @@ class PersonServiceTest {
 
     @Mock
     private PersonRepository personRepositoryMock;
+    @Mock
+    private ContactInfoService contactInfoServiceMock;
 
     @BeforeEach
     public void setup() {
-        personService = new PersonService(personRepositoryMock);
+        personService = new PersonService(personRepositoryMock, contactInfoServiceMock);
+    }
+
+    @Test
+    void getPerson() {
+        Person person = createPerson();
+        person.setId(233L);
+        person.setContactInfoId(78L);
+
+        ContactInfoDto contactInfoDto = new ContactInfoDto();
+        contactInfoDto.setId(person.getContactInfoId());
+        contactInfoDto.setEmailAddress("my@gmail.com");
+        contactInfoDto.setMobileNumberCountryCode("+47");
+        contactInfoDto.setMobileNumber("22334455");
+
+        when(personRepositoryMock.getPerson(anyLong())).thenReturn(person);
+        when(contactInfoServiceMock.getContactInfo(anyLong())).thenReturn(contactInfoDto);
+
+        PersonDto personDto = personService.getPerson(233L);
+        assertEquals(person.getId(), personDto.getId());
+        assertEquals("gunnar astor rønneberg", personDto.getFullName());
+        assertEquals(person.getContactInfoId(), personDto.getContactInfo().getId());
+        assertEquals("my@gmail.com", personDto.getContactInfo().getEmailAddress());
+        assertEquals("+47", personDto.getContactInfo().getMobileNumberCountryCode());
+        assertEquals("22334455", personDto.getContactInfo().getMobileNumber());
+        assertNull(personDto.getAddress());
     }
 
     @Test
@@ -73,4 +104,13 @@ class PersonServiceTest {
         return personDto;
     }
 
+    private Person createPerson() {
+        Person person = new Person();
+        person.setGender("M");
+        person.setDateOfBirth(LocalDate.of(1970, 11, 10));
+        person.setFullName("gunnar astor rønneberg");
+        person.setContactInfoId(233L);
+        person.setAddressId(55L);
+        return person;
+    }
 }

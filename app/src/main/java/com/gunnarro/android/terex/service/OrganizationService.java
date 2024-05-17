@@ -3,15 +3,12 @@ package com.gunnarro.android.terex.service;
 
 import com.gunnarro.android.terex.config.AppDatabase;
 import com.gunnarro.android.terex.domain.dto.OrganizationDto;
+import com.gunnarro.android.terex.domain.dto.PersonDto;
 import com.gunnarro.android.terex.domain.entity.Address;
-import com.gunnarro.android.terex.domain.entity.ContactInfo;
 import com.gunnarro.android.terex.domain.entity.Organization;
-import com.gunnarro.android.terex.domain.entity.Person;
 import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
 import com.gunnarro.android.terex.repository.AddressRepository;
-import com.gunnarro.android.terex.repository.ContactInfoRepository;
 import com.gunnarro.android.terex.repository.OrganizationRepository;
-import com.gunnarro.android.terex.repository.PersonRepository;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -25,33 +22,33 @@ public class OrganizationService {
 
     private final OrganizationRepository organizationRepository;
     private final AddressRepository addressRepository;
-    private ContactInfoRepository contactInfoRepository;
-    private PersonRepository personRepository;
+    private ContactInfoService contactInfoService;
+    private PersonService personService;
+
     /**
      * For unit test onlu
      */
     @Inject
-    public OrganizationService(OrganizationRepository organizationRepository, AddressRepository addressRepository) {
+    public OrganizationService(OrganizationRepository organizationRepository, AddressRepository addressRepository, ContactInfoService contactInfoService, PersonService personService) {
         this.organizationRepository = organizationRepository;
         this.addressRepository = addressRepository;
+        this.contactInfoService = contactInfoService;
+        this.personService = personService;
     }
 
     @Inject
     public OrganizationService() {
-        this.organizationRepository = new OrganizationRepository(AppDatabase.getDatabase().organizationDao());
-        this.addressRepository = new AddressRepository();
+        this(new OrganizationRepository(AppDatabase.getDatabase().organizationDao()), new AddressRepository(), new ContactInfoService(), new PersonService());
     }
 
     public OrganizationDto getOrganization(Long organizationId) {
         Organization organization = organizationRepository.getOrganization(organizationId);
         Address businessAddress = addressRepository.getAddress(organization.getBusinessAddressId());
         OrganizationDto organizationDto = TimesheetMapper.toOrganizationDto(organizationRepository.getOrganization(organizationId));
-        ContactInfo orgContactInfo = contactInfoRepository.getContactInfo(organization.getContactInfoId());
-      //  Person contactPerson = personRepository.getPerson(organization.getContactPersonId());
+        PersonDto contactPersonDto = personService.getPerson(organization.getContactInfoId());
 
         organizationDto.setBusinessAddress(TimesheetMapper.toABusinessAddressDto(businessAddress));
-    //    organizationDto.setContactPerson(TimesheetMapper.toPersonDto(contactPerson));
-        organizationDto.setContactInfo(TimesheetMapper.toContactInfoDto(orgContactInfo));
+        organizationDto.setContactPerson(contactPersonDto);
         return organizationDto;
     }
 
@@ -63,6 +60,10 @@ public class OrganizationService {
         Organization organization = TimesheetMapper.fromOrganizationDto(organizationDto);
         Long addressId = addressRepository.save(TimesheetMapper.fromBusinessAddressDto(organizationDto.getBusinessAddress()));
         organization.setBusinessAddressId(addressId);
+        if (organization.getContactInfoId() != null) {
+            Long contactInfoId = contactInfoService.save(organizationDto.getContactPerson().getContactInfo());
+            organization.setContactInfoId(contactInfoId);
+        }
         return organizationRepository.save(organization);
     }
 

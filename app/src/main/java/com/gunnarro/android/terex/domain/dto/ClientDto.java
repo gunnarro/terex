@@ -15,6 +15,7 @@ public class ClientDto {
     private Long id;
     private String name;
     private String status;
+    private PersonDto cntactPersonDto;
     private OrganizationDto organizationDto;
     private List<ProjectDto> projectList;
 
@@ -49,6 +50,14 @@ public class ClientDto {
 
     public void setOrganizationDto(OrganizationDto organizationDto) {
         this.organizationDto = organizationDto;
+    }
+
+    public PersonDto getCntactPersonDto() {
+        return cntactPersonDto;
+    }
+
+    public void setCntactPersonDto(PersonDto cntactPersonDto) {
+        this.cntactPersonDto = cntactPersonDto;
     }
 
     public List<ProjectDto> getProjectList() {

@@ -26,12 +26,16 @@ public class Person extends BaseEntity {
     private Long addressId;
     @ColumnInfo(name = "contact_info_id")
     private Long contactInfoId;
+    /**
+     * More suite for internalization, not all countries have first and last name
+     */
     @NotNull
+    @ColumnInfo(name = "full_name")
+    private String fullName;
     @ColumnInfo(name = "first_name")
     private String firstName;
     @ColumnInfo(name = "middle_name")
     private String middleName;
-    @NotNull
     @ColumnInfo(name = "last_name")
     private String lastName;
     @ColumnInfo(name = "date_of_birth")
@@ -57,6 +61,14 @@ public class Person extends BaseEntity {
 
     public void setContactInfoId(Long contactInfoId) {
         this.contactInfoId = contactInfoId;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public String getFirstName() {
@@ -122,6 +134,7 @@ public class Person extends BaseEntity {
         sb.append("id=").append(getId());
         sb.append(", addressId=").append(addressId);
         sb.append(", contactInfoId=").append(contactInfoId);
+        sb.append(", fullName='").append(fullName).append('\'');
         sb.append(", firstName='").append(firstName).append('\'');
         sb.append(", middleName='").append(middleName).append('\'');
         sb.append(", lastName='").append(lastName).append('\'');

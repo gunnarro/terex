@@ -13,6 +13,7 @@ public class ClientDetails {
 
     @Embedded
     private Client client;
+    private Person contactPerson;
     @Relation(parentColumn = "id", entityColumn = "client_id")
     private List<Project> projectList;
 
@@ -41,5 +42,13 @@ public class ClientDetails {
 
     public void setOrganizationDetails(OrganizationDetails organizationDetails) {
         this.organizationDetails = organizationDetails;
+    }
+
+    public Person getContactPerson() {
+        return contactPerson;
+    }
+
+    public void setContactPerson(Person contactPerson) {
+        this.contactPerson = contactPerson;
     }
 }
