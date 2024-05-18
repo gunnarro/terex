@@ -32,6 +32,19 @@ public class ClientRepository {
         return allClients;
     }
 
+    public List<Long> getAllClientIds() {
+        try {
+            CompletionService<List<Long>> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
+            service.submit(clientDao::getAllClientIds);
+            Future<List<Long>> future = service.take();
+            return future != null ? future.get() : null;
+        } catch (InterruptedException | ExecutionException e) {
+            // Something crashed, therefore restore interrupted state before leaving.
+            Thread.currentThread().interrupt();
+            throw new TerexApplicationException("error getting all client id's!", "50050", e);
+        }
+    }
+
     public List<Client> getClients() {
         try {
             CompletionService<List<Client>> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);

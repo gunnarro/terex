@@ -19,6 +19,9 @@ import java.util.List;
 @Dao
 public interface ClientDao {
 
+    @Query("SELECT id FROM client ORDER BY id ASC")
+    List<Long> getAllClientIds();
+
     @Query("SELECT * FROM client ORDER BY name ASC")
     LiveData<List<Client>> getAllClients();
 

@@ -16,10 +16,8 @@ import com.gunnarro.android.terex.domain.dto.ClientDto;
 import com.gunnarro.android.terex.domain.dto.OrganizationDto;
 import com.gunnarro.android.terex.domain.entity.Client;
 import com.gunnarro.android.terex.repository.ClientRepository;
-import com.gunnarro.android.terex.repository.ProjectRepository;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -33,7 +31,7 @@ public class ClientServiceTest {
         Context appContext = ApplicationProvider.getApplicationContext();
         AppDatabase appDatabase = Room.inMemoryDatabaseBuilder(appContext, AppDatabase.class).build();
         AppDatabase.init(appContext);
-        clientService = new ClientService(new ClientRepository(), new ProjectRepository(), new PersonService());
+        clientService = new ClientService(new ClientRepository(), new OrganizationService(), new ProjectService(), new PersonService());
         // load test data
         List<String> sqlQueryList = DbHelper.readMigrationSqlQueryFile(appContext, "database/test_data.sql");
         sqlQueryList.forEach(query -> {

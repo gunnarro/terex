@@ -160,17 +160,14 @@ class TimesheetMapperTest {
     @Test
     void toClientDtoList() {
         List<Client> clients = new ArrayList<Client>();
-        Client client = new Client();
-        client.setId(24L);
-        client.setName("gunnarro as");
-        client.setOrganizationId(100L);
-        clients.add(client);
+        clients.add(createClient(33L, "gunnarro as"));
         List<ClientDto> clientDtos = TimesheetMapper.toClientDtoList(clients);
         assertEquals(1, clientDtos.size());
-        //  assertNull(clientDto.getCompanyDto());
-        //    assertNull(clientDto.getCompanyDto().getName());
-        //    assertNull(clientDto.getCompanyDto().getOrganizationNumber());
-        //    assertNull(clientDto.getCompanyDto().getBankAccountNumber());
+        assertEquals(33, clientDtos.get(0).getId());
+        assertEquals("ACTIVE", clientDtos.get(0).getStatus());
+        assertEquals("gunnarro as", clientDtos.get(0).getName());
+        assertEquals(100, clientDtos.get(0).getOrganizationDto().getId());
+        assertEquals(900L, clientDtos.get(0).getCntactPersonDto().getId());
     }
 
     @Test
@@ -185,21 +182,16 @@ class TimesheetMapperTest {
     @Test
     void toClientDto() {
         ClientDetails clientDetails = new ClientDetails();
-        Client client = new Client();
-        client.setId(2344L);
-        client.setName("gunnarro");
-        client.setOrganizationId(2222222L);
-        client.setStatus("ACTIVE");
-        clientDetails.setClient(client);
+        clientDetails.setClient(createClient(23L, "gunnarro"));
 
         Project project1 = new Project();
-        project1.setClientId(client.getId());
+        project1.setClientId(23L);
         project1.setName("terex app developing");
         project1.setStatus(Project.ProjectStatusEnum.ACTIVE.name());
         project1.setDescription("description");
 
         Project project2 = new Project();
-        project2.setClientId(client.getId());
+        project2.setClientId(23L);
         project2.setName("web developing");
         project2.setStatus(Project.ProjectStatusEnum.ACTIVE.name());
         project2.setDescription("description");
@@ -225,12 +217,14 @@ class TimesheetMapperTest {
         orgDto.setOrganizationNumber("828707933");
         clientDto.setOrganizationDto(orgDto);
         clientDto.setName("gunnarro as");
+        clientDto.setStatus(Client.ClientStatusEnum.ACTIVE.name());
         PersonDto contactPersonDto = new PersonDto();
         contactPersonDto.setId(666L);
         contactPersonDto.setFullName("gunnar ronneberg");
         clientDto.setCntactPersonDto(contactPersonDto);
         Client client = TimesheetMapper.fromClientDto(clientDto);
         assertEquals(clientDto.getName(), client.getName());
+        assertEquals(clientDto.getStatus(), client.getStatus());
         assertEquals(clientDto.getOrganizationDto().getId(), client.getOrganizationId());
         assertEquals(clientDto.getCntactPersonDto().getId(), client.getContactPersonId());
     }
@@ -342,5 +336,15 @@ class TimesheetMapperTest {
         assertEquals(contactInfoDto.getEmailAddress(), contactInfo.getEmailAddress());
         assertEquals(contactInfoDto.getMobileNumberCountryCode(), contactInfo.getMobileNumberCountryCode());
         assertEquals(contactInfoDto.getMobileNumber(), contactInfo.getMobileNumber());
+    }
+
+    private Client createClient(Long id, String name) {
+        Client client = new Client();
+        client.setId(id);
+        client.setName("gunnarro as");
+        client.setOrganizationId(100L);
+        client.setContactPersonId(900L);
+        client.setStatus(Client.ClientStatusEnum.ACTIVE.name());
+        return client;
     }
 }

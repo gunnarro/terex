@@ -11,8 +11,8 @@ import com.gunnarro.android.terex.domain.dto.ClientDto;
 import com.gunnarro.android.terex.domain.dto.ContactInfoDto;
 import com.gunnarro.android.terex.domain.dto.OrganizationDto;
 import com.gunnarro.android.terex.domain.dto.PersonDto;
+import com.gunnarro.android.terex.domain.dto.ProjectDto;
 import com.gunnarro.android.terex.domain.entity.Client;
-import com.gunnarro.android.terex.domain.entity.Project;
 import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
 import com.gunnarro.android.terex.repository.ClientRepository;
 import com.gunnarro.android.terex.repository.ProjectRepository;
@@ -34,13 +34,16 @@ class ClientServiceTest {
     @Mock
     private ClientRepository clientRepositoryMock;
     @Mock
-    private ProjectRepository projectRepositoryMock;
+    private ProjectService projectServiceMock;
     @Mock
     private PersonService personServiceMock;
 
+    @Mock
+    private OrganizationService organizationServiceMock;
+
     @BeforeEach
     public void setup() {
-        clientService = new ClientService(clientRepositoryMock, projectRepositoryMock, personServiceMock);
+        clientService = new ClientService(clientRepositoryMock, organizationServiceMock, projectServiceMock, personServiceMock);
     }
 
     @Test
@@ -64,14 +67,14 @@ class ClientServiceTest {
 
         personDto.setContactInfo(contactInfoDto);
 
-        Project project = new Project();
-        project.setId(111L);
-        project.setClientId(client.getId());
-        project.setName("terex app development");
-        project.setStatus("ACTIVE");
+        ProjectDto projectDto = new ProjectDto();
+        projectDto.setId(111L);
+        projectDto.setClientId(client.getId());
+        projectDto.setName("terex app development");
+        projectDto.setStatus("ACTIVE");
 
         when(clientRepositoryMock.getClient(client.getId())).thenReturn(client);
-        when(projectRepositoryMock.getProjects(client.getId(), Project.ProjectStatusEnum.ACTIVE.name())).thenReturn(List.of(project));
+        when(projectServiceMock.getProjects(client.getId(), ProjectRepository.ProjectStatusEnum.ACTIVE)).thenReturn(List.of(projectDto));
         when(personServiceMock.getPerson(client.getContactPersonId())).thenReturn(personDto);
 
         ClientDto clientDto = clientService.getClient(client.getId());
@@ -88,9 +91,9 @@ class ClientServiceTest {
         assertEquals("33445566", clientDto.getCntactPersonDto().getContactInfo().getMobileNumber());
 
         assertEquals(1, clientDto.getProjectList().size());
-        assertEquals(project.getClientId(), clientDto.getProjectList().get(0).getClientId());
-        assertEquals(project.getName(), clientDto.getProjectList().get(0).getName());
-        assertEquals(project.getStatus(), clientDto.getProjectList().get(0).getStatus());
+        assertEquals(projectDto.getClientId(), clientDto.getProjectList().get(0).getClientId());
+        assertEquals(projectDto.getName(), clientDto.getProjectList().get(0).getName());
+        assertEquals(projectDto.getStatus(), clientDto.getProjectList().get(0).getStatus());
     }
 
     @Test

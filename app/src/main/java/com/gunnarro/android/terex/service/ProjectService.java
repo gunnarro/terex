@@ -51,8 +51,12 @@ public class ProjectService {
         }
     }
 
-    public LiveData<List<Project>> getProjects(Long clientId, ProjectRepository.ProjectStatusEnum status) {
+    public LiveData<List<Project>> getProjectsLiveData(Long clientId, ProjectRepository.ProjectStatusEnum status) {
         return projectRepository.getProjectsLiveData(clientId, status.name());
+    }
+
+    public List<ProjectDto> getProjects(Long clientId, ProjectRepository.ProjectStatusEnum status) {
+        return TimesheetMapper.toProjectDtoList(projectRepository.getProjects(clientId, status.name()));
     }
 
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures

@@ -9,18 +9,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.dto.ClientDto;
-import com.gunnarro.android.terex.domain.entity.Client;
 
 public class ClientViewHolder extends RecyclerView.ViewHolder {
     private final TextView lineHeaderView;
-    private final TextView line1LabelView;
     private final TextView line1ValueView;
+    private final TextView line2ValueView;
 
     private ClientViewHolder(View itemView) {
         super(itemView);
         lineHeaderView = itemView.findViewById(R.id.client_line_header);
-        line1LabelView = itemView.findViewById(R.id.client_line_1_label);
         line1ValueView = itemView.findViewById(R.id.client_line_1_value);
+        line2ValueView = itemView.findViewById(R.id.client_line_2_value);
     }
 
     public static ClientViewHolder create(ViewGroup parent) {
@@ -36,7 +35,8 @@ public class ClientViewHolder extends RecyclerView.ViewHolder {
         } else
             line1StatusView.setTextColor(line1StatusView.getResources().getColor(R.color.invoice_status_completed, null));
     }*/
-        line1LabelView.setText(String.format("OrgId: %s", clientDto.getOrganizationDto().getOrganizationNumber()));
-        line1ValueView.setText(String.format("contactPersonId: %s", clientDto.getCntactPersonDto().getFullName()));
+        line1ValueView.setText(String.format("%s", clientDto.getOrganizationDto().getOrganizationNumber()));
+        line2ValueView.setText(String.format("%s %s", clientDto.getCntactPersonDto().getFullName(),
+                clientDto.getCntactPersonDto().getContactInfo() != null ? clientDto.getCntactPersonDto().getContactInfo().getMobileNumber() : ""));
     }
 }

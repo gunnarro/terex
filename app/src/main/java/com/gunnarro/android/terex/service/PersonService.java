@@ -34,7 +34,7 @@ public class PersonService {
 
     @Inject
     public PersonService() {
-        this.personRepository = new PersonRepository();
+        this(new PersonRepository(), new ContactInfoService());
     }
 
     public PersonDto getPerson(Long personId) {
@@ -50,28 +50,34 @@ public class PersonService {
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures
     // that you're not doing any long running operations on the main thread, blocking the UI.
     public Long save(@NotNull final PersonDto personDto) {
+
+        if (personDto.hasContactInformation()) {
+            Long contactInformationId =  contactInfoService.save(personDto.getContactInfo());
+            personDto.getContactInfo().setId(contactInformationId);
+        }
+
         Person person = TimesheetMapper.fromPersonDto(personDto);
         try {
-            Person personExisting = null;
+            Person personExisting;
             if (person.getId() == null) {
                 personExisting = personRepository.findPerson(person.getFullName());
             } else {
                 personExisting = personRepository.getPerson(person.getId());
             }
-            Log.d("save person", String.format("existingPerson=%s", personExisting));
+            Log.d("savePerson", String.format("existingPerson=%s", personExisting));
             Long id;
             if (personExisting == null) {
                 person.setCreatedDate(LocalDateTime.now());
                 person.setLastModifiedDate(LocalDateTime.now());
                 id = personRepository.insert(person);
-                Log.d("", "inserted new person, id=" + id + " - " + person);
+                Log.d("savePerson", String.format("inserted new person, id= %s - %s", id, person));
             } else {
                 person.setId(personExisting.getId());
                 person.setCreatedDate(personExisting.getCreatedDate());
                 person.setLastModifiedDate(LocalDateTime.now());
                 personRepository.update(person);
                 id = person.getId();
-                Log.d("", "updated person, Id=" + id + " - " + person);
+                Log.d("savePerson", String.format("updated person, Id= %s - %s", id, person));
             }
             return id;
         } catch (Exception e) {

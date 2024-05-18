@@ -3,14 +3,12 @@ package com.gunnarro.android.terex.service;
 
 import android.util.Log;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-
 import com.gunnarro.android.terex.domain.dto.ClientDto;
+import com.gunnarro.android.terex.domain.dto.OrganizationDto;
 import com.gunnarro.android.terex.domain.dto.PersonDto;
+import com.gunnarro.android.terex.domain.dto.ProjectDto;
 import com.gunnarro.android.terex.domain.entity.Client;
 import com.gunnarro.android.terex.domain.entity.ClientDetails;
-import com.gunnarro.android.terex.domain.entity.Project;
 import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.repository.ClientRepository;
@@ -19,6 +17,7 @@ import com.gunnarro.android.terex.repository.ProjectRepository;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -28,40 +27,47 @@ import javax.inject.Singleton;
 public class ClientService {
 
     private final ClientRepository clientRepository;
-    private final ProjectRepository projectRepository;
+    private final OrganizationService organizationService;
+    private final ProjectService projectService;
     private final PersonService personService;
 
     /**
      * For unit test only
      */
     @Inject
-    public ClientService(ClientRepository clientRepository, ProjectRepository projectRepository, PersonService personService) {
+    public ClientService(ClientRepository clientRepository, OrganizationService organizationService, ProjectService projectService, PersonService personService) {
         this.clientRepository = clientRepository;
-        this.projectRepository = projectRepository;
+        this.organizationService = organizationService;
+        this.projectService = projectService;
         this.personService = personService;
     }
 
     @Inject
     public ClientService() {
-        this(new ClientRepository(), new ProjectRepository(), new PersonService());
+        this(new ClientRepository(), new OrganizationService(), new ProjectService(), new PersonService());
     }
 
     public List<ClientDto> getClients() {
-        List<Client> clients = clientRepository.getClients();
-        return TimesheetMapper.toClientDtoList(clients);
+        List<ClientDto> clientDtoList = new ArrayList<>();
+        List<Long> clientIds = clientRepository.getAllClientIds();
+        clientIds.forEach(id -> clientDtoList.add(getClient(id)));
+        return clientDtoList;
     }
 
     public ClientDto getClient(Long clientId) {
         Client client = clientRepository.getClient(clientId);
         Log.d("getClient", "clientId=" + clientId + ", client=" + client);
         if (client != null) {
-            List<Project> projects = projectRepository.getProjects(client.getId(), Project.ProjectStatusEnum.ACTIVE.name());
-            ClientDetails clientDetails = new ClientDetails();
-            clientDetails.setClient(client);
-            clientDetails.setProjectList(projects);
-            ClientDto clientDto = TimesheetMapper.toClientDto(clientDetails);
+            ClientDto clientDto = TimesheetMapper.toClientDto(client);
+            // add organization info
+            OrganizationDto organizationDto = organizationService.getOrganization(client.getId());
+            clientDto.setOrganizationDto(organizationDto);
+            // add contact person info
             PersonDto contactPersonDto = personService.getPerson(client.getContactPersonId());
             clientDto.setCntactPersonDto(contactPersonDto);
+            // add projects
+            List<ProjectDto> projectDtos = projectService.getProjects(client.getId(), ProjectRepository.ProjectStatusEnum.ACTIVE);
+            clientDto.setProjectList(projectDtos);
             return clientDto;
         }
         return null;
@@ -95,12 +101,14 @@ public class ClientService {
                 client.setCreatedDate(LocalDateTime.now());
                 client.setStatus(Client.ClientStatusEnum.ACTIVE.name());
                 id = clientRepository.insert(client);
+                Log.d("saveClient", String.format("inserted new client, id= %s - %s", id, client));
             } else {
                 client.setCreatedDate(clientExisting.getCreatedDate());
                 client.setStatus(clientDto.getStatus());
                 //client.setOrganizationId(clientExisting.getOrganizationId());
                 clientRepository.update(client);
                 id = clientExisting.getId();
+                Log.d("saveClient", String.format("updated client, id= %s - %s", id, client));
             }
             return id;
         } catch (Exception e) {

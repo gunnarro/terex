@@ -43,26 +43,26 @@ public class ContactInfoService {
     public Long save(@NotNull final ContactInfoDto contactInfoDto) {
         ContactInfo contactInfo = TimesheetMapper.fromContactInfoDto(contactInfoDto);
         try {
-            ContactInfo contactInfoExisting = null;
+            ContactInfo contactInfoExisting;
             if (contactInfo.getId() == null) {
                 contactInfoExisting = contactInfoRepository.findContactInfo(contactInfo.getMobileNumber(), contactInfoDto.getEmailAddress());
             } else {
                 contactInfoExisting = contactInfoRepository.getContactInfo(contactInfo.getId());
             }
-            Log.d("save person", String.format("existing contact info=%s", contactInfoExisting));
+            Log.d("saveContactInformation", String.format("existing contact info=%s", contactInfoExisting));
             Long id;
             if (contactInfoExisting == null) {
                 contactInfo.setCreatedDate(LocalDateTime.now());
                 contactInfo.setLastModifiedDate(LocalDateTime.now());
                 id = contactInfoRepository.insert(contactInfo);
-                Log.d("", "inserted new contact info, id=" + id + " - " + contactInfo);
+                Log.d("saveContactInformation", String.format("inserted new contact info, id= %s - %s", id, contactInfo));
             } else {
                 contactInfo.setId(contactInfoExisting.getId());
                 contactInfo.setCreatedDate(contactInfoExisting.getCreatedDate());
                 contactInfo.setLastModifiedDate(LocalDateTime.now());
                 contactInfoRepository.update(contactInfo);
                 id = contactInfo.getId();
-                Log.d("", "updated contact info, Id=" + id + " - " + contactInfo);
+                Log.d("saveContactInformation", String.format("updated contact info, Id= %s - %s", id, contactInfo));
             }
             return id;
         } catch (Exception e) {

@@ -40,19 +40,22 @@
 
         <TableRow>
             <TextView
-                android:id="@+id/client_line_1_label"
+                android:id="@+id/client_line_1_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:gravity="start"
+                android:text="828 707 922" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:id="@+id/client_line_2_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:gravity="start"
                 android:text="johann ett hansen" />
-
-            <TextView
-                android:id="@+id/client_line_1_value"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="end"
-                android:text="+47 45 46 55 00" />
         </TableRow>
     </TableLayout>
 </RelativeLayout>

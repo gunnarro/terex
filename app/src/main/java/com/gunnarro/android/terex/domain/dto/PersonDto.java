@@ -44,4 +44,8 @@ public class PersonDto {
     public void setContactInfo(ContactInfoDto contactInfo) {
         this.contactInfo = contactInfo;
     }
+
+    public boolean hasContactInformation() {
+        return this.contactInfo != null;
+    }
 }
