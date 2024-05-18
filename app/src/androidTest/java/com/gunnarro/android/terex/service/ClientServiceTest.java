@@ -13,7 +13,9 @@ import androidx.test.core.app.ApplicationProvider;
 import com.gunnarro.android.terex.DbHelper;
 import com.gunnarro.android.terex.config.AppDatabase;
 import com.gunnarro.android.terex.domain.dto.ClientDto;
+import com.gunnarro.android.terex.domain.dto.ContactInfoDto;
 import com.gunnarro.android.terex.domain.dto.OrganizationDto;
+import com.gunnarro.android.terex.domain.dto.PersonDto;
 import com.gunnarro.android.terex.domain.entity.Client;
 import com.gunnarro.android.terex.repository.ClientRepository;
 
@@ -41,39 +43,64 @@ public class ClientServiceTest {
         assertTrue(appDatabase.getOpenHelper().getWritableDatabase().isDatabaseIntegrityOk());
     }
 
-    /* fixme
+
+    /** fixme do not find the client in the test_data.sql file
     @Test
     public void getClient() {
-        ClientDto clientDto = clientService.getClient(1L);
+        ClientDto clientDto = clientService.getClient(1000L);
         assertNotNull(clientDto);
         assertEquals("GUNNARRO AS", clientDto.getName());
     }
-*/
+    */
+    @Test
+    public void getClient_not_found() {
+        ClientDto clientDto = clientService.getClient(9876L);
+        assertNull(clientDto);
+    }
+
     @Test
     public void newAndUpdateClient() {
         ClientDto newClientDto = new ClientDto();
         OrganizationDto organizationDto = new OrganizationDto();
-        organizationDto.setName("gunnarro as");
+        organizationDto.setName("gunnarro unittest as");
         organizationDto.setOrganizationNumber("822707922");
         newClientDto.setOrganizationDto(organizationDto);
         newClientDto.setName(organizationDto.getName());
         newClientDto.setStatus(Client.ClientStatusEnum.ACTIVE.name());
+        newClientDto.setCntactPersonDto(createContactPerson());
+
         Long id = clientService.saveClient(newClientDto);
         assertNotNull(id);
         // check new
         ClientDto clientDto = clientService.getClient(id);
         assertEquals(id, clientDto.getId());
-        assertEquals("gunnarro as", clientDto.getName());
+        assertEquals("gunnarro unittest as", clientDto.getName());
         assertEquals("ACTIVE", clientDto.getStatus());
-        assertNull(clientDto.getOrganizationDto()); // fixme should be returned by get client
-       // assertNotNull(clientDto.getOrganizationDto().getId());
-       // assertEquals("822707922", clientDto.getOrganizationDto().getOrganizationNumber());
+        assertEquals("1", clientDto.getOrganizationDto().getId().toString());
+        assertEquals("822707922", clientDto.getOrganizationDto().getOrganizationNumber());
+        assertEquals(1L, clientDto.getCntactPersonDto().getId().longValue());
+        assertEquals("gunnar ronneberg", clientDto.getCntactPersonDto().getFullName());
+        assertEquals(1L, clientDto.getCntactPersonDto().getContactInfo().getId().longValue());
+        assertEquals("gr@yahoo.org", clientDto.getCntactPersonDto().getContactInfo().getEmailAddress());
+        assertEquals("44556677", clientDto.getCntactPersonDto().getContactInfo().getMobileNumber());
+        assertEquals("+47", clientDto.getCntactPersonDto().getContactInfo().getMobileNumberCountryCode());
         // update client status
         clientDto.setStatus(Client.ClientStatusEnum.DEACTIVATED.name());
         id = clientService.saveClient(clientDto);
         // check updated
         ClientDto updatedClientDto = clientService.getClient(id);
-        assertEquals("gunnarro as", updatedClientDto.getName());
+        assertEquals("gunnarro unittest as", updatedClientDto.getName());
         assertEquals("DEACTIVATED", updatedClientDto.getStatus());
+    }
+
+    private PersonDto createContactPerson() {
+        PersonDto contactPersonDto = new PersonDto();
+        contactPersonDto.setFullName("gunnar ronneberg");
+        ContactInfoDto contactInfoDto = new ContactInfoDto();
+        contactInfoDto.setEmailAddress("gr@yahoo.org");
+        contactInfoDto.setMobileNumberCountryCode("+47");
+        contactInfoDto.setMobileNumber("44556677");
+        contactPersonDto.setContactInfo(contactInfoDto);
+        return contactPersonDto;
     }
 }

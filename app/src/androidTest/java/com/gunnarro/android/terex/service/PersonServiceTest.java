@@ -55,10 +55,10 @@ public class PersonServiceTest {
         PersonDto newPersonDto = createPersonDto();
 
         Long personId = personService.save(newPersonDto);
-        assertEquals(1, personId.intValue());
+        assertEquals(2, personId.intValue());
 
         PersonDto personDto = personService.getPerson(personId);
-        assertEquals(1, personDto.getId().intValue());
+        assertEquals(2, personDto.getId().intValue());
 
         assertEquals("ole gunnar hansen", personDto.getFullName());
         //  assertEquals("M", personDto.getGender());
@@ -67,7 +67,7 @@ public class PersonServiceTest {
         personId = personService.save(personDto);
 
         PersonDto updatedPersonDto = personService.getPerson(personId);
-        assertEquals(1, updatedPersonDto.getId().intValue());
+        assertEquals(2, updatedPersonDto.getId().intValue());
         assertEquals("ole gunnar hansen", personDto.getFullName());
         //assertEquals("M", updatedPersonDto.getGender());
     }

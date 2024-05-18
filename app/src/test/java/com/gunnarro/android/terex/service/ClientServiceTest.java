@@ -102,6 +102,7 @@ class ClientServiceTest {
         clientDto.setName("gunnarro as");
         clientDto.setStatus("ACTIVE");
         clientDto.setOrganizationDto(createOrganizationDto());
+        clientDto.setCntactPersonDto(createContactPerson());
 
         when(clientRepositoryMock.findClient(anyString())).thenReturn(null);
         when(clientRepositoryMock.insert(any())).thenReturn(1000L);
@@ -118,6 +119,7 @@ class ClientServiceTest {
         clientDto.setName("gunnarro as");
         clientDto.setStatus("ACTIVE");
         clientDto.setOrganizationDto(createOrganizationDto());
+        clientDto.setCntactPersonDto(createContactPerson());
 
         when(clientRepositoryMock.getClient(anyLong())).thenReturn(TimesheetMapper.fromClientDto(clientDto));
         when(clientRepositoryMock.update(any())).thenReturn(1);
@@ -153,5 +155,16 @@ class ClientServiceTest {
         organizationDto.setContactPerson(contectPersonDto);
         organizationDto.setContactInfo(contactInfoDto);
         return organizationDto;
+    }
+
+    private PersonDto createContactPerson() {
+        PersonDto contactPersonDto = new PersonDto();
+        contactPersonDto.setFullName("gunnar ronneberg");
+        ContactInfoDto contactInfoDto = new ContactInfoDto();
+        contactInfoDto.setEmailAddress("gr@yahoo.org");
+        contactInfoDto.setMobileNumberCountryCode("+47");
+        contactInfoDto.setMobileNumber("44556677");
+        contactPersonDto.setContactInfo(contactInfoDto);
+        return contactPersonDto;
     }
 }

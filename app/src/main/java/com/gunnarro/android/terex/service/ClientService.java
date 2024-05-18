@@ -14,8 +14,6 @@ import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.repository.ClientRepository;
 import com.gunnarro.android.terex.repository.ProjectRepository;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +54,7 @@ public class ClientService {
 
     public ClientDto getClient(Long clientId) {
         Client client = clientRepository.getClient(clientId);
-        Log.d("getClient", "clientId=" + clientId + ", client=" + client);
+        Log.d("getClient", String.format("clientId= %s - %s", clientId, client));
         if (client != null) {
             ClientDto clientDto = TimesheetMapper.toClientDto(client);
             // add organization info
@@ -83,9 +81,26 @@ public class ClientService {
         return null;
     }
 
+    public Long saveClient(ClientDto clientDto) {
+        try {
+            // save organization data
+            Long organizationId = organizationService.save(clientDto.getOrganizationDto());
+            clientDto.getOrganizationDto().setId(organizationId);
+            // save contact person information
+            Long contactPersonId = personService.save(clientDto.getCntactPersonDto());
+            clientDto.getCntactPersonDto().setId(contactPersonId);
+            // finally save client
+            return save(clientDto);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("Error", String.format("%s", e.getCause()));
+            throw new TerexApplicationException("Error saving client!" + e.getMessage(), "50050", e.getCause());
+        }
+    }
+
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures
     // that you're not doing any long running operations on the main thread, blocking the UI.
-    public Long saveClient(@NotNull final ClientDto clientDto) {
+    private Long save(ClientDto clientDto) {
         try {
             Client clientExisting;
             if (clientDto.getId() == null) {

@@ -24,9 +24,6 @@ import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.integration.breg.BregService;
 import com.gunnarro.android.terex.service.ClientService;
-import com.gunnarro.android.terex.service.ContactInfoService;
-import com.gunnarro.android.terex.service.OrganizationService;
-import com.gunnarro.android.terex.service.PersonService;
 import com.gunnarro.android.terex.utility.Utility;
 
 import org.jetbrains.annotations.NotNull;
@@ -40,9 +37,6 @@ public class ClientNewFragment extends BaseFragment implements View.OnClickListe
 
     private final BregService bregService;
     private ClientService clientService;
-    private OrganizationService organizationService;
-    private PersonService personService;
-    private ContactInfoService contactInfoService;
 
     @Inject
     public ClientNewFragment() {
@@ -54,8 +48,6 @@ public class ClientNewFragment extends BaseFragment implements View.OnClickListe
         super.onCreate(savedInstanceState);
         requireActivity().setTitle(R.string.title_client_new);
         clientService = new ClientService();
-        organizationService = new OrganizationService();
-        personService = new PersonService();
     }
 
     @Override
@@ -113,12 +105,6 @@ public class ClientNewFragment extends BaseFragment implements View.OnClickListe
     private void saveClient() {
         try {
             ClientDto clientDto = readClientInputData();
-            // save organization data
-            Long organizationId = organizationService.save(clientDto.getOrganizationDto());
-            clientDto.getOrganizationDto().setId(organizationId);
-            // save contact person information
-            Long contactPersonId = personService.save(clientDto.getCntactPersonDto());
-            clientDto.getCntactPersonDto().setId(contactPersonId);
             // finally save client
             clientService.saveClient(clientDto);
             showSnackbar(String.format(getResources().getString(R.string.info_client_saved_msg_format), clientDto.getOrganizationDto().getOrganizationNumber(), clientDto.getOrganizationDto().getName()), R.color.color_snackbar_text_add);

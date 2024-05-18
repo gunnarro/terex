@@ -21,7 +21,7 @@ INSERT INTO person (id, uuid, created_date, last_modified_date, full_name, addre
 
 -- update client data
 DELETE FROM client WHERE id > 0
-INSERT INTO client (id, uuid, created_date, last_modified_date, organization_id, name, status) VALUES(1, '', current_timestamp, current_timestamp, 2, 'gunnarro as', 'ACTIVE')
+INSERT INTO client (id, uuid, created_date, last_modified_date, organization_id, name, status) VALUES(1000, '', current_timestamp, current_timestamp, 2, 'gunnarro as', 'ACTIVE')
 
 -- update project data
 DELETE FROM project WHERE id > 0
