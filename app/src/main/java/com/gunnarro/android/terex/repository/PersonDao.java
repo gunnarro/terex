@@ -12,8 +12,8 @@ import com.gunnarro.android.terex.domain.entity.Person;
 @Dao
 public interface PersonDao {
 
-    @Query("SELECT * FROM person p WHERE p.first_name = :firstName AND p.middle_name = :middleName AND p.last_name = :lastName")
-    Person findPerson(String firstName, String middleName, String lastName);
+    @Query("SELECT * FROM person p WHERE p.full_name = :fullName")
+    Person findPerson(String fullName);
 
     @Query("SELECT * FROM person p WHERE p.id = :personId")
     Person getPerson(Long personId);

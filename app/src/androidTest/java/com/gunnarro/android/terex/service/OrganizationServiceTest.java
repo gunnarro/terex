@@ -94,8 +94,7 @@ public class OrganizationServiceTest {
         contactInfoDto.setMobileNumber("22334455");
 
         PersonDto contectPersonDto = new PersonDto();
-        contectPersonDto.setFirstName("ole");
-        contectPersonDto.setLastName("hansen");
+        contectPersonDto.setFullName("ole hansem");
 
         BusinessAddressDto organizationAddress = new BusinessAddressDto();
         organizationAddress.setStreetAddress("my-street 34");

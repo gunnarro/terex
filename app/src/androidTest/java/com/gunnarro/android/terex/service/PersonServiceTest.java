@@ -47,7 +47,7 @@ public class PersonServiceTest {
      */
     @Test
     public void getPerson_not_found() {
-        assertEquals(null, personService.getPerson(1L));
+        assertEquals(null, personService.getPerson(1000L));
     }
 
     @Test
@@ -64,7 +64,6 @@ public class PersonServiceTest {
         //  assertEquals("M", personDto.getGender());
 
         // update and save person
-        personDto.setMiddleName("");
         personId = personService.save(personDto);
 
         PersonDto updatedPersonDto = personService.getPerson(personId);

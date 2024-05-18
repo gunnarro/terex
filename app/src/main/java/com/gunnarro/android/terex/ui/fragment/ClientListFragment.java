@@ -59,7 +59,7 @@ public class ClientListFragment extends BaseFragment implements ListOnItemClickL
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_recycler_client_list, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.client_list_recyclerview);
-        final ClientListAdapter adapter = new ClientListAdapter(this, new ClientListAdapter.ClientDiff());
+        final ClientListAdapter adapter = new ClientListAdapter(this, new ClientListAdapter.ClientDtoDiff());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         // Add an observer on the LiveData returned by getAlphabetizedWords.

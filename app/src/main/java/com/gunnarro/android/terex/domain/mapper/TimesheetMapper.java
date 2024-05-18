@@ -282,9 +282,6 @@ public class TimesheetMapper {
         PersonDto personDto = new PersonDto();
         personDto.setId(person.getId());
         personDto.setFullName(person.getFullName());
-        personDto.setFirstName(person.getFirstName());
-        personDto.setMiddleName(person.getMiddleName());
-        personDto.setLastName(person.getLastName());
         return personDto;
     }
 
@@ -295,9 +292,6 @@ public class TimesheetMapper {
         Person person = new Person();
         person.setId(personDto.getId());
         person.setFullName(personDto.getFullName());
-        person.setFirstName(personDto.getFirstName());
-        person.setMiddleName(personDto.getMiddleName());
-        person.setLastName(personDto.getLastName());
         person.setAddressId(personDto.getAddress() != null ? personDto.getAddress().getId() : null);
         person.setContactInfoId(personDto.getContactInfo() != null ? personDto.getContactInfo().getId() : null);
         return person;

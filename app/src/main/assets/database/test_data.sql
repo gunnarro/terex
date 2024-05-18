@@ -10,8 +10,8 @@ INSERT INTO contact_info (id, uuid, created_date, last_modified_date, email_addr
 
 -- update person table data
 DELETE FROM person WHERE id > 0
-INSERT INTO person (id, uuid, created_date, last_modified_date, full_name, first_name, middle_name, last_name, address_id, contact_info_id) VALUES (2, '', current_timestamp, current_timestamp, 'Gunnar Rønneberg' ,'Gunnar', null, 'Rønneberg', null, 1)
-INSERT INTO person (id, uuid, created_date, last_modified_date, full_name, first_name, middle_name, last_name, address_id, contact_info_id) VALUES (3, '', current_timestamp, current_timestamp, 'Anita Lundtveit', 'Anita', null, 'Lundtveit', null, 2)
+INSERT INTO person (id, uuid, created_date, last_modified_date, full_name, address_id, contact_info_id) VALUES (2, '', current_timestamp, current_timestamp, 'Gunnar Rønneberg', null, 1)
+INSERT INTO person (id, uuid, created_date, last_modified_date, full_name, address_id, contact_info_id) VALUES (3, '', current_timestamp, current_timestamp, 'Anita Lundtveit', null, 2)
 
 -- update organization table data
  DELETE FROM organization WHERE id > 0

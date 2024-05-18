@@ -41,10 +41,10 @@ public class PersonRepository {
         }
     }
 
-    public Person findPerson(String firstName, String middleName, String lastName) {
+    public Person findPerson(String fullName) {
         try {
             CompletionService<Person> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
-            service.submit(() -> personDao.findPerson(firstName, middleName, lastName));
+            service.submit(() -> personDao.findPerson(fullName));
             Future<Person> future = service.take();
             return future != null ? future.get() : null;
         } catch (InterruptedException | ExecutionException e) {

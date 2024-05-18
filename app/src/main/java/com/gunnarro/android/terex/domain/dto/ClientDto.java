@@ -1,6 +1,7 @@
 package com.gunnarro.android.terex.domain.dto;
 
 import java.util.List;
+import java.util.Objects;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -66,5 +67,18 @@ public class ClientDto {
 
     public void setProjectList(List<ProjectDto> projectList) {
         this.projectList = projectList;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ClientDto clientDto = (ClientDto) o;
+        return Objects.equals(name, clientDto.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }

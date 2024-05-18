@@ -10,15 +10,16 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
 import com.gunnarro.android.terex.R;
+import com.gunnarro.android.terex.domain.dto.ClientDto;
 import com.gunnarro.android.terex.domain.entity.Client;
 import com.gunnarro.android.terex.ui.fragment.ClientListFragment;
 import com.gunnarro.android.terex.ui.listener.ListOnItemClickListener;
 import com.gunnarro.android.terex.ui.view.ClientViewHolder;
 
-public class ClientListAdapter extends ListAdapter<Client, ClientViewHolder> implements AdapterView.OnItemClickListener {
+public class ClientListAdapter extends ListAdapter<ClientDto, ClientViewHolder> implements AdapterView.OnItemClickListener {
     private final ListOnItemClickListener listOnItemClickListener;
 
-    public ClientListAdapter(@NonNull ListOnItemClickListener listOnItemClickListener, @NonNull DiffUtil.ItemCallback<Client> diffCallback) {
+    public ClientListAdapter(@NonNull ListOnItemClickListener listOnItemClickListener, @NonNull DiffUtil.ItemCallback<ClientDto> diffCallback) {
         super(diffCallback);
         this.setHasStableIds(true);
         this.listOnItemClickListener = listOnItemClickListener;
@@ -56,6 +57,19 @@ public class ClientListAdapter extends ListAdapter<Client, ClientViewHolder> imp
 
         @Override
         public boolean areContentsTheSame(@NonNull Client oldItem, @NonNull Client newItem) {
+            return oldItem.equals(newItem);
+        }
+    }
+
+    public static class ClientDtoDiff extends DiffUtil.ItemCallback<ClientDto> {
+
+        @Override
+        public boolean areItemsTheSame(@NonNull ClientDto oldItem, @NonNull ClientDto newItem) {
+            return oldItem == newItem;
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull ClientDto oldItem, @NonNull ClientDto newItem) {
             return oldItem.equals(newItem);
         }
     }

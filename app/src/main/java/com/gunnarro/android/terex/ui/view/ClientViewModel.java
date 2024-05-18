@@ -4,9 +4,10 @@ import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
-import com.gunnarro.android.terex.domain.entity.Client;
-import com.gunnarro.android.terex.repository.ClientRepository;
+import com.gunnarro.android.terex.domain.dto.ClientDto;
+import com.gunnarro.android.terex.service.ClientService;
 
 import java.util.List;
 
@@ -15,20 +16,21 @@ import java.util.List;
  */
 public class ClientViewModel extends AndroidViewModel {
 
-    private final ClientRepository clientRepository;
+    private final ClientService clientService;
     // Using LiveData and caching what getAlphabetizedWords returns has several benefits:
     // - We can put an observer on the data (instead of polling for changes) and only update the
     //   the UI when the data actually changes.
-    private final LiveData<List<Client>> clients;
+    private final MutableLiveData<List<ClientDto>> clientsLiveData;
 
     public ClientViewModel(Application application) {
         super(application);
-        clientRepository = new ClientRepository();
-        clients = clientRepository.getAllClients();
+        clientsLiveData = new MutableLiveData<>();
+        clientService = new ClientService();
+        clientsLiveData.setValue(clientService.getClients());
     }
 
-    public LiveData<List<Client>> getAllClients() {
-        return clients;
+    public LiveData<List<ClientDto>> getAllClients() {
+        return clientsLiveData;
     }
 
 }

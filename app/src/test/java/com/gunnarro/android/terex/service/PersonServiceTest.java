@@ -68,7 +68,7 @@ class PersonServiceTest {
     void savePerson_new() throws ExecutionException, InterruptedException {
         PersonDto personDto = createPersonDto();
 
-        when(personRepositoryMock.findPerson(anyString(), anyString(), anyString())).thenReturn(null);
+        when(personRepositoryMock.findPerson(anyString())).thenReturn(null);
         when(personRepositoryMock.insert(any())).thenReturn(1000L);
 
         Long clientId = personService.save(personDto);
@@ -89,9 +89,7 @@ class PersonServiceTest {
 
     private PersonDto createPersonDto() {
         PersonDto personDto = new PersonDto();
-        personDto.setFirstName("gunnar");
-        personDto.setMiddleName("astor");
-        personDto.setLastName("ronneberg");
+        personDto.setFullName("gunnar astor ronneberg");
         ContactInfoDto contactInfoDto = new ContactInfoDto();
         contactInfoDto.setEmailAddress("my@gmail.com");
         contactInfoDto.setMobileNumberCountryCode("+47");

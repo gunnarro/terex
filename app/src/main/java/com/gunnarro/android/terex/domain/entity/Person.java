@@ -19,7 +19,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @TypeConverters({LocalDateConverter.class, LocalDateTimeConverter.class})
-@Entity(tableName = "person", indices = {@Index(value = {"first_name"}, unique = true)})
+@Entity(tableName = "person", indices = {@Index(value = {"full_name"}, unique = true)})
 public class Person extends BaseEntity {
 
     @ColumnInfo(name = "address_id")
@@ -32,12 +32,6 @@ public class Person extends BaseEntity {
     @NotNull
     @ColumnInfo(name = "full_name")
     private String fullName;
-    @ColumnInfo(name = "first_name")
-    private String firstName;
-    @ColumnInfo(name = "middle_name")
-    private String middleName;
-    @ColumnInfo(name = "last_name")
-    private String lastName;
     @ColumnInfo(name = "date_of_birth")
     private LocalDate dateOfBirth;
     @ColumnInfo(name = "social_security_number")
@@ -69,30 +63,6 @@ public class Person extends BaseEntity {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getMiddleName() {
-        return middleName;
-    }
-
-    public void setMiddleName(String middleName) {
-        this.middleName = middleName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public LocalDate getDateOfBirth() {
@@ -135,9 +105,6 @@ public class Person extends BaseEntity {
         sb.append(", addressId=").append(addressId);
         sb.append(", contactInfoId=").append(contactInfoId);
         sb.append(", fullName='").append(fullName).append('\'');
-        sb.append(", firstName='").append(firstName).append('\'');
-        sb.append(", middleName='").append(middleName).append('\'');
-        sb.append(", lastName='").append(lastName).append('\'');
         sb.append(", dateOfBirth=").append(dateOfBirth);
         sb.append(", socialSecurityNumber='").append(socialSecurityNumber).append('\'');
         sb.append(", gender='").append(gender).append('\'');

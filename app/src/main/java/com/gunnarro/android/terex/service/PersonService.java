@@ -54,7 +54,7 @@ public class PersonService {
         try {
             Person personExisting = null;
             if (person.getId() == null) {
-                personExisting = personRepository.findPerson(person.getFirstName(), person.getMiddleName(), person.getLastName());
+                personExisting = personRepository.findPerson(person.getFullName());
             } else {
                 personExisting = personRepository.getPerson(person.getId());
             }
