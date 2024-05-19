@@ -171,17 +171,6 @@ public class TimesheetMapper {
         return clientDto;
     }
 
-    public static ClientDto toClientDto(ClientDetails clientDetails) {
-        ClientDto clientDto = new ClientDto();
-        clientDto.setId(clientDetails.getClient().getId());
-        clientDto.setName(clientDetails.getClient().getName());
-        clientDto.setStatus(clientDetails.getClient().getStatus());
-        clientDto.setProjectList(toProjectDtoList(clientDetails.getProjectList()));
-        //  clientDto.setOrganizationDto(toOrganizationDto(clientDetails.getOrganizationDetails()));
-        clientDto.setCntactPersonDto(toPersonDto(clientDetails.getContactPerson()));
-        return clientDto;
-    }
-
     public static Client fromClientDto(ClientDto clientDto) {
         Client client = new Client();
         client.setId(clientDto.getId());

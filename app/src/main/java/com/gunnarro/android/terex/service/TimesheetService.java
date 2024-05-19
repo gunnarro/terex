@@ -357,8 +357,8 @@ public class TimesheetService {
         context.put("invoiceAttachmentTitle", "Vedlegg til faktura");
         context.put("invoiceBillingPeriod", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM")));
         context.put("timesheetPeriod", String.format("%s/%s", timesheet.getMonth(), timesheet.getYear()));
-        context.put("company", organizationRepository.getOrganization(1L));
-        context.put("client", organizationRepository.getOrganization(2L));
+        context.put("company", organizationRepository.getOrganization(1L)); //fixme
+        context.put("client", organizationRepository.getOrganization(2L)); // fixme
         context.put("timesheetProjectCode", "techlead-catalystone-solution-as");
         context.put("timesheetSummaryList", TimesheetMapper.toTimesheetSummaryDtoList(timesheetSummaryList));
         context.put("totalBilledHours", String.format(Locale.getDefault(), "%.1f", totalBilledHours));
@@ -381,6 +381,15 @@ public class TimesheetService {
         Mustache mustache = mf.compile(new StringReader(loadMustacheTemplate(applicationContext, InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET)), "");
         Map<String, Object> context = new HashMap<>();
         context.put("title", "Timeliste for konsulentbistand");
+        context.put("consultantName", "Gunnar Rønneberg");
+        context.put("clientProjectName", "");
+        context.put("clientName", "");
+        context.put("clientContactPersonName", "");
+        context.put("clientContactPersonMobile", "");
+        context.put("clientContactPersonEmail", "");
+
+
+
         context.put("timesheetPeriod", String.format("%s/%s", timesheet.getMonth(), timesheet.getYear()));
         context.put("timesheetEntryDtoList", timesheetEntryDtoList);
         context.put("numberOfWorkedDays", numberOfWorkedDays);

@@ -28,13 +28,12 @@ public class ClientViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bindListLine(ClientDto clientDto) {
-        lineHeaderView.setText(String.format("%s %s", clientDto.getName(), clientDto.getStatus()));
-     /*   line1StatusView.setText(client.getStatus());
-        if (client.getStatus().equals("ACTIVE")) {
-            line1StatusView.setTextColor(line1StatusView.getResources().getColor(R.color.invoice_status_open, null));
-        } else
-            line1StatusView.setTextColor(line1StatusView.getResources().getColor(R.color.invoice_status_completed, null));
-    }*/
+        lineHeaderView.setText(String.format("%s", clientDto.getName()));
+        if (clientDto.getStatus().equals("ACTIVE")) {
+            lineHeaderView.setTextColor(lineHeaderView.getResources().getColor(R.color.client_status_active, null));
+        } else {
+            lineHeaderView.setTextColor(lineHeaderView.getResources().getColor(R.color.client_status_deactivated, null));
+        }
         int numberOfProjects = clientDto.getProjectList() != null ? clientDto.getProjectList().size() : 0;
         line1ValueView.setText(String.format("Number of projects: %s", numberOfProjects));
         line2ValueView.setText(String.format("%s %s", clientDto.getCntactPersonDto().getFullName(),

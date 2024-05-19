@@ -126,6 +126,7 @@ public class TimesheetRepository {
             return future != null ? future.get() : null;
         } catch (InterruptedException | ExecutionException e) {
             // Something crashed, therefore restore interrupted state before leaving.
+            e.printStackTrace();
             Thread.currentThread().interrupt();
             throw new TerexApplicationException("Error getting timesheet list", e.getMessage(), e.getCause());
         }

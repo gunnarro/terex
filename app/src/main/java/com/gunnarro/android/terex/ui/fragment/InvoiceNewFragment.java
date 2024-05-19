@@ -133,6 +133,7 @@ public class InvoiceNewFragment extends BaseFragment {
             timesheetSummaryAttachment.setAttachmentFileContent(invoiceSummaryHtml.getBytes(StandardCharsets.UTF_8));
             invoiceService.saveInvoiceAttachment(timesheetSummaryAttachment);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new TerexApplicationException(String.format("Error crating invoice attachment, invoice ref=%s", invoiceId), "50023", e);
         }
     }
@@ -153,6 +154,7 @@ public class InvoiceNewFragment extends BaseFragment {
             clientTimesheetAttachment.setAttachmentFileContent(timesheetAttachmentHtml.getBytes(StandardCharsets.UTF_8));
             invoiceService.saveInvoiceAttachment(clientTimesheetAttachment);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new TerexApplicationException(String.format("Error crating timesheet attachment, timesheetId=%s", timesheetId), "50023", e);
         }
     }

@@ -8,7 +8,6 @@ import com.gunnarro.android.terex.domain.dto.OrganizationDto;
 import com.gunnarro.android.terex.domain.dto.PersonDto;
 import com.gunnarro.android.terex.domain.dto.ProjectDto;
 import com.gunnarro.android.terex.domain.entity.Client;
-import com.gunnarro.android.terex.domain.entity.ClientDetails;
 import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.repository.ClientRepository;
@@ -67,16 +66,6 @@ public class ClientService {
             List<ProjectDto> projectDtos = projectService.getProjects(client.getId(), ProjectRepository.ProjectStatusEnum.ACTIVE);
             clientDto.setProjectList(projectDtos);
             return clientDto;
-        }
-        return null;
-    }
-
-    public ClientDto findClient(String name) {
-        Client client = clientRepository.findClient(name);
-        if (client != null) {
-            ClientDetails clientDetails = new ClientDetails();
-            clientDetails.setClient(client);
-            return TimesheetMapper.toClientDto(clientDetails);
         }
         return null;
     }
