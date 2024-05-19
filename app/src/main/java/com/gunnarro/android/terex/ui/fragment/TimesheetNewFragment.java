@@ -81,6 +81,11 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
         //String[] projects = consultantBrokerDto != null ? consultantBrokerDto.getProjects().stream().map(ProjectDto::getName).toArray(String[]::new) : new String[]{};
 
         ClientDto clientDto = clientService.getClient(1L);
+        if (clientDto == null) {
+           // showInfoDialog("Error", "No clients found! Please add a client.");
+            // return to timesheet list
+            throw new TerexApplicationException("No clients found! Please add a client.", "40040", null);
+        }
         String[] clients = new String[]{clientDto.getName()};
         String[] projects = clientDto.getProjectList().stream().map(ProjectDto::getName).toArray(String[]::new);
 

@@ -201,8 +201,6 @@ Papp/src/main/java/com/gunnarro/android/terex/domain/dto/ConsultantBrokerDto.jav
 Tapp/src/main/java/com/gunnarro/android/terex/domain/entity/ConsultantAssignment.java,c/d/cd4936be4518d5c44f2f7875b1d2126d9eca76b4
 Œ
 \app/src/androidTest/java/com/gunnarro/android/terex/service/ConsultantBrokerServiceTest.java,6/5/65d6ac53802133050f54d8bfa8faa066d2409a3f
-p
-@app/schemas/com.gunnarro.android.terex.config.AppDatabase/1.json,e/9/e92146ea07fe92b113b89075e340e150a3d28d5d
 }
 Mapp/src/test/java/com/gunnarro/android/terex/domain/entity/TimesheetTest.java,8/b/8b0bb41d1d99f908bb8c2b718847219968614e97
 y
@@ -328,3 +326,9 @@ z
 Japp/src/main/java/com/gunnarro/android/terex/ui/view/ProjectViewModel.java,5/a/5aa5ef4746094b4425c004b1bca9142675f6301d
 €
 Papp/src/main/java/com/gunnarro/android/terex/ui/fragment/ProjectNewFragment.java,c/a/ca1a80d312be7b44765420b7bcc98c914544389b
+~
+Napp/src/main/java/com/gunnarro/android/terex/utility/LocalTimeTypeAdapter.java,0/0/00e85c8c7589f45e300cb16da934ac3285aa730c
+~
+Napp/src/main/java/com/gunnarro/android/terex/utility/LocalDateTypeAdapter.java,f/4/f45b4a64cd8b6af0b8d0578dac84d464695d264d
+‚
+Rapp/src/main/java/com/gunnarro/android/terex/utility/LocalDateTimeTypeAdapter.java,d/4/d47286a14a12f156655b3cbec1ba7195d1190e5d

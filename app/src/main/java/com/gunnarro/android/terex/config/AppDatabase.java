@@ -59,7 +59,7 @@ import java.util.concurrent.Executors;
         ConsultantBroker.class,
         Client.class,
         Consultant.class
-}, version = 3, views = {TimesheetView.class}, exportSchema = true)
+}, version = 1, views = {TimesheetView.class}, exportSchema = true)
 public abstract class AppDatabase extends RoomDatabase {
     // marking the instance as volatile to ensure atomic access to the variable
     // The Java volatile keyword guarantees visibility of changes to variables across threads

@@ -17,8 +17,8 @@
             android:id="@+id/nav_from_home_to_invoice_list"
             app:destination="@id/invoice_list_fragment" />
         <action
-            android:id="@+id/nav_from_home_to_admin"
-            app:destination="@id/admin_fragment" />
+            android:id="@+id/nav_from_home_to_client_list"
+            app:destination="@id/client_list_fragment" />
     </fragment>
 
     <!-- client navigation -->

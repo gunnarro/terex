@@ -314,7 +314,6 @@ public class TimesheetService {
         return timesheetSummaryByWeek;
     }
 
-
     public String createTimesheetSummaryAttachmentHtml(@NotNull Long timesheetId, @NotNull Context applicationContext) {
         Timesheet timesheet = getTimesheet(timesheetId);
         List<TimesheetSummary> timesheetSummaryList = getTimesheetSummary(timesheetId);
@@ -344,7 +343,6 @@ public class TimesheetService {
         return writer.toString();
     }
 
-
     public String createTimesheetSummaryHtml(@NotNull Long timesheetId, @NotNull Context applicationContext) {
         Timesheet timesheet = getTimesheet(timesheetId);
         List<TimesheetSummary> timesheetSummaryList = createTimesheetSummary(timesheetId, "WEEK");
@@ -373,9 +371,6 @@ public class TimesheetService {
         mustache.execute(writer, context);
         return writer.toString();
     }
-
-
-
 
     public String createTimesheetListHtml(@NotNull Long timesheetId, @NotNull Context applicationContext) {
         Timesheet timesheet = getTimesheet(timesheetId);
@@ -412,7 +407,6 @@ public class TimesheetService {
         });
         return timesheetSummary;
     }
-
 
     private void populateTimesheetList(Long timesheetId, List<TimesheetEntry> timesheetEntryList) {
         Timesheet timesheet = getTimesheet(timesheetId);

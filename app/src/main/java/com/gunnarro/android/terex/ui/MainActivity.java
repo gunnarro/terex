@@ -29,8 +29,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
-
     public static final int PERMISSION_REQUEST = 1;
 
     AppBarConfiguration appBarConfiguration;
@@ -58,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
             Log.e(Utility.buildTag(getClass(), "onCreate"), "Failed starting! " + e.getMessage());
             throw new TerexApplicationException("Application error!", "50000", e);
         }
-
 
         // new navigation https://developer.android.com/guide/navigation/integrations/ui
 

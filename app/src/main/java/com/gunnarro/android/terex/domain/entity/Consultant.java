@@ -23,7 +23,6 @@ public class Consultant extends BaseEntity {
     @ColumnInfo(name = "company_id")
     private Long companyId;
 
-
     @ColumnInfo(name = "name")
     private String name;
 
