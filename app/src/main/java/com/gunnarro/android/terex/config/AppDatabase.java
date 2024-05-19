@@ -13,8 +13,6 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import com.gunnarro.android.terex.domain.dbview.TimesheetView;
 import com.gunnarro.android.terex.domain.entity.Address;
 import com.gunnarro.android.terex.domain.entity.Client;
-import com.gunnarro.android.terex.domain.entity.Consultant;
-import com.gunnarro.android.terex.domain.entity.ConsultantBroker;
 import com.gunnarro.android.terex.domain.entity.ContactInfo;
 import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.InvoiceAttachment;
@@ -25,18 +23,17 @@ import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
+import com.gunnarro.android.terex.repository.AddressDao;
 import com.gunnarro.android.terex.repository.ClientDao;
-import com.gunnarro.android.terex.repository.ConsultantBrokerDao;
 import com.gunnarro.android.terex.repository.ContactInfoDao;
 import com.gunnarro.android.terex.repository.InvoiceAttachmentDao;
 import com.gunnarro.android.terex.repository.InvoiceDao;
 import com.gunnarro.android.terex.repository.OrganizationDao;
+import com.gunnarro.android.terex.repository.PersonDao;
 import com.gunnarro.android.terex.repository.ProjectDao;
 import com.gunnarro.android.terex.repository.TimesheetDao;
 import com.gunnarro.android.terex.repository.TimesheetEntryDao;
 import com.gunnarro.android.terex.repository.TimesheetSummaryDao;
-import com.gunnarro.android.terex.repository.PersonDao;
-import com.gunnarro.android.terex.repository.AddressDao;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -56,9 +53,7 @@ import java.util.concurrent.Executors;
         Person.class,
         Organization.class,
         InvoiceAttachment.class,
-        ConsultantBroker.class,
         Client.class,
-        Consultant.class
 }, version = 1, views = {TimesheetView.class}, exportSchema = true)
 public abstract class AppDatabase extends RoomDatabase {
     // marking the instance as volatile to ensure atomic access to the variable
@@ -94,7 +89,7 @@ public abstract class AppDatabase extends RoomDatabase {
      */
     public static synchronized AppDatabase getDatabase() {
         if (INSTANCE == null) {
-            throw   new TerexApplicationException("Database not initialized. You should call AppDatabase.init(context) in the MainActivity.", "50050", null);
+            throw new TerexApplicationException("Database not initialized. You should call AppDatabase.init(context) in the MainActivity.", "50050", null);
         }
         return INSTANCE;
     }
@@ -116,8 +111,6 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract InvoiceAttachmentDao invoiceAttachmentDao();
 
     public abstract OrganizationDao organizationDao();
-
-    public abstract ConsultantBrokerDao consultantBrokerDao();
 
     public abstract ClientDao clientDao();
 

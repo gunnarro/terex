@@ -8,7 +8,6 @@ import com.gunnarro.android.terex.TestData;
 import com.gunnarro.android.terex.domain.dto.AddressDto;
 import com.gunnarro.android.terex.domain.dto.BusinessAddressDto;
 import com.gunnarro.android.terex.domain.dto.ClientDto;
-import com.gunnarro.android.terex.domain.dto.ConsultantBrokerDto;
 import com.gunnarro.android.terex.domain.dto.ContactInfoDto;
 import com.gunnarro.android.terex.domain.dto.OrganizationDto;
 import com.gunnarro.android.terex.domain.dto.PersonDto;
@@ -19,8 +18,6 @@ import com.gunnarro.android.terex.domain.dto.TimesheetSummaryDto;
 import com.gunnarro.android.terex.domain.entity.Address;
 import com.gunnarro.android.terex.domain.entity.Client;
 import com.gunnarro.android.terex.domain.entity.ClientDetails;
-import com.gunnarro.android.terex.domain.entity.ConsultantBroker;
-import com.gunnarro.android.terex.domain.entity.ConsultantBrokerWithProject;
 import com.gunnarro.android.terex.domain.entity.ContactInfo;
 import com.gunnarro.android.terex.domain.entity.Organization;
 import com.gunnarro.android.terex.domain.entity.Person;
@@ -118,44 +115,6 @@ class TimesheetMapperTest {
         assertEquals(projectDto.getStatus(), project.getStatus());
     }
 
-    @Test
-    void toConsultantBrokerDto() {
-        ConsultantBroker consultantBroker = new ConsultantBroker();
-        consultantBroker.setId(12L);
-        consultantBroker.setName("gunnarro consultant broker");
-        consultantBroker.setStatus("ACTIVE");
-
-        Project project = new Project();
-        project.setName("gunnarro timesheet project");
-        project.setId(1L);
-        project.setClientId(1L);
-        project.setDescription("develop a timesheet app");
-        project.setStatus(Project.ProjectStatusEnum.ACTIVE.name());
-
-        ConsultantBrokerWithProject consultantBrokerWithProject = new ConsultantBrokerWithProject();
-        consultantBrokerWithProject.setConsultantBroker(consultantBroker);
-        consultantBrokerWithProject.setProjectList(List.of(project));
-
-        ConsultantBrokerDto consultantBrokerDto = TimesheetMapper.toConsultantBrokerDto(consultantBrokerWithProject);
-        assertEquals(12, consultantBrokerDto.getId().intValue());
-        assertEquals("gunnarro consultant broker", consultantBrokerDto.getName());
-        assertEquals(1, consultantBrokerDto.getProjects().size());
-        assertEquals("gunnarro timesheet project", consultantBrokerDto.getProjects().get(0).getName());
-    }
-
-    @Test
-    void fromConsultantBrokerDto() {
-        ConsultantBrokerDto consultantBrokerDto = new ConsultantBrokerDto();
-        consultantBrokerDto.setId(12L);
-        consultantBrokerDto.setName("gunnarro consultant broker");
-        consultantBrokerDto.setStatus("ACTIVE");
-
-        ConsultantBroker consultantBroker = TimesheetMapper.fromConsultantBrokerDto(consultantBrokerDto);
-        assertEquals(12, consultantBroker.getId().intValue());
-        assertEquals("gunnarro consultant broker", consultantBroker.getName());
-        assertEquals("ACTIVE", consultantBroker.getStatus());
-
-    }
 
     @Test
     void toClientDtoList() {

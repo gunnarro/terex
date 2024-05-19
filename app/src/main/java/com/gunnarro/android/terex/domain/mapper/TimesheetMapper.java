@@ -3,7 +3,6 @@ package com.gunnarro.android.terex.domain.mapper;
 import com.gunnarro.android.terex.domain.dto.AddressDto;
 import com.gunnarro.android.terex.domain.dto.BusinessAddressDto;
 import com.gunnarro.android.terex.domain.dto.ClientDto;
-import com.gunnarro.android.terex.domain.dto.ConsultantBrokerDto;
 import com.gunnarro.android.terex.domain.dto.ContactInfoDto;
 import com.gunnarro.android.terex.domain.dto.OrganizationDto;
 import com.gunnarro.android.terex.domain.dto.PersonDto;
@@ -14,8 +13,6 @@ import com.gunnarro.android.terex.domain.dto.TimesheetSummaryDto;
 import com.gunnarro.android.terex.domain.entity.Address;
 import com.gunnarro.android.terex.domain.entity.Client;
 import com.gunnarro.android.terex.domain.entity.ClientDetails;
-import com.gunnarro.android.terex.domain.entity.ConsultantBroker;
-import com.gunnarro.android.terex.domain.entity.ConsultantBrokerWithProject;
 import com.gunnarro.android.terex.domain.entity.ContactInfo;
 import com.gunnarro.android.terex.domain.entity.Organization;
 import com.gunnarro.android.terex.domain.entity.Person;
@@ -151,29 +148,6 @@ public class TimesheetMapper {
         return projectDto;
     }
 
-    public static ConsultantBrokerDto toConsultantBrokerDto(ConsultantBrokerWithProject consultantBrokerWithProject) {
-        if (consultantBrokerWithProject == null || consultantBrokerWithProject.getConsultantBroker() == null) {
-            return null;
-        }
-        ConsultantBrokerDto consultantBrokerDto = new ConsultantBrokerDto();
-        consultantBrokerDto.setId(consultantBrokerWithProject.getConsultantBroker().getId());
-        consultantBrokerDto.setName(consultantBrokerWithProject.getConsultantBroker().getName());
-        consultantBrokerDto.setStatus(consultantBrokerWithProject.getConsultantBroker().getStatus());
-        consultantBrokerDto.setProjects(toProjectDtoList(consultantBrokerWithProject.getProjectList()));
-        return consultantBrokerDto;
-    }
-
-    public static ConsultantBroker fromConsultantBrokerDto(ConsultantBrokerDto consultantBrokerDto) {
-        if (consultantBrokerDto == null) {
-            return null;
-        }
-        ConsultantBroker consultantBroker = new ConsultantBroker();
-        consultantBroker.setId(consultantBrokerDto.getId());
-        consultantBroker.setName(consultantBrokerDto.getName());
-        consultantBroker.setStatus(consultantBrokerDto.getStatus());
-        return consultantBroker;
-    }
-
     public static List<ClientDto> toClientDtoList(List<Client> clientList) {
         if (clientList == null) {
             return new ArrayList<>();
@@ -203,7 +177,7 @@ public class TimesheetMapper {
         clientDto.setName(clientDetails.getClient().getName());
         clientDto.setStatus(clientDetails.getClient().getStatus());
         clientDto.setProjectList(toProjectDtoList(clientDetails.getProjectList()));
-      //  clientDto.setOrganizationDto(toOrganizationDto(clientDetails.getOrganizationDetails()));
+        //  clientDto.setOrganizationDto(toOrganizationDto(clientDetails.getOrganizationDetails()));
         clientDto.setCntactPersonDto(toPersonDto(clientDetails.getContactPerson()));
         return clientDto;
     }

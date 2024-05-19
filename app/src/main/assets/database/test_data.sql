@@ -26,11 +26,3 @@ INSERT INTO client (id, uuid, created_date, last_modified_date, organization_id,
 -- update project data
 DELETE FROM project WHERE id > 0
 INSERT INTO project (id, uuid, created_date, last_modified_date, client_id, project_name, project_description, project_status) VALUES(1, '', current_timestamp, current_timestamp, 1, 'CatalystOne HRIS modernisering', 'Fra monlith til microservice arkitektur', 'ACTIVE')
-
--- DELETE FROM consultant_broker WHERE id > 0
--- INSERT INTO consultant_broker (id, uuid, created_date, last_modified_date, organization_id, name, status) VALUES(1, '', current_timestamp, current_timestamp, 2, 'Norway Consulting AS', 'ACTIVE')
-
--- DELETE FROM consultant WHERE id > 0
--- INSERT INTO consultant (id, uuid, created_date, last_modified_date, company_id, name, status) VALUES(1, '', current_timestamp, current_timestamp, 1, 'gunnarro as', 'ACTIVE')
-
--- commit
