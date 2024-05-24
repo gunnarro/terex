@@ -34,10 +34,10 @@ public class TimesheetServiceTest {
 
     @Test
     public void getTimesheetsByStatus() {
-        assertEquals(0, timesheetService.getTimesheets(Timesheet.TimesheetStatusEnum.NEW.name()).size());
-        assertEquals(0, timesheetService.getTimesheets(Timesheet.TimesheetStatusEnum.ACTIVE.name()).size());
-        assertEquals(0, timesheetService.getTimesheets(Timesheet.TimesheetStatusEnum.COMPLETED.name()).size());
-        assertEquals(0, timesheetService.getTimesheets(Timesheet.TimesheetStatusEnum.BILLED.name()).size());
+        assertEquals(0, timesheetService.getTimesheetsByStatus(Timesheet.TimesheetStatusEnum.NEW.name()).size());
+        assertEquals(0, timesheetService.getTimesheetsByStatus(Timesheet.TimesheetStatusEnum.ACTIVE.name()).size());
+        assertEquals(0, timesheetService.getTimesheetsByStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name()).size());
+        assertEquals(0, timesheetService.getTimesheetsByStatus(Timesheet.TimesheetStatusEnum.BILLED.name()).size());
     }
 
     @Test

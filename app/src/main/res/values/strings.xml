@@ -161,9 +161,13 @@
     <string name="lbl_contact_person_mobile">Contact person mobile</string>
     <string name="lbl_contact_person_full_name">Contact person full name</string>
     <string name="msg_delete_client">verify delete client</string>
-    <string name="info_client_saved_msg_format">saved client,orgNumber=%s,  orgName=%s</string>
+    <string name="info_client_saved_msg_format">saved client, orgNumber=%s, orgName=%s</string>
     <string name="title_clients">Clients</string>
     <string name="title_projects">Projects</string>
     <string name="title_project_new">New Project</string>
+    <string name="info_user_account_saved_msg_format" >Saved user account, username=%s</string>
+    <string name="lbl_user_account">User account</string>
+    <string name="lbl_user_account_type">User account type</string>
+    <string name="title_user_account">User account</string>
 
 </resources>

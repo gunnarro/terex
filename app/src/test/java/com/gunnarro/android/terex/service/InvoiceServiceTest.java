@@ -7,6 +7,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 import com.gunnarro.android.terex.TestData;
+import com.gunnarro.android.terex.domain.dto.ClientDto;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
 import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
@@ -30,11 +31,14 @@ class InvoiceServiceTest {
     private TimesheetService timesheetServiceMock;
 
     @Mock
+    private ClientService clientServiceMock;
+
+    @Mock
     private InvoiceRepository invoiceRepositoryMock;
 
     @BeforeEach
     public void setup() {
-        invoiceService = new InvoiceService(invoiceRepositoryMock, timesheetServiceMock);
+        invoiceService = new InvoiceService(invoiceRepositoryMock, timesheetServiceMock, clientServiceMock);
     }
 
     @Test
@@ -57,11 +61,14 @@ class InvoiceServiceTest {
         timesheetSummaryWeek1.setTotalWorkedHours(37.5);
         timesheetSummaryWeek1.setTotalBilledAmount(25000d);
 
+        ClientDto clientDto = new ClientDto();
+        clientDto.setId(234L);
+
         List<TimesheetSummary> timesheetSummaries = List.of(timesheetSummaryWeek1);
         Long timesheetId = 1L;
         when(timesheetServiceMock.createTimesheetSummaryForBilling(anyLong())).thenReturn(TimesheetMapper.toTimesheetSummaryDtoList(timesheetSummaries));
         when(invoiceRepositoryMock.saveInvoice(any())).thenReturn(23L);
-        Long invoiceId = invoiceService.createInvoice(timesheetId );
+        Long invoiceId = invoiceService.createInvoice(timesheetId, 100L, 200L);
         assertEquals(23, invoiceId);
     }
 

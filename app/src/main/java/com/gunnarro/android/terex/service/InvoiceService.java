@@ -28,9 +28,11 @@ public class InvoiceService {
         TIMESHEET_SUMMARY("template/html/invoice-timesheet-attachment.mustache");
 
         private final String template;
+
         InvoiceAttachmentTypesEnum(String template) {
             this.template = template;
         }
+
         public String getTemplate() {
             return template;
         }
@@ -41,14 +43,16 @@ public class InvoiceService {
     }
 
     private final TimesheetService timesheetService;
+    private final ClientService clientService;
     private final InvoiceRepository invoiceRepository;
 
     /**
      * For unit test onlu
      */
-    public InvoiceService(InvoiceRepository invoiceRepository, TimesheetService timesheetService) {
+    public InvoiceService(InvoiceRepository invoiceRepository, TimesheetService timesheetService, ClientService clientSerice) {
         this.timesheetService = timesheetService;
         this.invoiceRepository = invoiceRepository;
+        this.clientService = clientSerice;
     }
 
     /**
@@ -56,8 +60,7 @@ public class InvoiceService {
      */
     @Inject
     public InvoiceService() {
-        this.timesheetService = new TimesheetService();
-        this.invoiceRepository = new InvoiceRepository();
+        this(new InvoiceRepository(), new TimesheetService(), new ClientService());
     }
 
     public Invoice getInvoice(Long invoiceId) {
@@ -77,14 +80,16 @@ public class InvoiceService {
     }
 
     @Transaction
-    public Long createInvoice(@NotNull Long timesheetId) {
+    public Long createInvoice(@NotNull Long invoiceIssuerId, @NotNull Long clientId, @NotNull Long timesheetId) {
         // first accumulate timesheet entries
         List<TimesheetSummaryDto> timesheetSummaryDtoList = timesheetService.createTimesheetSummaryForBilling(timesheetId);
         // there after create the invoice
         Invoice invoice = new Invoice();
-        invoice.setInvoiceNumber(Random.Default.nextInt(100, 10000));
+        invoice.setInvoiceNumber(generateInvoiceNumber());
         invoice.setTimesheetId(timesheetId);
-        //invoice.setClientId(client.getId());
+        invoice.setClientId(clientId);
+        invoice.setInvoiceRecipientId(clientId);
+        invoice.setInvoiceIssuerId(invoiceIssuerId);
         // ensure that a timesheet is only billed once.
         //invoice.setReference(String.format("%s-%s", client.getName(), timesheetId));
         invoice.setStatus(InvoiceRepository.InvoiceStatusEnum.NEW.name());
@@ -107,4 +112,7 @@ public class InvoiceService {
         return Arrays.asList(InvoiceAttachmentTypesEnum.values());
     }
 
+    private int generateInvoiceNumber() {
+        return Random.Default.nextInt(100, 10000);
+    }
 }

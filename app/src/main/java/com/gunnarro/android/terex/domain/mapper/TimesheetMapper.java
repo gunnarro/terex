@@ -10,9 +10,9 @@ import com.gunnarro.android.terex.domain.dto.ProjectDto;
 import com.gunnarro.android.terex.domain.dto.TimesheetDto;
 import com.gunnarro.android.terex.domain.dto.TimesheetEntryDto;
 import com.gunnarro.android.terex.domain.dto.TimesheetSummaryDto;
+import com.gunnarro.android.terex.domain.dto.UserAccountDto;
 import com.gunnarro.android.terex.domain.entity.Address;
 import com.gunnarro.android.terex.domain.entity.Client;
-import com.gunnarro.android.terex.domain.entity.ClientDetails;
 import com.gunnarro.android.terex.domain.entity.ContactInfo;
 import com.gunnarro.android.terex.domain.entity.Organization;
 import com.gunnarro.android.terex.domain.entity.Person;
@@ -20,6 +20,7 @@ import com.gunnarro.android.terex.domain.entity.Project;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
+import com.gunnarro.android.terex.domain.entity.UserAccount;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -304,5 +305,33 @@ public class TimesheetMapper {
         businessAddress.setCountryCode(businessAddressDto.getCountryCode());
         businessAddress.setPostalCode(businessAddressDto.getPostalCode());
         return businessAddress;
+    }
+
+    public static UserAccountDto toUserAccountDto(UserAccount userAccount) {
+        if (userAccount == null) {
+            return null;
+        }
+        UserAccountDto userAccountDto = new UserAccountDto();
+        userAccountDto.setId(userAccount.getId());
+        userAccountDto.setUserAccountType(userAccount.getUserAccountType());
+        userAccountDto.setUserName(userAccount.getUserName());
+        userAccountDto.setPassword(userAccount.getPassword());
+        OrganizationDto organizationDto = new OrganizationDto();
+        organizationDto.setId(userAccount.getOrganizationId());
+        userAccountDto.setOrganizationDto(organizationDto);
+        return userAccountDto;
+    }
+
+    public static UserAccount fromUserAccountDto(UserAccountDto userAccountDto) {
+        if (userAccountDto == null) {
+            return null;
+        }
+        UserAccount userAccount = new UserAccount();
+        userAccount.setId(userAccountDto.getId());
+        userAccount.setUserAccountType(userAccountDto.getUserAccountType());
+        userAccount.setUserName(userAccountDto.getUserName());
+        userAccount.setPassword(userAccountDto.getPassword());
+        userAccount.setOrganizationId(userAccountDto.getOrganizationDto() != null ? userAccountDto.getOrganizationDto().getId() : null);
+        return userAccount;
     }
 }

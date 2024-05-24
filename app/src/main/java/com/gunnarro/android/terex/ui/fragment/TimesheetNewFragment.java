@@ -27,6 +27,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.dto.ClientDto;
 import com.gunnarro.android.terex.domain.dto.ProjectDto;
+import com.gunnarro.android.terex.domain.dto.SpinnerItem;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
@@ -38,6 +39,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -59,7 +62,6 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
         super.onCreate(savedInstanceState);
         requireActivity().setTitle(R.string.title_timesheet);
         timesheetService = new TimesheetService();
-        //  consultantBrokerService = new ConsultantBrokerService();
         clientService = new ClientService();
     }
 
@@ -75,14 +77,9 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
         //toolbar.setNavigationIcon(R.drawable.ic_arrow_left);
         //toolbar.setNavigationOnClickListener(v -> returnToTimesheetList());
 
-        // with consultant brokers - deprecated
-        //ConsultantBrokerDto consultantBrokerDto = consultantBrokerService.getConsultantBroker(1L);
-        //String[] clients = consultantBrokerDto != null ? new String[]{consultantBrokerDto.getName()} : new String[]{};
-        //String[] projects = consultantBrokerDto != null ? consultantBrokerDto.getProjects().stream().map(ProjectDto::getName).toArray(String[]::new) : new String[]{};
-
         ClientDto clientDto = clientService.getClient(1L);
         if (clientDto == null) {
-           // showInfoDialog("Error", "No clients found! Please add a client.");
+            // showInfoDialog("Error", "No clients found! Please add a client.");
             // return to timesheet list
             throw new TerexApplicationException("No clients found! Please add a client.", "40040", null);
         }
@@ -121,7 +118,7 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
                 }
         );
         */
-        // create timesheet client spinner
+        // create timesheet clients spinner
         final AutoCompleteTextView clientSpinner = view.findViewById(R.id.timesheet_new_client_spinner);
         ArrayAdapter<String> clientAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, clients);
         clientSpinner.setAdapter(clientAdapter);
@@ -132,12 +129,14 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
             clientSpinner.setImportantForAutofill(View.IMPORTANT_FOR_AUTOFILL_NO);
         }
 
+        // create client projects spinner
         final AutoCompleteTextView projectSpinner = view.findViewById(R.id.timesheet_new_project_spinner);
-        ArrayAdapter<String> projectAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, projects);
+        List<SpinnerItem> projectItems = clientDto.getProjectList().stream().map(p -> new SpinnerItem(p.getId(), p.getName())).collect(Collectors.toList());
+        ArrayAdapter<SpinnerItem> projectAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, projectItems);
         projectSpinner.setAdapter(projectAdapter);
         projectSpinner.setListSelection(0);
 
-        // create timesheet status spinner
+        // create timesheet statuses spinner
         final AutoCompleteTextView statusSpinner = view.findViewById(R.id.timesheet_new_status_spinner);
         ArrayAdapter<CharSequence> statusAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, Timesheet.TimesheetStatusEnum.names());
         statusSpinner.setAdapter(statusAdapter);
@@ -228,18 +227,6 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
     private void saveTimesheet() {
         try {
             Timesheet timesheet = readTimesheetInputData();
-           /* deprecated
-             ConsultantBrokerDto consultantBrokerDto = consultantBrokerService.findConsultantBroker(timesheet.getClientName());
-            if (consultantBrokerDto == null) {
-                // this was a new consultant broker, so save it
-                consultantBrokerDto = new ConsultantBrokerDto();
-                consultantBrokerDto.setName(timesheet.getClientName());
-                ProjectDto projectDto = new ProjectDto();
-                projectDto.setName(timesheet.getProjectCode());
-                consultantBrokerDto.setProjects(List.of(projectDto));
-                consultantBrokerService.saveConsultantBroker(consultantBrokerDto);
-            }
-            */
             //  timesheet.getClientName();
             //  timesheet.getProjectCode();
             timesheetService.saveTimesheet(timesheet);
@@ -283,6 +270,7 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
         clientSpinner.setText(timesheet.getClientName());
 
         AutoCompleteTextView projectSpinner = view.findViewById(R.id.timesheet_new_project_spinner);
+
         projectSpinner.setText(timesheet.getProjectCode());
 /*
         MaterialButton newBtn = view.findViewById(R.id.timesheet_new_status_new);
@@ -445,7 +433,15 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
         timesheet.setClientName(clientSpinner.getText().toString());
 
         AutoCompleteTextView projectSpinner = requireView().findViewById(R.id.timesheet_new_project_spinner);
-        timesheet.setProjectCode(projectSpinner.getText().toString());
+        // some trouble to get the project id, so this mey be to complicated
+        int count = projectSpinner.getAdapter().getCount();
+        for (int i = 0; i < count; i++) {
+            SpinnerItem item = (SpinnerItem) projectSpinner.getAdapter().getItem(i);
+            if (item.name().equals(projectSpinner.getText().toString())) {
+                timesheet.setProjectCode(item.name());
+                timesheet.setProjectId(item.id());
+            }
+        }
 
         //MaterialButtonToggleGroup statusBtnGrp = requireView().findViewById(R.id.timesheet_new_status_group_layout);
         //MaterialButton selectedStatusBtn = statusBtnGrp.findViewById(statusBtnGrp.getCheckedButtonId());

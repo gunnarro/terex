@@ -10,6 +10,7 @@ import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.gunnarro.android.terex.config.AppDatabase;
+import com.gunnarro.android.terex.domain.dto.OrganizationDto;
 import com.gunnarro.android.terex.domain.dto.TimesheetDto;
 import com.gunnarro.android.terex.domain.dto.TimesheetEntryDto;
 import com.gunnarro.android.terex.domain.dto.TimesheetSummaryDto;
@@ -67,7 +68,7 @@ public class TimesheetService {
     @Inject
     public TimesheetService() {
         timesheetRepository = new TimesheetRepository();
-        organizationRepository = new OrganizationRepository(AppDatabase.getDatabase().organizationDao());
+        organizationRepository = new OrganizationRepository();
     }
 
 
@@ -93,12 +94,17 @@ public class TimesheetService {
         TimesheetWithEntries timesheet = getTimesheetWithEntries(timesheetId);
         Integer sumDays = timesheet.getTimesheetEntryList().size();
         Integer sumHours = timesheet.getTimesheetEntryList().stream().mapToInt(TimesheetEntry::getWorkedMinutes).sum() / 60;
-
         return TimesheetMapper.toTimesheetDto(timesheet.getTimesheet(), sumDays, sumHours);
     }
 
 
-    public List<Timesheet> getTimesheets(String status) {
+    public List<TimesheetDto> getTimesheetsReadyForBilling() {
+        List<Timesheet> timesheetList = timesheetRepository.getTimesheets(Timesheet.TimesheetStatusEnum.COMPLETED.name());
+        return TimesheetMapper.toTimesheetDtoList(timesheetList);
+    }
+
+    public List<Timesheet> getTimesheetsByStatus(String status) {
+        Log.d("getTimesheetsByStatus", "status: " + status);
         return timesheetRepository.getTimesheets(status);
     }
 
@@ -314,7 +320,7 @@ public class TimesheetService {
         return timesheetSummaryByWeek;
     }
 
-    public String createTimesheetSummaryAttachmentHtml(@NotNull Long timesheetId, @NotNull Context applicationContext) {
+    public String createTimesheetSummaryAttachmentHtml(@NotNull Long timesheetId, @NotNull Long myCompanyOrgId, @NotNull Long clientOrgId, @NotNull Context applicationContext) {
         Timesheet timesheet = getTimesheet(timesheetId);
         List<TimesheetSummary> timesheetSummaryList = getTimesheetSummary(timesheetId);
         double totalBilledAmount = timesheetSummaryList.stream().mapToDouble(TimesheetSummary::getTotalBilledAmount).sum();
@@ -328,8 +334,8 @@ public class TimesheetService {
         context.put("invoiceAttachmentTitle", "Vedlegg til faktura");
         context.put("invoiceBillingPeriod", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM")));
         context.put("timesheetPeriod", String.format("%s/%s", timesheet.getMonth(), timesheet.getYear()));
-        context.put("company", organizationRepository.getOrganization(1L));
-        context.put("client", organizationRepository.getOrganization(2L));
+        context.put("company", organizationRepository.getOrganization(myCompanyOrgId));
+        context.put("client", organizationRepository.getOrganization(clientOrgId));
         context.put("timesheetProjectCode", "techlead-catalystone-solution-as");
         context.put("timesheetSummaryList", timesheetSummaryList);
         context.put("totalBilledHours", Double.toString(totalBilledHours));

@@ -60,7 +60,7 @@ public class AddressRepository {
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures
     // that you're not doing any long running operations on the main thread, blocking the UI.
     public Long insert(Address address) throws InterruptedException, ExecutionException {
-        Log.d("insert", "address: " + address);
+        Log.d("insert", String.format("address: %s", address));
         CompletionService<Long> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
         service.submit(() -> addressDao.insert(address));
         Future<Long> future = service.take();
@@ -68,7 +68,7 @@ public class AddressRepository {
     }
 
     public Integer update(Address address) throws InterruptedException, ExecutionException {
-        Log.d("insert", "address: " + address);
+        Log.d("update", String.format("address: %s", address));
         CompletionService<Integer> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
         service.submit(() -> addressDao.update(address));
         Future<Integer> future = service.take();

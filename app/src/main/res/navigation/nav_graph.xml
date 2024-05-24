@@ -19,6 +19,12 @@
         <action
             android:id="@+id/nav_from_home_to_client_list"
             app:destination="@id/client_list_fragment" />
+        <action
+            android:id="@+id/nav_from_home_to_settings"
+            app:destination="@id/client_list_fragment" />
+        <action
+            android:id="@+id/nav_from_home_to_admin"
+            app:destination="@id/admin_fragment" />
     </fragment>
 
     <!-- client navigation -->
@@ -250,6 +256,16 @@
     </fragment>
 
     <fragment
+        android:id="@+id/user_account_new_fragment"
+        android:name="com.gunnarro.android.terex.ui.fragment.UserAccountNewFragment"
+        android:label="user_account_fragment"
+        tools:layout="@layout/fragment_user_account_new">
+        <action
+            android:id="@+id/nav_from_user_account_to_admin"
+            app:destination="@id/admin_fragment" />
+    </fragment>
+
+    <fragment
         android:id="@+id/admin_fragment"
         android:name="com.gunnarro.android.terex.ui.fragment.AdminFragment"
         android:label="admin_fragment"
@@ -258,8 +274,8 @@
             android:id="@+id/nav_from_admin_to_home"
             app:destination="@id/home_fragment" />
         <action
-            android:id="@+id/nav_from_admin_to_client_list"
-            app:destination="@id/client_list_fragment" />
+            android:id="@+id/nav_from_admin_to_user_account"
+            app:destination="@id/user_account_new_fragment" />
     </fragment>
 
     <!-- preferences -->

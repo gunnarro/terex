@@ -43,8 +43,8 @@ public class AdminFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_admin, container, false);
 
-        view.findViewById(R.id.btn_client_new).setOnClickListener(v -> {
-            navController.navigate(R.id.nav_from_admin_to_client_list);
+        view.findViewById(R.id.btn_user_account).setOnClickListener(v -> {
+            navController.navigate(R.id.nav_from_admin_to_user_account);
         });
 
         view.findViewById(R.id.btn_project_new).setOnClickListener(v -> {

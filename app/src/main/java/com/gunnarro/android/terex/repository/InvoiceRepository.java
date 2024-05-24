@@ -111,6 +111,7 @@ public class InvoiceRepository {
             return id;
         } catch (Exception e) {
             // Something crashed, therefore restore interrupted state before leaving.
+            e.printStackTrace();
             Thread.currentThread().interrupt();
             throw new TerexApplicationException("Error saving invoice!", e.getMessage(), e.getCause());
         }

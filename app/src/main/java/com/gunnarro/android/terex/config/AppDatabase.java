@@ -22,6 +22,7 @@ import com.gunnarro.android.terex.domain.entity.Project;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
+import com.gunnarro.android.terex.domain.entity.UserAccount;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.repository.AddressDao;
 import com.gunnarro.android.terex.repository.ClientDao;
@@ -34,6 +35,7 @@ import com.gunnarro.android.terex.repository.ProjectDao;
 import com.gunnarro.android.terex.repository.TimesheetDao;
 import com.gunnarro.android.terex.repository.TimesheetEntryDao;
 import com.gunnarro.android.terex.repository.TimesheetSummaryDao;
+import com.gunnarro.android.terex.repository.UserAccountDao;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -43,6 +45,7 @@ import java.util.concurrent.Executors;
  * Thread safe database instance.
  */
 @Database(entities = {
+        UserAccount.class,
         Timesheet.class,
         TimesheetEntry.class,
         Invoice.class,
@@ -54,7 +57,7 @@ import java.util.concurrent.Executors;
         Organization.class,
         InvoiceAttachment.class,
         Client.class,
-}, version = 1, views = {TimesheetView.class}, exportSchema = true)
+}, version = 2, views = {TimesheetView.class}, exportSchema = true)
 public abstract class AppDatabase extends RoomDatabase {
     // marking the instance as volatile to ensure atomic access to the variable
     // The Java volatile keyword guarantees visibility of changes to variables across threads
@@ -97,6 +100,8 @@ public abstract class AppDatabase extends RoomDatabase {
     public static Migration getMigration(Context applicationContext, int startVersion, int endVersion) {
         return new DbMigrationFrom1To2(applicationContext, startVersion, endVersion);
     }
+
+    public abstract UserAccountDao userAccountDao();
 
     public abstract TimesheetDao timesheetDao();
 

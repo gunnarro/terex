@@ -45,23 +45,31 @@ public class Invoice extends BaseEntity {
     @NotNull
     @ColumnInfo(name = "client_id")
     private Long clientId;
+    /**
+     * invoice recipient : fakturamottaker
+     */
+    @NotNull
+    @ColumnInfo(name = "invoice_recipient_id")
+    private Long invoiceRecipientId;
 
+    /**
+     * invoice issuer : fakturautsteder
+     */
+    @NotNull
+    @ColumnInfo(name = "invoice_issuer_id")
+    private Long invoiceIssuerId;
     @ColumnInfo(name = "reference")
     private String reference;
     @NotNull
     @ColumnInfo(name = "invoice_status", defaultValue = "OPEN")
     private String status;
-
     @NotNull
     @ColumnInfo(name = "billing_date")
     private LocalDate billingDate;
-
     @ColumnInfo(name = "billing_period_start_date")
     private LocalDate billingPeriodStartDate;
-
     @ColumnInfo(name = "billing_period_end_date")
     private LocalDate billingPeriodEndDate;
-
     @NotNull
     @ColumnInfo(name = "due_date")
     private LocalDate dueDate;
@@ -108,6 +116,22 @@ public class Invoice extends BaseEntity {
 
     public void setClientId(Long clientId) {
         this.clientId = clientId;
+    }
+
+    public Long getInvoiceRecipientId() {
+        return invoiceRecipientId;
+    }
+
+    public void setInvoiceRecipientId(Long invoiceRecipientId) {
+        this.invoiceRecipientId = invoiceRecipientId;
+    }
+
+    public Long getInvoiceIssuerId() {
+        return invoiceIssuerId;
+    }
+
+    public void setInvoiceIssuerId(Long invoiceIssuerId) {
+        this.invoiceIssuerId = invoiceIssuerId;
     }
 
     public String getReference() {

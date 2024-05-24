@@ -15,19 +15,19 @@
         tools:ignore="UselessParent">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_client_new"
+            android:id="@+id/btn_user_account"
             style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:layout_weight="1"
-            android:text="@string/lbl_client"
+            android:text="@string/lbl_user_account"
             app:iconTint="@color/color_btn_bg_cancel" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_project_new"
             style="@style/Widget.Material3.Button.OutlinedButton"
-            android:layout_below="@id/btn_client_new"
+            android:layout_below="@id/btn_user_account"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"

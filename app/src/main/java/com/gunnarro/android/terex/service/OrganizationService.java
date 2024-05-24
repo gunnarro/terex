@@ -38,7 +38,7 @@ public class OrganizationService {
 
     @Inject
     public OrganizationService() {
-        this(new OrganizationRepository(AppDatabase.getDatabase().organizationDao()), new AddressRepository(), new ContactInfoService(), new PersonService());
+        this(new OrganizationRepository(), new AddressRepository(), new ContactInfoService(), new PersonService());
     }
 
     public OrganizationDto getOrganization(Long organizationId) {

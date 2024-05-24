@@ -28,6 +28,32 @@ public class ClientRepository {
         allClients = clientDao.getAllClients();
     }
 
+    public Long getClientIdByTimesheetId(Long timesheetId) {
+        try {
+            CompletionService<Long> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
+            service.submit(() -> clientDao.getClientIdByTimesheetId(timesheetId));
+            Future<Long> future = service.take();
+            return future != null ? future.get() : null;
+        } catch (InterruptedException | ExecutionException e) {
+            // Something crashed, therefore restore interrupted state before leaving.
+            Thread.currentThread().interrupt();
+            throw new TerexApplicationException("error getting client id for timesheet id!", "50050", e);
+        }
+    }
+
+    public Client getClientByTimesheetId(Long timesheetId) {
+        try {
+            CompletionService<Client> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
+            service.submit(() -> clientDao.getClientByTimesheetId(timesheetId));
+            Future<Client> future = service.take();
+            return future != null ? future.get() : null;
+        } catch (InterruptedException | ExecutionException e) {
+            // Something crashed, therefore restore interrupted state before leaving.
+            Thread.currentThread().interrupt();
+            throw new TerexApplicationException("error getting client by timesheet id!", "50050", e);
+        }
+    }
+
     public LiveData<List<Client>> getAllClients() {
         return allClients;
     }

@@ -14,10 +14,25 @@ import com.gunnarro.android.terex.domain.entity.Client;
 import java.util.List;
 
 /**
+ * Room query example:
+ * <a hraf="https://developer.android.com/training/data-storage/room/accessing-data">room dao query examples</a>
+ * <p>
  * NB! Use transactions if method return a aggregate object
  */
 @Dao
 public interface ClientDao {
+
+    @Query("SELECT client.id FROM client"
+            + " INNER JOIN project ON project.client_id = client.id "
+            + " INNER JOIN timesheet ON timesheet.project_id = project.id"
+            + " WHERE timesheet.id = :timesheetId")
+    Long getClientIdByTimesheetId(Long timesheetId);
+
+    @Query("SELECT client.* FROM client"
+            + " INNER JOIN project ON project.client_id = client.id "
+            + " INNER JOIN timesheet ON timesheet.project_id = project.id"
+            + " WHERE timesheet.id = :timesheetId")
+    Client getClientByTimesheetId(Long timesheetId);
 
     @Query("SELECT id FROM client ORDER BY id ASC")
     List<Long> getAllClientIds();

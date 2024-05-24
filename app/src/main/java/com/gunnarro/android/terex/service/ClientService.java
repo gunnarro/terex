@@ -44,6 +44,22 @@ public class ClientService {
         this(new ClientRepository(), new OrganizationService(), new ProjectService(), new PersonService());
     }
 
+    public Long getClientIdByTimesheetId(Long timesheetId) {
+        Long clientId = clientRepository.getClientIdByTimesheetId(timesheetId);
+        if (clientId == null) {
+            throw new TerexApplicationException(String.format("Timesheet id is not linked to a client! timesheetId=%s", timesheetId), "50045", null);
+        }
+        return clientId;
+    }
+
+    public ClientDto getClientByTimesheetId(Long timesheetId) {
+        Client client = clientRepository.getClientByTimesheetId(timesheetId);
+        if (client == null) {
+            throw new TerexApplicationException(String.format("Timesheet id is not linked to a client! timesheetId=%s", timesheetId), "50045", null);
+        }
+        return getClient(client.getId());
+    }
+
     public List<ClientDto> getClients() {
         List<ClientDto> clientDtoList = new ArrayList<>();
         List<Long> clientIds = clientRepository.getAllClientIds();

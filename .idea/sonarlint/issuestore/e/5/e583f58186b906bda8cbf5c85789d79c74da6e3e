@@ -1,23 +1,21 @@
 
-e
-java:S6355I"HAdd 'since' and/or 'forRemoval' arguments to the @Deprecated annotation.(õˆúš8ïö·Ë1
-W
-java:S1133L"5Do not forget to remove this deprecated code someday.(¼×ûÿÿÿÿ8ïö·Ë1
-J
-java:S1123L"(Add the missing @deprecated Javadoc tag.(¼×ûÿÿÿÿ8ïö·Ë1
-U
-java:S1874~"3Remove this use of "projectCode"; it is deprecated.(ÿù úÿÿÿÿ8’ïö·Ë1
-Q
-java:S1874‚"3Remove this use of "projectCode"; it is deprecated.(€ÏĞõ8’ïö·Ë1
-V
-java:S1874ä"3Remove this use of "projectCode"; it is deprecated.(ñ“¯Õûÿÿÿÿ8—ïö·Ë1
-Q
-java:S1874ı"3Remove this use of "projectCode"; it is deprecated.(¿ñÇü8šïö·Ë1
-Q
-java:S1874ı"3Remove this use of "projectCode"; it is deprecated.(¿ñÇü8šïö·Ë1
-V
-java:S1874‚"3Remove this use of "projectCode"; it is deprecated.(¸±½†úÿÿÿÿ8šïö·Ë1
-Q
-java:S1874"3Remove this use of "projectCode"; it is deprecated.(œİ¯Û8œïö·Ë1
-W
-java:S1128"5Remove this unused import 'androidx.room.PrimaryKey'.(¨¿áçüÿÿÿÿ8Ï›’ÆĞ1
+‹
+java:S6355H"HAdd 'since' and/or 'forRemoval' arguments to the @Deprecated annotation.(õˆúš8ïö·Ë1J$990f6167-fcf1-4d01-bd85-3fc5cf294534
+}
+java:S1133K"5Do not forget to remove this deprecated code someday.(¼×ûÿÿÿÿ8ïö·Ë1J$5c3f26fa-b3e4-4e5e-97c1-e9110ea40073
+p
+java:S1123K"(Add the missing @deprecated Javadoc tag.(¼×ûÿÿÿÿ8ïö·Ë1J$68adc546-623d-458a-b4c9-39f234873c07
+{
+java:S1874}"3Remove this use of "projectCode"; it is deprecated.(ÿù úÿÿÿÿ8’ïö·Ë1J$066ad760-b37b-42f8-9f37-ffd0edfe2a02
+w
+java:S1874"3Remove this use of "projectCode"; it is deprecated.(€ÏĞõ8’ïö·Ë1J$55965888-9a93-4b5e-8a88-6f08e3e58f12
+|
+java:S1874ã"3Remove this use of "projectCode"; it is deprecated.(ñ“¯Õûÿÿÿÿ8—ïö·Ë1J$be9502ff-8622-443a-91d8-b2edbb37db19
+w
+java:S1874ü"3Remove this use of "projectCode"; it is deprecated.(¿ñÇü8šïö·Ë1J$879685e3-fa2c-4a65-be34-4b3c52fbda0d
+w
+java:S1874ü"3Remove this use of "projectCode"; it is deprecated.(¿ñÇü8šïö·Ë1J$a54ab4ed-1131-410b-8cea-cac7c06acf15
+|
+java:S1874"3Remove this use of "projectCode"; it is deprecated.(¸±½†úÿÿÿÿ8šïö·Ë1J$052d8fde-f8b0-43b7-80ad-c1d6f16da4f6
+w
+java:S1874Œ"3Remove this use of "projectCode"; it is deprecated.(œİ¯Û8œïö·Ë1J$7935865d-eaaf-4b9f-94d1-99b6b1913326

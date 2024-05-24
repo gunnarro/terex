@@ -389,7 +389,7 @@ class TimesheetServiceTest {
         List<TimesheetSummary> timesheetSummaryList = TestData.buildTimesheetSummaryByWeek(23L, 2023, 1);
         when(timesheetRepositoryMock.getTimesheet(anyLong())).thenReturn(timesheet);
         when(timesheetRepositoryMock.getTimesheetSummary(anyLong())).thenReturn(timesheetSummaryList);
-        String templateHtml = timesheetService.createTimesheetSummaryAttachmentHtml(23L, applicationContextMock);
+        String templateHtml = timesheetService.createTimesheetSummaryAttachmentHtml(23L, 100L, 200L, applicationContextMock);
         Assertions.assertNotNull(templateHtml);
         // saveToFile("src/test/" + InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getFileName() + ".html", templateHtml);
     }

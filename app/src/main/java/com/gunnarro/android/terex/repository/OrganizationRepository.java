@@ -3,7 +3,6 @@ package com.gunnarro.android.terex.repository;
 import android.util.Log;
 
 import com.gunnarro.android.terex.config.AppDatabase;
-import com.gunnarro.android.terex.domain.entity.Client;
 import com.gunnarro.android.terex.domain.entity.Organization;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 
@@ -23,8 +22,15 @@ public class OrganizationRepository {
 
     private final OrganizationDao organizationDao;
 
+    /**
+     * for unit test
+     */
     public OrganizationRepository(OrganizationDao organizationDao) {
         this.organizationDao = organizationDao;
+    }
+
+    public OrganizationRepository() {
+        this.organizationDao = AppDatabase.getDatabase().organizationDao();
     }
 
     public List<Organization> getOrganizations() {

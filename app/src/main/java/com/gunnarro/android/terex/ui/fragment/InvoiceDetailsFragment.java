@@ -61,7 +61,7 @@ public class InvoiceDetailsFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_invoice_details, container, false);
         setHasOptionsMenu(true);
         invoiceId = getArguments().getLong(InvoiceListFragment.INVOICE_ID_KEY);
-        Log.d(Utility.buildTag(getClass(), "onCreateView"), "");
+        Log.d(Utility.buildTag(getClass(), "onCreateView"), String.format("invoiceId=%s", invoiceId));
         return view;
     }
 

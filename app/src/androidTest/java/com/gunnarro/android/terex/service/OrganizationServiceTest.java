@@ -32,7 +32,7 @@ public class OrganizationServiceTest {
         Context appContext = ApplicationProvider.getApplicationContext();
         AppDatabase appDatabase = Room.inMemoryDatabaseBuilder(appContext, AppDatabase.class).build();
         AppDatabase.init(appContext);
-        organizationService = new OrganizationService(new OrganizationRepository(appDatabase.organizationDao()), new AddressRepository(), new ContactInfoService(), new PersonService());
+        organizationService = new OrganizationService(new OrganizationRepository(), new AddressRepository(), new ContactInfoService(), new PersonService());
         // load test data
         List<String> sqlQueryList = DbHelper.readMigrationSqlQueryFile(appContext, "database/test_data.sql");
         sqlQueryList.forEach(query -> {

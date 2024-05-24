@@ -43,8 +43,9 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        view.findViewById(R.id.btn_timesheet_list_view).setOnClickListener(v -> navController.navigate(R.id.nav_from_home_to_timesheet_list));
+        view.findViewById(R.id.btn_settings_view).setOnClickListener(v -> navController.navigate(R.id.nav_from_home_to_admin));
         view.findViewById(R.id.btn_invoice_list_view).setOnClickListener(v -> navController.navigate(R.id.nav_from_home_to_invoice_list));
+        view.findViewById(R.id.btn_timesheet_list_view).setOnClickListener(v -> navController.navigate(R.id.nav_from_home_to_timesheet_list));
         view.findViewById(R.id.btn_clients_view).setOnClickListener(v -> navController.navigate(R.id.nav_from_home_to_client_list));
         view.findViewById(R.id.btn_history_view).setOnClickListener(v -> {
         });

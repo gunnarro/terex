@@ -10,11 +10,13 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
 import com.gunnarro.android.terex.R;
+import com.gunnarro.android.terex.domain.dto.ClientDto;
 import com.gunnarro.android.terex.domain.dto.SpinnerItem;
 import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.InvoiceAttachment;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
+import com.gunnarro.android.terex.service.ClientService;
 import com.gunnarro.android.terex.service.InvoiceService;
 import com.gunnarro.android.terex.service.TimesheetService;
 import com.gunnarro.android.terex.utility.Utility;
@@ -38,6 +40,7 @@ public class InvoiceNewFragment extends BaseFragment {
 
     private InvoiceService invoiceService;
     private TimesheetService timesheetService;
+    private ClientService clientService;
 
     @Inject
     public InvoiceNewFragment() {
@@ -49,6 +52,7 @@ public class InvoiceNewFragment extends BaseFragment {
         requireActivity().setTitle(R.string.title_invoice);
         invoiceService = new InvoiceService();
         timesheetService = new TimesheetService();
+        clientService = new ClientService();
     }
 
     @Override
@@ -56,7 +60,7 @@ public class InvoiceNewFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_invoice_new, container, false);
         // only completed time sheets can be used a attachment to a invoice.
-        List<Timesheet> timesheetList = timesheetService.getTimesheets(Timesheet.TimesheetStatusEnum.COMPLETED.name());
+        List<Timesheet> timesheetList = timesheetService.getTimesheetsByStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
         List<SpinnerItem> timesheetItems = timesheetList.stream().map(t -> new SpinnerItem(t.getId(), String.format("%s-%s %s", t.getYear(), t.getMonth(), t.getProjectCode()))).collect(Collectors.toList());
         final AutoCompleteTextView timesheetSpinner = view.findViewById(R.id.invoice_timesheet_spinner);
         ArrayAdapter<SpinnerItem> timesheetAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, timesheetItems);
@@ -78,6 +82,7 @@ public class InvoiceNewFragment extends BaseFragment {
                     navigateTo(R.id.nav_from_invoice_new_to_invoice_details, bundle);
                 }
             } catch (TerexApplicationException e) {
+                e.printStackTrace();
                 showInfoDialog("Info", "Error creating invoice!" + e.getMessage());
             }
         });
@@ -105,7 +110,10 @@ public class InvoiceNewFragment extends BaseFragment {
      * @param timesheetId to be created invoice for
      */
     private Long createInvoice(@NotNull Long timesheetId) {
-        Long invoiceId = invoiceService.createInvoice(timesheetId);
+        Long clientId = clientService.getClientIdByTimesheetId(timesheetId);
+        // get invoice issuer, which is your company id
+        Long invoiceIssuerId = 1L;
+        Long invoiceId = invoiceService.createInvoice(invoiceIssuerId, clientId, timesheetId);
         if (invoiceId == null) {
             showInfoDialog("Info", "No timesheet found! timesheetId=" + timesheetId);
         }
@@ -120,8 +128,7 @@ public class InvoiceNewFragment extends BaseFragment {
         try {
             Invoice invoice = invoiceService.getInvoice(invoiceId);
             Log.d("createTimesheetSummaryAttachment", "timesheetId=" + invoice.getTimesheetId());
-
-            String invoiceSummaryHtml = timesheetService.createTimesheetSummaryAttachmentHtml(invoice.getTimesheetId(), requireContext());
+            String invoiceSummaryHtml = timesheetService.createTimesheetSummaryAttachmentHtml(invoice.getTimesheetId(), invoice.getInvoiceIssuerId(), invoice.getInvoiceRecipientId(),requireContext());
             Log.d("createInvoiceSummaryAttachment", invoiceSummaryHtml);
             String invoiceAttachmentFileName = InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.name().toLowerCase(Locale.getDefault()) + "_attachment_" + invoice.getBillingDate().format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
