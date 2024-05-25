@@ -53,7 +53,7 @@ public class OrganizationServiceTest {
 
         // create new organization
         Long orgId = organizationService.save(newOrganizationDto);
-        assertEquals(2, orgId.intValue());
+        assertTrue(orgId.intValue() > 0);
 
         // get organization
         OrganizationDto organizationDto = organizationService.getOrganization(orgId);

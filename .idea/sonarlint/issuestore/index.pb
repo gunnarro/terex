@@ -332,3 +332,5 @@ Papp/src/test/java/com/gunnarro/android/terex/service/UserAccountServiceTest.jav
 Wapp/src/androidTest/java/com/gunnarro/android/terex/service/UserAccountServiceTest.java,d/3/d34bfb7c1db37e23e6c9f1a6f62a4fb7f4275183
 „
 Tapp/src/main/java/com/gunnarro/android/terex/ui/fragment/UserAccountNewFragment.java,a/f/af4b4a5d95d6b90d4ef66355e217275b7a709969
+†
+Vapp/src/test/java/com/gunnarro/android/terex/repository/UserAccountRepositoryTest.java,7/4/74a37a2d5d673b20760273944d6dd3c4c777c346

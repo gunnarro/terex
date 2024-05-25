@@ -19,13 +19,16 @@ import javax.inject.Singleton;
 @Singleton
 public class UserAccountRepository {
 
-
     private final UserAccountDao userAccountDao;
 
-    // Note that in order to unit test the WordRepository, you have to remove the Application
-    // dependency. This adds complexity and much more code, and this sample is not about testing.
-    // See the BasicSample in the android-architecture-components repository at
-    // https://github.com/googlesamples
+    /**
+     * For unit testing only
+     * @param userAccountDao user account dao mock
+     */
+    public UserAccountRepository(UserAccountDao userAccountDao) {
+        this.userAccountDao = userAccountDao;
+    }
+
     public UserAccountRepository() {
         userAccountDao = AppDatabase.getDatabase().userAccountDao();
     }

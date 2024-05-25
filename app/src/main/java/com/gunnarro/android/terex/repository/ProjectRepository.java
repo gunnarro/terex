@@ -33,10 +33,6 @@ public class ProjectRepository {
 
     private final ProjectDao projectDao;
 
-    // Note that in order to unit test the WordRepository, you have to remove the Application
-    // dependency. This adds complexity and much more code, and this sample is not about testing.
-    // See the BasicSample in the android-architecture-components repository at
-    // https://github.com/googlesamples
     public ProjectRepository() {
         projectDao = AppDatabase.getDatabase().projectDao();
     }

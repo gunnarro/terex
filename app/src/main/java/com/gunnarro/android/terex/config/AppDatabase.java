@@ -80,7 +80,7 @@ public abstract class AppDatabase extends RoomDatabase {
                    // .allowMainThreadQueries()
                     .createFromAsset("database/test_data.sql") // FIXME is not executed
                     //.addMigrations(getMigration(context, 16,17))
-                    //.addCallback(roomCallback)
+                    .addCallback(roomCallback)
                     .build();
         }
     }
