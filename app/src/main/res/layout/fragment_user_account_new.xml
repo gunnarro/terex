@@ -249,7 +249,7 @@
                     android:hint="@string/lbl_city">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/user_account_new_org_city_name"
+                        android:id="@+id/user_account_new_org_city"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:enabled="false"

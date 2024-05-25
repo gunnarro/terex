@@ -1,3 +1,6 @@
+-- update user account table data
+DELETE FROM user_account WHERE id > 1000
+INSERT INTO user_account (id, uuid, created_date, last_modified_date, user_name, password, account_type, organization_id, person_id) VALUES (2001, '', current_timestamp, current_timestamp, 'guro', 'change-me', 'BUSINESS', 1100, null )
 
 -- update address table data
 DELETE FROM address WHERE id > 1000

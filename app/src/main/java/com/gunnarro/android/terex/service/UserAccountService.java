@@ -39,7 +39,14 @@ public class UserAccountService {
 
     public UserAccountDto getUserAccount(Long userAccountId) {
         UserAccount userAccount = userAccountRepository.getUserAccount(userAccountId);
-        return TimesheetMapper.toUserAccountDto(userAccount);
+        if (userAccount == null) {
+            return null;
+        }
+        UserAccountDto userAccountDto = TimesheetMapper.toUserAccountDto(userAccount);
+        if (userAccount.getUserAccountType().equals(UserAccount.UserAccountTypeEnum.BUSINESS.name())) {
+            userAccountDto.setOrganizationDto(organizationService.getOrganization(userAccount.getOrganizationId()));
+        }
+        return userAccountDto;
     }
 
     public Long saveUserAccount(@NotNull final UserAccountDto userAccountDto) {

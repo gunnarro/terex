@@ -24,20 +24,29 @@ import java.util.List;
 public class UserAccountServiceTest {
 
     private UserAccountService userAccountService;
+    AppDatabase appDatabase;
 
     @Before
     public void setup() {
         Context appContext = ApplicationProvider.getApplicationContext();
-        AppDatabase appDatabase = Room.inMemoryDatabaseBuilder(appContext, AppDatabase.class).build();
+        appDatabase = Room.inMemoryDatabaseBuilder(appContext, AppDatabase.class).build();
         AppDatabase.init(appContext);
         userAccountService = new UserAccountService(new UserAccountRepository(), new OrganizationService());
         // load test data
         List<String> sqlQueryList = DbHelper.readMigrationSqlQueryFile(appContext, "database/test_data.sql");
+        appDatabase.getOpenHelper().getWritableDatabase().beginTransaction();
         sqlQueryList.forEach(query -> {
             System.out.println(query);
             appDatabase.getOpenHelper().getWritableDatabase().execSQL(query);
         });
+        appDatabase.getOpenHelper().getWritableDatabase().endTransaction();
         assertTrue(appDatabase.getOpenHelper().getWritableDatabase().isDatabaseIntegrityOk());
+    }
+
+    @Test
+    public void getUserAccount_business() {
+        UserAccountDto userAccountDto = userAccountService.getUserAccount(2001L);
+        assertEquals(2001, userAccountDto.getId().longValue());
     }
 
     @Test

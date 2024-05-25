@@ -14,6 +14,103 @@
         android:orientation="horizontal"
         tools:ignore="UselessParent">
 
+        <TableLayout
+            android:id="@+id/user_account_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:stretchColumns="1">
+
+            <TableRow>
+                <TextView
+                    android:id="@+id/user_account_account_type_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_span="1"
+                    android:gravity="start"
+                    android:text=""
+                    android:textStyle="normal" />
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:id="@+id/user_account_username_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_span="1"
+                    android:gravity="start"
+                    android:text=""
+                    android:textStyle="normal" />
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:id="@+id/user_account_organization_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_span="1"
+                    android:gravity="start"
+                    android:text=""
+                    android:textStyle="normal" />
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:id="@+id/user_account_organization_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_span="1"
+                    android:gravity="start"
+                    android:text=""
+                    android:textStyle="normal" />
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:id="@+id/user_account_organization_bank_account"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_span="1"
+                    android:gravity="start"
+                    android:text=""
+                    android:textStyle="normal" />
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:id="@+id/user_account_organization_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_span="1"
+                    android:gravity="start"
+                    android:text=""
+                    android:textStyle="normal" />
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:id="@+id/user_account_organization_city"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_span="1"
+                    android:gravity="start"
+                    android:text=""
+                    android:textStyle="normal" />
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:id="@+id/user_account_organization_country"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_span="1"
+                    android:gravity="start"
+                    android:text=""
+                    android:textStyle="normal" />
+            </TableRow>
+        </TableLayout>
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_user_account"
             style="@style/Widget.Material3.Button.OutlinedButton"
@@ -21,26 +118,16 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:layout_weight="1"
+            android:layout_below="@+id/user_account_info"
             android:text="@string/lbl_user_account"
-            app:iconTint="@color/color_btn_bg_cancel" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_project_new"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            android:layout_below="@id/btn_user_account"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_weight="1"
-            android:text="@string/lbl_project"
             app:iconTint="@color/color_btn_bg_cancel" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_settings"
             style="@style/Widget.Material3.Button.OutlinedButton"
-            android:layout_below="@id/btn_project_new"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/btn_user_account"
             android:layout_marginEnd="10dp"
             android:layout_weight="1"
             android:text="@string/title_settings"

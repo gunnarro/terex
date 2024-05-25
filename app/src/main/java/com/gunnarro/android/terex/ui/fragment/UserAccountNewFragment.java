@@ -78,6 +78,8 @@ public class UserAccountNewFragment extends BaseFragment implements View.OnClick
             // Simply return back to home page
             navigateTo(R.id.nav_from_user_account_to_admin, null);
         });
+
+        updateUserAccountInputData(view, userAccountService.getUserAccount(1L));
         return view;
     }
 
@@ -107,10 +109,8 @@ public class UserAccountNewFragment extends BaseFragment implements View.OnClick
             userAccountService.saveUserAccount(userAccountDto);
             showSnackbar(String.format(getResources().getString(R.string.info_user_account_saved_msg_format), userAccountDto.getUserName()), R.color.color_snackbar_text_add);
         } catch (TerexApplicationException | InputValidationException ex) {
-            ex.printStackTrace();
             showInfoDialog("Error", String.format("%s", ex.getMessage()));
         } catch (Exception e) {
-            e.printStackTrace();
             showInfoDialog("Error", String.format("%s", e.getCause()));
         }
     }
@@ -124,7 +124,7 @@ public class UserAccountNewFragment extends BaseFragment implements View.OnClick
         ((TextView) view.findViewById(R.id.user_account_new_org_number)).setText(organizationDto.getOrganizationNumber());
         ((TextView) view.findViewById(R.id.user_account_new_org_street_name)).setText(organizationDto.getBusinessAddress().getStreetAddress());
         ((TextView) view.findViewById(R.id.user_account_new_org_postal_code)).setText(organizationDto.getBusinessAddress().getPostalCode());
-        ((TextView) view.findViewById(R.id.user_account_new_org_city_name)).setText(organizationDto.getBusinessAddress().getCity());
+        ((TextView) view.findViewById(R.id.user_account_new_org_city)).setText(organizationDto.getBusinessAddress().getCity());
         ((TextView) view.findViewById(R.id.user_account_new_org_country)).setText(organizationDto.getBusinessAddress().getCountry());
     }
 
@@ -157,6 +157,30 @@ public class UserAccountNewFragment extends BaseFragment implements View.OnClick
         } else if (id == R.id.user_account_new_cancel_btn) {
             // return back to main view
             Log.d(Utility.buildTag(getClass(), "onClick"), "cancel button, return back to home view");
+        }
+    }
+
+    private void updateUserAccountInputData(@NotNull View view, @NotNull UserAccountDto userAccountDto) {
+        // check if this is a new or existing user account
+        if (userAccountDto == null) {
+            return;
+        }
+
+
+        ((TextView) view.findViewById(R.id.user_account_new_id)).setText(userAccountDto.getId().toString());
+        ((TextView) view.findViewById(R.id.user_account_new_username)).setText(userAccountDto.getUserName());
+        ((TextView) view.findViewById(R.id.user_account_new_password)).setText(userAccountDto.getPassword());
+        ((TextView) view.findViewById(R.id.user_account_new_account_type)).setText(userAccountDto.getUserAccountType());
+        if (userAccountDto.getUserAccountType().equals("BUSINESS")) {
+            ((TextView) view.findViewById(R.id.user_account_new_org_number)).setText(userAccountDto.getOrganizationDto().getOrganizationNumber());
+            ((TextView) view.findViewById(R.id.user_account_new_org_name)).setText(userAccountDto.getOrganizationDto().getName());
+
+            ((TextView) view.findViewById(R.id.user_account_new_org_street_name)).setText(userAccountDto.getOrganizationDto().getBusinessAddress().getStreetAddress());
+            ((TextView) view.findViewById(R.id.user_account_new_org_postal_code)).setText(userAccountDto.getOrganizationDto().getBusinessAddress().getPostalCode());
+            ((TextView) view.findViewById(R.id.user_account_new_org_city)).setText(userAccountDto.getOrganizationDto().getBusinessAddress().getCity());
+            ((TextView) view.findViewById(R.id.user_account_new_org_country)).setText(userAccountDto.getOrganizationDto().getBusinessAddress().getCountry());
+        } else if (userAccountDto.getUserAccountType().equals("PRIVATE")) {
+            showInfoDialog("INFO", "Private user account is not supported yet!");
         }
     }
 
@@ -196,7 +220,7 @@ public class UserAccountNewFragment extends BaseFragment implements View.OnClick
         }
         businessAddressDto.setStreetAddress(((TextView) requireView().findViewById(R.id.user_account_new_org_street_name)).getText().toString());
         businessAddressDto.setPostalCode(((TextView) requireView().findViewById(R.id.user_account_new_org_postal_code)).getText().toString());
-        businessAddressDto.setCity(((TextView) requireView().findViewById(R.id.user_account_new_org_city_name)).getText().toString());
+        businessAddressDto.setCity(((TextView) requireView().findViewById(R.id.user_account_new_org_city)).getText().toString());
         businessAddressDto.setCountry(((TextView) requireView().findViewById(R.id.user_account_new_org_country)).getText().toString());
         organizationDto.setBusinessAddress(businessAddressDto);
         return organizationDto;

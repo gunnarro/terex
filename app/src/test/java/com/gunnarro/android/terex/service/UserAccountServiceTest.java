@@ -8,6 +8,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
+import com.gunnarro.android.terex.domain.dto.OrganizationDto;
 import com.gunnarro.android.terex.domain.dto.UserAccountDto;
 import com.gunnarro.android.terex.domain.entity.UserAccount;
 import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
@@ -38,8 +39,11 @@ class UserAccountServiceTest {
     @Test
     void getUserAccount_business() {
         UserAccount userAccount = createUserAccount(333L);
+        OrganizationDto organizationDto = new OrganizationDto();
+        organizationDto.setId(userAccount.getOrganizationId());
 
         when(userAccountRepositoryMock.getUserAccount(anyLong())).thenReturn(userAccount);
+        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organizationDto);
 
         UserAccountDto userAccountDto = userAccountService.getUserAccount(333L);
         assertEquals(userAccount.getId(), userAccountDto.getId());
