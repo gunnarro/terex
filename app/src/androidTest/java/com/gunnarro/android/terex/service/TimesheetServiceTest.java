@@ -80,7 +80,6 @@ public class TimesheetServiceTest {
         TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(timesheetId, LocalDate.of(2023, 11, 27));
         timesheetEntry.setWorkedMinutes(450);
         timesheetEntry.setBreakInMin(30);
-        timesheetEntry.setHourlyRate(1900);
         TerexApplicationException ex = assertThrows(TerexApplicationException.class, () -> {
             timesheetService.saveTimesheetEntry(timesheetEntry);
         });

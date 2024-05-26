@@ -200,7 +200,7 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
         // typeSpinner.setText(timesheetEntry.getType());
 
         EditText hourlyRateView = view.findViewById(R.id.timesheet_entry_hourly_rate);
-        hourlyRateView.setText(String.format("%s", timesheetEntry.getHourlyRate()));
+        hourlyRateView.setText(String.format("%s", 1200)); //fixme
 
         EditText workdayYearView = view.findViewById(R.id.timesheet_entry_workday_year);
         workdayYearView.setText(String.format("%s", timesheetEntry.getWorkdayDate().getYear()));
@@ -305,7 +305,7 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
         timesheetEntry.setType(TimesheetEntry.TimesheetEntryTypeEnum.REGULAR.name());
 
         TextView hourlyRateView = requireView().findViewById(R.id.timesheet_entry_hourly_rate);
-        timesheetEntry.setHourlyRate(Integer.parseInt(hourlyRateView.getText().toString()));
+        //timesheetEntry.setHourlyRate(Integer.parseInt(hourlyRateView.getText().toString())); fixme
 
         TextView workdayYearView = requireView().findViewById(R.id.timesheet_entry_workday_year);
         TextView workdayMonthView = requireView().findViewById(R.id.timesheet_entry_workday_month);

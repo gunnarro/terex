@@ -8,6 +8,7 @@ public class ProjectDto {
     private String name;
     private String description;
     private String status;
+    private Integer hourlyRate;
 
     private List<TimesheetDto> timesheetDto;
 
@@ -49,6 +50,14 @@ public class ProjectDto {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Integer getHourlyRate() {
+        return hourlyRate;
+    }
+
+    public void setHourlyRate(Integer hourlyRate) {
+        this.hourlyRate = hourlyRate;
     }
 
     public List<TimesheetDto> getTimesheetDto() {

@@ -417,7 +417,7 @@ public class TimesheetService {
         timesheetSummary.setToDate(Utility.getLastDayOfWeek(timesheetEntryList.get(0).getWorkdayDate(), week));
         timesheetSummary.setTotalWorkedDays(timesheetEntryList.size());
         timesheetEntryList.forEach(t -> {
-            timesheetSummary.setTotalBilledAmount(timesheetSummary.getTotalBilledAmount() + (t.getHourlyRate() * ((double) t.getWorkedMinutes() / 60)));
+            timesheetSummary.setTotalBilledAmount(timesheetSummary.getTotalBilledAmount() + (1250 * ((double) t.getWorkedMinutes() / 60))); //FIXME
             timesheetSummary.setTotalWorkedHours(timesheetSummary.getTotalWorkedHours() + (double) t.getWorkedMinutes() / 60);
         });
         return timesheetSummary;
@@ -456,7 +456,7 @@ public class TimesheetService {
         timesheetSummary.setToDate(Utility.getLastDayOfMonth(timesheetEntryList.get(0).getWorkdayDate()));
         timesheetSummary.setTotalWorkedDays(timesheetEntryList.size());
         timesheetEntryList.forEach(t -> {
-            timesheetSummary.setTotalBilledAmount(timesheetSummary.getTotalBilledAmount() + (t.getHourlyRate() * ((double) t.getWorkedMinutes() / 60)));
+            timesheetSummary.setTotalBilledAmount(timesheetSummary.getTotalBilledAmount() + (1250 * ((double) t.getWorkedMinutes() / 60))); // FIXME
             timesheetSummary.setTotalWorkedHours(timesheetSummary.getTotalWorkedHours() + (double) t.getWorkedMinutes() / 60);
         });
         return timesheetSummary;

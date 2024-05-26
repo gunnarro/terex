@@ -35,7 +35,7 @@ public class ProjectViewHolder extends RecyclerView.ViewHolder {
         } else
             line1StatusView.setTextColor(line1StatusView.getResources().getColor(R.color.invoice_status_completed, null));
     }*/
-        line1LabelView.setText("id: " + project.getClientId());
-        line1ValueView.setText(project.getDescription());
+        line1LabelView.setText("Hourly rate");
+        line1ValueView.setText(String.format("%s", project.getHourlyRate().toString()));
     }
 }

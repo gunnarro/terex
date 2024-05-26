@@ -85,6 +85,7 @@ class TimesheetMapperTest {
         project.setClientId(1001L);
         project.setDescription("develop a timesheet app");
         project.setStatus(Project.ProjectStatusEnum.ACTIVE.name());
+        project.setHourlyRate(1200);
 
         ProjectDto projectDto = TimesheetMapper.toProjectDto(project);
 
@@ -92,6 +93,7 @@ class TimesheetMapperTest {
         assertEquals(1001, projectDto.getClientId().intValue());
         assertEquals("gunnarro timesheet project", projectDto.getName());
         assertEquals("develop a timesheet app", projectDto.getDescription());
+        assertEquals(1200, projectDto.getHourlyRate());
         assertEquals(Project.ProjectStatusEnum.ACTIVE.name(), projectDto.getStatus());
         assertNull(projectDto.getTimesheetDto());
     }
@@ -104,6 +106,7 @@ class TimesheetMapperTest {
         projectDto.setId(1L);
         projectDto.setDescription("develop a timesheet app");
         projectDto.setStatus(Project.ProjectStatusEnum.ACTIVE.name());
+        projectDto.setHourlyRate(1200);
 
         Project project = TimesheetMapper.fromProjectDto(projectDto);
 
@@ -112,6 +115,7 @@ class TimesheetMapperTest {
         assertEquals(projectDto.getName(), project.getName());
         assertEquals(projectDto.getDescription(), project.getDescription());
         assertEquals(projectDto.getStatus(), project.getStatus());
+        assertEquals(projectDto.getHourlyRate(), project.getHourlyRate());
     }
 
 

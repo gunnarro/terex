@@ -124,6 +124,7 @@ public class TimesheetMapper {
         projectDto.setName(project.getName());
         projectDto.setDescription(project.getDescription());
         projectDto.setStatus(project.getStatus());
+        projectDto.setHourlyRate(project.getHourlyRate());
         return projectDto;
     }
 
@@ -137,6 +138,7 @@ public class TimesheetMapper {
         project.setName(projectDto.getName());
         project.setDescription(projectDto.getDescription());
         project.setStatus(projectDto.getStatus());
+        project.setHourlyRate(projectDto.getHourlyRate());
         return project;
     }
 

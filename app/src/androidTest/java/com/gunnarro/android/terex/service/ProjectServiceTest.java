@@ -49,6 +49,7 @@ public class ProjectServiceTest {
         newProjectDto.setId(null);// for new projects id is not set
         newProjectDto.setDescription("develop a timesheet app");
         newProjectDto.setStatus(Project.ProjectStatusEnum.ACTIVE.name());
+        newProjectDto.setHourlyRate(1250);
 
         Long projectId = projectService.saveProject(newProjectDto);
         assertEquals(1, projectId.intValue());

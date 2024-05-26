@@ -50,7 +50,7 @@ public class TimesheetEntryViewHolder extends RecyclerView.ViewHolder {
         }
         timesheetEntryLine1LabelView.setText(String.format("%s - %s", Utility.formatTime(timesheetEntry.getFromTime()), Utility.formatTime(timesheetEntry.getToTime())));
         timesheetEntryLine1ValueView.setText(Utility.getDateDiffInHours(timesheetEntry.getFromTime(), timesheetEntry.getToTime()));
-        timesheetEntryLine2LabelView.setText(String.format("%s", timesheetEntry.getHourlyRate()));
-        timesheetEntryLine2ValueView.setText(String.format("%s", timesheetEntry.getHourlyRate() * (timesheetEntry.getWorkedMinutes() / 60)));
+        timesheetEntryLine2LabelView.setText(String.format("%s", "na")); // FIXME
+        timesheetEntryLine2ValueView.setText(String.format("%s", 1200 * (timesheetEntry.getWorkedMinutes() / 60)));
     }
 }

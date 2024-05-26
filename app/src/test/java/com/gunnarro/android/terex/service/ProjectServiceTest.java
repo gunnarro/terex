@@ -57,6 +57,7 @@ class ProjectServiceTest {
         projectDto.setName("timerex");
         projectDto.setStatus(Project.ProjectStatusEnum.ACTIVE.name());
         projectDto.setDescription("develop a timesheet android app");
+        projectDto.setHourlyRate(1250);
 
         Project existingProject = TimesheetMapper.fromProjectDto(projectDto);
         when(projectRepositoryMock.findProject(anyLong(), anyString())).thenReturn(existingProject);

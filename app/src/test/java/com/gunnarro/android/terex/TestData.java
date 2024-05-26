@@ -49,7 +49,7 @@ public class TestData {
             timesheetSummary.setTotalWorkedDays(e.size());
             timesheetSummaryByWeek.add(timesheetSummary);
             Objects.requireNonNull(weekMap.get(k)).forEach(t -> {
-                timesheetSummary.setTotalBilledAmount(timesheetSummary.getTotalBilledAmount() + (t.getHourlyRate() * ((double) t.getWorkedMinutes() / 60)));
+                timesheetSummary.setTotalBilledAmount(timesheetSummary.getTotalBilledAmount() + (1250 * ((double) t.getWorkedMinutes() / 60)));
                 timesheetSummary.setTotalWorkedHours(timesheetSummary.getTotalWorkedHours() + (double) t.getWorkedMinutes() / 60);
             });
         });

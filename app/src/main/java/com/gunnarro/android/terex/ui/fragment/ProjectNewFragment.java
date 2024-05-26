@@ -54,14 +54,14 @@ public class ProjectNewFragment extends BaseFragment implements View.OnClickList
         View view = inflater.inflate(R.layout.fragment_project_new, container, false);
 
         // create status spinner
-        final AutoCompleteTextView statusSpinner = view.findViewById(R.id.client_project_status_spinner);
+        final AutoCompleteTextView statusSpinner = view.findViewById(R.id.project_status_spinner);
         ArrayAdapter<CharSequence> statusAdapter = ArrayAdapter.createFromResource(requireContext(), R.array.timesheet_statuses, android.R.layout.simple_spinner_item);
         statusSpinner.setAdapter(statusAdapter);
         statusSpinner.setListSelection(0);
 
         // disable save button as default
-        view.findViewById(R.id.client_project_save_btn).setEnabled(true);
-        view.findViewById(R.id.client_project_save_btn).setOnClickListener(v -> {
+        view.findViewById(R.id.project_save_btn).setEnabled(true);
+        view.findViewById(R.id.project_save_btn).setOnClickListener(v -> {
 
           /*  view.findViewById(R.id.client_project_save_btn).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
             Bundle result = new Bundle();
@@ -75,8 +75,8 @@ public class ProjectNewFragment extends BaseFragment implements View.OnClickList
             returnToProjectList(getArguments().getLong(ClientListFragment.CLIENT_ID_KEY));
         });
 
-        view.findViewById(R.id.client_project_delete_btn).setOnClickListener(v -> {
-            view.findViewById(R.id.client_project_delete_btn).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
+        view.findViewById(R.id.project_delete_btn).setOnClickListener(v -> {
+            view.findViewById(R.id.project_delete_btn).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
             Bundle result = new Bundle();
             result.putString(ProjectListFragment.PROJECT_JSON_KEY, getProjectAsJson());
             result.putString(ProjectListFragment.PROJECT_ACTION_KEY, ProjectListFragment.PROJECT_ACTION_DELETE);
@@ -85,8 +85,8 @@ public class ProjectNewFragment extends BaseFragment implements View.OnClickList
             returnToProjectList(getArguments().getLong(ClientListFragment.CLIENT_ID_KEY));
         });
 
-        view.findViewById(R.id.client_project_cancel_btn).setOnClickListener(v -> {
-            view.findViewById(R.id.client_project_cancel_btn).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
+        view.findViewById(R.id.project_cancel_btn).setOnClickListener(v -> {
+            view.findViewById(R.id.project_cancel_btn).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
             returnToProjectList(getArguments().getLong(ClientListFragment.CLIENT_ID_KEY));
         });
 
@@ -124,32 +124,31 @@ public class ProjectNewFragment extends BaseFragment implements View.OnClickList
             throw new TerexApplicationException("clientId is null!", "clientId is null!", null);
         }
 
-        TextView clientId = view.findViewById(R.id.client_project_client_id);
+        TextView clientId = view.findViewById(R.id.project_client_id);
         clientId.setText(String.valueOf(project.getClientId()));
 
-        TextView id = view.findViewById(R.id.client_project_project_id);
+        TextView id = view.findViewById(R.id.project_project_id);
         id.setText(String.valueOf(project.getId()));
 
-        EditText createdDateView = view.findViewById(R.id.client_project_created_date);
+        EditText createdDateView = view.findViewById(R.id.project_created_date);
         createdDateView.setText(Utility.formatDateTime(project.getCreatedDate()));
 
-        EditText lastModifiedDateView = view.findViewById(R.id.client_project_last_modified_date);
+        EditText lastModifiedDateView = view.findViewById(R.id.project_last_modified_date);
         lastModifiedDateView.setText(Utility.formatDateTime(project.getLastModifiedDate()));
 
-        AutoCompleteTextView statusSpinner = view.findViewById(R.id.client_project_status_spinner);
+        AutoCompleteTextView statusSpinner = view.findViewById(R.id.project_status_spinner);
         statusSpinner.setText(Project.ProjectStatusEnum.ACTIVE.name()); //FIXME
 
-        EditText hourlyRateView = view.findViewById(R.id.client_project_name);
-        hourlyRateView.setText(String.format("%s", project.getName()));
+        EditText hourlyRateView = view.findViewById(R.id.project_hourly_rate);
+        hourlyRateView.setText(String.format("%s", project.getHourlyRate()));
 
-        EditText workdayYearView = view.findViewById(R.id.client_project_description);
+        EditText workdayYearView = view.findViewById(R.id.project_description);
         workdayYearView.setText(String.format("%s", project.getDescription()));
-
 
         // hide fields if this is a new
         if (project.getId() == null) {
-            view.findViewById(R.id.client_project_date_layout).setVisibility(View.GONE);
-            view.findViewById(R.id.client_project_delete_btn).setVisibility(View.GONE);
+            view.findViewById(R.id.project_date_layout).setVisibility(View.GONE);
+            view.findViewById(R.id.project_delete_btn).setVisibility(View.GONE);
         } else if (!project.getStatus().equals(Project.ProjectStatusEnum.ACTIVE.name())) {
             // project locked, not able to edit anymore
             createdDateView.setEnabled(false);
@@ -167,9 +166,9 @@ public class ProjectNewFragment extends BaseFragment implements View.OnClickList
         }
 
         int id = view.getId();
-        if (id == R.id.client_project_save_btn) {
+        if (id == R.id.project_save_btn) {
             Log.d(Utility.buildTag(getClass(), "onClick"), "save button, save entry");
-        } else if (id == R.id.client_project_cancel_btn) {
+        } else if (id == R.id.project_cancel_btn) {
             // return back to main view
             Log.d(Utility.buildTag(getClass(), "onClick"), "cancel button, return back to client list view");
         }
@@ -178,33 +177,27 @@ public class ProjectNewFragment extends BaseFragment implements View.OnClickList
     private ProjectDto getProjectData() {
         ProjectDto projectDto = new ProjectDto();
 
-        TextView clientIdView = requireView().findViewById(R.id.client_project_client_id);
+        TextView clientIdView = requireView().findViewById(R.id.project_client_id);
         projectDto.setClientId(Utility.isInteger(clientIdView.getText().toString()) ? Long.parseLong(clientIdView.getText().toString()) : null);
 
-        TextView idView = requireView().findViewById(R.id.client_project_project_id);
+        TextView idView = requireView().findViewById(R.id.project_project_id);
         projectDto.setId(Utility.isInteger(idView.getText().toString()) ? Long.parseLong(idView.getText().toString()) : null);
 
-        EditText createdDateView = requireView().findViewById(R.id.client_project_created_date);
+        EditText createdDateView = requireView().findViewById(R.id.project_created_date);
         LocalDateTime createdDateTime = Utility.toLocalDateTime(createdDateView.getText().toString());
         if (createdDateTime != null) {
             //projectDto.setCreatedDate(createdDateTime);
         }
 
-        EditText lastModifiedDateView = requireView().findViewById(R.id.client_project_last_modified_date);
+        EditText lastModifiedDateView = requireView().findViewById(R.id.project_last_modified_date);
         LocalDateTime lastModifiedDateTime = Utility.toLocalDateTime(lastModifiedDateView.getText().toString());
         if (lastModifiedDateTime != null) {
             //projectDto.setLastModifiedDate(lastModifiedDateTime);
         }
-
-        TextView nameView = requireView().findViewById(R.id.client_project_name);
-        projectDto.setName(nameView.getText().toString());
-
-        TextView descriptionView = requireView().findViewById(R.id.client_project_description);
-        projectDto.setDescription(descriptionView.getText().toString());
-
-        AutoCompleteTextView statusSpinner = requireView().findViewById(R.id.client_project_status_spinner);
-        projectDto.setStatus(statusSpinner.getText().toString());
-
+        projectDto.setName(((TextView) requireView().findViewById(R.id.project_name)).getText().toString());
+        projectDto.setDescription(((TextView) requireView().findViewById(R.id.project_description)).getText().toString());
+        projectDto.setHourlyRate( Integer.valueOf(((TextView) requireView().findViewById(R.id.project_hourly_rate)).getText().toString()));
+        projectDto.setStatus(((AutoCompleteTextView) requireView().findViewById(R.id.project_status_spinner)).getText().toString());
         return projectDto;
     }
 

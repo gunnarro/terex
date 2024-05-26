@@ -40,6 +40,10 @@ public class Project extends BaseEntity {
     @ColumnInfo(name = "project_status")
     private String status;
 
+    @NotNull
+    @ColumnInfo(name = "hourly_rate")
+    private Integer hourlyRate;
+
     public Long getClientId() {
         return clientId;
     }
@@ -71,6 +75,14 @@ public class Project extends BaseEntity {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Integer getHourlyRate() {
+        return hourlyRate;
+    }
+
+    public void setHourlyRate(Integer hourlyRate) {
+        this.hourlyRate = hourlyRate;
     }
 
     @Override

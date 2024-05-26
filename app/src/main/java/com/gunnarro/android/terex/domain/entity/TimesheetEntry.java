@@ -87,11 +87,6 @@ public class TimesheetEntry extends BaseEntity {
     @ColumnInfo(name = "break_in_min")
     private Integer breakInMin;
 
-    // TODO remove rate, should be placed at project level.
-    @NotNull
-    @ColumnInfo(name = "hourly_rate")
-    private Integer hourlyRate;
-
     /**
      * Status can only be OPEN and CLOSED. When CLOSED is not possible to change or delete the entry.
      * The status is automatically set equal to CLOSED when a timesheet have been completed and billed.
@@ -183,15 +178,6 @@ public class TimesheetEntry extends BaseEntity {
         this.breakInMin = breakInMin;
     }
 
-    @NonNull
-    public Integer getHourlyRate() {
-        return hourlyRate;
-    }
-
-    public void setHourlyRate(@NonNull Integer hourlyRate) {
-        this.hourlyRate = hourlyRate;
-    }
-
     /**
      * Valid statues: OPEN, BILLED
      */
@@ -253,7 +239,6 @@ public class TimesheetEntry extends BaseEntity {
         timesheetEntry.setToTime(timesheetEntry.getFromTime().plusMinutes(Utility.DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES));
         timesheetEntry.setWorkedMinutes((int) ChronoUnit.MINUTES.between(timesheetEntry.getFromTime(), timesheetEntry.getToTime()));
         timesheetEntry.setBreakInMin(Utility.DEFAULT_DAILY_BREAK_IN_MINUTES);
-        timesheetEntry.setHourlyRate(Utility.DEFAULT_HOURLY_RATE);
         return timesheetEntry;
     }
 
@@ -267,7 +252,6 @@ public class TimesheetEntry extends BaseEntity {
         clone.setWorkedMinutes(timesheetEntry.getWorkedMinutes());
         clone.setStatus(timesheetEntry.getStatus());
         clone.setType(timesheetEntry.getType());
-        clone.setHourlyRate(timesheetEntry.getHourlyRate());
         clone.setWorkdayWeek(timesheetEntry.getWorkdayWeek());
         clone.setBreakInMin(timesheetEntry.getBreakInMin());
         clone.setFromTime(timesheetEntry.getFromTime());
@@ -304,7 +288,6 @@ public class TimesheetEntry extends BaseEntity {
         sb.append(", toTime=").append(toTime);
         sb.append(", workedMinutes=").append(workedMinutes);
         sb.append(", breakInMin=").append(breakInMin);
-        sb.append(", hourlyRate=").append(hourlyRate);
         sb.append(", status='").append(status);
         sb.append(", type=").append(type);
         sb.append(", comment='").append(comment);

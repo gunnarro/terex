@@ -127,10 +127,8 @@ class TimesheetServiceTest {
         timesheet.setStatus(Timesheet.TimesheetStatusEnum.ACTIVE.name());
         TimesheetEntry timesheetEntry1 = TimesheetEntry.createDefault(1L, LocalDate.now());
         timesheetEntry1.setWorkedMinutes(450);
-        timesheetEntry1.setHourlyRate(1900);
         TimesheetEntry timesheetEntry2 = TimesheetEntry.createDefault(2L, LocalDate.now());
         timesheetEntry2.setWorkedMinutes(450);
-        timesheetEntry2.setHourlyRate(1900);
 
 //        when(timesheetRepositoryMock.getTimesheetEntryList(any())).thenReturn(List.of(timesheetEntry1, timesheetEntry2));
 //        when(timesheetRepositoryMock.getTimesheet(timesheet.getId())).thenReturn(timesheet);
@@ -269,7 +267,6 @@ class TimesheetServiceTest {
         TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(timesheetExisting.getId(), LocalDate.of(2023, 12, 21));
         timesheetEntry.setWorkedMinutes(450);
         timesheetEntry.setBreakInMin(30);
-        timesheetEntry.setHourlyRate(1900);
 
         when(timesheetRepositoryMock.getTimesheet(timesheetExisting.getId())).thenReturn(timesheetExisting);
         when(timesheetRepositoryMock.getTimesheetEntryList(timesheetEntry.getTimesheetId())).thenReturn(List.of());
@@ -295,7 +292,6 @@ class TimesheetServiceTest {
         TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(timesheetExisting.getId(), LocalDate.of(2023, 12, 21));
         timesheetEntry.setWorkedMinutes(450);
         timesheetEntry.setBreakInMin(30);
-        timesheetEntry.setHourlyRate(1900);
 
         List<TimesheetEntry> timesheetEntryList = TestData.generateTimesheetEntries(timesheetExisting.getYear(), timesheetExisting.getMonth());
         when(timesheetRepositoryMock.getTimesheet(timesheetExisting.getId())).thenReturn(timesheetExisting);
