@@ -5,8 +5,6 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -331,29 +329,5 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
             Log.e("getTimesheetAsJson", e.toString());
             throw new RuntimeException("unable to parse object to json! " + e);
         }
-    }
-
-    /**
-     *
-     */
-    private TextWatcher createEmptyTextValidator(EditText editText, String regexp, String validationErrorMsg) {
-        return new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // ignore
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // ignore
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (!editText.getText().toString().matches(regexp)) {
-                    editText.setError(validationErrorMsg);
-                }
-            }
-        };
     }
 }

@@ -2,7 +2,10 @@ package com.gunnarro.android.terex.ui.fragment;
 
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
 
 import androidx.annotation.ColorRes;
 import androidx.fragment.app.Fragment;
@@ -52,6 +55,43 @@ abstract class BaseFragment extends Fragment {
 
     protected NavController getNavController() {
         return navController;
+    }
+
+    // -------------------------------------
+    // common data input validation
+    // -------------------------------------
+
+    /**
+     * used to check if a input field is empty or not
+     * @param e inputfield to check
+     * @return true if not empty, otherwise false
+     */
+    protected boolean hasText(Editable e) {
+        return e != null && !e.toString().isBlank();
+    }
+
+    /**
+     * Used for input validation
+     */
+    protected TextWatcher createEmptyTextValidator(EditText editText, String regexp, String validationErrorMsg) {
+        return new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // ignore
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // ignore
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!editText.getText().toString().matches(regexp)) {
+                    editText.setError(validationErrorMsg);
+                }
+            }
+        };
     }
 
 }

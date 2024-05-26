@@ -27,6 +27,7 @@ public class Project extends BaseEntity {
     /**
      * The company that have hired the consultant
      */
+    @NotNull
     @ColumnInfo(name = "client_id")
     private Long clientId;
 
@@ -40,7 +41,6 @@ public class Project extends BaseEntity {
     @ColumnInfo(name = "project_status")
     private String status;
 
-    @NotNull
     @ColumnInfo(name = "hourly_rate")
     private Integer hourlyRate;
 

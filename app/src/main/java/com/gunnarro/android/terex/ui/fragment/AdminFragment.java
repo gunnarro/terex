@@ -1,7 +1,5 @@
 package com.gunnarro.android.terex.ui.fragment;
 
-import android.app.AlertDialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,9 +12,9 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.gunnarro.android.terex.R;
+import com.gunnarro.android.terex.domain.dto.UserAccountDto;
 import com.gunnarro.android.terex.service.UserAccountService;
 import com.gunnarro.android.terex.utility.Utility;
-import com.gunnarro.android.terex.domain.dto.UserAccountDto;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -30,6 +28,7 @@ public class AdminFragment extends Fragment {
     private NavController navController;
 
     private UserAccountService userAccountService;
+
     @Inject
     public AdminFragment() {
     }
@@ -81,16 +80,4 @@ public class AdminFragment extends Fragment {
         this.navController = Navigation.findNavController(view);
     }
 
-
-    private void showInfoDialog(String infoMessage, Context context) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Info");
-        builder.setMessage(infoMessage);
-        // Set Cancelable false for when the user clicks on the outside the Dialog Box then it will remain show
-        builder.setCancelable(false);
-        // Set the positive button with yes name Lambda OnClickListener method is use of DialogInterface interface.
-        builder.setPositiveButton("Ok", (dialog, which) -> dialog.cancel());
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-    }
 }

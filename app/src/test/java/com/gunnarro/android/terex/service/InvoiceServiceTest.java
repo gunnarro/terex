@@ -44,7 +44,7 @@ class InvoiceServiceTest {
     @Test
     void invoiceTemplateEnum() {
         assertEquals("template/html/norway-consulting-timesheet.mustache", InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.getTemplate());
-        assertEquals("template/html/invoice-timesheet-attachment.mustache", InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getTemplate());
+        assertEquals("template/html/invoice-timesheet-summary-attachment.mustache", InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getTemplate());
         assertEquals("norway-consulting-timesheet", InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.getFileName());
         assertEquals("invoice-timesheet-attachment", InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getFileName());
     }

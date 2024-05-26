@@ -4,8 +4,6 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -505,33 +503,5 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
 
         TextView toDateView = requireView().findViewById(R.id.timesheet_new_to_date);
         toDateView.setText(Utility.formatDate(Utility.getLastDayOfMonth(date)));
-    }
-
-    private boolean hasText(Editable e) {
-        return e != null && !e.toString().isBlank();
-    }
-
-    /**
-     * Used for input validation
-     */
-    private TextWatcher createEmptyTextValidator(EditText editText, String regexp, String validationErrorMsg) {
-        return new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // ignore
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // ignore
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (!editText.getText().toString().matches(regexp)) {
-                    editText.setError(validationErrorMsg);
-                }
-            }
-        };
     }
 }

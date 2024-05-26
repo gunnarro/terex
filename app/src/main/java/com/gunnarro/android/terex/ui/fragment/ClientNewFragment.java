@@ -3,13 +3,10 @@ package com.gunnarro.android.terex.ui.fragment;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
@@ -232,33 +229,5 @@ public class ClientNewFragment extends BaseFragment implements View.OnClickListe
 
     private boolean isInputDataValid() {
         return true;
-    }
-
-    private boolean hasText(Editable e) {
-        return e != null && !e.toString().isBlank();
-    }
-
-    /**
-     * Used for input validation
-     */
-    private TextWatcher createEmptyTextValidator(EditText editText, String regexp, String validationErrorMsg) {
-        return new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // ignore
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // ignore
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (!editText.getText().toString().matches(regexp)) {
-                    editText.setError(validationErrorMsg);
-                }
-            }
-        };
     }
 }

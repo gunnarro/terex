@@ -24,8 +24,7 @@ public class InvoiceService {
 
     public enum InvoiceAttachmentTypesEnum {
         CLIENT_TIMESHEET("template/html/norway-consulting-timesheet.mustache"),
-        TIMESHEET_SUMMARY_2("template/html/timesheet-summary.mustache"),
-        TIMESHEET_SUMMARY("template/html/invoice-timesheet-attachment.mustache");
+        TIMESHEET_SUMMARY("template/html/timesheet-summary.mustache");
 
         private final String template;
 
