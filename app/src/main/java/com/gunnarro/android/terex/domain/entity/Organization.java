@@ -27,6 +27,9 @@ public class Organization extends BaseEntity {
     @ColumnInfo(name = "postal_address_id")
     private Long postalAddressId;
 
+    @ColumnInfo(name = "invoice_address_id")
+    private Long invoiceAddressId;
+
     @ColumnInfo(name = "contact_info_id")
     private Long contactInfoId;
 
@@ -60,6 +63,14 @@ public class Organization extends BaseEntity {
 
     public void setPostalAddressId(Long postalAddressId) {
         this.postalAddressId = postalAddressId;
+    }
+
+    public Long getInvoiceAddressId() {
+        return invoiceAddressId;
+    }
+
+    public void setInvoiceAddressId(Long invoiceAddressId) {
+        this.invoiceAddressId = invoiceAddressId;
     }
 
     public Long getContactInfoId() {

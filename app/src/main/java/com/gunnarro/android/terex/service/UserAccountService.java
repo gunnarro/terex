@@ -37,6 +37,10 @@ public class UserAccountService {
         this(new UserAccountRepository(), new OrganizationService());
     }
 
+    public Long getActiveUserAccountId() {
+       return getUserAccount(1L).getId();
+    }
+
     public UserAccountDto getUserAccount(Long userAccountId) {
         UserAccount userAccount = userAccountRepository.getUserAccount(userAccountId);
         if (userAccount == null) {
@@ -61,7 +65,6 @@ public class UserAccountService {
             // finally save client
             return save(userAccountDto);
         } catch (Exception e) {
-            e.printStackTrace();
             Log.e("Error", String.format("%s", e.getCause()));
             throw new TerexApplicationException("Error saving client!" + e.getMessage(), "50050", e.getCause());
         }

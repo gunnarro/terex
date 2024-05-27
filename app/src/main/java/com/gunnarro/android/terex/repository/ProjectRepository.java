@@ -68,6 +68,19 @@ public class ProjectRepository {
         }
     }
 
+    public Integer getProjectHourlyRateByTimesheetId(Long timesheetId) {
+        try {
+            CompletionService<Integer> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
+            service.submit(() -> projectDao.getProjectHourlyRate(timesheetId));
+            Future<Integer> future = service.take();
+            return future != null ? future.get() : null;
+        } catch (InterruptedException | ExecutionException e) {
+            // Something crashed, therefore restore interrupted state before leaving.
+            Thread.currentThread().interrupt();
+            throw new TerexApplicationException("error getting project!", "50050", e);
+        }
+    }
+
     public Project getProject(Long projectId) {
         try {
             CompletionService<Project> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);

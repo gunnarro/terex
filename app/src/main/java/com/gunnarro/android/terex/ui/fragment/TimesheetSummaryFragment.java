@@ -9,6 +9,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.gunnarro.android.terex.R;
+import com.gunnarro.android.terex.service.ProjectService;
 import com.gunnarro.android.terex.service.TimesheetService;
 import com.gunnarro.android.terex.utility.Utility;
 
@@ -22,6 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class TimesheetSummaryFragment extends BaseFragment {
 
     private TimesheetService timesheetService;
+    private ProjectService projectService;
 
     private Long timesheetId;
 
@@ -34,6 +36,7 @@ public class TimesheetSummaryFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         requireActivity().setTitle(R.string.title_timesheet_summary);
         timesheetService = new TimesheetService();
+        projectService = new ProjectService();
     }
 
     @Override
@@ -53,7 +56,8 @@ public class TimesheetSummaryFragment extends BaseFragment {
     }
 
     private void buildTimesheetSummary(Long timesheetId) {
-        String timesheetSummaryHtml = timesheetService.createTimesheetSummaryHtml(timesheetId, requireContext());
+        Integer hourlyRate = projectService.getProjectHourlyRate(timesheetId);
+        String timesheetSummaryHtml = timesheetService.createTimesheetSummaryHtml(timesheetId, hourlyRate, requireContext());
         WebView webView;
         try {
             webView = requireView().findViewById(R.id.timesheet_summary_web_view);

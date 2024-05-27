@@ -42,6 +42,10 @@ public class ProjectService {
         return TimesheetMapper.toProjectDto(projectRepository.getProject(projectId));
     }
 
+    public Integer getProjectHourlyRate(Long timesheetId) {
+        return projectRepository.getProjectHourlyRateByTimesheetId(timesheetId);
+    }
+
     public ProjectDto getProjectWithTimesheet(Long projectId) {
         ProjectWithTimesheet project = projectRepository.getProjectWithTimesheet(projectId);
         if (project != null) {

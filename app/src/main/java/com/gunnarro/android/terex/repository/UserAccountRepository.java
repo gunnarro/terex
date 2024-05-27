@@ -33,7 +33,6 @@ public class UserAccountRepository {
         userAccountDao = AppDatabase.getDatabase().userAccountDao();
     }
 
-
     public UserAccount getUserAccount(Long userAccountId) {
         try {
             CompletionService<UserAccount> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);

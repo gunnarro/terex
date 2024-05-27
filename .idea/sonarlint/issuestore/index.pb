@@ -334,3 +334,7 @@ Wapp/src/androidTest/java/com/gunnarro/android/terex/service/UserAccountServiceT
 Tapp/src/main/java/com/gunnarro/android/terex/ui/fragment/UserAccountNewFragment.java,a/f/af4b4a5d95d6b90d4ef66355e217275b7a709969
 †
 Vapp/src/test/java/com/gunnarro/android/terex/repository/UserAccountRepositoryTest.java,7/4/74a37a2d5d673b20760273944d6dd3c4c777c346
+f
+6app/src/test/invoice-timesheet-summary-attachment.html,6/0/60f2e4eea71dfaf5dc43de5a61eb04376912e588
+„
+Tapp/src/test/java/com/gunnarro/android/terex/domain/entity/TimesheetSummaryTest.java,e/3/e3c8652760389e09df8b952149eeb1c7bd77f876

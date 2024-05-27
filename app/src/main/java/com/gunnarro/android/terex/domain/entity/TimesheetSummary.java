@@ -11,6 +11,7 @@ import com.gunnarro.android.terex.domain.converter.LocalDateTimeConverter;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -84,6 +85,18 @@ public class TimesheetSummary extends BaseEntity {
 
     public void setFromDate(LocalDate fromDate) {
         this.fromDate = fromDate;
+    }
+
+    public String getFromDateDDMM() {
+        return fromDate.format(DateTimeFormatter.ofPattern("dd.MM"));
+    }
+
+    public String getToDateDDMM() {
+        return toDate.format(DateTimeFormatter.ofPattern("dd.MM"));
+    }
+
+    public String getMonthInYear() {
+        return fromDate.format(DateTimeFormatter.ofPattern("MMM"));
     }
 
     public LocalDate getToDate() {

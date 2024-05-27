@@ -24,7 +24,7 @@ public class InvoiceService {
 
     public enum InvoiceAttachmentTypesEnum {
         CLIENT_TIMESHEET("template/html/norway-consulting-timesheet.mustache"),
-        TIMESHEET_SUMMARY("template/html/timesheet-summary.mustache");
+        TIMESHEET_SUMMARY("template/html/invoice-timesheet-summary-attachment.mustache");
 
         private final String template;
 
@@ -79,9 +79,9 @@ public class InvoiceService {
     }
 
     @Transaction
-    public Long createInvoice(@NotNull Long invoiceIssuerId, @NotNull Long clientId, @NotNull Long timesheetId) {
+    public Long createInvoice(@NotNull Long invoiceIssuerId, @NotNull Long clientId, @NotNull Long timesheetId, @NotNull Integer hourlyRate) {
         // first accumulate timesheet entries
-        List<TimesheetSummaryDto> timesheetSummaryDtoList = timesheetService.createTimesheetSummaryForBilling(timesheetId);
+        List<TimesheetSummaryDto> timesheetSummaryDtoList = timesheetService.createTimesheetSummaryForBilling(timesheetId, hourlyRate);
         // there after create the invoice
         Invoice invoice = new Invoice();
         invoice.setInvoiceNumber(generateInvoiceNumber());

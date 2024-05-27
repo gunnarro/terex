@@ -169,5 +169,11 @@
     <string name="lbl_user_account">User account</string>
     <string name="lbl_user_account_type">User account type</string>
     <string name="title_user_account">User account</string>
+    <string name="title_client_details">Client Details</string>
+    <string name="title_timesheet_details">Timesheet Details</string>
+    <string name="title_timesheet_entry_details">Timesheet Entry Details</string>
+    <string name="title_timesheet_entry_new">New timesheet entry</string>
+    <string name="title_invoice_new">New invoice</string>
+    <string name="title_invoice_details">Invoice details</string>
 
 </resources>

@@ -11,10 +11,12 @@ import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 
+import com.google.android.material.button.MaterialButton;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.dto.BusinessAddressDto;
 import com.gunnarro.android.terex.domain.dto.OrganizationDto;
 import com.gunnarro.android.terex.domain.dto.UserAccountDto;
+import com.gunnarro.android.terex.domain.entity.UserAccount;
 import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.integration.breg.BregService;
@@ -58,6 +60,15 @@ public class UserAccountNewFragment extends BaseFragment implements View.OnClick
             lookupOrgNumber();
         });
 
+        /*
+        ((RadioButton) view.findViewById(R.id.user_account_new_account_type_private)).setOnCheckedChangeListener((buttonView, isChecked) -> {}
+                // show private data input
+        );
+
+        ((RadioButton) view.findViewById(R.id.user_account_new_account_type_business)).setOnCheckedChangeListener((buttonView, isChecked) -> {}
+                // show business data input
+        );
+        */
         // disable save button as default
         view.findViewById(R.id.user_account_new_save_btn).setEnabled(true);
         view.findViewById(R.id.user_account_new_save_btn).setOnClickListener(v -> {
@@ -163,11 +174,17 @@ public class UserAccountNewFragment extends BaseFragment implements View.OnClick
             return;
         }
 
-
         ((TextView) view.findViewById(R.id.user_account_new_id)).setText(userAccountDto.getId().toString());
         ((TextView) view.findViewById(R.id.user_account_new_username)).setText(userAccountDto.getUserName());
         ((TextView) view.findViewById(R.id.user_account_new_password)).setText(userAccountDto.getPassword());
-        ((TextView) view.findViewById(R.id.user_account_new_account_type)).setText(userAccountDto.getUserAccountType());
+        if (userAccountDto.getUserAccountType().equals(UserAccount.UserAccountTypeEnum.PRIVATE.name())) {
+            ((MaterialButton) view.findViewById(R.id.user_account_new_account_type_private)).setChecked(true);
+            ((MaterialButton) view.findViewById(R.id.user_account_new_account_type_business)).setChecked(false);
+        } else {
+            ((MaterialButton) view.findViewById(R.id.user_account_new_account_type_private)).setChecked(false);
+            ((MaterialButton) view.findViewById(R.id.user_account_new_account_type_business)).setChecked(true);
+        }
+
         if (userAccountDto.getUserAccountType().equals("BUSINESS")) {
             ((TextView) view.findViewById(R.id.user_account_new_org_number)).setText(userAccountDto.getOrganizationDto().getOrganizationNumber());
             ((TextView) view.findViewById(R.id.user_account_new_org_name)).setText(userAccountDto.getOrganizationDto().getName());
@@ -191,7 +208,12 @@ public class UserAccountNewFragment extends BaseFragment implements View.OnClick
 
         userAccountDto.setUserName(((TextView) requireView().findViewById(R.id.user_account_new_username)).getText().toString());
         userAccountDto.setPassword(((TextView) requireView().findViewById(R.id.user_account_new_password)).getText().toString());
-        userAccountDto.setUserAccountType(((TextView) requireView().findViewById(R.id.user_account_new_account_type)).getText().toString());
+
+        if (((MaterialButton) requireView().findViewById(R.id.user_account_new_account_type_private)).isChecked()) {
+            userAccountDto.setUserAccountType(UserAccount.UserAccountTypeEnum.PRIVATE.name());
+        } else {
+            userAccountDto.setUserAccountType(UserAccount.UserAccountTypeEnum.BUSINESS.name());
+        }
 
         if (userAccountDto.getUserAccountType().equals("BUSINESS")) {
             userAccountDto.setOrganizationDto(readOrganizationInputData());

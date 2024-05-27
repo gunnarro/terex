@@ -3,6 +3,7 @@ package com.gunnarro.android.terex.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
@@ -46,7 +47,7 @@ class InvoiceServiceTest {
         assertEquals("template/html/norway-consulting-timesheet.mustache", InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.getTemplate());
         assertEquals("template/html/invoice-timesheet-summary-attachment.mustache", InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getTemplate());
         assertEquals("norway-consulting-timesheet", InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.getFileName());
-        assertEquals("invoice-timesheet-attachment", InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getFileName());
+        assertEquals("invoice-timesheet-summary-attachment", InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getFileName());
     }
 
     @Test
@@ -66,9 +67,9 @@ class InvoiceServiceTest {
 
         List<TimesheetSummary> timesheetSummaries = List.of(timesheetSummaryWeek1);
         Long timesheetId = 1L;
-        when(timesheetServiceMock.createTimesheetSummaryForBilling(anyLong())).thenReturn(TimesheetMapper.toTimesheetSummaryDtoList(timesheetSummaries));
+        when(timesheetServiceMock.createTimesheetSummaryForBilling(anyLong(), anyInt())).thenReturn(TimesheetMapper.toTimesheetSummaryDtoList(timesheetSummaries));
         when(invoiceRepositoryMock.saveInvoice(any())).thenReturn(23L);
-        Long invoiceId = invoiceService.createInvoice(timesheetId, 100L, 200L);
+        Long invoiceId = invoiceService.createInvoice(timesheetId, 100L, 200L, 1250);
         assertEquals(23, invoiceId);
     }
 
@@ -97,7 +98,7 @@ class InvoiceServiceTest {
     @Test
     void buildInvoiceSummary() {
         TimesheetService timesheetService = new TimesheetService();
-        List<TimesheetSummary> timesheetSummaries = TestData.buildTimesheetSummaryByWeek(23L, 2023, 2);
+        List<TimesheetSummary> timesheetSummaries = TestData.buildTimesheetSummaryByWeek(23L, 2023, 2, 1250);
         assertEquals(5, timesheetSummaries.size());
         assertEquals(0, timesheetSummaries.get(0).getTimesheetId());
         assertEquals(24187.5, timesheetSummaries.get(0).getTotalBilledAmount());

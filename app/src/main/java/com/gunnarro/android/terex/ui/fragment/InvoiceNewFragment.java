@@ -12,13 +12,16 @@ import android.widget.AutoCompleteTextView;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.dto.ClientDto;
 import com.gunnarro.android.terex.domain.dto.SpinnerItem;
+import com.gunnarro.android.terex.domain.dto.UserAccountDto;
 import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.InvoiceAttachment;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.service.ClientService;
 import com.gunnarro.android.terex.service.InvoiceService;
+import com.gunnarro.android.terex.service.ProjectService;
 import com.gunnarro.android.terex.service.TimesheetService;
+import com.gunnarro.android.terex.service.UserAccountService;
 import com.gunnarro.android.terex.utility.Utility;
 
 import org.jetbrains.annotations.NotNull;
@@ -41,6 +44,8 @@ public class InvoiceNewFragment extends BaseFragment {
     private InvoiceService invoiceService;
     private TimesheetService timesheetService;
     private ClientService clientService;
+    private UserAccountService userAccountService;
+    private ProjectService projectService;
 
     @Inject
     public InvoiceNewFragment() {
@@ -50,9 +55,11 @@ public class InvoiceNewFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requireActivity().setTitle(R.string.title_invoice);
-        invoiceService = new InvoiceService();
-        timesheetService = new TimesheetService();
-        clientService = new ClientService();
+        this.invoiceService = new InvoiceService();
+        this.timesheetService = new TimesheetService();
+        this.clientService = new ClientService();
+        this.userAccountService = new UserAccountService();
+        this.projectService = new ProjectService();
     }
 
     @Override
@@ -82,7 +89,6 @@ public class InvoiceNewFragment extends BaseFragment {
                     navigateTo(R.id.nav_from_invoice_new_to_invoice_details, bundle);
                 }
             } catch (TerexApplicationException e) {
-                e.printStackTrace();
                 showInfoDialog("Info", "Error creating invoice!" + e.getMessage());
             }
         });
@@ -112,14 +118,15 @@ public class InvoiceNewFragment extends BaseFragment {
     private Long createInvoice(@NotNull Long timesheetId) {
         Long clientId = clientService.getClientIdByTimesheetId(timesheetId);
         // get invoice issuer, which is your company id
-        Long invoiceIssuerId = 1L;
-        Long invoiceId = invoiceService.createInvoice(invoiceIssuerId, clientId, timesheetId);
+        Long invoiceIssuerId = userAccountService.getActiveUserAccountId();
+        Integer hourlyRate = projectService.getProjectHourlyRate(timesheetId);
+        Long invoiceId = invoiceService.createInvoice(invoiceIssuerId, clientId, timesheetId, hourlyRate);
         if (invoiceId == null) {
             showInfoDialog("Info", "No timesheet found! timesheetId=" + timesheetId);
         }
-        Invoice invoice = invoiceService.getInvoice(invoiceId);
-        createTimesheetSummaryAttachment(invoice.getId());
-        createClientTimesheetAttachment(invoice.getId(), invoice.getTimesheetId());
+        //Invoice invoice = invoiceService.getInvoice(invoiceId);
+        createTimesheetSummaryAttachment(invoiceId);
+        createClientTimesheetAttachment(invoiceId, timesheetId);
         showInfoDialog("Info", "Successfully generated invoice attachment. invoiceId=" + invoiceId);
         return invoiceId;
     }
@@ -128,7 +135,9 @@ public class InvoiceNewFragment extends BaseFragment {
         try {
             Invoice invoice = invoiceService.getInvoice(invoiceId);
             Log.d("createTimesheetSummaryAttachment", "timesheetId=" + invoice.getTimesheetId());
-            String invoiceSummaryHtml = timesheetService.createTimesheetSummaryAttachmentHtml(invoice.getTimesheetId(), invoice.getInvoiceIssuerId(), invoice.getInvoiceRecipientId(),requireContext());
+            UserAccountDto invoiceIssuer = userAccountService.getUserAccount(invoice.getInvoiceIssuerId());
+            ClientDto invoiceReceiver = clientService.getClient(invoice.getClientId());
+            String invoiceSummaryHtml = timesheetService.createTimesheetSummaryAttachmentHtml(invoice.getTimesheetId(), invoiceIssuer, invoiceReceiver, requireContext());
             Log.d("createInvoiceSummaryAttachment", invoiceSummaryHtml);
             String invoiceAttachmentFileName = InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.name().toLowerCase(Locale.getDefault()) + "_attachment_" + invoice.getBillingDate().format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
@@ -140,7 +149,6 @@ public class InvoiceNewFragment extends BaseFragment {
             timesheetSummaryAttachment.setAttachmentFileContent(invoiceSummaryHtml.getBytes(StandardCharsets.UTF_8));
             invoiceService.saveInvoiceAttachment(timesheetSummaryAttachment);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new TerexApplicationException(String.format("Error crating invoice attachment, invoice ref=%s", invoiceId), "50023", e);
         }
     }
@@ -161,7 +169,6 @@ public class InvoiceNewFragment extends BaseFragment {
             clientTimesheetAttachment.setAttachmentFileContent(timesheetAttachmentHtml.getBytes(StandardCharsets.UTF_8));
             invoiceService.saveInvoiceAttachment(clientTimesheetAttachment);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new TerexApplicationException(String.format("Error crating timesheet attachment, timesheetId=%s", timesheetId), "50023", e);
         }
     }

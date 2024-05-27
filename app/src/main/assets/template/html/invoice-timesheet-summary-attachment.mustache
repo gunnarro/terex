@@ -41,17 +41,17 @@
         <div class="col-md">
             <address>
                 <strong>Kunde</strong><br>
-                {{client.name}}<br>
-                {{client.businessAddress.streetName}} {{client.businessAddress.streetNumber}}<br>
-                {{client.businessAddress.postCode}} {{client.businessAddress.city}}
+                {{invoiceReceiver.organizationDto.name}}<br>
+                {{invoiceReceiver.organizationDto.businessAddress.streetAddress}}<br>
+                {{invoiceReceiver.organizationDto.businessAddress.postalCode}} {{invoiceReceiver.organizationDto.businessAddress.city}}
             </address>
         </div>
         <div class="col-md">
             <address>
                 <strong>Firma</strong><br>
-                {{company.name}}<br>
-                {{company.businessAddress.streetName}} {{company.businessAddress.streetNumber}}<br>
-                {{company.businessAddress.postCode}} {{company.businessAddress.city}}
+                {{invoiceIssuer.organizationDto.name}}<br>
+                {{invoiceIssuer.organizationDto.businessAddress.streetAddress}}<br>
+                {{invoiceIssuer.organizationDto.businessAddress.postalCode}} {{invoiceIssuer.organizationDto.businessAddress.city}}
             </address>
         </div>
     </div>
@@ -61,15 +61,15 @@
                 <strong>Prosjektkode</strong><br>
                 {{timesheetProjectCode}}<br>
                 <strong>Kontaktperson</strong><br>
-                {{client.contactPerson.firstName}} {{client.contactPerson.lastName}}
+                {{invoiceReceiver.cntactPersonDto.fullName}}
             </address>
         </div>
         <div class="col-md">
             <address>
                 <strong>Organisasjonsnummer</strong><br>
-                {{company.organizationNumber}}<br>
+                {{invoiceIssuer.organizationDto.organizationNumber}}<br>
                 <strong>Bankkonto</strong><br>
-                {{company.bankAccountNumber}}
+                {{invoiceIssuer.organizationDto.bankAccountNumber}}
             </address>
         </div>
     </div>
@@ -98,7 +98,7 @@
                             {{#timesheetSummaryList}}
                             <tr>
                                 <td class="text-center">{{year}}</td>
-                                <td class="text-center">{{fromDateMM}}</td>
+                                <td class="text-center">{{monthInYear}}</td>
                                 <td class="text-center">{{weekInYear}}</td>
                                 <td class="text-center">{{fromDateDDMM}} - {{toDateDDMM}}</td>
                                 <td class="text-end">{{totalWorkedHours}}</td>

@@ -37,6 +37,16 @@ public interface ProjectDao {
     Project findProject(Long clientId, String projectName);
 
     /**
+     * Get hourly rate for timesheet id
+     * @param timesheetId timesheet id
+     * @return hourly rate
+     */
+    @Query("SELECT project.hourly_rate FROM project"
+            + " INNER JOIN timesheet ON timesheet.project_id = project.id"
+            + " WHERE timesheet.id = :timesheetId")
+    Integer getProjectHourlyRate(Long timesheetId);
+
+    /**
      * @param project project to be inserted. Abort if conflict, i.e. silently drop the insert
      * @return the id of the inserted invoice row
      */
@@ -55,5 +65,4 @@ public interface ProjectDao {
      */
     @Delete
     void delete(Project project);
-
 }

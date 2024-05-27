@@ -31,7 +31,7 @@
     <fragment
         android:id="@+id/client_list_fragment"
         android:name="com.gunnarro.android.terex.ui.fragment.ClientListFragment"
-        android:label="client_list_fragment"
+        android:label="@string/title_clients"
         tools:layout="@layout/fragment_recycler_client_list">
         <action
             android:id="@+id/nav_from_client_list_to_client_details"
@@ -65,14 +65,14 @@
     <fragment
         android:id="@+id/client_details_fragment"
         android:name="com.gunnarro.android.terex.ui.fragment.ClientNewFragment"
-        android:label="client_details_fragment"
+        android:label="@string/title_client_details"
         tools:layout="@layout/fragment_client_new">
     </fragment>
 
     <fragment
         android:id="@+id/client_new_fragment"
         android:name="com.gunnarro.android.terex.ui.fragment.ClientNewFragment"
-        android:label="client_new_fragment"
+        android:label="@string/title_client_new"
         tools:layout="@layout/fragment_client_new">
         <action
             android:id="@+id/nav_from_client_new_to_client_list"
@@ -83,7 +83,7 @@
     <fragment
         android:id="@+id/project_list_fragment"
         android:name="com.gunnarro.android.terex.ui.fragment.ProjectListFragment"
-        android:label="project_list_fragment"
+        android:label="@string/title_projects"
         tools:layout="@layout/fragment_recycler_project_list">
         <action
             android:id="@+id/nav_from_project_list_to_project_new"
@@ -99,7 +99,7 @@
     <fragment
         android:id="@+id/project_new_fragment"
         android:name="com.gunnarro.android.terex.ui.fragment.ProjectNewFragment"
-        android:label="project_new_fragment"
+        android:label="@string/title_project_new"
         tools:layout="@layout/fragment_project_new">
         <action
             android:id="@+id/nav_from_project_new_to_project_list"
@@ -110,7 +110,7 @@
     <fragment
         android:id="@+id/timesheet_list_fragment"
         android:name="com.gunnarro.android.terex.ui.fragment.TimesheetListFragment"
-        android:label="timesheet_list_fragment"
+        android:label="@string/title_timesheets"
         tools:layout="@layout/fragment_recycler_timesheet_list">
         <action
             android:id="@+id/nav_from_timesheet_list_to_timesheet_details"
@@ -135,7 +135,7 @@
     <fragment
         android:id="@+id/timesheet_details_fragment"
         android:name="com.gunnarro.android.terex.ui.fragment.TimesheetNewFragment"
-        android:label="timesheet_details_fragment"
+        android:label="@string/title_timesheet_details"
         tools:layout="@layout/fragment_timesheet_new">
         <argument
             android:name="timesheetId"
@@ -153,7 +153,7 @@
     <fragment
         android:id="@+id/timesheet_summary_fragment"
         android:name="com.gunnarro.android.terex.ui.fragment.TimesheetSummaryFragment"
-        android:label="timesheet_summary_fragment"
+        android:label="@string/title_timesheet_summary"
         tools:layout="@layout/fragment_timesheet_summary">
         <argument
             android:name="timesheetId"
@@ -166,7 +166,7 @@
     <fragment
         android:id="@+id/timesheet_entry_list_fragment"
         android:name="com.gunnarro.android.terex.ui.fragment.TimesheetEntryListFragment"
-        android:label="timesheet_entry_list_fragment"
+        android:label="@string/title_timesheet_entries"
         tools:layout="@layout/fragment_recycler_timesheet_entry_list">
         <action
             android:id="@+id/nav_from_timesheet_entry_list_to_timesheet_entry_details"
@@ -191,7 +191,7 @@
     <fragment
         android:id="@+id/timesheet_entry_details_fragment"
         android:name="com.gunnarro.android.terex.ui.fragment.TimesheetEntryAddFragment"
-        android:label="timesheet_entry_details_fragment"
+        android:label="@string/title_timesheet_entry_details"
         tools:layout="@layout/fragment_timesheet_entry_add">
         <argument
             android:name="timesheetId"
@@ -206,7 +206,7 @@
     <fragment
         android:id="@+id/timesheet_entry_calendar_add_fragment"
         android:name="com.gunnarro.android.terex.ui.fragment.TimesheetEntryCustomCalendarFragment"
-        android:label="timesheet_entry_calendar_add_fragment"
+        android:label="@string/title_timesheet_entry_new"
         tools:layout="@layout/fragment_timesheet_entry_custom_calendar">
         <argument
             android:name="timesheetId"
@@ -222,7 +222,7 @@
     <fragment
         android:id="@+id/invoice_list_fragment"
         android:name="com.gunnarro.android.terex.ui.fragment.InvoiceListFragment"
-        android:label="invoice_list_fragment"
+        android:label="@string/title_invoices"
         tools:layout="@layout/fragment_recycler_invoice_list">
         <action
             android:id="@+id/nav_from_invoice_list_to_invoice_details"
@@ -235,7 +235,7 @@
     <fragment
         android:id="@+id/invoice_new_fragment"
         android:name="com.gunnarro.android.terex.ui.fragment.InvoiceNewFragment"
-        android:label="invoice_new_fragment"
+        android:label="@string/title_invoice_new"
         tools:layout="@layout/fragment_invoice_new">
         <action
             android:id="@+id/nav_from_invoice_new_to_invoice_details"
@@ -248,7 +248,7 @@
     <fragment
         android:id="@+id/invoice_details_fragment"
         android:name="com.gunnarro.android.terex.ui.fragment.InvoiceDetailsFragment"
-        android:label="invoice_details_fragment"
+        android:label="@string/title_invoice_details"
         tools:layout="@layout/fragment_invoice_details">
         <action
             android:id="@+id/nav_from_invoice_details_to_invoice_list"
@@ -258,7 +258,7 @@
     <fragment
         android:id="@+id/user_account_new_fragment"
         android:name="com.gunnarro.android.terex.ui.fragment.UserAccountNewFragment"
-        android:label="user_account_fragment"
+        android:label="@string/title_user_account"
         tools:layout="@layout/fragment_user_account_new">
         <action
             android:id="@+id/nav_from_user_account_to_admin"
@@ -268,7 +268,7 @@
     <fragment
         android:id="@+id/admin_fragment"
         android:name="com.gunnarro.android.terex.ui.fragment.AdminFragment"
-        android:label="admin_fragment"
+        android:label="@string/title_admin"
         tools:layout="@layout/fragment_admin">
         <action
             android:id="@+id/nav_from_admin_to_home"

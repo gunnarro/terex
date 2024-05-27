@@ -14,13 +14,14 @@ import android.content.Context;
 import android.content.res.AssetManager;
 
 import com.gunnarro.android.terex.TestData;
+import com.gunnarro.android.terex.domain.dto.ClientDto;
 import com.gunnarro.android.terex.domain.dto.TimesheetSummaryDto;
+import com.gunnarro.android.terex.domain.dto.UserAccountDto;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
 import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
-import com.gunnarro.android.terex.repository.OrganizationRepository;
 import com.gunnarro.android.terex.repository.TimesheetRepository;
 import com.gunnarro.android.terex.utility.Utility;
 
@@ -49,12 +50,10 @@ class TimesheetServiceTest {
 
     @Mock
     private TimesheetRepository timesheetRepositoryMock;
-    @Mock
-    private OrganizationRepository OrganizationRepositoryMock;
 
     @BeforeEach
     public void setup() {
-        timesheetService = new TimesheetService(timesheetRepositoryMock, OrganizationRepositoryMock);
+        timesheetService = new TimesheetService(timesheetRepositoryMock);
     }
 
     @Test
@@ -254,7 +253,7 @@ class TimesheetServiceTest {
 
         when(timesheetRepositoryMock.getTimesheet(timesheetExisting.getId())).thenReturn(timesheetExisting);
 
-        TerexApplicationException ex = assertThrows(TerexApplicationException.class, () -> timesheetService.createTimesheetSummaryForBilling(timesheetExisting.getId()));
+        TerexApplicationException ex = assertThrows(TerexApplicationException.class, () -> timesheetService.createTimesheetSummaryForBilling(timesheetExisting.getId(), 1250));
 
         Assertions.assertEquals("Application error! Please Report error to app developer. Error=Application error, timesheet not fulfilled! timesheetId=23, status=ACTIVE", ex.getMessage());
     }
@@ -271,7 +270,7 @@ class TimesheetServiceTest {
         when(timesheetRepositoryMock.getTimesheet(timesheetExisting.getId())).thenReturn(timesheetExisting);
         when(timesheetRepositoryMock.getTimesheetEntryList(timesheetEntry.getTimesheetId())).thenReturn(List.of());
 
-        TerexApplicationException ex = assertThrows(TerexApplicationException.class, () -> timesheetService.createTimesheetSummaryForBilling(timesheetExisting.getId()));
+        TerexApplicationException ex = assertThrows(TerexApplicationException.class, () -> timesheetService.createTimesheetSummaryForBilling(timesheetExisting.getId(), 1250));
 
         Assertions.assertEquals("Application error! Please Report error to app developer. Error=Application error, timesheet not ready for billing, no entries found! timesheetId=23, status=COMPLETED", ex.getMessage());
     }
@@ -297,7 +296,7 @@ class TimesheetServiceTest {
         when(timesheetRepositoryMock.getTimesheet(timesheetExisting.getId())).thenReturn(timesheetExisting);
         when(timesheetRepositoryMock.getTimesheetEntryList(timesheetEntry.getTimesheetId())).thenReturn(timesheetEntryList);
 
-        List<TimesheetSummaryDto> timesheetSummaryDtoList = timesheetService.createTimesheetSummaryForBilling(timesheetExisting.getId());
+        List<TimesheetSummaryDto> timesheetSummaryDtoList = timesheetService.createTimesheetSummaryForBilling(timesheetExisting.getId(), 1250);
         // week 1
         assertEquals(5, timesheetSummaryDtoList.size());
         assertEquals(23, timesheetSummaryDtoList.get(0).getTimesheetId());
@@ -367,7 +366,7 @@ class TimesheetServiceTest {
 
         when(timesheetRepositoryMock.getTimesheet(anyLong())).thenReturn(timesheet);
         when(timesheetRepositoryMock.getTimesheetEntryList(anyLong())).thenReturn(TestData.generateTimesheetEntries(2023, 12));
-        String templateHtml = timesheetService.createTimesheetSummaryHtml(23L, applicationContextMock);
+        String templateHtml = timesheetService.createTimesheetSummaryHtml(23L, 1250, applicationContextMock);
         Assertions.assertNotNull(templateHtml);
         // saveToFile("src/test/" + InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getFileName() + ".html", templateHtml);
     }
@@ -376,18 +375,27 @@ class TimesheetServiceTest {
     void createTimesheetSummaryAttachmentHtml() throws IOException {
         Timesheet timesheet = Timesheet.createDefault("gunnarro", "test-project", 2023, 11);
         timesheet.setId(23L);
+        timesheet.setProjectId(444L);
+
+        UserAccountDto invoiceIssuer = TestData.createUserAccountDto(1000L, "guro");
+        invoiceIssuer.setOrganizationDto(TestData.createOrganizationDto(100L, "gunnarro as", "822 707 922"));
+        ClientDto invoiceReceiver = TestData.createClientDto(300L, "client organization name");
+        invoiceReceiver.setOrganizationDto(TestData.createOrganizationDto(1001L, "client organization name", "988 232 999"));
+        invoiceReceiver.setCntactPersonDto(TestData.createContactPerson(600L, "kontaktperson hos klient"));
         File mustacheTemplateFile = new File("src/main/assets/" + InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getTemplate());
+
         Context applicationContextMock = mock(Context.class);
         AssetManager assetManagerMock = mock(AssetManager.class);
         when(assetManagerMock.open(anyString())).thenReturn(new FileInputStream(mustacheTemplateFile));
         when(applicationContextMock.getAssets()).thenReturn(assetManagerMock);
 
-        List<TimesheetSummary> timesheetSummaryList = TestData.buildTimesheetSummaryByWeek(23L, 2023, 1);
+        List<TimesheetSummary> timesheetSummaryList = TestData.buildTimesheetSummaryByWeek(23L, 2023, 1, 1000);
         when(timesheetRepositoryMock.getTimesheet(anyLong())).thenReturn(timesheet);
         when(timesheetRepositoryMock.getTimesheetSummary(anyLong())).thenReturn(timesheetSummaryList);
-        String templateHtml = timesheetService.createTimesheetSummaryAttachmentHtml(23L, 100L, 200L, applicationContextMock);
+
+        String templateHtml = timesheetService.createTimesheetSummaryAttachmentHtml(timesheet.getId(), invoiceIssuer, invoiceReceiver, applicationContextMock);
         Assertions.assertNotNull(templateHtml);
-        // saveToFile("src/test/" + InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getFileName() + ".html", templateHtml);
+        //saveToFile("src/test/" + InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getFileName() + ".html", templateHtml);
     }
 
     private void saveToFile(String filePath, String content) throws IOException {

@@ -6,10 +6,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
-import com.gunnarro.android.terex.domain.dto.BusinessAddressDto;
-import com.gunnarro.android.terex.domain.dto.ContactInfoDto;
+import com.gunnarro.android.terex.TestData;
 import com.gunnarro.android.terex.domain.dto.OrganizationDto;
-import com.gunnarro.android.terex.domain.dto.PersonDto;
 import com.gunnarro.android.terex.domain.entity.Organization;
 import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
 import com.gunnarro.android.terex.repository.AddressRepository;
@@ -49,7 +47,7 @@ class OrganizationServiceTest {
 
     @Test
     void saveOrganization_new() throws ExecutionException, InterruptedException {
-        OrganizationDto organizationDto = createOrganizationDto();
+        OrganizationDto organizationDto = TestData.createOrganizationDto(null, "gunnarro as", "822 707 922");
 
         when(organizationRepositoryMock.findOrganization(anyString())).thenReturn(null);
         when(organizationRepositoryMock.insert(any())).thenReturn(1L);
@@ -59,9 +57,8 @@ class OrganizationServiceTest {
     }
 
     @Test
-    void saveOrganization_update() throws ExecutionException, InterruptedException {
-        OrganizationDto organizationDto = createOrganizationDto();
-        organizationDto.setId(100L);
+    void saveOrganization_update() {
+        OrganizationDto organizationDto = TestData.createOrganizationDto(100L, "gunnarro as", "822 707 922");
         Organization existingOrganization = TimesheetMapper.fromOrganizationDto(organizationDto);
         when(organizationRepositoryMock.findOrganization(anyString())).thenReturn(existingOrganization);
 
@@ -69,30 +66,4 @@ class OrganizationServiceTest {
         assertEquals(100L, organizationId);
     }
 
-    private OrganizationDto createOrganizationDto() {
-        OrganizationDto organizationDto = new OrganizationDto();
-        organizationDto.setName("gunnarro");
-        organizationDto.setOrganizationNumber("123456789");
-        organizationDto.setBankAccountNumber("23232323");
-        organizationDto.setIndustryType("SOFTWARE");
-
-        ContactInfoDto contactInfoDto = new ContactInfoDto();
-        contactInfoDto.setEmailAddress("my@org.com");
-        contactInfoDto.setMobileNumberCountryCode("+47");
-        contactInfoDto.setMobileNumber("22334455");
-
-        PersonDto contectPersonDto = new PersonDto();
-        contectPersonDto.setFullName("ole hansen");
-
-        BusinessAddressDto organizationAddress = new BusinessAddressDto();
-        organizationAddress.setStreetAddress("my-street 34");
-        organizationAddress.setCity("oslo");
-        organizationAddress.setCountry("norway");
-        organizationAddress.setPostalCode("0467");
-
-        organizationDto.setBusinessAddress(organizationAddress);
-        organizationDto.setContactPerson(contectPersonDto);
-        organizationDto.setContactInfo(contactInfoDto);
-        return organizationDto;
-    }
 }

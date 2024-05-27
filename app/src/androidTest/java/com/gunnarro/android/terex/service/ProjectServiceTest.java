@@ -40,11 +40,17 @@ public class ProjectServiceTest {
     }
 
     @Test
+    public void getHourlyRate() {
+        assertNull(projectService.getProjectHourlyRate(23L));
+    }
+
+    @Test
     public void saveProject() {
         assertNull(projectService.getProject(1L));
         assertNull(projectService.getProjectWithTimesheet(1L));
 
         ProjectDto newProjectDto = new ProjectDto();
+        newProjectDto.setClientId(200L);
         newProjectDto.setName("gunnarro timesheet project");
         newProjectDto.setId(null);// for new projects id is not set
         newProjectDto.setDescription("develop a timesheet app");

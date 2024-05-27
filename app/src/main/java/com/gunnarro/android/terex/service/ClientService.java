@@ -73,7 +73,7 @@ public class ClientService {
         if (client != null) {
             ClientDto clientDto = TimesheetMapper.toClientDto(client);
             // add organization info
-            OrganizationDto organizationDto = organizationService.getOrganization(client.getId());
+            OrganizationDto organizationDto = organizationService.getOrganization(client.getOrganizationId());
             clientDto.setOrganizationDto(organizationDto);
             // add contact person info
             PersonDto contactPersonDto = personService.getPerson(client.getContactPersonId());

@@ -29,7 +29,7 @@ public class TimesheetServiceTest {
     public void setup() {
         Context appContext = ApplicationProvider.getApplicationContext();
         AppDatabase.init(appContext);
-        timesheetService = new TimesheetService(new TimesheetRepository(), null);//fixme
+        timesheetService = new TimesheetService(new TimesheetRepository());
     }
 
     @Test

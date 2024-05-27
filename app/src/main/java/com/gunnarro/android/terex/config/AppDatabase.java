@@ -57,7 +57,7 @@ import java.util.concurrent.Executors;
         Organization.class,
         InvoiceAttachment.class,
         Client.class,
-}, version = 3, views = {TimesheetView.class}, exportSchema = true)
+}, version = 7, views = {TimesheetView.class}, exportSchema = true)
 public abstract class AppDatabase extends RoomDatabase {
     // marking the instance as volatile to ensure atomic access to the variable
     // The Java volatile keyword guarantees visibility of changes to variables across threads
@@ -76,8 +76,8 @@ public abstract class AppDatabase extends RoomDatabase {
                             context.getApplicationContext(),
                             AppDatabase.class, "terex_database")
                     // use this during development
-                   // .fallbackToDestructiveMigration()
-                   // .allowMainThreadQueries()
+                    .fallbackToDestructiveMigration()
+                    // .allowMainThreadQueries()
                     .createFromAsset("database/test_data.sql") // FIXME is not executed
                     //.addMigrations(getMigration(context, 16,17))
                     .addCallback(roomCallback)

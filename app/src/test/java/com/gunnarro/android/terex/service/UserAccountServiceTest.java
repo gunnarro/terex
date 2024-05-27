@@ -45,7 +45,7 @@ class UserAccountServiceTest {
         when(userAccountRepositoryMock.getUserAccount(anyLong())).thenReturn(userAccount);
         when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organizationDto);
 
-        UserAccountDto userAccountDto = userAccountService.getUserAccount(333L);
+        UserAccountDto userAccountDto = userAccountService.getUserAccount(userAccount.getId());
         assertEquals(userAccount.getId(), userAccountDto.getId());
         assertEquals(userAccount.getUserName(), userAccountDto.getUserName());
         assertEquals(userAccount.getPassword(), userAccountDto.getPassword());
