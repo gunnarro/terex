@@ -40,6 +40,7 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
 
     @Inject
     public TimesheetEntryAddFragment() {
+        // Needed by dagger framework
     }
 
     @Override

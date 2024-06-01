@@ -24,7 +24,7 @@ import java.util.List;
 public class UserAccountServiceTest {
 
     private UserAccountService userAccountService;
-    AppDatabase appDatabase;
+    private AppDatabase appDatabase;
 
     @Before
     public void setup() {

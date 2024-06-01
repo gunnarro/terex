@@ -42,12 +42,13 @@ public class TimesheetMapper {
         return toTimesheetDto(timesheet, null, null);
     }
 
+    // fixme map projectId and userId
     public static TimesheetDto toTimesheetDto(Timesheet timesheet, Integer sumDays, Integer sumHours) {
         TimesheetDto timesheetDto = new TimesheetDto();
         timesheetDto.setTimesheetId(timesheet.getId());
-        timesheetDto.setClientName(timesheet.getClientName());
-        timesheetDto.setProjectCode(timesheet.getProjectCode());
         timesheetDto.setDescription(timesheet.getDescription());
+        timesheetDto.setFromDate(timesheet.getFromDate());
+        timesheetDto.setToDate(timesheet.getToDate());
         timesheetDto.setYear(timesheet.getYear());
         timesheetDto.setMonth(timesheet.getMonth());
         timesheetDto.setStatus(timesheet.getStatus());
@@ -58,18 +59,17 @@ public class TimesheetMapper {
         return timesheetDto;
     }
 
-
     public static Timesheet fromTimesheetDto(TimesheetDto timesheetDto) {
         Timesheet timesheet = new Timesheet();
         timesheet.setId(timesheetDto.getTimesheetId());
-        timesheet.setClientName(timesheetDto.getClientName());
-        timesheet.setProjectCode(timesheetDto.getProjectCode());
+        timesheet.setProjectId(timesheetDto.getProjectDto().getId());
+        timesheet.setUserId(timesheetDto.getUserAccountDto().getId());
         timesheet.setDescription(timesheetDto.getDescription());
         timesheet.setYear(timesheetDto.getYear());
         timesheet.setMonth(timesheetDto.getMonth());
         timesheet.setStatus(timesheetDto.getStatus());
-        timesheet.setFromDate(timesheet.getFromDate());
-        timesheet.setToDate(timesheet.getToDate());
+        timesheet.setFromDate(timesheetDto.getFromDate());
+        timesheet.setToDate(timesheetDto.getToDate());
         timesheet.setWorkingDaysInMonth(timesheetDto.getWorkingDaysInMonth());
         timesheet.setWorkingHoursInMonth(timesheetDto.getWorkingHoursInMonth());
         return timesheet;
@@ -170,7 +170,7 @@ public class TimesheetMapper {
         // map person
         PersonDto contactPersonDto = new PersonDto();
         contactPersonDto.setId(client.getContactPersonId());
-        clientDto.setCntactPersonDto(contactPersonDto);
+        clientDto.setContactPersonDto(contactPersonDto);
         return clientDto;
     }
 
@@ -180,7 +180,7 @@ public class TimesheetMapper {
         client.setName(clientDto.getName());
         client.setOrganizationId(clientDto.getOrganizationDto() != null ? clientDto.getOrganizationDto().getId() : null);
         client.setStatus(clientDto.getStatus());
-        client.setContactPersonId(clientDto.getCntactPersonDto() != null ? clientDto.getCntactPersonDto().getId() : null);
+        client.setContactPersonId(clientDto.getContactPersonDto() != null ? clientDto.getContactPersonDto().getId() : null);
         return client;
     }
 

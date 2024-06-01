@@ -106,10 +106,10 @@ public class TimesheetRepository {
         }
     }
 
-    public Timesheet getTimesheet(String clientName, String projectCode, Integer year, Integer mount) {
+    public Timesheet find(Long userId, Long projectId, Integer year, Integer mount) {
         try {
             CompletionService<Timesheet> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
-            service.submit(() -> timesheetDao.getTimesheet(clientName, projectCode, year, mount));
+            service.submit(() -> timesheetDao.find(userId, projectId, year, mount));
             Future<Timesheet> future = service.take();
             return future != null ? future.get() : null;
         } catch (InterruptedException | ExecutionException e) {
@@ -138,6 +138,19 @@ public class TimesheetRepository {
             CompletionService<LiveData<List<Timesheet>>> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
             service.submit(() -> timesheetDao.getTimesheetByYear(year));
             Future<LiveData<List<Timesheet>>> future = service.take();
+            return future != null ? future.get() : null;
+        } catch (InterruptedException | ExecutionException e) {
+            // Something crashed, therefore restore interrupted state before leaving.
+            Thread.currentThread().interrupt();
+            throw new TerexApplicationException("Error getting timesheet list", e.getMessage(), e.getCause());
+        }
+    }
+
+    public List<Timesheet> getTimesheetList(final Integer year) {
+        try {
+            CompletionService<List<Timesheet>> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
+            service.submit(() -> timesheetDao.getTimesheets(year));
+            Future<List<Timesheet>> future = service.take();
             return future != null ? future.get() : null;
         } catch (InterruptedException | ExecutionException e) {
             // Something crashed, therefore restore interrupted state before leaving.

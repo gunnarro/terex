@@ -36,7 +36,7 @@ public class ContactInfoRepository {
         }
     }
 
-    public ContactInfo findContactInfo(String mobileNumber, String emailAddress) {
+    public ContactInfo find(String mobileNumber, String emailAddress) {
         try {
             CompletionService<ContactInfo> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
             service.submit(() -> contactInfoDao.findContactInfo(mobileNumber, emailAddress));

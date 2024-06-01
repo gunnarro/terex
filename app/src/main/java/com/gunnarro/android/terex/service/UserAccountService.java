@@ -77,7 +77,7 @@ public class UserAccountService {
         try {
             UserAccount userAccountExisting;
             if (userAccount.getId() == null) {
-                userAccountExisting = userAccountRepository.findUserAccount(userAccount.getUserName());
+                userAccountExisting = userAccountRepository.find(userAccount.getUserName());
             } else {
                 userAccountExisting = userAccountRepository.getUserAccount(userAccount.getId());
             }

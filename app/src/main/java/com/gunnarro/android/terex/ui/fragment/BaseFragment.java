@@ -4,6 +4,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -24,7 +25,7 @@ abstract class BaseFragment extends Fragment {
     private NavController navController;
 
     /**
-     * setup after view is successfully create
+     * setup after view is successfully created
      */
     @Override
     public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
@@ -49,8 +50,25 @@ abstract class BaseFragment extends Fragment {
                 .show();
     }
 
-    protected void navigateTo(int destinationFragmentId, Bundle bundle) {
-        navController.navigate(destinationFragmentId, bundle);
+    /*
+     * The navigate() pushes the given toFragmentId to the top of the stack.
+     * Which cause that that will be the destination fragment when clicking th back button.
+     */
+    protected void navigateTo(int toFragmentId, Bundle bundle) {
+        navController.navigate(toFragmentId, bundle);
+    }
+
+    protected void navigateTo(int toFragmentId, Bundle bundle, boolean isDirect) {
+        if (isDirect) {
+            boolean b = navController.popBackStack(toFragmentId, false);
+            Log.d("navigateTo", "navigate directly, success=" + b);
+        } else {
+            navigateTo(toFragmentId, bundle);
+        }
+    }
+
+    protected void navigateToHome(Bundle bundle) {
+        navController.navigate(R.id.nav_to_home, bundle);
     }
 
     protected NavController getNavController() {
@@ -63,6 +81,7 @@ abstract class BaseFragment extends Fragment {
 
     /**
      * used to check if a input field is empty or not
+     *
      * @param e inputfield to check
      * @return true if not empty, otherwise false
      */

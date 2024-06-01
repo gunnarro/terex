@@ -106,10 +106,8 @@ public class ClientNewFragment extends BaseFragment implements View.OnClickListe
             clientService.saveClient(clientDto);
             showSnackbar(String.format(getResources().getString(R.string.info_client_saved_msg_format), clientDto.getOrganizationDto().getOrganizationNumber(), clientDto.getOrganizationDto().getName()), R.color.color_snackbar_text_add);
         } catch (TerexApplicationException | InputValidationException ex) {
-            ex.printStackTrace();
             showInfoDialog("Error", String.format("%s", ex.getMessage()));
         } catch (Exception e) {
-            e.printStackTrace();
             showInfoDialog("Error", String.format("%s", e.getCause()));
         }
     }
@@ -223,7 +221,7 @@ public class ClientNewFragment extends BaseFragment implements View.OnClickListe
         // name of client is set equal to organization name
         clientDto.setName(organizationDto.getName());
         clientDto.setOrganizationDto(organizationDto);
-        clientDto.setCntactPersonDto(contactPersonDto);
+        clientDto.setContactPersonDto(contactPersonDto);
         return clientDto;
     }
 

@@ -10,7 +10,6 @@ import android.content.Context;
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 
-import com.gunnarro.android.terex.DbHelper;
 import com.gunnarro.android.terex.config.AppDatabase;
 import com.gunnarro.android.terex.domain.dto.BusinessAddressDto;
 import com.gunnarro.android.terex.domain.dto.ClientDto;
@@ -25,7 +24,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class ClientServiceTest {
 
@@ -38,17 +36,14 @@ public class ClientServiceTest {
         AppDatabase.init(appContext);
         clientService = new ClientService(new ClientRepository(), new OrganizationService(), new ProjectService(), new PersonService());
         // load test data
+        /*
         List<String> sqlQueryList = DbHelper.readMigrationSqlQueryFile(appContext, "database/test_data.sql");
-        sqlQueryList.forEach(query -> {
-            System.out.println("DB test data sql query: : " + query);
+        appDatabase.runInTransaction(() -> sqlQueryList.forEach(query -> {
+            System.out.printf("DB test data sql query: %s%n", query);
             appDatabase.getOpenHelper().getWritableDatabase().execSQL(query);
-        });
-        Client client = new Client();
-        client.setId(23L);
-        client.setCreatedDate(LocalDateTime.now());
-        client.setLastModifiedDate(LocalDateTime.now());
-        client.setName("unit test");
-        appDatabase.clientDao().insert(client);
+        }));
+         */
+        appDatabase.clientDao().insert(createClient());
         assertTrue(appDatabase.getOpenHelper().getWritableDatabase().isDatabaseIntegrityOk());
     }
 
@@ -56,23 +51,20 @@ public class ClientServiceTest {
     public void getClientByTimesheetId_not_found() {
         clientService.getClientByTimesheetId(100L);
     }
-/*
+
     @Test
     public void getClientByTimesheetId() {
         ClientDto clientDto = clientService.getClientByTimesheetId(99L);
         assertEquals("", clientDto.getName());
     }
-*/
-    /**
-     * fixme do not find the client in the test_data.sql file
-     *
+
     @Test
     public void getClient() {
-        ClientDto clientDto = clientService.getClient(23L);
+        ClientDto clientDto = clientService.getClient(1001L);
         assertNotNull(clientDto);
         assertEquals("GUNNARRO AS", clientDto.getName());
     }
-*/
+
     @Test
     public void getClient_not_found() {
         ClientDto clientDto = clientService.getClient(9876L);
@@ -88,7 +80,7 @@ public class ClientServiceTest {
         newClientDto.setOrganizationDto(organizationDto);
         newClientDto.setName(organizationDto.getName());
         newClientDto.setStatus(Client.ClientStatusEnum.ACTIVE.name());
-        newClientDto.setCntactPersonDto(createContactPerson());
+        newClientDto.setContactPersonDto(createContactPerson());
 
         Long id = clientService.saveClient(newClientDto);
         assertNotNull(id);
@@ -99,12 +91,12 @@ public class ClientServiceTest {
         assertEquals("ACTIVE", clientDto.getStatus());
         assertEquals("1", clientDto.getOrganizationDto().getId().toString());
         assertEquals("822707922", clientDto.getOrganizationDto().getOrganizationNumber());
-        assertEquals(1L, clientDto.getCntactPersonDto().getId().longValue());
-        assertEquals("gunnar ronneberg", clientDto.getCntactPersonDto().getFullName());
-        assertEquals(1L, clientDto.getCntactPersonDto().getContactInfo().getId().longValue());
-        assertEquals("gr@yahoo.org", clientDto.getCntactPersonDto().getContactInfo().getEmailAddress());
-        assertEquals("44556677", clientDto.getCntactPersonDto().getContactInfo().getMobileNumber());
-        assertEquals("+47", clientDto.getCntactPersonDto().getContactInfo().getMobileNumberCountryCode());
+        assertEquals(1L, clientDto.getContactPersonDto().getId().longValue());
+        assertEquals("gunnar ronneberg", clientDto.getContactPersonDto().getFullName());
+        assertEquals(1L, clientDto.getContactPersonDto().getContactInfo().getId().longValue());
+        assertEquals("gr@yahoo.org", clientDto.getContactPersonDto().getContactInfo().getEmailAddress());
+        assertEquals("44556677", clientDto.getContactPersonDto().getContactInfo().getMobileNumber());
+        assertEquals("+47", clientDto.getContactPersonDto().getContactInfo().getMobileNumberCountryCode());
         // update client status
         clientDto.setStatus(Client.ClientStatusEnum.DEACTIVATED.name());
         id = clientService.saveClient(clientDto);
@@ -118,14 +110,14 @@ public class ClientServiceTest {
     // TEST DATA
     // ------------------------
 
-    private ClientDto ClientDto() {
-        ClientDto clientDto = new ClientDto();
-        clientDto.setId(100L);
-        clientDto.setName("gunnarro as");
-        clientDto.setStatus("ACTIVE");
-        clientDto.setOrganizationDto(createOrganizationDto());
-        clientDto.setCntactPersonDto(createContactPerson());
-        return clientDto;
+    private Client createClient() {
+        Client client = new Client();
+        client.setId(1001L);
+        client.setCreatedDate(LocalDateTime.now());
+        client.setLastModifiedDate(LocalDateTime.now());
+        client.setName("gunnarro as");
+        client.setStatus("ACTIVE");
+        return client;
     }
 
     private OrganizationDto createOrganizationDto() {

@@ -129,7 +129,7 @@ class TimesheetMapperTest {
         assertEquals("ACTIVE", clientDtos.get(0).getStatus());
         assertEquals("gunnarro as", clientDtos.get(0).getName());
         assertEquals(100, clientDtos.get(0).getOrganizationDto().getId());
-        assertEquals(900L, clientDtos.get(0).getCntactPersonDto().getId());
+        assertEquals(900L, clientDtos.get(0).getContactPersonDto().getId());
     }
 
     @Test
@@ -153,12 +153,12 @@ class TimesheetMapperTest {
         PersonDto contactPersonDto = new PersonDto();
         contactPersonDto.setId(666L);
         contactPersonDto.setFullName("gunnar ronneberg");
-        clientDto.setCntactPersonDto(contactPersonDto);
+        clientDto.setContactPersonDto(contactPersonDto);
         Client client = TimesheetMapper.fromClientDto(clientDto);
         assertEquals(clientDto.getName(), client.getName());
         assertEquals(clientDto.getStatus(), client.getStatus());
         assertEquals(clientDto.getOrganizationDto().getId(), client.getOrganizationId());
-        assertEquals(clientDto.getCntactPersonDto().getId(), client.getContactPersonId());
+        assertEquals(clientDto.getContactPersonDto().getId(), client.getContactPersonId());
     }
 
     @Test
@@ -273,7 +273,7 @@ class TimesheetMapperTest {
     private Client createClient(Long id, String name) {
         Client client = new Client();
         client.setId(id);
-        client.setName("gunnarro as");
+        client.setName(name);
         client.setOrganizationId(100L);
         client.setContactPersonId(900L);
         client.setStatus(Client.ClientStatusEnum.ACTIVE.name());

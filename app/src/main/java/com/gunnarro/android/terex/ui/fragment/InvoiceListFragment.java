@@ -67,19 +67,20 @@ public class InvoiceListFragment extends BaseFragment implements ListOnItemClick
         return view;
     }
 
-
-
     private void handleFragmentResult(Bundle bundle) {
         if (bundle == null) {
             return;
         }
-      if (bundle.getLong(INVOICE_ID_KEY) > 0) {
-          navigateTo(R.id.nav_from_invoice_list_to_invoice_details, bundle);
+        if (bundle.getLong(INVOICE_ID_KEY) > 0) {
+            navigateTo(R.id.nav_from_invoice_list_to_invoice_details, bundle);
         }
     }
 
+    /**
+     * Open invoice details when clicked on an invoice in the list.
+     */
     @Override
     public void onItemClick(Bundle bundle) {
-        getNavController().navigate(R.id.nav_from_invoice_list_to_invoice_details, bundle);
+        navigateTo(R.id.nav_from_invoice_list_to_invoice_details, bundle);
     }
 }

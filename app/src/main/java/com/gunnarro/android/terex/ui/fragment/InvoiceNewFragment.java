@@ -49,6 +49,7 @@ public class InvoiceNewFragment extends BaseFragment {
 
     @Inject
     public InvoiceNewFragment() {
+        // Needed by dagger framework
     }
 
     @Override
@@ -68,7 +69,7 @@ public class InvoiceNewFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_invoice_new, container, false);
         // only completed time sheets can be used a attachment to a invoice.
         List<Timesheet> timesheetList = timesheetService.getTimesheetsByStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
-        List<SpinnerItem> timesheetItems = timesheetList.stream().map(t -> new SpinnerItem(t.getId(), String.format("%s-%s %s", t.getYear(), t.getMonth(), t.getProjectCode()))).collect(Collectors.toList());
+        List<SpinnerItem> timesheetItems = timesheetList.stream().map(t -> new SpinnerItem(t.getId(), String.format("%s-%s %s", t.getYear(), t.getMonth(), t.toString()))).collect(Collectors.toList());
         final AutoCompleteTextView timesheetSpinner = view.findViewById(R.id.invoice_timesheet_spinner);
         ArrayAdapter<SpinnerItem> timesheetAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, timesheetItems);
         timesheetSpinner.setAdapter(timesheetAdapter);
@@ -86,7 +87,7 @@ public class InvoiceNewFragment extends BaseFragment {
                     Bundle bundle = new Bundle();
                     bundle.putLong(InvoiceListFragment.INVOICE_ID_KEY, invoiceId);
                     bundle.putString(InvoiceListFragment.INVOICE_ACTION_KEY, InvoiceListFragment.INVOICE_ACTION_VIEW);
-                    navigateTo(R.id.nav_from_invoice_new_to_invoice_details, bundle);
+                    returnToInvoiceList(bundle);
                 }
             } catch (TerexApplicationException e) {
                 showInfoDialog("Info", "Error creating invoice!" + e.getMessage());
@@ -96,18 +97,25 @@ public class InvoiceNewFragment extends BaseFragment {
         view.findViewById(R.id.btn_invoice_new_cancel).setOnClickListener(v -> {
             view.findViewById(R.id.btn_invoice_new_cancel).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
             // Simply return back to credential list
-            returnToInvoiceList();
+            returnToInvoiceList(savedInstanceState);
         });
-
-        if (timesheetList.isEmpty()) {
-            // disable dropdown and create button
-            view.findViewById(R.id.invoice_timesheet_spinner).setEnabled(false);
-            view.findViewById(R.id.btn_invoice_new_create).setEnabled(false);
-            showInfoDialog("Info", "No timesheet ready for billing. Please fulfill the timesheet and try again.");
-        }
 
         Log.d(Utility.buildTag(getClass(), "onCreateView"), "");
         return view;
+    }
+
+    /**
+     * Check data here
+     */
+    @Override
+    public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
+        // must call super first in order to use the navigation controller, that must be initialized first.
+        super.onViewCreated(view, savedInstanceState);
+        final AutoCompleteTextView timesheetSpinner = view.findViewById(R.id.invoice_timesheet_spinner);
+        if (timesheetSpinner.getAdapter().isEmpty()) {
+            showInfoDialog("Info", "No timesheet ready for billing. Please fulfill the timesheet and try again.");
+            navigateTo(R.id.nav_to_invoice_list, savedInstanceState);
+        }
     }
 
     /**
@@ -124,7 +132,6 @@ public class InvoiceNewFragment extends BaseFragment {
         if (invoiceId == null) {
             showInfoDialog("Info", "No timesheet found! timesheetId=" + timesheetId);
         }
-        //Invoice invoice = invoiceService.getInvoice(invoiceId);
         createTimesheetSummaryAttachment(invoiceId);
         createClientTimesheetAttachment(invoiceId, timesheetId);
         showInfoDialog("Info", "Successfully generated invoice attachment. invoiceId=" + invoiceId);
@@ -184,8 +191,8 @@ public class InvoiceNewFragment extends BaseFragment {
         startActivity(Intent.createChooser(email, "Choose Email client:"));
     }
 
-    private void returnToInvoiceList() {
-        navigateTo(R.id.nav_from_invoice_new_to_invoice_list, null);
+    private void returnToInvoiceList(Bundle bundle) {
+        navigateTo(R.id.nav_to_invoice_list, bundle);
     }
 
 }

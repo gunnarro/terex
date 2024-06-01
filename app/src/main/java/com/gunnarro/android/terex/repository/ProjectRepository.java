@@ -94,7 +94,7 @@ public class ProjectRepository {
         }
     }
 
-    public Project findProject(Long consultantCompanyId, String projectName) {
+    public Project find(Long consultantCompanyId, String projectName) {
         try {
             CompletionService<Project> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
             service.submit(() -> projectDao.findProject(consultantCompanyId, projectName));

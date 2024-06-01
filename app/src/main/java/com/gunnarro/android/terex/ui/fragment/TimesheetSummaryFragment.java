@@ -29,6 +29,7 @@ public class TimesheetSummaryFragment extends BaseFragment {
 
     @Inject
     public TimesheetSummaryFragment() {
+        // Needed by dagger framework
     }
 
     @Override

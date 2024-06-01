@@ -5,21 +5,19 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.gunnarro.android.terex.domain.entity.Timesheet;
-
 import org.junit.jupiter.api.Test;
 
 class TimesheetTest {
 
     @Test
     void timesheetNew() {
-        Timesheet timeSheet = Timesheet.createDefault("gunnarro", "terex-prjo", 2023, 11);
-        assertEquals("gunnarro", timeSheet.getClientName());
-        assertEquals("terex-prjo", timeSheet.getProjectCode());
+        Timesheet timeSheet = Timesheet.createDefault(100L, 200L, 2023, 11);
+        assertEquals(100, timeSheet.getUserId());
+        assertEquals(200, timeSheet.getProjectId());
         assertEquals(11, timeSheet.getMonth().intValue());
         assertEquals(2023, timeSheet.getYear().intValue());
-        assertNull( timeSheet.getDescription());
-        assertEquals("2023:11:gunnarro:terex-prjo", timeSheet.getTimesheetRef());
+        assertNull(timeSheet.getDescription());
+        assertEquals("Timesheet{userId=100, projectId=200, year=2023, month=11}", timeSheet.toString());
         assertEquals(Timesheet.TimesheetStatusEnum.NEW.name(), timeSheet.getStatus());
 /*
         assertEquals(0, timeSheet.getTotalWorkedDays().intValue());
@@ -28,11 +26,12 @@ class TimesheetTest {
         assertEquals(165, timeSheet.getWorkingHoursInMonth().intValue());
         assertFalse(timeSheet.getTotalWorkedHours() >= timeSheet.getWorkingHoursInMonth());
         assertFalse(timeSheet.getTotalWorkedDays() >= timeSheet.getWorkingDaysInMonth());
-  */  }
+  */
+    }
 
     @Test
     void status() {
-        Timesheet timeSheet = Timesheet.createDefault("gunnarro", "timesheet", 2023, 11);
+        Timesheet timeSheet = Timesheet.createDefault(100L, 200L, 2023, 11);
         assertTrue(timeSheet.isNew());
         timeSheet.setStatus(Timesheet.TimesheetStatusEnum.ACTIVE.name());
         assertTrue(timeSheet.isActive());
@@ -61,14 +60,14 @@ class TimesheetTest {
     @Test
     void timesheetAreEqual() {
         Timesheet timesheet1 = new Timesheet();
-        timesheet1.setClientName("clientname_1");
-        timesheet1.setProjectCode("projectcode_1");
+        timesheet1.setUserId(100L);
+        timesheet1.setProjectId(200L);
         timesheet1.setYear(2023);
         timesheet1.setMonth(11);
 
         Timesheet timesheet2 = new Timesheet();
-        timesheet2.setClientName("clientname_1");
-        timesheet2.setProjectCode("projectcode_1");
+        timesheet2.setUserId(100L);
+        timesheet2.setProjectId(200L);
         timesheet2.setYear(2023);
         timesheet2.setMonth(11);
 
@@ -78,14 +77,14 @@ class TimesheetTest {
     @Test
     void timesheetNotEqual() {
         Timesheet timesheet1 = new Timesheet();
-        timesheet1.setClientName("clientname_1");
-        timesheet1.setProjectCode("projectcode_1");
+        timesheet1.setUserId(100L);
+        timesheet1.setProjectId(200L);
         timesheet1.setYear(2023);
         timesheet1.setMonth(11);
 
         Timesheet timesheet2 = new Timesheet();
-        timesheet2.setClientName("clientname_1");
-        timesheet2.setProjectCode("projectcode_1");
+        timesheet2.setUserId(100L);
+        timesheet2.setProjectId(200L);
         timesheet2.setYear(2023);
         timesheet2.setMonth(12);
 

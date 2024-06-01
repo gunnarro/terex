@@ -97,7 +97,7 @@ public class ClientRepository {
         }
     }
 
-    public Client findClient(String name) {
+    public Client find(String name) {
         try {
             CompletionService<Client> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
             service.submit(() -> clientDao.findClientByName(name));

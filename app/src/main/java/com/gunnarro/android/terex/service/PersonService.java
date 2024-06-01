@@ -60,7 +60,7 @@ public class PersonService {
         try {
             Person personExisting;
             if (person.getId() == null) {
-                personExisting = personRepository.findPerson(person.getFullName());
+                personExisting = personRepository.find(person.getFullName());
             } else {
                 personExisting = personRepository.getPerson(person.getId());
             }

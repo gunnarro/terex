@@ -67,48 +67,6 @@
                     android:inputType="date" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
-
-        <!-- timesheet status -->
-        <!--
-        <com.google.android.material.button.MaterialButtonToggleGroup
-            android:id="@+id/timesheet_new_status_group_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/timesheet_new_date_layout"
-            android:layout_margin="10dp"
-            android:gravity="center"
-            android:enabled="true"
-            app:singleSelection="false">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/timesheet_new_status_new"
-                style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/timesheet_status_new" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/timesheet_new_status_active"
-                style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/timesheet_status_active" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/timesheet_new_status_completed"
-                style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/timesheet_status_completed" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/timesheet_new_status_billed"
-                style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/timesheet_status_billed" />
-        </com.google.android.material.button.MaterialButtonToggleGroup>
-        -->
         <!-- vertical spinner layout -->
 
         <!-- year and mount date -->
@@ -162,6 +120,45 @@
                     android:inputType="none"
                     tools:ignore="KeyboardInaccessibleWidget" />
             </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- timesheet status button group -->
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/timesheet_new_status_btn_group_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:enabled="true"
+                app:singleSelection="true">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/timesheet_new_status_new"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/timesheet_status_new" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/timesheet_new_status_active"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/timesheet_status_active" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/timesheet_new_status_completed"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/timesheet_status_completed" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/timesheet_new_status_billed"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/timesheet_status_billed" />
+            </com.google.android.material.button.MaterialButtonToggleGroup>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/timesheet_new_status_spinner_layout"

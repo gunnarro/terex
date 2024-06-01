@@ -37,6 +37,7 @@ public class ProjectNewFragment extends BaseFragment implements View.OnClickList
 
     @Inject
     public ProjectNewFragment() {
+        // Needed by dagger framework
     }
 
     @Override

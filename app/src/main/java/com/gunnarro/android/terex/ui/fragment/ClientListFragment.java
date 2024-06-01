@@ -135,7 +135,7 @@ public class ClientListFragment extends BaseFragment implements ListOnItemClickL
      */
     @Override
     public void onItemClick(Bundle bundle) {
-       getNavController().navigate(R.id.nav_from_client_list_to_project_list, bundle);
+       navigateTo(R.id.nav_from_client_list_to_project_list, bundle);
     }
 
     private void deleteClient(Long clientId) {

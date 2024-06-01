@@ -1,6 +1,5 @@
 package com.gunnarro.android.terex.domain.entity;
 
-import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Index;
@@ -31,7 +30,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @TypeConverters({LocalDateConverter.class, LocalDateTimeConverter.class})
-@Entity(tableName = "timesheet", indices = {@Index(value = {"client_name", "project_code", "year", "month"},
+@Entity(tableName = "timesheet", indices = {@Index(value = {"user_account_id", "project_id", "year", "month"},
         unique = true)})
 public class Timesheet extends BaseEntity {
 
@@ -51,28 +50,12 @@ public class Timesheet extends BaseEntity {
         }
     }
 
+    @NotNull
+    @ColumnInfo(name = "user_account_id")
+    private Long userId;
+    @NotNull
     @ColumnInfo(name = "project_id")
     private Long projectId;
-
-    /**
-     * Must be unique, typically one timesheet per month.
-     * the ref is composed with: clientName_projectCode_year_month
-     */
-//    @NotNull
-    @ColumnInfo(name = "timesheet_ref")
-    private String timesheetRef;
-
-    @NotNull
-    @ColumnInfo(name = "client_name")
-    private String clientName;
-
-    /**
-     * use projectId
-     */
-    @Deprecated
-    @NotNull
-    @ColumnInfo(name = "project_code")
-    private String projectCode;
     @NotNull
     @ColumnInfo(name = "year")
     private Integer year;
@@ -82,10 +65,6 @@ public class Timesheet extends BaseEntity {
     @NotNull
     @ColumnInfo(name = "from_date")
     private LocalDate fromDate;
-    @ColumnInfo(name = "working_days_in_month", defaultValue = "0")
-    private Integer workingDaysInMonth = 0;
-    @ColumnInfo(name = "working_hours_in_month", defaultValue = "0")
-    private Integer workingHoursInMonth = 0;
     @NotNull
     @ColumnInfo(name = "to_date")
     private LocalDate toDate;
@@ -94,6 +73,18 @@ public class Timesheet extends BaseEntity {
     private String status;
     @ColumnInfo(name = "description")
     private String description;
+    @ColumnInfo(name = "working_days_in_month", defaultValue = "0")
+    private Integer workingDaysInMonth = 0;
+    @ColumnInfo(name = "working_hours_in_month", defaultValue = "0")
+    private Integer workingHoursInMonth = 0;
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
     public Long getProjectId() {
         return projectId;
@@ -101,32 +92,6 @@ public class Timesheet extends BaseEntity {
 
     public void setProjectId(Long projectId) {
         this.projectId = projectId;
-    }
-
-    public String getTimesheetRef() {
-        return timesheetRef;
-    }
-
-    public void setTimesheetRef(String timesheetRef) {
-        this.timesheetRef = timesheetRef;
-    }
-
-    @NotNull
-    public String getClientName() {
-        return clientName;
-    }
-
-    public void setClientName(@NotNull String clientName) {
-        this.clientName = clientName;
-    }
-
-    @NotNull
-    public String getProjectCode() {
-        return projectCode;
-    }
-
-    public void setProjectCode(@NotNull String projectCode) {
-        this.projectCode = projectCode;
     }
 
     @NotNull
@@ -198,7 +163,6 @@ public class Timesheet extends BaseEntity {
         this.description = description;
     }
 
-
     public boolean isNew() {
         return status.equals(TimesheetStatusEnum.NEW.name());
     }
@@ -220,60 +184,45 @@ public class Timesheet extends BaseEntity {
         return status.equals(TimesheetStatusEnum.BILLED.name());
     }
 
-    /**
-     * unique reference for this timesheet
-     */
-    public void createTimesheetRef() {
-        timesheetRef = year + ":" + month + ":" + clientName + ":" + projectCode;
-    }
-
-    public static Timesheet createDefault(String clientName, String projectCode, Integer year, Integer month) {
-        LocalDate timesheetDate = LocalDate.of(year, month, 1);
-        Timesheet timesheet = new Timesheet();
-        timesheet.setClientName(clientName);
-        timesheet.setProjectCode(projectCode);
-        timesheet.setProjectId(1L);
-        timesheet.setStatus(Timesheet.TimesheetStatusEnum.NEW.name());
-        timesheet.setYear(timesheetDate.getYear());
-        timesheet.setMonth(timesheetDate.getMonthValue());
-        timesheet.setFromDate(Utility.getFirstDayOfMonth(timesheetDate));
-        timesheet.setToDate(Utility.getLastDayOfMonth(timesheetDate));
-        timesheet.createTimesheetRef();
-        timesheet.setWorkingDaysInMonth(Utility.countBusinessDaysInMonth(timesheet.getFromDate()));
-        timesheet.setWorkingHoursInMonth((int) (timesheet.getWorkingDaysInMonth() * 7.5));
-        return timesheet;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Timesheet timesheet = (Timesheet) o;
-        return clientName.equals(timesheet.clientName) && projectCode.equals(timesheet.projectCode) && year.equals(timesheet.year) && month.equals(timesheet.month);
+        return Objects.equals(userId, timesheet.userId) && Objects.equals(projectId, timesheet.projectId) && Objects.equals(year, timesheet.year) && Objects.equals(month, timesheet.month);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(clientName, projectCode, year, month);
+        return Objects.hash(userId, projectId, year, month);
     }
 
-    @NonNull
+    public static Timesheet createDefault(Long userId, Long projectId, Integer year, Integer month) {
+        LocalDate timesheetDate = LocalDate.of(year, month, 1);
+        Timesheet timesheet = new Timesheet();
+        timesheet.setUserId(userId);
+        timesheet.setProjectId(projectId);
+        timesheet.setStatus(Timesheet.TimesheetStatusEnum.NEW.name());
+        timesheet.setYear(timesheetDate.getYear());
+        timesheet.setMonth(timesheetDate.getMonthValue());
+        timesheet.setFromDate(Utility.getFirstDayOfMonth(timesheetDate));
+        timesheet.setToDate(Utility.getLastDayOfMonth(timesheetDate));
+        timesheet.setWorkingDaysInMonth(Utility.countBusinessDaysInMonth(timesheet.getFromDate()));
+        timesheet.setWorkingHoursInMonth((int) (timesheet.getWorkingDaysInMonth() * 7.5));
+        return timesheet;
+    }
+
+
+    /**
+     * @return the unique key for a timesheet
+     */
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Timesheet{");
-        sb.append("id=").append(getId());
-        sb.append(", uuid='").append(getUuid()).append('\'');
-        sb.append(", timesheetRef='").append(timesheetRef).append('\'');
-        sb.append(", clientName='").append(clientName).append('\'');
-        sb.append(", projectCode='").append(projectCode).append('\'');
+        sb.append("userId=").append(userId);
+        sb.append(", projectId=").append(projectId);
         sb.append(", year=").append(year);
         sb.append(", month=").append(month);
-        sb.append(", fromDate=").append(fromDate);
-        sb.append(", workingDaysInMonth=").append(workingDaysInMonth);
-        sb.append(", workingHoursInMonth=").append(workingHoursInMonth);
-        sb.append(", toDate=").append(toDate);
-        sb.append(", status='").append(status).append('\'');
-        sb.append(", description='").append(description).append('\'');
         sb.append('}');
         return sb.toString();
     }

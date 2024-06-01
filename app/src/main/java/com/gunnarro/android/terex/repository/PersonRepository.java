@@ -36,7 +36,7 @@ public class PersonRepository {
         }
     }
 
-    public Person findPerson(String fullName) {
+    public Person find(String fullName) {
         try {
             CompletionService<Person> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
             service.submit(() -> personDao.findPerson(fullName));

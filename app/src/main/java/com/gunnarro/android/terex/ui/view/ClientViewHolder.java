@@ -36,7 +36,9 @@ public class ClientViewHolder extends RecyclerView.ViewHolder {
         }
         int numberOfProjects = clientDto.getProjectList() != null ? clientDto.getProjectList().size() : 0;
         line1ValueView.setText(String.format("Number of projects: %s", numberOfProjects));
-        line2ValueView.setText(String.format("%s %s", clientDto.getCntactPersonDto().getFullName(),
-                clientDto.getCntactPersonDto().getContactInfo() != null ? clientDto.getCntactPersonDto().getContactInfo().getMobileNumber() : ""));
+        if (clientDto.hasContactPersonDto()) {
+            line2ValueView.setText(String.format("%s %s", clientDto.getContactPersonDto().getFullName(),
+                    clientDto.getContactPersonDto().getContactInfo() != null ? clientDto.getContactPersonDto().getContactInfo().getMobileNumber() : ""));
+        }
     }
 }

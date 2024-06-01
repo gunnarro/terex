@@ -45,7 +45,7 @@ public class ContactInfoService {
         try {
             ContactInfo contactInfoExisting;
             if (contactInfo.getId() == null) {
-                contactInfoExisting = contactInfoRepository.findContactInfo(contactInfo.getMobileNumber(), contactInfoDto.getEmailAddress());
+                contactInfoExisting = contactInfoRepository.find(contactInfo.getMobileNumber(), contactInfoDto.getEmailAddress());
             } else {
                 contactInfoExisting = contactInfoRepository.getContactInfo(contactInfo.getId());
             }

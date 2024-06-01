@@ -1,7 +1,6 @@
 package com.gunnarro.android.terex.service;
 
 
-import com.gunnarro.android.terex.config.AppDatabase;
 import com.gunnarro.android.terex.domain.dto.OrganizationDto;
 import com.gunnarro.android.terex.domain.dto.PersonDto;
 import com.gunnarro.android.terex.domain.entity.Address;
@@ -44,7 +43,7 @@ public class OrganizationService {
     public OrganizationDto getOrganization(Long organizationId) {
         Organization organization = organizationRepository.getOrganization(organizationId);
         OrganizationDto organizationDto = null;
-        if (organization != null ) {
+        if (organization != null) {
             Address businessAddress = addressRepository.getAddress(organization.getBusinessAddressId());
             organizationDto = TimesheetMapper.toOrganizationDto(organizationRepository.getOrganization(organizationId));
             PersonDto contactPersonDto = personService.getPerson(organization.getContactInfoId());

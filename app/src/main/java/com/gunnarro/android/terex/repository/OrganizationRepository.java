@@ -60,7 +60,7 @@ public class OrganizationRepository {
         }
     }
 
-    public Organization findOrganization(String organizationName) {
+    public Organization find(String organizationName) {
         Log.d("findOrganization", String.format("find by org name: %s", organizationName));
         try {
             CompletionService<Organization> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
@@ -98,14 +98,14 @@ public class OrganizationRepository {
         try {
             Organization organizationExisting;
             if (organization.getId() == null) {
-                organizationExisting = findOrganization(organization.getName());
+                organizationExisting = find(organization.getName());
             } else {
                 organizationExisting = getOrganization(organization.getId());
             }
             Log.d("saveOrganization", String.format("existing org: %s", organizationExisting));
             // only check for new organizations that do not have got an id yet.
             if (organization.getId() == null) {
-                organizationExisting = findOrganization(organization.getName());
+                organizationExisting = find(organization.getName());
             }
 
             Log.d("saveOrganization", String.format("existing org: %s", organizationExisting));

@@ -46,7 +46,7 @@ public class UserAccountRepository {
         }
     }
 
-    public UserAccount findUserAccount(String userName) {
+    public UserAccount find(String userName) {
         try {
             CompletionService<UserAccount> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
             service.submit(() -> userAccountDao.findUserAccount(userName));
@@ -81,7 +81,7 @@ public class UserAccountRepository {
         try {
             UserAccount userAccountExisting;
             if (userAccount.getId() == null) {
-                userAccountExisting = findUserAccount(userAccount.getUserName());
+                userAccountExisting = find(userAccount.getUserName());
             } else {
                 userAccountExisting = getUserAccount(userAccount.getId());
             }

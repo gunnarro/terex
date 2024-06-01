@@ -5,6 +5,7 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.gunnarro.android.terex.domain.dto.TimesheetDto;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
@@ -22,20 +23,17 @@ public class TimesheetViewModel extends AndroidViewModel {
     // Using LiveData and caching what getTimesheetListLiveData returns has several benefits:
     // - We can put an observer on the data (instead of polling for changes) and only update the
     //   the UI when the data actually changes.
-    private final LiveData<List<Timesheet>> timesheetList;
+    private final MutableLiveData<List<TimesheetDto>> timesheetListLiveData;
 
     public TimesheetViewModel(@NonNull Application application, Integer year) {
         super(application);
+        timesheetListLiveData = new MutableLiveData<>();
         timesheetService = new TimesheetService();
-        timesheetList = timesheetService.getTimesheetListLiveData(year);
+        timesheetListLiveData.setValue(timesheetService.getTimesheetList(year));
     }
 
-    public LiveData<List<Timesheet>> getTimesheetLiveData(Integer year) {
-        //return Transformations.map(timesheetService.getTimesheetListLiveData(year) {
-        //    t -> TimesheetMapper.toTimesheetDtoList(timesheetList.getValue())
-        //};
-      //  timesheetList = timesheetService.getTimesheetListLiveData(year);
-        return timesheetList;
+    public LiveData<List<TimesheetDto>> getTimesheetLiveData(Integer year) {
+        return timesheetListLiveData;
     }
 
     public void saveTimesheet(Timesheet timesheet) {

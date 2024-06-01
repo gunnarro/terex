@@ -32,14 +32,17 @@ public interface TimesheetDao {
     @Query("SELECT * FROM timesheet WHERE id = :timesheetId")
     TimesheetWithEntries getTimesheetWithEntries(Long timesheetId);
 
-    @Query("SELECT * FROM timesheet WHERE client_name = :clientName AND project_code = :projectCode AND year = :year AND month = :month")
-    Timesheet getTimesheet(String clientName, String projectCode, Integer year, Integer month);
+    @Query("SELECT * FROM timesheet WHERE user_account_id = :userAccountId AND project_id = :projectId AND year = :year AND month = :month")
+    Timesheet find(Long userAccountId, Long projectId, Integer year, Integer month);
 
-    @Query("SELECT * FROM timesheet where year = :year ORDER BY client_name")
+    @Query("SELECT * FROM timesheet where year = :year ORDER BY year, month")
    // @Query("SELECT t.*, count(e.timesheet_id) AS registeredWorkingDays , sum(e.worked_in_min) as  registeredWorkingHours FROM timesheet t"
    //         + " INNER JOIN  timesheet_entry e ON e.timesheet_id = t.id "
    //         + " WHERE year = :year")
     LiveData<List<Timesheet>> getTimesheetByYear(Integer year);
+
+    @Query("SELECT * FROM timesheet where year = :year ORDER BY year, month")
+    List<Timesheet> getTimesheets(Integer year);
 
     @Query("SELECT * FROM timesheet WHERE status = :status ORDER BY year, month DESC")
     List<Timesheet> getTimesheets(String status);

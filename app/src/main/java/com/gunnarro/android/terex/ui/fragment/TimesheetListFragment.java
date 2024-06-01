@@ -12,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentResultListener;
 import androidx.lifecycle.LiveData;
@@ -23,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.gunnarro.android.terex.R;
+import com.gunnarro.android.terex.domain.dto.TimesheetDto;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
@@ -58,25 +58,6 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requireActivity().setTitle(R.string.title_timesheets);
-
-        // NB! Require API level 33 or higher. Will not be called by API level 32 and lower.
-        // This callback is only called when MyFragment is at least started
-        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                if (true) {
-                    Log.d("handleOnBackPressed", "custom navigate back to home");
-                    navigateTo(R.id.home_fragment, null);
-                } else {
-                    Log.d("handleOnBackPressed", "use default navigation");
-                    // use default navigation
-                    requireActivity().getOnBackPressedDispatcher().onBackPressed();
-                }
-            }
-        };
-        // tell activity to use this navigate callback listener
-        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
-
         // todo get from db
         timesheetYears = List.of(2023, 2024, 2025);
         selectedYear = LocalDate.now().getYear();
@@ -152,7 +133,7 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
             Timesheet timesheet = Utility.gsonMapper().fromJson(timesheetJson, Timesheet.class);
             if (TIMESHEET_ACTION_SAVE.equals(action)) {
                 timesheetViewModel.saveTimesheet(timesheet);
-                showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_saved_msg_format), timesheet.getTimesheetRef(), timesheet.getYear() + "-" + timesheet.getMonth()), R.color.color_snackbar_text_add);
+                showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_saved_msg_format), timesheet.toString(), timesheet.getYear() + "-" + timesheet.getMonth()), R.color.color_snackbar_text_add);
             } else if (TIMESHEET_ACTION_DELETE.equals(action)) {
                 if (timesheet.getStatus().equals("BILLED")) {
                     showInfoDialog("Info", "Can not delete timesheet with status BILLED");
@@ -244,7 +225,7 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
         try {
             Timesheet timesheet = timesheetViewModel.getTimesheet(timesheetId);
             timesheetViewModel.deleteTimesheet(timesheet);
-            showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_delete_msg_format), timesheet.getTimesheetRef()), R.color.color_snackbar_text_delete);
+            showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_delete_msg_format), timesheet.toString()), R.color.color_snackbar_text_delete);
         } catch (TerexApplicationException | InputValidationException e) {
             showInfoDialog("Info", e.getMessage());
         }
@@ -254,11 +235,11 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
         SwipeCallback swipeToDeleteCallback = new SwipeCallback(requireContext(), ItemTouchHelper.RIGHT, getResources().getColor(R.color.color_bg_swipe_right, null), R.drawable.ic_add_black_24dp) {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-                LiveData<List<Timesheet>> listLiveData = timesheetViewModel.getTimesheetLiveData(selectedYear);
+                LiveData<List<TimesheetDto>> listLiveData = timesheetViewModel.getTimesheetLiveData(selectedYear);
                 int pos = viewHolder.getAbsoluteAdapterPosition();
-                List<Timesheet> list = listLiveData.getValue();
+                List<TimesheetDto> list = listLiveData.getValue();
                 Bundle bundle = new Bundle();
-                bundle.putLong(TIMESHEET_ID_KEY, list.get(pos).getId());
+                bundle.putLong(TIMESHEET_ID_KEY, list.get(pos).getTimesheetId());
                 bundle.putBoolean(TIMESHEET_READ_ONLY_KEY, list.get(pos).isBilled());
                 openTimesheetDetailsView(bundle);
             }
@@ -273,8 +254,8 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
                 final int position = viewHolder.getAbsoluteAdapterPosition();
-                Timesheet timesheet = timesheetViewModel.getTimesheetLiveData(selectedYear).getValue().get(position);
-                confirmDeleteTimesheetDialog(getString(R.string.msg_delete_timesheet), getString(R.string.msg_confirm_delete), timesheet.getId());
+                TimesheetDto timesheet = timesheetViewModel.getTimesheetLiveData(selectedYear).getValue().get(position);
+                confirmDeleteTimesheetDialog(getString(R.string.msg_delete_timesheet), getString(R.string.msg_confirm_delete), timesheet.getTimesheetId());
             }
         };
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
@@ -311,6 +292,6 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
      */
     @Override
     public void onItemClick(Bundle bundle) {
-        getNavController().navigate(R.id.nav_from_timesheet_list_to_timesheet_entry_list, bundle);
+        navigateTo(R.id.nav_from_timesheet_list_to_timesheet_entry_list, bundle);
     }
 }

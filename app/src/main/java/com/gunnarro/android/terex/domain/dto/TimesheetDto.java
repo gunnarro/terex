@@ -1,12 +1,17 @@
 package com.gunnarro.android.terex.domain.dto;
 
+import com.gunnarro.android.terex.domain.entity.Timesheet;
+
+import java.time.LocalDate;
+import java.util.Objects;
+
 public class TimesheetDto {
     private Long timesheetId;
-    private ProjectDto project;
-    private Long invoiceNumber;
-    private String clientName;
-    private String projectCode;
+    private UserAccountDto userAccountDto;
+    private ProjectDto projectDto;
     private String status;
+    private LocalDate fromDate;
+    private LocalDate toDate;
     private Integer year;
     private Integer month;
     private Integer workingDaysInMonth;
@@ -27,36 +32,28 @@ public class TimesheetDto {
         this.timesheetId = timesheetId;
     }
 
-    public Long getInvoiceNumber() {
-        return invoiceNumber;
-    }
-
-    public void setInvoiceNumber(Long invoiceNumber) {
-        this.invoiceNumber = invoiceNumber;
-    }
-
-    public String getClientName() {
-        return clientName;
-    }
-
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
-    }
-
-    public String getProjectCode() {
-        return projectCode;
-    }
-
-    public void setProjectCode(String projectCode) {
-        this.projectCode = projectCode;
-    }
-
     public String getStatus() {
         return status;
     }
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public LocalDate getFromDate() {
+        return fromDate;
+    }
+
+    public void setFromDate(LocalDate fromDate) {
+        this.fromDate = fromDate;
+    }
+
+    public LocalDate getToDate() {
+        return toDate;
+    }
+
+    public void setToDate(LocalDate toDate) {
+        this.toDate = toDate;
     }
 
     public Integer getYear() {
@@ -147,11 +144,52 @@ public class TimesheetDto {
         this.description = description;
     }
 
-    public ProjectDto getProject() {
-        return project;
+    public UserAccountDto getUserAccountDto() {
+        return userAccountDto;
     }
 
-    public void setProject(ProjectDto project) {
-        this.project = project;
+    public void setUserAccountDto(UserAccountDto userAccountDto) {
+        this.userAccountDto = userAccountDto;
+    }
+
+    public ProjectDto getProjectDto() {
+        return projectDto;
+    }
+
+    public void setProjectDto(ProjectDto projectDto) {
+        this.projectDto = projectDto;
+    }
+
+    public boolean isNew() {
+        return status.equals(Timesheet.TimesheetStatusEnum.NEW.name());
+    }
+
+    public boolean isActive() {
+        return status.equals(Timesheet.TimesheetStatusEnum.ACTIVE.name());
+    }
+
+    public boolean isClosed() {
+        return status.equals(Timesheet.TimesheetStatusEnum.BILLED.name());
+    }
+
+    public boolean isCompleted() {
+        return status.equals(Timesheet.TimesheetStatusEnum.COMPLETED.name());
+    }
+
+    public boolean isBilled() {
+        return status.equals(Timesheet.TimesheetStatusEnum.BILLED.name());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TimesheetDto that = (TimesheetDto) o;
+        return Objects.equals(userAccountDto, that.userAccountDto) && Objects.equals(projectDto, that.projectDto) && Objects.equals(year, that.year) && Objects.equals(month, that.month);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userAccountDto, projectDto, year, month);
     }
 }

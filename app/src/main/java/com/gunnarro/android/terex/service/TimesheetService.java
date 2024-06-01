@@ -110,6 +110,10 @@ public class TimesheetService {
         return timesheetRepository.getTimesheetByYear(year);
     }
 
+    public List<TimesheetDto> getTimesheetList(Integer year) {
+        return TimesheetMapper.toTimesheetDtoList(timesheetRepository.getTimesheetList(year));
+    }
+
     public void deleteTimesheet(Timesheet timesheet) {
         if (timesheet.isBilled()) {
             throw new InputValidationException("Timesheet is BILLED, not allowed to delete or update", "40045", null);
@@ -119,14 +123,14 @@ public class TimesheetService {
 
     public Long saveTimesheet(Timesheet timesheet) {
         Log.d("saveTimesheet", String.format("%s", timesheet));
-        Timesheet timesheetExisting = timesheetRepository.getTimesheet(timesheet.getClientName(), timesheet.getProjectCode(), timesheet.getYear(), timesheet.getMonth());
+        Timesheet timesheetExisting = timesheetRepository.find(timesheet.getUserId(), timesheet.getProjectId(), timesheet.getYear(), timesheet.getMonth());
         if (timesheetExisting != null && timesheet.isNew()) {
-            throw new InputValidationException(String.format("timesheet already exist. %s %s, status=%s", timesheetExisting.getClientName(), timesheet.getProjectCode(), timesheetExisting.getStatus()), "40040", null);
+            throw new InputValidationException(String.format("timesheet already exist. %s, status=%s", timesheetExisting.toString(), timesheetExisting.getStatus()), "40040", null);
         }
         // first of all, check status
         if (timesheetExisting != null && timesheetExisting.isBilled()) {
             Log.e("", "timesheet is already billed, no changes is allowed. timesheetId=" + timesheetExisting.getId() + " " + timesheetExisting.getStatus());
-            throw new InputValidationException(String.format("timesheet is already billed, no changes is allowed. %s %s, status=%s", timesheetExisting.getClientName(), timesheet.getProjectCode(), timesheetExisting.getStatus()), "40040", null);
+            throw new InputValidationException(String.format("timesheet is already billed, no changes is allowed. %s, status=%s", timesheetExisting.toString(), timesheetExisting.getStatus()), "40040", null);
         }
         try {
             Log.d("TimesheetRepository.saveTimesheet", String.format("existingTimesheet: %s", timesheetExisting));
@@ -153,6 +157,7 @@ public class TimesheetService {
                 //timesheet.setTotalWorkedHours(timesheetExisting.getTotalWorkedHours());
                 timesheetRepository.updateTimesheet(timesheet);
                 Log.d("TimesheetRepository.saveTimesheet", String.format("updated timesheet: %s", timesheet));
+                id = timesheetExisting.getId();
             }
             return id;
         } catch (Exception e) {
@@ -166,30 +171,30 @@ public class TimesheetService {
     // timesheet entry
     // ----------------------------------------
 
-    // You must call this on a non-UI thread or your app will throw an exception. Room ensures
-    // that you're not doing any long running operations on the main thread, blocking the UI.
+
+    /**
+     * At time not possible to update a timesheet entry.
+     */
     @Transaction
-    public void saveTimesheetEntry(@NotNull final TimesheetEntry timesheetEntry) {
+    public Long saveTimesheetEntry(@NotNull final TimesheetEntry timesheetEntry) {
         try {
             TimesheetEntry timesheetEntryExisting = timesheetRepository.getTimesheetEntry(timesheetEntry.getTimesheetId(), timesheetEntry.getWorkdayDate());
-
             // first of all, check status
             if (timesheetEntryExisting != null && timesheetEntryExisting.isBilled()) {
                 throw new InputValidationException(String.format("timesheet entry have status billed, no changes is allowed. workday date=%s, status=%s", timesheetEntryExisting.getWorkdayDate(), timesheetEntryExisting.getStatus()), "40040", null);
             }
             // the check if this is a new one or update of an existing
             if (timesheetEntryExisting != null) {
-                throw new InputValidationException(String.format("Workday already registered, timesheetId=%s, date=%s, hours=%s, status=%s", timesheetEntryExisting.getTimesheetId(), timesheetEntryExisting.getWorkdayDate(), timesheetEntry.getWorkedHours(), timesheetEntryExisting.getStatus()), "40040", null);
+                throw new InputValidationException(String.format("Workday already registered and update is not allowed! timesheetId=%s, date=%s, hours=%s, status=%s", timesheetEntryExisting.getTimesheetId(), timesheetEntryExisting.getWorkdayDate(), timesheetEntry.getWorkedHours(), timesheetEntryExisting.getStatus()), "40040", null);
             }
 
             // validate work date, must be between the to and from date range of the timesheet
             Timesheet timesheet = timesheetRepository.getTimesheet(timesheetEntry.getTimesheetId());
             // check the timesheet entry date
             if (timesheetEntry.getWorkdayDate().isBefore(timesheet.getFromDate()) || timesheetEntry.getWorkdayDate().isAfter(timesheet.getToDate())) {
-                throw new InputValidationException(String.format("timesheet entry work date not in the to and from date range of the timesheet. %s <> %s - %s", timesheetEntry.getWorkdayDate(), timesheet.getFromDate(), timesheet.getToDate()), "40040", null);
+                throw new InputValidationException(String.format("timesheet entry work date not in the to and from date range of the timesheet! workDate = %s <> dateRange = %s - %s", timesheetEntry.getWorkdayDate(), timesheet.getFromDate(), timesheet.getToDate()), "40040", null);
             }
 
-            Log.d("TimesheetRepository.saveTimesheetEntry", String.format("%s", timesheetEntryExisting));
             // set the timesheet work date week number here, this is only used to simplify accumulate timesheet by week by the invoice service
             timesheetEntry.setWorkdayWeek(timesheetEntry.getWorkdayDate().get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()));
             Long id;
@@ -197,14 +202,15 @@ public class TimesheetService {
                 timesheetEntry.setCreatedDate(LocalDateTime.now());
                 timesheetEntry.setLastModifiedDate(LocalDateTime.now());
                 id = timesheetRepository.insertTimesheetEntry(timesheetEntry);
-                Log.d("TimesheetRepository.saveTimesheetEntry", "insert new timesheet entry: " + id + " - " + timesheetEntry.getWorkdayDate());
-            } else {
+                Log.d("TimesheetRepository.saveTimesheetEntry", String.format("insert new timesheet entry, timesheetId=%s, timesheetEntryId=%s, workDate=%s", timesheetEntry.getTimesheetId(), id, timesheetEntry.getWorkdayDate()));
+            } else { // fixme, update not supported
                 timesheetEntry.setId(timesheetEntryExisting.getId());
                 timesheetEntry.setCreatedDate(timesheetEntryExisting.getCreatedDate());
                 timesheetRepository.updateTimesheetEntry(timesheetEntry);
                 id = timesheetEntry.getId();
-                Log.d("TimesheetRepository.saveTimesheetEntry", "update timesheet entry: " + id + " - " + timesheetEntry.getWorkdayDate());
+                Log.d("TimesheetRepository.saveTimesheetEntry", String.format("updated timesheet entry, timesheetId=%s, timesheetEntryId=%s, workDate=%s", timesheetEntry.getTimesheetId(), id, timesheetEntry.getWorkdayDate()));
             }
+            return id;
         } catch (InterruptedException | ExecutionException e) {
             // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();
@@ -330,7 +336,7 @@ public class TimesheetService {
         context.put("timesheetPeriod", String.format("%s/%s", timesheet.getMonth(), timesheet.getYear()));
         context.put("invoiceIssuer", userAccount);
         context.put("invoiceReceiver", client);
-        context.put("timesheetProjectCode", timesheet.getTimesheetRef());
+        context.put("timesheetProjectCode", timesheet.toString());
         context.put("timesheetSummaryList", timesheetSummaryList);
         context.put("totalBilledHours", Double.toString(totalBilledHours));
         context.put("totalBilledAmount", Double.toString(totalBilledAmount));
@@ -359,7 +365,7 @@ public class TimesheetService {
         context.put("timesheetPeriod", String.format("%s/%s", timesheet.getMonth(), timesheet.getYear()));
         context.put("company", null);// organizationService.getOrganization(1L)); //fixme
         context.put("client", null);//organizationService.getOrganization(2L)); // fixme
-        context.put("timesheetProjectCode", timesheet.getProjectCode());
+        context.put("timesheetProjectCode", timesheet.toString());
         context.put("timesheetSummaryList", TimesheetMapper.toTimesheetSummaryDtoList(timesheetSummaryList));
         context.put("totalBilledHours", String.format(Locale.getDefault(), "%.1f", totalBilledHours));
         context.put("totalBilledAmount", String.format(Locale.getDefault(), "%.2f", totalBilledAmount));

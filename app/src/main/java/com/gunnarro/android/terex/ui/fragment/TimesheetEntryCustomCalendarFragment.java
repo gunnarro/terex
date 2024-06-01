@@ -37,7 +37,7 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
 
     @Inject
     public TimesheetEntryCustomCalendarFragment() {
-        Log.d("TimesheetCalendarFragment", "");
+        // Needed by dagger framework
     }
 
     @Override

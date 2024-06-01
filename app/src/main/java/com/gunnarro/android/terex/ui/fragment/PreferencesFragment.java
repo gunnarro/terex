@@ -10,8 +10,6 @@ import androidx.preference.PreferenceFragmentCompat;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.ui.MainActivity;
 
-import java.util.Objects;
-
 import javax.inject.Inject;
 
 public class PreferencesFragment extends PreferenceFragmentCompat implements Preference.OnPreferenceChangeListener {

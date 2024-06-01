@@ -42,7 +42,7 @@ class ProjectServiceTest {
         projectDto.setStatus(Project.ProjectStatusEnum.ACTIVE.name());
         projectDto.setDescription("develop a timesheet android app");
 
-        when(projectRepositoryMock.findProject(anyLong(), anyString())).thenReturn(null);
+        when(projectRepositoryMock.find(anyLong(), anyString())).thenReturn(null);
         when(projectRepositoryMock.insert(any())).thenReturn(1L);
 
         Long projectId = projectService.saveProject(projectDto);
@@ -60,7 +60,7 @@ class ProjectServiceTest {
         projectDto.setHourlyRate(1250);
 
         Project existingProject = TimesheetMapper.fromProjectDto(projectDto);
-        when(projectRepositoryMock.findProject(anyLong(), anyString())).thenReturn(existingProject);
+        when(projectRepositoryMock.find(anyLong(), anyString())).thenReturn(existingProject);
         when(projectRepositoryMock.update(any())).thenReturn(1);
 
         Long projectId = projectService.saveProject(projectDto);

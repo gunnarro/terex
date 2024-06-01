@@ -32,7 +32,7 @@ public class PersonServiceTest {
         List<String> sqlQueryList = DbHelper.readMigrationSqlQueryFile(appContext, "database/test_data.sql");
         sqlQueryList.forEach(query -> {
             System.out.println(query);
-            appDatabase.getOpenHelper().getWritableDatabase().execSQL(query);
+            // appDatabase.getOpenHelper().getWritableDatabase().execSQL(query);
         });
         assertTrue(appDatabase.getOpenHelper().getWritableDatabase().isDatabaseIntegrityOk());
     }
@@ -55,21 +55,20 @@ public class PersonServiceTest {
         PersonDto newPersonDto = createPersonDto();
 
         Long personId = personService.save(newPersonDto);
-        assertEquals(2, personId.intValue());
+        assertEquals(1, personId.intValue());
 
         PersonDto personDto = personService.getPerson(personId);
-        assertEquals(2, personDto.getId().intValue());
+        assertEquals(1, personDto.getId().intValue());
 
         assertEquals("ole gunnar hansen", personDto.getFullName());
-        //  assertEquals("M", personDto.getGender());
 
         // update and save person
+        personDto.setFullName("Ole Gunnar Hansen");
         personId = personService.save(personDto);
 
         PersonDto updatedPersonDto = personService.getPerson(personId);
-        assertEquals(2, updatedPersonDto.getId().intValue());
-        assertEquals("ole gunnar hansen", personDto.getFullName());
-        //assertEquals("M", updatedPersonDto.getGender());
+        assertEquals(1, updatedPersonDto.getId().intValue());
+        assertEquals("Ole Gunnar Hansen", personDto.getFullName());
     }
 
     private PersonDto createPersonDto() {

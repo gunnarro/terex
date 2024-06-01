@@ -58,7 +58,7 @@ class UserAccountServiceTest {
     void saveUserAccount_new() throws ExecutionException, InterruptedException {
         UserAccountDto userAccountDto = TimesheetMapper.toUserAccountDto(createUserAccount(null));
 
-        when(userAccountRepositoryMock.findUserAccount(anyString())).thenReturn(null);
+        when(userAccountRepositoryMock.find(anyString())).thenReturn(null);
         when(organizationServiceMock.save(any())).thenReturn(555L);
         when(userAccountRepositoryMock.insert(any())).thenReturn(400L);
 

@@ -77,7 +77,7 @@ public class ClientService {
             clientDto.setOrganizationDto(organizationDto);
             // add contact person info
             PersonDto contactPersonDto = personService.getPerson(client.getContactPersonId());
-            clientDto.setCntactPersonDto(contactPersonDto);
+            clientDto.setContactPersonDto(contactPersonDto);
             // add projects
             List<ProjectDto> projectDtos = projectService.getProjects(client.getId(), ProjectRepository.ProjectStatusEnum.ACTIVE);
             clientDto.setProjectList(projectDtos);
@@ -89,11 +89,15 @@ public class ClientService {
     public Long saveClient(ClientDto clientDto) {
         try {
             // save organization data
-            Long organizationId = organizationService.save(clientDto.getOrganizationDto());
-            clientDto.getOrganizationDto().setId(organizationId);
+            if (clientDto.hasOrganization()) {
+                Long organizationId = organizationService.save(clientDto.getOrganizationDto());
+                clientDto.getOrganizationDto().setId(organizationId);
+            }
             // save contact person information
-            Long contactPersonId = personService.save(clientDto.getCntactPersonDto());
-            clientDto.getCntactPersonDto().setId(contactPersonId);
+            if (clientDto.hasContactPersonDto()) {
+                Long contactPersonId = personService.save(clientDto.getContactPersonDto());
+                clientDto.getContactPersonDto().setId(contactPersonId);
+            }
             // finally save client
             return save(clientDto);
         } catch (Exception e) {
@@ -109,7 +113,7 @@ public class ClientService {
         try {
             Client clientExisting;
             if (clientDto.getId() == null) {
-                clientExisting = clientRepository.findClient(clientDto.getName());
+                clientExisting = clientRepository.find(clientDto.getName());
             } else {
                 clientExisting = clientRepository.getClient(clientDto.getId());
             }

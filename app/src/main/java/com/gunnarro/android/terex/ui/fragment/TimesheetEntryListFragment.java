@@ -82,12 +82,12 @@ public class TimesheetEntryListFragment extends BaseFragment implements ListOnIt
 
         FloatingActionButton addButton = view.findViewById(R.id.timesheet_entry_add_btn);
         addButton.setOnClickListener(v ->
-                getNavController().navigate(R.id.nav_from_timesheet_entry_list_to_timesheet_entry_details, createTimesheetEntryBundle(timesheetId))
+                navigateTo(R.id.nav_from_timesheet_entry_list_to_timesheet_entry_details, createTimesheetEntryBundle(timesheetId))
         );
 
         FloatingActionButton calendarButton = view.findViewById(R.id.timesheet_entry_calendar_btn);
         calendarButton.setOnClickListener(v ->
-                getNavController().navigate(R.id.nav_from_timesheet_entry_list_to_timesheet_entry_calendar_add, createTimesheetEntryBundle(timesheetId))
+                navigateTo(R.id.nav_from_timesheet_entry_list_to_timesheet_entry_calendar_add, createTimesheetEntryBundle(timesheetId))
         );
 
         // flip gui based on timesheet status, hide buttons if timesheet has status BILLED

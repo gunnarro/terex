@@ -82,13 +82,13 @@ class ClientServiceTest {
         assertEquals(client.getName(), clientDto.getName());
         assertEquals("ACTIVE", clientDto.getStatus());
 
-        assertEquals(client.getContactPersonId(), clientDto.getCntactPersonDto().getId());
-        assertEquals(client.getContactPersonId(), clientDto.getCntactPersonDto().getId());
-        assertEquals("petter hansen", clientDto.getCntactPersonDto().getFullName());
-        assertEquals(4444, clientDto.getCntactPersonDto().getContactInfo().getId());
-        assertEquals("contact@gmail.org", clientDto.getCntactPersonDto().getContactInfo().getEmailAddress());
-        assertEquals("+47", clientDto.getCntactPersonDto().getContactInfo().getMobileNumberCountryCode());
-        assertEquals("33445566", clientDto.getCntactPersonDto().getContactInfo().getMobileNumber());
+        assertEquals(client.getContactPersonId(), clientDto.getContactPersonDto().getId());
+        assertEquals(client.getContactPersonId(), clientDto.getContactPersonDto().getId());
+        assertEquals("petter hansen", clientDto.getContactPersonDto().getFullName());
+        assertEquals(4444, clientDto.getContactPersonDto().getContactInfo().getId());
+        assertEquals("contact@gmail.org", clientDto.getContactPersonDto().getContactInfo().getEmailAddress());
+        assertEquals("+47", clientDto.getContactPersonDto().getContactInfo().getMobileNumberCountryCode());
+        assertEquals("33445566", clientDto.getContactPersonDto().getContactInfo().getMobileNumber());
 
         assertEquals(1, clientDto.getProjectList().size());
         assertEquals(projectDto.getClientId(), clientDto.getProjectList().get(0).getClientId());
@@ -102,9 +102,9 @@ class ClientServiceTest {
         clientDto.setName("gunnarro as");
         clientDto.setStatus("ACTIVE");
         clientDto.setOrganizationDto(createOrganizationDto());
-        clientDto.setCntactPersonDto(createContactPerson());
+        clientDto.setContactPersonDto(createContactPerson());
 
-        when(clientRepositoryMock.findClient(anyString())).thenReturn(null);
+        when(clientRepositoryMock.find(anyString())).thenReturn(null);
         when(clientRepositoryMock.insert(any())).thenReturn(1000L);
 
         Long clientId = clientService.saveClient(clientDto);
@@ -119,7 +119,7 @@ class ClientServiceTest {
         clientDto.setName("gunnarro as");
         clientDto.setStatus("ACTIVE");
         clientDto.setOrganizationDto(createOrganizationDto());
-        clientDto.setCntactPersonDto(createContactPerson());
+        clientDto.setContactPersonDto(createContactPerson());
 
         when(clientRepositoryMock.getClient(anyLong())).thenReturn(TimesheetMapper.fromClientDto(clientDto));
         when(clientRepositoryMock.update(any())).thenReturn(1);

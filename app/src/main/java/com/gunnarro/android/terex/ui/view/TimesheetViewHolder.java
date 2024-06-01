@@ -8,7 +8,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gunnarro.android.terex.R;
-import com.gunnarro.android.terex.domain.entity.Timesheet;
+import com.gunnarro.android.terex.domain.dto.TimesheetDto;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -39,30 +39,30 @@ public class TimesheetViewHolder extends RecyclerView.ViewHolder {
         return new TimesheetViewHolder(view);
     }
 
-    public void bindListLine(Timesheet timesheet) {
-        if (timesheet == null) {
+    public void bindListLine(TimesheetDto timesheetDto) {
+        if (timesheetDto == null) {
             return;
         }
-        String title = timesheet.getClientName();
+        String title = timesheetDto.getProjectDto().getName();
         if (title.length() > TITLE_MAX_LENGTH) {
             title = title.substring(0, TITLE_MAX_LENGTH) + "...";
         }
         timesheetLineHeaderView1.setText(title);
-        timesheetLineHeaderView2.setText(timesheet.getProjectCode());
-        timesheetLine1StatusView.setText(timesheet.getFromDate().format(DateTimeFormatter.ofPattern("MMM", Locale.getDefault())));
+        timesheetLineHeaderView2.setText(timesheetDto.getUserAccountDto().getUserName());
+        timesheetLine1StatusView.setText(timesheetDto.getFromDate().format(DateTimeFormatter.ofPattern("MMM", Locale.getDefault())));
 
-        if (timesheet.isNew()) {
+        if (timesheetDto.isNew()) {
             timesheetLine1StatusView.setTextColor(timesheetLine1StatusView.getResources().getColor(R.color.timesheet_status_open, null));
-        } else if (timesheet.isActive()) {
+        } else if (timesheetDto.isActive()) {
             timesheetLine1StatusView.setTextColor(timesheetLine1StatusView.getResources().getColor(R.color.timesheet_status_active, null));
-        } else if (timesheet.isCompleted()) {
+        } else if (timesheetDto.isCompleted()) {
             timesheetLine1StatusView.setTextColor(timesheetLine1StatusView.getResources().getColor(R.color.timesheet_status_completed, null));
-        } else if (timesheet.isBilled()) {
+        } else if (timesheetDto.isBilled()) {
             timesheetLine1StatusView.setTextColor(timesheetLine1StatusView.getResources().getColor(R.color.timesheet_status_billed, null));
         }
         timesheetLine1LabelView.setText(R.string.lbl_worked_days);
-        timesheetLine1ValueView.setText(String.format("%s of %s days", "na", timesheet.getWorkingDaysInMonth()));
+        timesheetLine1ValueView.setText(String.format("%s of %s days", "na", timesheetDto.getWorkingDaysInMonth()));
         timesheetLine2LabelView.setText(R.string.lbl_worked_hours);
-        timesheetLine2ValueView.setText(String.format("%s of %s hours", "na", timesheet.getWorkingHoursInMonth()));
+        timesheetLine2ValueView.setText(String.format("%s of %s hours", "na", timesheetDto.getWorkingHoursInMonth()));
     }
 }

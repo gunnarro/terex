@@ -134,6 +134,6 @@ public class ProjectListFragment extends BaseFragment implements ListOnItemClick
 
     @Override
     public void onItemClick(Bundle bundle) {
-        //  getNavController().navigate(R.id.nav_from_client_list_to_client_details, bundle);
+          //navigateTo(R.id.nav_from_client_list_to_client_details, bundle);
     }
 }

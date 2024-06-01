@@ -6,14 +6,17 @@ import com.gunnarro.android.terex.domain.dto.ContactInfoDto;
 import com.gunnarro.android.terex.domain.dto.OrganizationDto;
 import com.gunnarro.android.terex.domain.dto.PersonDto;
 import com.gunnarro.android.terex.domain.dto.UserAccountDto;
+import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
 import com.gunnarro.android.terex.domain.entity.UserAccount;
+import com.gunnarro.android.terex.utility.Utility;
 
 import java.time.DateTimeException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.Month;
 import java.time.Year;
 import java.time.temporal.ChronoField;
@@ -22,6 +25,7 @@ import java.time.temporal.TemporalField;
 import java.time.temporal.ValueRange;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -32,6 +36,41 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class TestData {
+
+    public static List<TimesheetEntry> createTimesheetEntriesForMonth(Long timesheetId, Integer year, Integer month) {
+        List<TimesheetEntry> timesheetEntryList = new ArrayList<>();
+        // get timesheet
+        Timesheet timesheet = new Timesheet();
+        timesheet.setFromDate(LocalDate.of(year, month, 1));
+        timesheet.setToDate(LocalDate.of(year, month, Utility.getLastDayOfMonth(LocalDate.of(year, month, 1)).getDayOfMonth()));
+        // interpolate missing days in the month.
+        TimesheetEntry timesheetEntry = new TimesheetEntry();
+        timesheetEntry.setTimesheetId(timesheetId);
+        for (LocalDate date = timesheet.getFromDate(); date.isBefore(timesheet.getToDate()); date = date.plusDays(1)) {
+            boolean isInList = false;
+            for (TimesheetEntry e : timesheetEntryList) {
+                if (e.getWorkdayDate().equals(date)) {
+                    isInList = true;
+                    break;
+                }
+            }
+            if (!isInList) {
+                TimesheetEntry timesheetEntry1 = new TimesheetEntry();
+                timesheetEntry1.setTimesheetId(timesheetId);
+                timesheetEntry1.setStatus(TimesheetEntry.TimesheetEntryStatusEnum.OPEN.name());
+                timesheetEntry1.setType(TimesheetEntry.TimesheetEntryTypeEnum.REGULAR.name());
+                timesheetEntry1.setWorkdayDate(date);
+                timesheetEntry1.setFromTime(LocalTime.of(7,0));
+                timesheetEntry1.setToTime(LocalTime.of(3,0));
+                timesheetEntry1.setBreakInMin(30);
+                timesheetEntry1.setWorkedMinutes(420);
+                timesheetEntry1.setWorkdayWeek(date.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()));
+                timesheetEntryList.add(timesheetEntry1);
+            }
+        }
+        timesheetEntryList.sort(Comparator.comparing(TimesheetEntry::getWorkdayDate));
+        return timesheetEntryList;
+    }
 
     public static List<TimesheetSummary> buildTimesheetSummaryByWeek(Long timesheetId, Integer year, Integer month, Integer hourlyRate) {
         Map<Integer, List<TimesheetEntry>> weekMap = new HashMap<>();

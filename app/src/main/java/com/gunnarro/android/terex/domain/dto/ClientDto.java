@@ -16,7 +16,7 @@ public class ClientDto {
     private Long id;
     private String name;
     private String status;
-    private PersonDto cntactPersonDto;
+    private PersonDto contactPersonDto;
     private OrganizationDto organizationDto;
     private List<ProjectDto> projectList;
 
@@ -53,12 +53,12 @@ public class ClientDto {
         this.organizationDto = organizationDto;
     }
 
-    public PersonDto getCntactPersonDto() {
-        return cntactPersonDto;
+    public PersonDto getContactPersonDto() {
+        return contactPersonDto;
     }
 
-    public void setCntactPersonDto(PersonDto cntactPersonDto) {
-        this.cntactPersonDto = cntactPersonDto;
+    public void setContactPersonDto(PersonDto contactPersonDto) {
+        this.contactPersonDto = contactPersonDto;
     }
 
     public List<ProjectDto> getProjectList() {
@@ -67,6 +67,14 @@ public class ClientDto {
 
     public void setProjectList(List<ProjectDto> projectList) {
         this.projectList = projectList;
+    }
+
+    public boolean hasOrganization() {
+        return organizationDto != null;
+    }
+
+    public boolean hasContactPersonDto() {
+        return contactPersonDto != null;
     }
 
     @Override

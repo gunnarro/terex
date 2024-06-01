@@ -5,9 +5,27 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/home_fragment">
 
+    <!-- global actions that can bu used everywhere -->
+    <action
+        android:id="@+id/nav_to_home"
+        app:destination="@id/home_fragment" />
+    <action
+        android:id="@+id/nav_to_timesheet_list"
+        app:destination="@id/timesheet_list_fragment" />
+    <action
+        android:id="@+id/nav_to_invoice_list"
+        app:destination="@id/invoice_list_fragment" />
+    <action
+        android:id="@+id/nav_to_client_list"
+        app:destination="@id/client_list_fragment" />
+    <action
+        android:id="@+id/nav_to_admin"
+        app:destination="@id/admin_fragment" />
+
     <!-- start page navigation, application entry point -->
     <fragment
         android:id="@+id/home_fragment"
+        android:label="@string/title_home"
         android:name="com.gunnarro.android.terex.ui.fragment.HomeFragment"
         tools:layout="@layout/fragment_home">
         <action
@@ -237,12 +255,6 @@
         android:name="com.gunnarro.android.terex.ui.fragment.InvoiceNewFragment"
         android:label="@string/title_invoice_new"
         tools:layout="@layout/fragment_invoice_new">
-        <action
-            android:id="@+id/nav_from_invoice_new_to_invoice_details"
-            app:destination="@id/invoice_details_fragment" />
-        <action
-            android:id="@+id/nav_from_invoice_new_to_invoice_list"
-            app:destination="@id/invoice_list_fragment" />
     </fragment>
 
     <fragment
@@ -271,13 +283,7 @@
         android:label="@string/title_admin"
         tools:layout="@layout/fragment_admin">
         <action
-            android:id="@+id/nav_from_admin_to_home"
-            app:destination="@id/home_fragment" />
-        <action
             android:id="@+id/nav_from_admin_to_user_account"
             app:destination="@id/user_account_new_fragment" />
     </fragment>
-
-    <!-- preferences -->
-
 </navigation>

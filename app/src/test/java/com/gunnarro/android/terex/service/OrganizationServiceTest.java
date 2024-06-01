@@ -49,7 +49,7 @@ class OrganizationServiceTest {
     void saveOrganization_new() throws ExecutionException, InterruptedException {
         OrganizationDto organizationDto = TestData.createOrganizationDto(null, "gunnarro as", "822 707 922");
 
-        when(organizationRepositoryMock.findOrganization(anyString())).thenReturn(null);
+        when(organizationRepositoryMock.find(anyString())).thenReturn(null);
         when(organizationRepositoryMock.insert(any())).thenReturn(1L);
 
         Long organizationId = organizationService.save(organizationDto);
@@ -60,7 +60,7 @@ class OrganizationServiceTest {
     void saveOrganization_update() {
         OrganizationDto organizationDto = TestData.createOrganizationDto(100L, "gunnarro as", "822 707 922");
         Organization existingOrganization = TimesheetMapper.fromOrganizationDto(organizationDto);
-        when(organizationRepositoryMock.findOrganization(anyString())).thenReturn(existingOrganization);
+        when(organizationRepositoryMock.find(anyString())).thenReturn(existingOrganization);
 
         Long organizationId = organizationService.save(organizationDto);
         assertEquals(100L, organizationId);

@@ -50,12 +50,10 @@ public class UserAccountNewFragment extends BaseFragment implements View.OnClick
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         // do not show the action bar
         setHasOptionsMenu(true);
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user_account_new, container, false);
-
         view.findViewById(R.id.user_account_new_search_org_number_btn).setOnClickListener(v -> {
             lookupOrgNumber();
         });
@@ -177,6 +175,7 @@ public class UserAccountNewFragment extends BaseFragment implements View.OnClick
         ((TextView) view.findViewById(R.id.user_account_new_id)).setText(userAccountDto.getId().toString());
         ((TextView) view.findViewById(R.id.user_account_new_username)).setText(userAccountDto.getUserName());
         ((TextView) view.findViewById(R.id.user_account_new_password)).setText(userAccountDto.getPassword());
+
         if (userAccountDto.getUserAccountType().equals(UserAccount.UserAccountTypeEnum.PRIVATE.name())) {
             ((MaterialButton) view.findViewById(R.id.user_account_new_account_type_private)).setChecked(true);
             ((MaterialButton) view.findViewById(R.id.user_account_new_account_type_business)).setChecked(false);

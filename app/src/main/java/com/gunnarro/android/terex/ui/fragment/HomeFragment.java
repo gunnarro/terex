@@ -25,6 +25,7 @@ public class HomeFragment extends Fragment {
 
     @Inject
     public HomeFragment() {
+        // Needed by dagger framework
     }
 
     @Override

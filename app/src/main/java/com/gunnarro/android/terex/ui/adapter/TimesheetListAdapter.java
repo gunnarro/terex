@@ -11,16 +11,16 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
 import com.gunnarro.android.terex.R;
-import com.gunnarro.android.terex.domain.entity.Timesheet;
+import com.gunnarro.android.terex.domain.dto.TimesheetDto;
 import com.gunnarro.android.terex.ui.fragment.TimesheetListFragment;
 import com.gunnarro.android.terex.ui.listener.ListOnItemClickListener;
 import com.gunnarro.android.terex.ui.view.TimesheetViewHolder;
 
-public class TimesheetListAdapter extends ListAdapter<Timesheet, TimesheetViewHolder> implements AdapterView.OnItemClickListener {
+public class TimesheetListAdapter extends ListAdapter<TimesheetDto, TimesheetViewHolder> implements AdapterView.OnItemClickListener {
 
     private final ListOnItemClickListener listOnItemClickListener;
 
-    public TimesheetListAdapter(@NonNull ListOnItemClickListener listOnItemClickListener, @NonNull DiffUtil.ItemCallback<Timesheet> diffCallback) {
+    public TimesheetListAdapter(@NonNull ListOnItemClickListener listOnItemClickListener, @NonNull DiffUtil.ItemCallback<TimesheetDto> diffCallback) {
         super(diffCallback);
         this.setHasStableIds(true);
         this.listOnItemClickListener = listOnItemClickListener;
@@ -32,7 +32,7 @@ public class TimesheetListAdapter extends ListAdapter<Timesheet, TimesheetViewHo
         TimesheetViewHolder viewHolder = TimesheetViewHolder.create(parent);
         viewHolder.itemView.findViewById(R.id.ic_timesheet_row_view).setOnClickListener(v -> {
             Bundle bundle = new Bundle();
-            bundle.putLong(TimesheetListFragment.TIMESHEET_ID_KEY, getItem(viewHolder.getBindingAdapterPosition()).getId());
+            bundle.putLong(TimesheetListFragment.TIMESHEET_ID_KEY, getItem(viewHolder.getBindingAdapterPosition()).getTimesheetId());
             bundle.putString(TimesheetListFragment.TIMESHEET_ACTION_KEY, TimesheetListFragment.TIMESHEET_ACTION_EDIT);
             listOnItemClickListener.onItemClick(bundle);
         });
@@ -52,16 +52,16 @@ public class TimesheetListAdapter extends ListAdapter<Timesheet, TimesheetViewHo
     }
 
     /**
-     *
+     * Check if timesheet are equal or not
      */
-    public static class TimesheetDiff extends DiffUtil.ItemCallback<Timesheet> {
+    public static class TimesheetDiff extends DiffUtil.ItemCallback<TimesheetDto> {
         @Override
-        public boolean areItemsTheSame(@NonNull Timesheet oldItem, @NonNull Timesheet newItem) {
+        public boolean areItemsTheSame(@NonNull TimesheetDto oldItem, @NonNull TimesheetDto newItem) {
             return oldItem == newItem;
         }
 
         @Override
-        public boolean areContentsTheSame(@NonNull Timesheet oldItem, @NonNull Timesheet newItem) {
+        public boolean areContentsTheSame(@NonNull TimesheetDto oldItem, @NonNull TimesheetDto newItem) {
             return oldItem.equals(newItem);
         }
     }

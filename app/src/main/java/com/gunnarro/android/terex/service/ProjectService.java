@@ -68,7 +68,7 @@ public class ProjectService {
     public Long saveProject(@NotNull final ProjectDto projectDto) {
         Project project = TimesheetMapper.fromProjectDto(projectDto);
         try {
-            Project projectExisting = projectRepository.findProject(project.getClientId(), project.getName());
+            Project projectExisting = projectRepository.find(project.getClientId(), project.getName());
             Log.d("ProjectRepository.saveProject", String.format("%s", projectExisting));
             Long id;
             if (projectExisting == null) {

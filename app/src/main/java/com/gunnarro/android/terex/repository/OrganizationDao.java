@@ -18,7 +18,7 @@ public interface OrganizationDao {
     List<Organization> getOrganizations();
 
     @Query("SELECT * FROM organization c WHERE c.id = :organizationId")
-    Organization getOrganization(long organizationId);
+    Organization getOrganization(Long organizationId);
 
     @Query("SELECT * FROM organization o WHERE o.organization_name = :organizationName")
     Organization findOrganization(String organizationName);

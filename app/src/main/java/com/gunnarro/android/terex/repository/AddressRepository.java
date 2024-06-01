@@ -39,7 +39,7 @@ public class AddressRepository {
         }
     }
 
-    public Address findAddress(String streetAddress) {
+    public Address find(String streetAddress) {
         try {
             CompletionService<Address> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
             service.submit(() -> addressDao.findAddress(streetAddress));
@@ -74,7 +74,7 @@ public class AddressRepository {
         try {
             Address addressExisting;
             if (address.getId() == null) {
-                addressExisting = findAddress(address.getStreetAddress());
+                addressExisting = find(address.getStreetAddress());
             } else {
                 addressExisting = getAddress(address.getId());
             }

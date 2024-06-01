@@ -46,6 +46,7 @@ public class InvoiceDetailsFragment extends BaseFragment {
 
     @Inject
     public InvoiceDetailsFragment() {
+        // Needed by dagger framework
     }
 
     @Override

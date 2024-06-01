@@ -36,7 +36,7 @@ class ContactInfoServiceTest {
     void saveContactInfo_new() throws ExecutionException, InterruptedException {
         ContactInfoDto contactInfoDto = createContactInfoDto();
 
-        when(contactInfoRepositoryMock.findContactInfo(anyString(), anyString())).thenReturn(null);
+        when(contactInfoRepositoryMock.find(anyString(), anyString())).thenReturn(null);
         when(contactInfoRepositoryMock.insert(any())).thenReturn(1000L);
 
         Long clientId = contactInfoService.save(contactInfoDto);
