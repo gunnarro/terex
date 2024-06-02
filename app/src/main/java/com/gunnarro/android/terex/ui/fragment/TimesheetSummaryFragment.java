@@ -1,5 +1,6 @@
 package com.gunnarro.android.terex.ui.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,11 +10,19 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.gunnarro.android.terex.R;
+import com.gunnarro.android.terex.exception.TerexApplicationException;
+import com.gunnarro.android.terex.service.InvoiceService;
 import com.gunnarro.android.terex.service.ProjectService;
 import com.gunnarro.android.terex.service.TimesheetService;
 import com.gunnarro.android.terex.utility.Utility;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 import javax.inject.Inject;
 
@@ -58,7 +67,8 @@ public class TimesheetSummaryFragment extends BaseFragment {
 
     private void buildTimesheetSummary(Long timesheetId) {
         Integer hourlyRate = projectService.getProjectHourlyRate(timesheetId);
-        String timesheetSummaryHtml = timesheetService.createTimesheetSummaryHtml(timesheetId, hourlyRate, requireContext());
+        String timesheetSummeryMustacheTemplate = loadMustacheTemplate(requireContext(), InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY);
+        String timesheetSummaryHtml = timesheetService.createTimesheetSummaryHtml(timesheetId, hourlyRate, timesheetSummeryMustacheTemplate);
         WebView webView;
         try {
             webView = requireView().findViewById(R.id.timesheet_summary_web_view);
@@ -78,4 +88,13 @@ public class TimesheetSummaryFragment extends BaseFragment {
         webView.loadDataWithBaseURL("file:///android_asset/", timesheetSummaryHtml, "text/html", "UTF-8", null);
     }
 
+    private String loadMustacheTemplate(Context applicationContext, InvoiceService.InvoiceAttachmentTypesEnum template) {
+        StringBuilder mustacheTemplateStr = new StringBuilder();
+        try (InputStream fis = applicationContext.getAssets().open(template.getTemplate()); InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8); BufferedReader br = new BufferedReader(isr)) {
+            br.lines().forEach(mustacheTemplateStr::append);
+            return mustacheTemplateStr.toString();
+        } catch (IOException e) {
+            throw new TerexApplicationException("error reading mustache template", "50050", e);
+        }
+    }
 }

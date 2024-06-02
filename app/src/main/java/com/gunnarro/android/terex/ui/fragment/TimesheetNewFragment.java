@@ -256,7 +256,7 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
 
     private void deleteTimesheet() {
         Timesheet timesheet = readTimesheetInputData();
-        timesheetService.deleteTimesheet(timesheet);
+        timesheetService.deleteTimesheet(timesheet.getId());
         showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_delete_msg_format), timesheet.toString()), R.color.color_snackbar_text_delete);
         navigateTo(R.id.nav_from_timesheet_details_to_timesheet_list, null);
     }

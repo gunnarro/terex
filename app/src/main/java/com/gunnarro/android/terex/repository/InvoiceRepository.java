@@ -100,13 +100,13 @@ public class InvoiceRepository {
                 invoice.setCreatedDate(LocalDateTime.now());
                 invoice.setLastModifiedDate(LocalDateTime.now());
                 id = insertInvoice(invoice);
-                Log.d("", "inserted new invoice: " + id + " - " + invoice.getReference());
+                Log.d("InvoiceRepository.saveInvoice", String.format("inserted new invoice, invoiceId=%s, timesheetId=%s", id, invoice.getTimesheetId()));
             } else {
                 invoice.setId(invoiceExisting.getId());
                 invoice.setLastModifiedDate(LocalDateTime.now());
                 updateInvoice(invoice);
                 id = invoice.getId();
-                Log.d("", "updated invoice: " + id + " - " + invoice.getReference());
+                Log.d("InvoiceRepository.saveInvoice", String.format("updated invoice, invoiceId=%s, timesheetId=%s ", id, invoice.getTimesheetId()));
             }
             return id;
         } catch (Exception e) {
@@ -169,25 +169,25 @@ public class InvoiceRepository {
     public Long saveInvoiceAttachment(@NotNull final InvoiceAttachment invoiceAttachment) {
         try {
             Invoice invoiceAttachmentExisting = null;//findInvoice(invoice.getReference());
-            Log.d("InvoiceRepository.saveInvoiceFile", String.format("%s", invoiceAttachmentExisting));
+            Log.d("saveInvoiceAttachment", String.format("%s", invoiceAttachmentExisting));
             Long id = null;
             if (invoiceAttachmentExisting == null) {
                 invoiceAttachment.setCreatedDate(LocalDateTime.now());
                 invoiceAttachment.setLastModifiedDate(LocalDateTime.now());
                 id = insertInvoiceAttachment(invoiceAttachment);
-                Log.d("", "inserted new invoice file: " + id + " - " + invoiceAttachment.getAttachmentFileName());
+                Log.d("saveInvoiceAttachment", "inserted new invoice file: " + id + " - " + invoiceAttachment.getAttachmentFileName());
             } else {
                 invoiceAttachment.setId(invoiceAttachmentExisting.getId());
                 invoiceAttachment.setLastModifiedDate(LocalDateTime.now());
                 updateInvoiceAttachment(invoiceAttachment);
                 id = invoiceAttachment.getId();
-                Log.d("", "updated invoice file: " + id + " - " + invoiceAttachment.getAttachmentFileName());
+                Log.d("saveInvoiceAttachment", "updated invoice file: " + id + " - " + invoiceAttachment.getAttachmentFileName());
             }
             return id;
         } catch (Exception e) {
             // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();
-            throw new TerexApplicationException("Error saving invoice!", e.getMessage(), e.getCause());
+            throw new TerexApplicationException("Error saving invoice attachment!", e.getMessage(), e.getCause());
         }
     }
 

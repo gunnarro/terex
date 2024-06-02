@@ -1,8 +1,12 @@
 package com.gunnarro.android.terex.service;
 
+import android.util.Log;
+
 import androidx.room.Transaction;
 
+import com.gunnarro.android.terex.domain.dto.ClientDto;
 import com.gunnarro.android.terex.domain.dto.TimesheetSummaryDto;
+import com.gunnarro.android.terex.domain.dto.UserAccountDto;
 import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.InvoiceAttachment;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
@@ -10,9 +14,12 @@ import com.gunnarro.android.terex.repository.InvoiceRepository;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -41,17 +48,23 @@ public class InvoiceService {
         }
     }
 
+    public enum InvoiceAttachmentFileTypes {
+        PDF, HTML
+    }
+
     private final TimesheetService timesheetService;
+    private final UserAccountService userAccountService;
     private final ClientService clientService;
     private final InvoiceRepository invoiceRepository;
 
     /**
      * For unit test onlu
      */
-    public InvoiceService(InvoiceRepository invoiceRepository, TimesheetService timesheetService, ClientService clientSerice) {
+    public InvoiceService(InvoiceRepository invoiceRepository, TimesheetService timesheetService, ClientService clientService, UserAccountService userAccountService) {
         this.timesheetService = timesheetService;
         this.invoiceRepository = invoiceRepository;
-        this.clientService = clientSerice;
+        this.clientService = clientService;
+        this.userAccountService = userAccountService;
     }
 
     /**
@@ -59,7 +72,7 @@ public class InvoiceService {
      */
     @Inject
     public InvoiceService() {
-        this(new InvoiceRepository(), new TimesheetService(), new ClientService());
+        this(new InvoiceRepository(), new TimesheetService(), new ClientService(), new UserAccountService());
     }
 
     public Invoice getInvoice(Long invoiceId) {
@@ -74,8 +87,8 @@ public class InvoiceService {
         return invoiceRepository.saveInvoiceAttachment(invoiceAttachment);
     }
 
-    public InvoiceAttachment getInvoiceAttachment(Long invoiceId, String attachmentType, String invoiceFileType) {
-        return invoiceRepository.getInvoiceAttachment(invoiceId, attachmentType, invoiceFileType);
+    public InvoiceAttachment getInvoiceAttachment(Long invoiceId, InvoiceAttachmentTypesEnum attachmentType, InvoiceAttachmentFileTypes invoiceFileType) {
+        return invoiceRepository.getInvoiceAttachment(invoiceId, attachmentType.name(), invoiceFileType.name());
     }
 
     @Transaction
@@ -99,7 +112,7 @@ public class InvoiceService {
         invoice.setBillingPeriodEndDate(null);
         // due date is defaulted to 10 days after billing date
         invoice.setDueDate(invoice.getBillingDate().plusDays(10));
-        //fixme do this in timesheet service
+        // do the billing part, i.e calculate the billing amount.
         double sumAmount = timesheetSummaryDtoList.stream().mapToDouble(TimesheetSummaryDto::getBilledAmount).sum();
         invoice.setAmount(sumAmount);
         invoice.setCurrency("NOK");
@@ -109,6 +122,51 @@ public class InvoiceService {
 
     public List<InvoiceAttachmentTypesEnum> getInvoiceAttachmentTypes() {
         return Arrays.asList(InvoiceAttachmentTypesEnum.values());
+    }
+
+
+    public long createTimesheetSummaryAttachment(Long invoiceId, String timesheetSummaryTemplate) {
+        try {
+            Invoice invoice = getInvoice(invoiceId);
+            Log.d("createTimesheetSummaryAttachment", "timesheetId=" + invoice.getTimesheetId());
+            UserAccountDto invoiceIssuer = userAccountService.getUserAccount(invoice.getInvoiceIssuerId());
+            ClientDto invoiceReceiver = clientService.getClient(invoice.getClientId());
+
+            String invoiceSummaryHtml = timesheetService.createTimesheetSummaryAttachmentHtml(invoice.getTimesheetId(), invoiceIssuer, invoiceReceiver, timesheetSummaryTemplate);
+            Log.d("createInvoiceSummaryAttachment", invoiceSummaryHtml);
+            String invoiceAttachmentFileName = InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.name().toLowerCase(Locale.getDefault()) + "_attachment_" + invoice.getBillingDate().format(DateTimeFormatter.ofPattern("yyyy-MM"));
+
+            InvoiceAttachment timesheetSummaryAttachment = new InvoiceAttachment();
+            timesheetSummaryAttachment.setInvoiceId(invoiceId);
+            timesheetSummaryAttachment.setAttachmentType(InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.name());
+            timesheetSummaryAttachment.setAttachmentFileName(invoiceAttachmentFileName);
+            timesheetSummaryAttachment.setAttachmentFileType(InvoiceAttachmentFileTypes.HTML.name());
+            timesheetSummaryAttachment.setAttachmentFileContent(invoiceSummaryHtml.getBytes(StandardCharsets.UTF_8));
+            return saveInvoiceAttachment(timesheetSummaryAttachment);
+        } catch (Exception e) {
+            throw new TerexApplicationException(String.format("Error crating invoice attachment, invoice ref=%s", invoiceId), "50023", e);
+        }
+    }
+
+
+    /**
+     * The timesheet should contain an entry for all days in the month.
+     * Days not worked, sick, or vacation are simple blank.
+     */
+    public Long createClientTimesheetAttachment(Long invoiceId, Long timesheetId, String clientTimesheetTemplate) {
+        try {
+            String timesheetAttachmentHtml = timesheetService.createTimesheetListHtml(timesheetId, clientTimesheetTemplate);
+            String timesheetAttachmentFileName = InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.name().toLowerCase(Locale.getDefault()) + "_attachment_" + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
+            InvoiceAttachment clientTimesheetAttachment = new InvoiceAttachment();
+            clientTimesheetAttachment.setInvoiceId(invoiceId);
+            clientTimesheetAttachment.setAttachmentType(InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.name());
+            clientTimesheetAttachment.setAttachmentFileName(timesheetAttachmentFileName);
+            clientTimesheetAttachment.setAttachmentFileType(InvoiceAttachmentFileTypes.HTML.name());
+            clientTimesheetAttachment.setAttachmentFileContent(timesheetAttachmentHtml.getBytes(StandardCharsets.UTF_8));
+            return saveInvoiceAttachment(clientTimesheetAttachment);
+        } catch (Exception e) {
+            throw new TerexApplicationException(String.format("Error crating client timesheet attachment, timesheetId=%s", timesheetId), "50023", e);
+        }
     }
 
     private int generateInvoiceNumber() {

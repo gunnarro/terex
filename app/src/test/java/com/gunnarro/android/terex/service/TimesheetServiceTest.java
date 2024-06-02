@@ -2,7 +2,6 @@ package com.gunnarro.android.terex.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -32,10 +31,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.List;
@@ -56,7 +59,7 @@ class TimesheetServiceTest {
 
     @Test
     void generateTimesheetForMonth() {
-        assertEquals(30, TestData.createTimesheetEntriesForMonth(1L,2023, 1).size());
+        assertEquals(30, TestData.createTimesheetEntriesForMonth(1L, 2023, 1).size());
     }
 
     @Test
@@ -159,8 +162,11 @@ class TimesheetServiceTest {
         Timesheet timesheetExisting = Timesheet.createDefault(100L, 200L, 2023, 11);
         timesheetExisting.setId(23L);
         timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.BILLED.name());
+
+        when(timesheetRepositoryMock.getTimesheet(anyLong())).thenReturn(timesheetExisting);
+
         InputValidationException ex = assertThrows(InputValidationException.class, () -> {
-            timesheetService.deleteTimesheet(timesheetExisting);
+            timesheetService.deleteTimesheet(timesheetExisting.getId());
         });
 
         Assertions.assertEquals("Timesheet is BILLED, not allowed to delete or update", ex.getMessage());
@@ -320,7 +326,9 @@ class TimesheetServiceTest {
         when(timesheetRepositoryMock.getTimesheet(anyLong())).thenReturn(timesheet);
         when(timesheetRepositoryMock.getTimesheetEntryList(anyLong())).thenReturn(timesheetEntryList);
 
-        String templateHtml = timesheetService.createTimesheetListHtml(23L, applicationContextMock);
+        String clientTimesheetMustacheTemplate = loadMustacheTemplate(applicationContextMock, InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET);
+
+        String templateHtml = timesheetService.createTimesheetListHtml(23L, clientTimesheetMustacheTemplate);
         assertNotNull(templateHtml);
         //saveToFile("src/test/" + InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.getFileName() + ".html", templateHtml);
     }
@@ -337,9 +345,11 @@ class TimesheetServiceTest {
         when(assetManagerMock.open(anyString())).thenReturn(new FileInputStream(mustacheTemplateFile));
         when(applicationContextMock.getAssets()).thenReturn(assetManagerMock);
 
+        String timesheetSummaryMustacheTemplate = loadMustacheTemplate(applicationContextMock, InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY);
+
         when(timesheetRepositoryMock.getTimesheet(anyLong())).thenReturn(timesheet);
         when(timesheetRepositoryMock.getTimesheetEntryList(anyLong())).thenReturn(TestData.generateTimesheetEntries(2023, 12));
-        String templateHtml = timesheetService.createTimesheetSummaryHtml(23L, 1250, applicationContextMock);
+        String templateHtml = timesheetService.createTimesheetSummaryHtml(23L, 1250, timesheetSummaryMustacheTemplate);
         assertNotNull(templateHtml);
         // saveToFile("src/test/" + InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getFileName() + ".html", templateHtml);
     }
@@ -366,7 +376,9 @@ class TimesheetServiceTest {
         when(timesheetRepositoryMock.getTimesheet(anyLong())).thenReturn(timesheet);
         when(timesheetRepositoryMock.getTimesheetSummary(anyLong())).thenReturn(timesheetSummaryList);
 
-        String templateHtml = timesheetService.createTimesheetSummaryAttachmentHtml(timesheet.getId(), invoiceIssuer, invoiceReceiver, applicationContextMock);
+        String timesheetSummaryMustacheTemplate = loadMustacheTemplate(applicationContextMock, InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY);
+
+        String templateHtml = timesheetService.createTimesheetSummaryAttachmentHtml(timesheet.getId(), invoiceIssuer, invoiceReceiver, timesheetSummaryMustacheTemplate);
         assertNotNull(templateHtml);
         //saveToFile("src/test/" + InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getFileName() + ".html", templateHtml);
     }
@@ -380,6 +392,16 @@ class TimesheetServiceTest {
         }
         try (FileWriter fileWriter = new FileWriter(Path.of(filePath).toFile())) {
             fileWriter.write(content);
+        }
+    }
+
+    private String loadMustacheTemplate(Context applicationContext, InvoiceService.InvoiceAttachmentTypesEnum template) {
+        StringBuilder mustacheTemplateStr = new StringBuilder();
+        try (InputStream fis = applicationContext.getAssets().open(template.getTemplate()); InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8); BufferedReader br = new BufferedReader(isr)) {
+            br.lines().forEach(mustacheTemplateStr::append);
+            return mustacheTemplateStr.toString();
+        } catch (IOException e) {
+            throw new TerexApplicationException("error reading mustache template", "50050", e);
         }
     }
 }

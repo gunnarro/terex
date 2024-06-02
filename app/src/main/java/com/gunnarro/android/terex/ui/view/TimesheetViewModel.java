@@ -49,6 +49,6 @@ public class TimesheetViewModel extends AndroidViewModel {
     }
 
     public void deleteTimesheet(Timesheet timesheet) {
-        timesheetService.deleteTimesheet(timesheet);
+        timesheetService.deleteTimesheet(timesheet.getId());
     }
 }

@@ -1,11 +1,19 @@
 package com.gunnarro.android.terex.utility;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.gunnarro.android.terex.exception.TerexApplicationException;
+import com.gunnarro.android.terex.service.InvoiceService;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -211,5 +219,15 @@ public class Utility {
                 .limit(daysInMonth)
                 .filter((isWeekend).negate())
                 .collect(Collectors.toList()).size();
+    }
+
+    public static String loadMustacheTemplate(Context applicationContext, InvoiceService.InvoiceAttachmentTypesEnum template) {
+        StringBuilder mustacheTemplateStr = new StringBuilder();
+        try (InputStream fis = applicationContext.getAssets().open(template.getTemplate()); InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8); BufferedReader br = new BufferedReader(isr)) {
+            br.lines().forEach(mustacheTemplateStr::append);
+            return mustacheTemplateStr.toString();
+        } catch (IOException e) {
+            throw new TerexApplicationException("error reading mustache template", "50050", e);
+        }
     }
 }

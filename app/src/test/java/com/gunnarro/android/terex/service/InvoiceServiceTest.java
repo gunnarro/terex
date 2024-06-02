@@ -35,11 +35,14 @@ class InvoiceServiceTest {
     private ClientService clientServiceMock;
 
     @Mock
+    private UserAccountService userAccountServiceMock;
+
+    @Mock
     private InvoiceRepository invoiceRepositoryMock;
 
     @BeforeEach
     public void setup() {
-        invoiceService = new InvoiceService(invoiceRepositoryMock, timesheetServiceMock, clientServiceMock);
+        invoiceService = new InvoiceService(invoiceRepositoryMock, timesheetServiceMock, clientServiceMock, userAccountServiceMock);
     }
 
     @Test

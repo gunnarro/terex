@@ -1,6 +1,5 @@
 package com.gunnarro.android.terex.service;
 
-import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -26,13 +25,8 @@ import com.gunnarro.android.terex.utility.Utility;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -64,16 +58,6 @@ public class TimesheetService {
     @Inject
     public TimesheetService() {
         this.timesheetRepository = new TimesheetRepository();
-    }
-
-    private String loadMustacheTemplate(Context applicationContext, InvoiceService.InvoiceAttachmentTypesEnum template) {
-        StringBuilder mustacheTemplateStr = new StringBuilder();
-        try (InputStream fis = applicationContext.getAssets().open(template.getTemplate()); InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8); BufferedReader br = new BufferedReader(isr)) {
-            br.lines().forEach(mustacheTemplateStr::append);
-            return mustacheTemplateStr.toString();
-        } catch (IOException e) {
-            throw new TerexApplicationException("error reading mustache template", "50050", e);
-        }
     }
 
     // ----------------------------------------
@@ -114,7 +98,8 @@ public class TimesheetService {
         return TimesheetMapper.toTimesheetDtoList(timesheetRepository.getTimesheetList(year));
     }
 
-    public void deleteTimesheet(Timesheet timesheet) {
+    public void deleteTimesheet(Long timesheetId) {
+        Timesheet timesheet = timesheetRepository.getTimesheet(timesheetId);
         if (timesheet.isBilled()) {
             throw new InputValidationException("Timesheet is BILLED, not allowed to delete or update", "40045", null);
         }
@@ -320,7 +305,7 @@ public class TimesheetService {
         return timesheetSummaryByWeek;
     }
 
-    public String createTimesheetSummaryAttachmentHtml(@NotNull Long timesheetId, @NotNull UserAccountDto userAccount, @NotNull ClientDto client, @NotNull Context applicationContext) {
+    public String createTimesheetSummaryAttachmentHtml(@NotNull Long timesheetId, @NotNull UserAccountDto userAccount, @NotNull ClientDto client, @NotNull String timesheetSummeryMustacheTemplate) {
         Timesheet timesheet = getTimesheet(timesheetId);
         List<TimesheetSummary> timesheetSummaryList = getTimesheetSummary(timesheetId);
         double totalBilledAmount = timesheetSummaryList.stream().mapToDouble(TimesheetSummary::getTotalBilledAmount).sum();
@@ -329,7 +314,7 @@ public class TimesheetService {
         double totalBilledAmountWithVat = totalBilledAmount + totalVat;
 
         MustacheFactory mf = new DefaultMustacheFactory();
-        Mustache mustache = mf.compile(new StringReader(loadMustacheTemplate(applicationContext, InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY)), "");
+        Mustache mustache = mf.compile(new StringReader(timesheetSummeryMustacheTemplate), "");
         Map<String, Object> context = new HashMap<>();
         context.put("invoiceAttachmentTitle", "Vedlegg til faktura");
         context.put("invoiceBillingPeriod", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM")));
@@ -349,7 +334,7 @@ public class TimesheetService {
         return writer.toString();
     }
 
-    public String createTimesheetSummaryHtml(@NotNull Long timesheetId, @NotNull Integer hourlyRate, @NotNull Context applicationContext) {
+    public String createTimesheetSummaryHtml(@NotNull Long timesheetId, @NotNull Integer hourlyRate, @NotNull String timesheetSummaryMustacheTemplate) {
         Timesheet timesheet = getTimesheet(timesheetId);
         List<TimesheetSummary> timesheetSummaryList = createTimesheetSummary(timesheetId, "WEEK", hourlyRate);
         double totalBilledAmount = timesheetSummaryList.stream().mapToDouble(TimesheetSummary::getTotalBilledAmount).sum();
@@ -358,7 +343,7 @@ public class TimesheetService {
         double totalVat = totalBilledAmount * (vat / 100);
         double totalBilledAmountWithVat = totalBilledAmount + totalVat;
         MustacheFactory mf = new DefaultMustacheFactory();
-        Mustache mustache = mf.compile(new StringReader(loadMustacheTemplate(applicationContext, InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY)), "");
+        Mustache mustache = mf.compile(new StringReader(timesheetSummaryMustacheTemplate), "");
         Map<String, Object> context = new HashMap<>();
         context.put("invoiceAttachmentTitle", "Vedlegg til faktura");
         context.put("invoiceBillingPeriod", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM")));
@@ -378,13 +363,13 @@ public class TimesheetService {
         return writer.toString();
     }
 
-    public String createTimesheetListHtml(@NotNull Long timesheetId, @NotNull Context applicationContext) {
+    public String createTimesheetListHtml(@NotNull Long timesheetId, @NotNull String clientTimesheetMustacheTemplate) {
         Timesheet timesheet = getTimesheet(timesheetId);
         List<TimesheetEntryDto> timesheetEntryDtoList = getTimesheetEntryDtoListReadyForBilling(timesheetId);
         Double sumBilledHours = timesheetEntryDtoList.stream().mapToDouble(TimesheetEntryDto::getWorkedMinutes).sum() / 60;
         Integer numberOfWorkedDays = timesheetEntryDtoList.stream().filter(e -> e.getWorkedMinutes() != null && e.getWorkedMinutes() > 0).collect(Collectors.toList()).size();
         MustacheFactory mf = new DefaultMustacheFactory();
-        Mustache mustache = mf.compile(new StringReader(loadMustacheTemplate(applicationContext, InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET)), "");
+        Mustache mustache = mf.compile(new StringReader(clientTimesheetMustacheTemplate), "");
         Map<String, Object> context = new HashMap<>();
         context.put("title", "Timeliste for konsulentbistand");
         context.put("consultantName", "Gunnar Rønneberg");

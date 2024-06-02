@@ -283,4 +283,8 @@ public class TimesheetRepository {
         }
         return 1;
     }
+
+    public String getTimesheetStatus(Long timesheetId) {
+        return timesheetDao.getTimesheetStatus(timesheetId);
+    }
 }
