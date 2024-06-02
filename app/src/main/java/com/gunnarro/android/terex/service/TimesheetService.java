@@ -445,4 +445,8 @@ public class TimesheetService {
         });
         return timesheetSummary;
     }
+
+    public int countTimesheetEntries() {
+        return timesheetRepository.countTimesheetEntries();
+    }
 }

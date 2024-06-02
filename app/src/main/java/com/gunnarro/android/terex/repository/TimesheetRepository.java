@@ -287,4 +287,8 @@ public class TimesheetRepository {
     public String getTimesheetStatus(Long timesheetId) {
         return timesheetDao.getTimesheetStatus(timesheetId);
     }
+
+    public int countTimesheetEntries() {
+        return timesheetEntryDao.count();
+    }
 }

@@ -77,4 +77,8 @@ public interface TimesheetEntryDao {
      */
     @Delete
     int delete(TimesheetEntry timesheetEntry);
+
+    // only for checking
+    @Query("SELECT count(id) FROM timesheet_entry")
+    int count();
 }
