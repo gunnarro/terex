@@ -340,3 +340,11 @@ q
 Aapp/src/androidTest/java/com/gunnarro/android/terex/TestData.java,5/b/5bd8da1c152ee60c8769466de1379867669aa28f
 q
 Aapp/src/androidTest/java/com/gunnarro/android/terex/LoadTest.java,2/5/25748922855259e4efbe0ae0eccd9c9ccba5125b
+w
+Gapp/src/androidTest/java/com/gunnarro/android/terex/FunctionalTest.java,e/a/ea28b10383c9a920f07b580cec158194186ad54a
+p
+@app/schemas/com.gunnarro.android.terex.config.AppDatabase/2.json,0/d/0db56a918722e7f1b136b35f1ece4218affeb99a
+p
+@app/schemas/com.gunnarro.android.terex.config.AppDatabase/3.json,8/4/84732d018378afa01c331b24256e10e37589efc6
+p
+@app/schemas/com.gunnarro.android.terex.config.AppDatabase/1.json,e/9/e92146ea07fe92b113b89075e340e150a3d28d5d

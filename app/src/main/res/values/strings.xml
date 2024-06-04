@@ -56,6 +56,10 @@
     <string name="msg_delete_timesheet">Delete timesheet. Note that all registered hours will also be deleted. It is not possible to revert the deletion.</string>
     <string name="msg_confirm_delete">Bekreft sletting av timeliste.</string>
 
+    <string name="msg_delete_timesheet_entry">Delete timesheet entry. It is not possible to revert the deletion.</string>
+    <string name="msg_confirm_delete_timesheet_entry">Bekreft sletting av timeliste oppføring.</string>
+
+
     <!-- invoice -->
     <string name="lbl_company_name">Firma</string>
     <string name="lbl_business_address">Forretningsadresse</string>
@@ -177,4 +181,7 @@
     <string name="title_invoice_new">New invoice</string>
     <string name="title_invoice_details">Invoice details</string>
 
+    <string name="timesheet_entry_type_regular">Regular</string>
+    <string name="timesheet_entry_type_vacation">Vacation</string>
+    <string name="timesheet_entry_type_sick">Sick</string>
 </resources>

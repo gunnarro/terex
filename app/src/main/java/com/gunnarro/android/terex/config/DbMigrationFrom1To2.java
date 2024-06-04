@@ -32,16 +32,16 @@ public class DbMigrationFrom1To2 extends Migration {
     public void migrate(@NonNull SupportSQLiteDatabase database) {
         List<String> sqlQueryList = readMigrationSqlQueryFile(startVersion, endVersion);
         sqlQueryList.forEach( query -> {
-            Log.d("", query);
+            Log.d("DbMigrationFrom1To2.migrate", "migrate sql query: " + query);
             database.execSQL(query);
         });
-        Log.i("", String.format("executed database schema migration from version %s to %s", startVersion, endVersion));
+        Log.i("DbMigrationFrom1To2.migrate", String.format("executed database schema migration from version %s to %s", startVersion, endVersion));
     }
 
     private List<String> readMigrationSqlQueryFile(int startVersion, int endVersion) {
         List<String> sqlQueryList = new ArrayList<>();
         String migrationFilePath = String.format("database/migration/db_migration_from_v%s_to_v%s.sql", startVersion, endVersion);
-        Log.d("", String.format("read sql db migration file, file=%s", migrationFilePath));
+        Log.d("readMigrationSqlQueryFile", String.format("read sql db migration file, file=%s", migrationFilePath));
         try (InputStream fis = context.getAssets().open(migrationFilePath); InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8); BufferedReader br = new BufferedReader(isr)) {
             br.lines().forEach(query -> {
                 // skip comments

@@ -20,11 +20,19 @@ class UtilityTest {
 
 
     @Test
-    void dateDiffHours() {
+    void dateTimeDiffHours() {
         LocalDateTime d1 = LocalDateTime.now(ZoneId.systemDefault()).withHour(8).withMinute(0).withSecond(0).withNano(0);
         Assertions.assertEquals("08:00", d1.toLocalTime().toString());
         LocalDateTime d2 = d1.plusHours(7).plusMinutes(30);
         Assertions.assertEquals("7.5", Utility.getDateDiffInHours(d1.toLocalTime(), d2.toLocalTime()));
+    }
+
+    @Test
+    void timeDiffHours() {
+        LocalTime d1 = LocalTime.now(ZoneId.systemDefault()).withHour(8).withMinute(0).withSecond(0).withNano(0);
+        Assertions.assertEquals("08:00", d1.toString());
+        LocalTime d2 = d1.plusHours(7).plusMinutes(30);
+        Assertions.assertEquals("7.5", Utility.getTimeDiffInHours(d1, d2));
     }
 
     @Test

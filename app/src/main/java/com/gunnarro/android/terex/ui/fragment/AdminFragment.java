@@ -125,7 +125,7 @@ public class AdminFragment extends BaseFragment {
         projectDto2.setHourlyRate(1100);
         Long projectId2 = projectService.saveProject(projectDto2);
 
-        Long userId = 1l;
+        Long userId = 1L;
 
         int year = 2024;
         for (int month = 1; month < 12; month++) {

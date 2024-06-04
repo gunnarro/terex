@@ -13,14 +13,17 @@ import com.gunnarro.android.terex.domain.dto.OrganizationDto;
 import com.gunnarro.android.terex.domain.dto.PersonDto;
 import com.gunnarro.android.terex.domain.dto.PostalAddressDto;
 import com.gunnarro.android.terex.domain.dto.ProjectDto;
+import com.gunnarro.android.terex.domain.dto.TimesheetDto;
 import com.gunnarro.android.terex.domain.dto.TimesheetEntryDto;
 import com.gunnarro.android.terex.domain.dto.TimesheetSummaryDto;
+import com.gunnarro.android.terex.domain.dto.UserAccountDto;
 import com.gunnarro.android.terex.domain.entity.Address;
 import com.gunnarro.android.terex.domain.entity.Client;
 import com.gunnarro.android.terex.domain.entity.ContactInfo;
 import com.gunnarro.android.terex.domain.entity.Organization;
 import com.gunnarro.android.terex.domain.entity.Person;
 import com.gunnarro.android.terex.domain.entity.Project;
+import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
 
@@ -31,6 +34,40 @@ import java.util.ArrayList;
 import java.util.List;
 
 class TimesheetMapperTest {
+
+    @Test
+    void toTimesheetDto() {
+        Timesheet timesheet = Timesheet.createDefault(100L, 200L, 2024, 5);
+        TimesheetDto timesheetDto = TimesheetMapper.toTimesheetDto(timesheet);
+        assertEquals(timesheet.getId(), timesheetDto.getTimesheetId());
+        assertEquals(timesheet.getProjectId(), timesheetDto.getProjectDto().getId());
+        assertEquals(timesheet.getUserId(), timesheetDto.getUserAccountDto().getId());
+        assertEquals(timesheet.getYear(), timesheetDto.getYear());
+        assertEquals(timesheet.getMonth(), timesheetDto.getMonth());
+        assertEquals(timesheet.getStatus(), timesheetDto.getStatus());
+    }
+
+    @Test
+    void fromTimesheetDto() {
+        TimesheetDto timesheetDto = new TimesheetDto();
+        timesheetDto.setTimesheetId(22L);
+        ProjectDto projectDto = new ProjectDto();
+        projectDto.setId(666L);
+        timesheetDto.setProjectDto(projectDto);
+        UserAccountDto userAccountDto = new UserAccountDto();
+        userAccountDto.setId(11L);
+        timesheetDto.setUserAccountDto(userAccountDto);
+        timesheetDto.setStatus("COMPLETED");
+        timesheetDto.setYear(2024);
+        timesheetDto.setMonth(7);
+        Timesheet timesheet = TimesheetMapper.fromTimesheetDto(timesheetDto);
+        assertEquals(timesheetDto.getTimesheetId(), timesheet.getId());
+        assertEquals(timesheetDto.getProjectDto().getId(), timesheet.getProjectId());
+        assertEquals(timesheetDto.getUserAccountDto().getId(), timesheet.getUserId());
+        assertEquals(timesheetDto.getYear(), timesheet.getYear());
+        assertEquals(timesheetDto.getMonth(), timesheet.getMonth());
+        assertEquals(timesheetDto.getStatus(), timesheet.getStatus());
+    }
 
     @Test
     void toTimesheetEntryDto() {
@@ -117,7 +154,6 @@ class TimesheetMapperTest {
         assertEquals(projectDto.getStatus(), project.getStatus());
         assertEquals(projectDto.getHourlyRate(), project.getHourlyRate());
     }
-
 
     @Test
     void toClientDtoList() {

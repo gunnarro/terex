@@ -57,7 +57,7 @@ import java.util.concurrent.Executors;
         Organization.class,
         InvoiceAttachment.class,
         Client.class,
-}, version = 1, views = {TimesheetView.class}, exportSchema = true)
+}, version = 3, views = {TimesheetView.class}, exportSchema = true)
 public abstract class AppDatabase extends RoomDatabase {
     // marking the instance as volatile to ensure atomic access to the variable
     // The Java volatile keyword guarantees visibility of changes to variables across threads
@@ -77,9 +77,9 @@ public abstract class AppDatabase extends RoomDatabase {
                     // use this during development
                     .fallbackToDestructiveMigration()
                     .allowMainThreadQueries()
-                    //.createFromAsset("database/test_data.sql") // FIXME is not executed
-                    //.addMigrations(getMigration(context, 16,17))
-                    //.addCallback(roomCallback)
+                   // .createFromAsset("database/init_data.sql") // FIXME is not executed
+                   // .addMigrations(getMigration(context, 1, 2))
+                    .addCallback(roomCallback)
                     .build();
         }
     }
@@ -126,7 +126,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
     /**
      * Called when the database is created for the first time. This is called after all the tables are created.
-      */
+     */
     private static final RoomDatabase.Callback roomCallback = new RoomDatabase.Callback() {
 
         /**
@@ -135,10 +135,10 @@ public abstract class AppDatabase extends RoomDatabase {
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase database) {
             super.onCreate(database);
-            // database.beginTransaction();
+            //database.beginTransaction();
             // sql queries for default data
-            // database.execSQL("");
-            // database.endTransaction();
+            //database.execSQL("INSERT INTO user_account (id, uuid, created_date, last_modified_date, user_name, password, account_type, organization_id, person_id) VALUES (2001, '', current_timestamp, current_timestamp, 'guro', 'change-me', 'BUSINESS', 1100, null )");
+            //database.endTransaction();
             Log.d("RoomDatabase.Callback.onCreate", "start init database");
         }
 
@@ -148,6 +148,15 @@ public abstract class AppDatabase extends RoomDatabase {
         @Override
         public void onOpen(@NonNull SupportSQLiteDatabase database) {
             super.onCreate(database);
+            //database.beginTransaction();
+            // sql queries for default data
+            // database.execSQL("INSERT INTO user_account (id, uuid, created_date, last_modified_date, user_name, password, account_type, organization_id, person_id) VALUES (2001, '', current_timestamp, current_timestamp, 'guro', 'change-me', 'BUSINESS', 1100, null )");
+            // database.isDatabaseIntegrityOk();
+           /* ContentValues contentValues = new ContentValues();
+            contentValues.put("id", 100L);
+            contentValues.put("user_name", "testing");
+            database.insert("user_account", SQLiteDatabase.CONFLICT_FAIL, contentValues);
+            database.endTransaction();*/
             Log.d("RoomDatabase.Callback.onOpen", "start init database");
         }
     };

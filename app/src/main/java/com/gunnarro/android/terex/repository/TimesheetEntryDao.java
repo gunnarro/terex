@@ -26,11 +26,14 @@ public interface TimesheetEntryDao {
     @Query("SELECT * FROM timesheet_entry WHERE timesheet_id = :timesheetId ORDER BY workday_date DESC LIMIT 1")
     TimesheetEntry getMostRecent(Long timesheetId);
 
+    @Query("SELECT * FROM timesheet_entry WHERE id = :timesheetEntryId")
+    TimesheetEntry getTimesheetEntry(Long timesheetEntryId);
+
     @Query("SELECT * FROM timesheet_entry WHERE timesheet_id = :timesheetId AND workday_date = :workdayDate")
-    TimesheetEntry getTimesheet(Long timesheetId, LocalDate workdayDate);
+    TimesheetEntry getTimesheetEntry(Long timesheetId, LocalDate workdayDate);
 
     @Query("SELECT * FROM timesheet_entry WHERE timesheet_id = :timesheetId AND workday_date = :workdayDate AND status = :status")
-    TimesheetEntry getTimesheet(Long timesheetId, LocalDate workdayDate, String status);
+    TimesheetEntry getTimesheetEntry(Long timesheetId, LocalDate workdayDate, String status);
 
     @Query("SELECT count(*) FROM timesheet_entry WHERE timesheet_id = :timesheetId")
     Integer getRegisteredWorkedDays(Long timesheetId);

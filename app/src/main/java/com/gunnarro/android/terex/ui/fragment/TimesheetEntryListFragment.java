@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
@@ -37,6 +38,7 @@ public class TimesheetEntryListFragment extends BaseFragment implements ListOnIt
     public static final String TIMESHEET_ENTRY_ACTION_KEY = "211";
     public static final String TIMESHEET_ENTRY_ACTION_SAVE = "timesheet_entry_save";
     public static final String TIMESHEET_ENTRY_ACTION_DELETE = "timesheet_entry_delete";
+    private Long timesheetId;
 
     private TimesheetEntryViewModel timesheetEntryViewModel;
 
@@ -74,7 +76,8 @@ public class TimesheetEntryListFragment extends BaseFragment implements ListOnIt
             // timesheet id must be provided, if not, return
             throw new TerexApplicationException("Missing timesheet id!", "50023", null);
         }
-        Long timesheetId = getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY);
+        // save the timesheet id, needed for view and delete timesheet entry actions.
+        timesheetId = getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY);
         boolean isTimesheetReadOnly = getArguments().getBoolean(TimesheetListFragment.TIMESHEET_READ_ONLY_KEY);
 
         // Update the cached copy of the timesheet entries in the adapter.
@@ -91,6 +94,7 @@ public class TimesheetEntryListFragment extends BaseFragment implements ListOnIt
         );
 
         // flip gui based on timesheet status, hide buttons if timesheet has status BILLED
+        Log.d("isTimesheetReadOnly", "isTimesheetReadOnly=" + isTimesheetReadOnly);
         if (isTimesheetReadOnly) {
             addButton.setVisibility(View.GONE);
             calendarButton.setVisibility(View.GONE);
@@ -143,6 +147,7 @@ public class TimesheetEntryListFragment extends BaseFragment implements ListOnIt
         } catch (InputValidationException ie) {
             showInfoDialog("Info", ie.getMessage());
         } catch (Exception ex) {
+            ex.printStackTrace();
             showInfoDialog("Error", String.format("Application error!%s Error: %s%s Please report.", ex.getMessage(), System.lineSeparator(), System.lineSeparator()));
         }
     }
@@ -151,13 +156,10 @@ public class TimesheetEntryListFragment extends BaseFragment implements ListOnIt
         SwipeCallback swipeToDeleteCallback = new SwipeCallback(requireContext(), ItemTouchHelper.RIGHT, getResources().getColor(R.color.color_bg_swipe_right, null), R.drawable.ic_add_black_24dp) {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-                LiveData<List<TimesheetEntry>> listLiveData = timesheetEntryViewModel.getTimesheetEntryLiveData(1L);
-                int pos = viewHolder.getAbsoluteAdapterPosition();
-                List<TimesheetEntry> list = listLiveData.getValue();
-                //openTimesheetView(list.get(pos));
-
+                final int selectedTimesheetEntryPos = viewHolder.getAbsoluteAdapterPosition();
+                TimesheetEntry timesheetEntry = timesheetEntryViewModel.getTimesheetEntryLiveData(timesheetId).getValue().get(selectedTimesheetEntryPos);
                 Bundle bundle = new Bundle();
-                bundle.putLong(TimesheetListFragment.TIMESHEET_ID_KEY, list.get(pos).getId());
+                bundle.putLong(TimesheetEntryListFragment.TIMESHEET_ENTRY_ID_KEY, timesheetEntry.getId());
                 // goToTimesheetEntryView(bundle);
             }
         };
@@ -170,9 +172,9 @@ public class TimesheetEntryListFragment extends BaseFragment implements ListOnIt
         SwipeCallback swipeToDeleteCallback = new SwipeCallback(requireContext(), ItemTouchHelper.LEFT, getResources().getColor(R.color.color_bg_swipe_left, null), R.drawable.ic_delete_black_24dp) {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-                final int position = viewHolder.getAbsoluteAdapterPosition();// FIXME crash when swipe, item is null at position!
-                timesheetEntryViewModel.deleteTimesheetEntry(timesheetEntryViewModel.getTimesheetEntryLiveData(1L).getValue().get(position));
-                showSnackbar("Deleted timesheet", R.color.color_snackbar_text_delete);
+                final int selectedTimesheetEntryPos = viewHolder.getAbsoluteAdapterPosition();
+                TimesheetEntry timesheetEntry = timesheetEntryViewModel.getTimesheetEntryLiveData(timesheetId).getValue().get(selectedTimesheetEntryPos);
+                confirmDeleteTimesheetEntryDialog(getString(R.string.msg_delete_timesheet_entry), getString(R.string.msg_confirm_delete_timesheet_entry), timesheetEntry.getId());
             }
         };
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
@@ -183,5 +185,26 @@ public class TimesheetEntryListFragment extends BaseFragment implements ListOnIt
     @Override
     public void onItemClick(Bundle bundle) {
         handleTimesheetEntryActions(null, bundle.getString(TIMESHEET_ENTRY_ACTION_KEY));
+    }
+
+    private void deleteTimesheetEntry(Long timesheetEntryId) {
+        try {
+            TimesheetEntry timesheetEntry = timesheetEntryViewModel.getTimesheetEntry(timesheetEntryId);
+            timesheetEntryViewModel.deleteTimesheetEntry(timesheetEntry);
+            showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_delete_msg_format), timesheetEntry.toString()), R.color.color_snackbar_text_delete);
+        } catch (TerexApplicationException | InputValidationException e) {
+            showInfoDialog("Info", e.getMessage());
+        }
+    }
+
+    private void confirmDeleteTimesheetEntryDialog(final String title, final String message, final Long timesheetEntryId) {
+        new MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(R.string.btn_ok, (dialogInterface, i) -> deleteTimesheetEntry(timesheetEntryId))
+                .setNeutralButton(R.string.btn_cancel, (dialogInterface, i) -> {
+                    // nothing to do
+                })
+                .show();
     }
 }

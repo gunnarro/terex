@@ -19,8 +19,8 @@ public class TimesheetEntryViewHolder extends RecyclerView.ViewHolder {
     private final TextView timesheetEntryLine1StatusView;
     private final TextView timesheetEntryLine1LabelView;
     private final TextView timesheetEntryLine1ValueView;
-    private final TextView timesheetEntryLine2LabelView;
-    private final TextView timesheetEntryLine2ValueView;
+   // private final TextView timesheetEntryLine2LabelView;
+    //private final TextView timesheetEntryLine2ValueView;
 
 
     private TimesheetEntryViewHolder(View itemView) {
@@ -29,8 +29,8 @@ public class TimesheetEntryViewHolder extends RecyclerView.ViewHolder {
         timesheetEntryLine1StatusView = itemView.findViewById(R.id.timesheet_entry_line_1_status);
         timesheetEntryLine1LabelView = itemView.findViewById(R.id.timesheet_entry_line_1_label);
         timesheetEntryLine1ValueView = itemView.findViewById(R.id.timesheet_entry_line_1_value);
-        timesheetEntryLine2LabelView = itemView.findViewById(R.id.timesheet_entry_line_2_label);
-        timesheetEntryLine2ValueView = itemView.findViewById(R.id.timesheet_entry_line_2_value);
+       // timesheetEntryLine2LabelView = itemView.findViewById(R.id.timesheet_entry_line_2_label);
+       // timesheetEntryLine2ValueView = itemView.findViewById(R.id.timesheet_entry_line_2_value);
     }
 
     public static TimesheetEntryViewHolder create(ViewGroup parent) {
@@ -39,7 +39,12 @@ public class TimesheetEntryViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bindListLine(TimesheetEntry timesheetEntry) {
-        timesheetEntryLineHeaderView.setText(timesheetEntry.getTimesheetId().toString());
+        timesheetEntryLineHeaderView.setText(timesheetEntry.getType());
+        if (timesheetEntry.isVacationDay()) {
+            timesheetEntryLineHeaderView.setTextColor(timesheetEntryLine1StatusView.getResources().getColor(R.color.timesheet_status_active, null));
+        } else if (timesheetEntry.isSickDay()) {
+            timesheetEntryLineHeaderView.setTextColor(timesheetEntryLine1StatusView.getResources().getColor(R.color.color_snackbar_text_delete, null));
+        }
         timesheetEntryLine1StatusView.setText(timesheetEntry.getWorkdayDate().format(DateTimeFormatter.ofPattern("dd", Locale.getDefault())));
         // can have status OPEN or BILLED
         if (timesheetEntry.isOpen()) {
@@ -49,8 +54,8 @@ public class TimesheetEntryViewHolder extends RecyclerView.ViewHolder {
             itemView.findViewById(R.id.ic_timesheet_entry_row_delete).setVisibility(View.GONE);
         }
         timesheetEntryLine1LabelView.setText(String.format("%s - %s", Utility.formatTime(timesheetEntry.getFromTime()), Utility.formatTime(timesheetEntry.getToTime())));
-        timesheetEntryLine1ValueView.setText(Utility.getDateDiffInHours(timesheetEntry.getFromTime(), timesheetEntry.getToTime()));
-        timesheetEntryLine2LabelView.setText(String.format("%s", "na")); // FIXME
-        timesheetEntryLine2ValueView.setText(String.format("%s", 1200 * (timesheetEntry.getWorkedMinutes() / 60)));
+        timesheetEntryLine1ValueView.setText(Utility.getTimeDiffInHours(timesheetEntry.getFromTime(), timesheetEntry.getToTime()));
+       // timesheetEntryLine2LabelView.setText(String.format("%s", "na")); // FIXME
+        //timesheetEntryLine2ValueView.setText(String.format("%s", 1200 * (timesheetEntry.getWorkedMinutes() / 60)));
     }
 }

@@ -32,7 +32,9 @@ public class TimesheetListAdapter extends ListAdapter<TimesheetDto, TimesheetVie
         TimesheetViewHolder viewHolder = TimesheetViewHolder.create(parent);
         viewHolder.itemView.findViewById(R.id.ic_timesheet_row_view).setOnClickListener(v -> {
             Bundle bundle = new Bundle();
+            TimesheetDto timesheetDto = getItem(viewHolder.getBindingAdapterPosition());
             bundle.putLong(TimesheetListFragment.TIMESHEET_ID_KEY, getItem(viewHolder.getBindingAdapterPosition()).getTimesheetId());
+            bundle.putBoolean(TimesheetListFragment.TIMESHEET_READ_ONLY_KEY, timesheetDto.isBilled());
             bundle.putString(TimesheetListFragment.TIMESHEET_ACTION_KEY, TimesheetListFragment.TIMESHEET_ACTION_EDIT);
             listOnItemClickListener.onItemClick(bundle);
         });
@@ -54,7 +56,7 @@ public class TimesheetListAdapter extends ListAdapter<TimesheetDto, TimesheetVie
     /**
      * Check if timesheet are equal or not
      */
-    public static class TimesheetDiff extends DiffUtil.ItemCallback<TimesheetDto> {
+    public static class TimesheetDtoDiff extends DiffUtil.ItemCallback<TimesheetDto> {
         @Override
         public boolean areItemsTheSame(@NonNull TimesheetDto oldItem, @NonNull TimesheetDto newItem) {
             return oldItem == newItem;

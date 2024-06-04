@@ -1,5 +1,9 @@
 package com.gunnarro.android.terex.domain.dto;
 
+import com.gunnarro.android.terex.domain.entity.UserAccount;
+
+import java.util.Objects;
+
 public class UserAccountDto {
 
     private Long id;
@@ -55,5 +59,25 @@ public class UserAccountDto {
 
     public void setOrganizationDto(OrganizationDto organizationDto) {
         this.organizationDto = organizationDto;
+    }
+
+    public boolean isBusiness() {
+        return userAccountType.equals(UserAccount.UserAccountTypeEnum.BUSINESS.name());
+    }
+
+    public boolean isPrivate() {
+        return userAccountType.equals(UserAccount.UserAccountTypeEnum.PRIVATE.name());
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserAccountDto that = (UserAccountDto) o;
+        return Objects.equals(userName, that.userName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userName);
     }
 }

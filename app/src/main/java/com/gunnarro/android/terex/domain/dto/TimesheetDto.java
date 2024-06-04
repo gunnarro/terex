@@ -192,4 +192,16 @@ public class TimesheetDto {
     public int hashCode() {
         return Objects.hash(userAccountDto, projectDto, year, month);
     }
+
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("TimesheetDto{");
+        sb.append("timesheetId=").append(timesheetId);
+        sb.append(", status='").append(status).append('\'');
+        sb.append(", year=").append(year);
+        sb.append(", month=").append(month);
+        sb.append('}');
+        return sb.toString();
+    }
 }

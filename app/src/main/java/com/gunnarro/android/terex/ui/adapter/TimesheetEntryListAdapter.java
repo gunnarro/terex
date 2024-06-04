@@ -31,10 +31,13 @@ public class TimesheetEntryListAdapter extends ListAdapter<TimesheetEntry, Times
     public TimesheetEntryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         TimesheetEntryViewHolder viewHolder = TimesheetEntryViewHolder.create(parent);
         viewHolder.itemView.findViewById(R.id.ic_timesheet_entry_row_delete).setOnClickListener(v -> {
-            Bundle actionBundle = new Bundle();
-            actionBundle.putLong(TimesheetEntryListFragment.TIMESHEET_ENTRY_ID_KEY, getItem(viewHolder.getBindingAdapterPosition()).getId());
-            actionBundle.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_KEY, TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_DELETE);
-            listOnItemClickListener.onItemClick(actionBundle);
+            TimesheetEntry timesheetEntry = getItem(viewHolder.getBindingAdapterPosition());
+            if (timesheetEntry.isOpen()) {
+                Bundle actionBundle = new Bundle();
+                actionBundle.putLong(TimesheetEntryListFragment.TIMESHEET_ENTRY_ID_KEY, timesheetEntry.getId());
+                actionBundle.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_KEY, TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_DELETE);
+                listOnItemClickListener.onItemClick(actionBundle);
+            }
         });
         return viewHolder;
     }

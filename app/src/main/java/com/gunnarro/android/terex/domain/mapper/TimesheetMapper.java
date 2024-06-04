@@ -41,11 +41,16 @@ public class TimesheetMapper {
     public static TimesheetDto toTimesheetDto(Timesheet timesheet) {
         return toTimesheetDto(timesheet, null, null);
     }
-
-    // fixme map projectId and userId
+    
     public static TimesheetDto toTimesheetDto(Timesheet timesheet, Integer sumDays, Integer sumHours) {
         TimesheetDto timesheetDto = new TimesheetDto();
         timesheetDto.setTimesheetId(timesheet.getId());
+        ProjectDto projectDto = new ProjectDto();
+        projectDto.setId(timesheet.getProjectId());
+        timesheetDto.setProjectDto(projectDto);
+        UserAccountDto userAccountDto = new UserAccountDto();
+        userAccountDto.setId(timesheet.getUserId());
+        timesheetDto.setUserAccountDto(userAccountDto);
         timesheetDto.setDescription(timesheet.getDescription());
         timesheetDto.setFromDate(timesheet.getFromDate());
         timesheetDto.setToDate(timesheet.getToDate());

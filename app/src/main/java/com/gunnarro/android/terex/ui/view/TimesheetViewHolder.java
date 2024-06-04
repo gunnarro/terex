@@ -44,7 +44,7 @@ public class TimesheetViewHolder extends RecyclerView.ViewHolder {
             return;
         }
         String title = timesheetDto.getProjectDto().getName();
-        if (title.length() > TITLE_MAX_LENGTH) {
+        if (title != null && title.length() > TITLE_MAX_LENGTH) {
             title = title.substring(0, TITLE_MAX_LENGTH) + "...";
         }
         timesheetLineHeaderView1.setText(title);
@@ -61,8 +61,8 @@ public class TimesheetViewHolder extends RecyclerView.ViewHolder {
             timesheetLine1StatusView.setTextColor(timesheetLine1StatusView.getResources().getColor(R.color.timesheet_status_billed, null));
         }
         timesheetLine1LabelView.setText(R.string.lbl_worked_days);
-        timesheetLine1ValueView.setText(String.format("%s of %s days", "na", timesheetDto.getWorkingDaysInMonth()));
+        timesheetLine1ValueView.setText(String.format("%s of %s days", timesheetDto.getRegisteredWorkedDays(), timesheetDto.getWorkingDaysInMonth()));
         timesheetLine2LabelView.setText(R.string.lbl_worked_hours);
-        timesheetLine2ValueView.setText(String.format("%s of %s hours", "na", timesheetDto.getWorkingHoursInMonth()));
+        timesheetLine2ValueView.setText(String.format("%s of %s hours", timesheetDto.getRegisteredWorkedHours(), timesheetDto.getWorkingHoursInMonth()));
     }
 }

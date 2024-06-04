@@ -240,7 +240,6 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
         }
     }
 
-
     private void saveTimesheet() {
         try {
             Timesheet timesheet = readTimesheetInputData();
@@ -270,34 +269,36 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
     private void updateTimesheetInputData(@NotNull View view, @NotNull Timesheet timesheet) {
         // new timesheet do not have id yet, the id is generated upon save to database
         if (!timesheet.isNew()) {
-            TextView timesheetId = view.findViewById(R.id.timesheet_new_id);
-            timesheetId.setText(String.valueOf(timesheet.getId()));
+            TextView timesheetIdView = view.findViewById(R.id.timesheet_new_id);
+            timesheetIdView.setText(String.valueOf(timesheet.getId()));
         }
+
+        TextView userAccountIdView = view.findViewById(R.id.timesheet_new_user_account_id);
+        userAccountIdView.setText(String.valueOf(timesheet.getUserId()));
+
         EditText createdDateView = view.findViewById(R.id.timesheet_new_created_date);
         createdDateView.setText(Utility.formatDateTime(timesheet.getCreatedDate()));
 
         EditText lastModifiedDateView = view.findViewById(R.id.timesheet_new_last_modified_date);
         lastModifiedDateView.setText(Utility.formatDateTime(timesheet.getLastModifiedDate()));
 
-        // fixme
         AutoCompleteTextView clientSpinner = view.findViewById(R.id.timesheet_new_client_spinner);
-       // clientSpinner.setText(timesheet.getClientName());
+        clientSpinner.setText(clientSpinner.getAdapter().getItem(0).toString());
 
         AutoCompleteTextView projectSpinner = view.findViewById(R.id.timesheet_new_project_spinner);
+        projectSpinner.setText(projectSpinner.getAdapter().getItem(0).toString());
 
-        //projectSpinner.setText(timesheet.getProjectCode());
-/*
-        MaterialButton newBtn = view.findViewById(R.id.timesheet_new_status_new);
-        newBtn.setSelected(timesheet.isNew());
+        // set status button group
+        if (timesheet.isNew()) {
+            ((MaterialButton) view.findViewById(R.id.timesheet_new_status_btn_new)).setChecked(true);
+        } else if (timesheet.isActive()) {
+            ((MaterialButton) view.findViewById(R.id.timesheet_new_status_btn_active)).setChecked(true);
+        } else if (timesheet.isCompleted()) {
+            ((MaterialButton) view.findViewById(R.id.timesheet_new_status_btn_completed)).setChecked(true);
+        } else if (timesheet.isBilled()) {
+            ((MaterialButton) view.findViewById(R.id.timesheet_new_status_btn_billed)).setChecked(true);
+        }
 
-        MaterialButton activeBtn = view.findViewById(R.id.timesheet_new_status_active);
-        activeBtn.setSelected(true);
-        activeBtn.setChecked(true);
-        activeBtn.setEnabled(true);
-
-        view.findViewById(R.id.timesheet_new_status_completed).setSelected(timesheet.isCompleted());
-        view.findViewById(R.id.timesheet_new_status_billed).setSelected(timesheet.isBilled());
-*/
         AutoCompleteTextView statusSpinner = view.findViewById(R.id.timesheet_new_status_spinner);
         statusSpinner.setText(timesheet.getStatus());
 
@@ -336,9 +337,11 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
             createdDateView.setEnabled(false);
             lastModifiedDateView.setEnabled(false);
             clientSpinner.setEnabled(false);
+            view.findViewById(R.id.timesheet_new_client_spinner_layout).setEnabled(false);
             projectSpinner.setEnabled(false);
-            //view.findViewById(R.id.timesheet_new_status_group_layout).setEnabled(false);
+            view.findViewById(R.id.timesheet_new_project_spinner_layout).setEnabled(false);
             statusSpinner.setEnabled(true);
+            view.findViewById(R.id.timesheet_new_status_btn_group_layout).setEnabled(true);
             yearSpinner.setEnabled(false);
             monthSpinner.setEnabled(false);
             fromTimeView.setEnabled(false);
@@ -351,6 +354,7 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
             view.findViewById(R.id.timesheet_new_client_spinner_layout).setEnabled(false);
             view.findViewById(R.id.timesheet_new_project_spinner_layout).setEnabled(false);
             view.findViewById(R.id.timesheet_new_status_spinner_layout).setEnabled(false);
+            view.findViewById(R.id.timesheet_new_status_btn_group_layout).setEnabled(false);
             //view.findViewById(R.id.timesheet_new_status_group_layout).setEnabled(false);
             view.findViewById(R.id.timesheet_new_year_spinner_layout).setEnabled(false);
             view.findViewById(R.id.timesheet_new_month_spinner_layout).setEnabled(false);
@@ -401,6 +405,8 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
             timesheet.setId(Long.parseLong(timesheetIdView.getText().toString()));
         }
 
+        TextView userAccountIdView = requireView().findViewById(R.id.timesheet_new_user_account_id);
+        timesheet.setUserId(Long.parseLong(userAccountIdView.getText().toString()));
         EditText createdDateView = requireView().findViewById(R.id.timesheet_new_created_date);
         LocalDateTime createdDateTime = Utility.toLocalDateTime(createdDateView.getText().toString());
         if (createdDateTime != null) {
@@ -415,7 +421,7 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
 
         //fixme
         AutoCompleteTextView clientSpinner = requireView().findViewById(R.id.timesheet_new_client_spinner);
-      //  timesheet.setClientName(clientSpinner.getText().toString());
+        //  timesheet.setClientName(clientSpinner.getText().toString());
 
         AutoCompleteTextView projectSpinner = requireView().findViewById(R.id.timesheet_new_project_spinner);
         // some trouble to get the project id, so this mey be to complicated
@@ -430,8 +436,18 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
         //MaterialButtonToggleGroup statusBtnGrp = requireView().findViewById(R.id.timesheet_new_status_group_layout);
         //MaterialButton selectedStatusBtn = statusBtnGrp.findViewById(statusBtnGrp.getCheckedButtonId());
         //timesheet.setStatus(selectedStatusBtn.getText().toString().toUpperCase());
-        AutoCompleteTextView statusSpinner = requireView().findViewById(R.id.timesheet_new_status_spinner);
-        timesheet.setStatus(statusSpinner.getText().toString());
+       // AutoCompleteTextView statusSpinner = requireView().findViewById(R.id.timesheet_new_status_spinner);
+       // timesheet.setStatus(statusSpinner.getText().toString());
+
+        if ( ((MaterialButton) requireView().findViewById(R.id.timesheet_new_status_btn_new)).isChecked()) {
+           timesheet.setStatus(Timesheet.TimesheetStatusEnum.NEW.name());
+        } else if ( ((MaterialButton) requireView().findViewById(R.id.timesheet_new_status_btn_active)).isChecked()) {
+            timesheet.setStatus(Timesheet.TimesheetStatusEnum.ACTIVE.name());
+        } else if ( ((MaterialButton) requireView().findViewById(R.id.timesheet_new_status_btn_completed)).isChecked()) {
+            timesheet.setStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
+        } else if ( ((MaterialButton) requireView().findViewById(R.id.timesheet_new_status_btn_billed)).isChecked()) {
+            timesheet.setStatus(Timesheet.TimesheetStatusEnum.BILLED.name());
+        }
 
         AutoCompleteTextView yearSpinner = requireView().findViewById(R.id.timesheet_new_year_spinner);
         timesheet.setYear(Integer.parseInt(yearSpinner.getText().toString()));

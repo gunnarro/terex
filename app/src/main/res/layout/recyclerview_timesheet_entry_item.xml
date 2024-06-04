@@ -14,7 +14,8 @@
         android:id="@+id/timesheet_entry_line_1_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
         android:fontFamily="sans-serif-medium"
         android:gravity="center"
         android:maxLines="3"
@@ -52,7 +53,6 @@
                 android:contentDescription="@string/btn_view"
                 android:elevation="1dp"
                 android:src="@drawable/ic_delete_red_24dp" />
-
         </TableRow>
 
         <TableRow>
@@ -71,24 +71,6 @@
                 android:layout_height="wrap_content"
                 android:gravity="end"
                 android:text="7,5 timer" />
-        </TableRow>
-
-        <TableRow>
-
-            <TextView
-                android:id="@+id/timesheet_entry_line_2_label"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:gravity="start"
-                android:text="Timepris" />
-
-            <TextView
-                android:id="@+id/timesheet_entry_line_2_value"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="end"
-                android:text="8.345,00 Kr" />
         </TableRow>
     </TableLayout>
 </RelativeLayout>

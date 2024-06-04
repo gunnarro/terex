@@ -92,15 +92,27 @@ public class TimesheetRepository {
         }
     }
 
-    public Timesheet getTimesheet(Long id) {
+    public Timesheet getTimesheet(Long timesheetId) {
         try {
             CompletionService<Timesheet> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
-            service.submit(() -> timesheetDao.getTimesheetById(id));
+            service.submit(() -> timesheetDao.getTimesheetById(timesheetId));
             Future<Timesheet> future = service.take();
             return future != null ? future.get() : null;
         } catch (InterruptedException | ExecutionException e) {
             // Something crashed, therefore restore interrupted state before leaving.
-            e.printStackTrace();
+            Thread.currentThread().interrupt();
+            throw new TerexApplicationException("Error getting timesheet!", e.getMessage(), e.getCause());
+        }
+    }
+
+    public List<Long> getTimesheetIds(Integer year) {
+        try {
+            CompletionService<List<Long>> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
+            service.submit(() -> timesheetDao.getTimesheetIds(year));
+            Future<List<Long>> future = service.take();
+            return future != null ? future.get() : null;
+        } catch (InterruptedException | ExecutionException e) {
+            // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();
             throw new TerexApplicationException("Error getting timesheet!", e.getMessage(), e.getCause());
         }
@@ -200,6 +212,7 @@ public class TimesheetRepository {
             Log.d("TimesheetRepository.getTimesheetEntryListLiveData", String.format("timesheetId=%s, data=%s", timesheetId, liveDate.getValue()));
             return liveDate;
         } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
             // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();
             throw new TerexApplicationException("Error getting timesheet entry list", e.getMessage(), e.getCause());
@@ -225,20 +238,33 @@ public class TimesheetRepository {
     public void deleteTimesheet(Timesheet timesheet) {
         AppDatabase.databaseExecutor.execute(() -> {
             timesheetDao.delete(timesheet);
-            Log.d("TimesheetRepository.delete", "deleted, id=" + timesheet.getId());
+            Log.d("TimesheetRepository.delete", "deleted, timesheetId=" + timesheet.getId());
         });
+    }
+
+    public TimesheetEntry getTimesheetEntry(Long timesheetEntryId) {
+        try {
+            CompletionService<TimesheetEntry> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
+            service.submit(() -> timesheetEntryDao.getTimesheetEntry(timesheetEntryId));
+            Future<TimesheetEntry> future = service.take();
+            return future != null ? future.get() : null;
+        } catch (InterruptedException | ExecutionException e) {
+            // Something crashed, therefore restore interrupted state before leaving.
+            Thread.currentThread().interrupt();
+            throw new TerexApplicationException("Error getting timesheet entry", e.getMessage(), e.getCause());
+        }
     }
 
     public TimesheetEntry getTimesheetEntry(Long timesheetId, LocalDate workDayDate) throws InterruptedException, ExecutionException {
         CompletionService<TimesheetEntry> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
-        service.submit(() -> timesheetEntryDao.getTimesheet(timesheetId, workDayDate));
+        service.submit(() -> timesheetEntryDao.getTimesheetEntry(timesheetId, workDayDate));
         Future<TimesheetEntry> future = service.take();
         return future != null ? future.get() : null;
     }
 
     public TimesheetEntry getTimesheetEntry(Long timesheetId, LocalDate workDayDate, String status) throws InterruptedException, ExecutionException {
         CompletionService<TimesheetEntry> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
-        service.submit(() -> timesheetEntryDao.getTimesheet(timesheetId, workDayDate, status));
+        service.submit(() -> timesheetEntryDao.getTimesheetEntry(timesheetId, workDayDate, status));
         Future<TimesheetEntry> future = service.take();
         return future != null ? future.get() : null;
     }
@@ -286,6 +312,16 @@ public class TimesheetRepository {
 
     public String getTimesheetStatus(Long timesheetId) {
         return timesheetDao.getTimesheetStatus(timesheetId);
+    }
+
+    public Integer getNumberOfRegisteredWorkDays(Long timesheetId) {
+        Integer days = timesheetDao.getWorkedDays(timesheetId);
+        return days != null ? days : 0;
+    }
+
+    public Integer getNumberOfRegisteredWorkTime(Long timesheetId) {
+        Integer minutes = timesheetDao.getWorkedMinutes(timesheetId);
+        return minutes != null ? minutes / 60 : 0;
     }
 
     public int countTimesheetEntries() {

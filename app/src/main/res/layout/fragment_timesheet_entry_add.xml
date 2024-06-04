@@ -74,13 +74,13 @@
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
-        <!-- vertical spinner layout -->
+        <!-- vertical name layout -->
         <LinearLayout
-            android:id="@+id/timesheet_entry_spinner_layout"
+            android:id="@+id/timesheet_entry_name_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
             android:layout_below="@id/timesheet_entry_date_layout"
+            android:layout_margin="10dp"
             android:baselineAligned="false"
             android:orientation="vertical"
             tools:ignore="UselessParent">
@@ -93,7 +93,7 @@
                 android:hint="@string/lbl_timesheet_name">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/timesheet_entry_timesheet_spinner"
+                    android:id="@+id/timesheet_entry_timesheet_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autofillHints="false"
@@ -104,43 +104,45 @@
                     android:text="" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/timesheet_entry_status_spinner_layout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="match_parent"
+            <!-- timesheet entry type button group -->
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/timesheet_entry_type_btn_group_layout"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="@string/lbl_status"
-                android:visibility="gone">
+                android:layout_marginTop="10dp"
+                android:enabled="true"
+                android:gravity="center"
+                app:singleSelection="true">
 
-                <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                    android:id="@+id/timesheet_entry_status_spinner"
-                    android:layout_width="match_parent"
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/timesheet_entry_type_regular"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:autofillHints="false"
-                    android:clickable="true"
-                    android:importantForAutofill="no"
-                    tools:ignore="KeyboardInaccessibleWidget" />
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
+                    android:text="@string/timesheet_entry_type_regular" />
 
-        <!--  entry type -->
-        <LinearLayout
-            android:id="@+id/timesheet_entry_type_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/timesheet_entry_spinner_layout"
-            android:layout_margin="10dp"
-            android:baselineAligned="false"
-            android:orientation="horizontal"
-            tools:ignore="UselessParent">
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/timesheet_entry_type_vacation"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/timesheet_entry_type_vacation" />
 
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/timesheet_entry_type_sick"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/timesheet_entry_type_sick" />
+
+            </com.google.android.material.button.MaterialButtonToggleGroup>
         </LinearLayout>
         <!-- workday year, month day -->
         <LinearLayout
             android:id="@+id/timesheet_entry_work_date_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/timesheet_entry_spinner_layout"
+            android:layout_below="@id/timesheet_entry_name_layout"
             android:layout_margin="10dp"
             android:baselineAligned="false"
             android:orientation="horizontal"
@@ -203,7 +205,6 @@
                     android:maxLength="2"
                     android:text="" />
             </com.google.android.material.textfield.TextInputLayout>
-
         </LinearLayout>
 
         <!-- work day to and from time -->
@@ -279,23 +280,6 @@
                     android:layout_height="wrap_content"
                     android:inputType="number"
                     android:maxLength="3"
-                    android:text="" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/timesheet_entry_hourly_rate_layout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="@string/lbl_hourly_rate">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/timesheet_entry_hourly_rate"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:maxLength="5"
                     android:text="" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>

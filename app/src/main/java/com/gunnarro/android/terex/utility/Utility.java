@@ -16,6 +16,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.time.DayOfWeek;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -121,6 +122,11 @@ public class Utility {
             return String.format("%s.%s", diffHour, new DecimalFormat("#").format((double) diffMinute / 60 * 10));
         }
         return null;
+    }
+
+    public static String getTimeDiffInHours(LocalTime t1, LocalTime t2) {
+        Duration diff = Duration.between(t1, t2);
+        return String.format("%s.%s", diff.toHours(), diff.toMinutes() % 60);
     }
 
     public static String formatToHHMM(int hour, int minute) {

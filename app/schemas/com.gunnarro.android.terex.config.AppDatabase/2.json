@@ -1,0 +1,1158 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 2,
+    "identityHash": "06714b1d44f12eccc1fdef0365cc59ba",
+    "entities": [
+      {
+        "tableName": "user_account",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`user_name` TEXT, `password` TEXT, `account_type` TEXT, `organization_id` INTEGER, `person_id` INTEGER, `id` INTEGER PRIMARY KEY AUTOINCREMENT, `uuid` TEXT, `created_date` INTEGER NOT NULL, `last_modified_date` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "userName",
+            "columnName": "user_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "password",
+            "columnName": "password",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "userAccountType",
+            "columnName": "account_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "organizationId",
+            "columnName": "organization_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "personId",
+            "columnName": "person_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "createdDate",
+            "columnName": "created_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastModifiedDate",
+            "columnName": "last_modified_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_user_account_user_name",
+            "unique": true,
+            "columnNames": [
+              "user_name"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_user_account_user_name` ON `${TABLE_NAME}` (`user_name`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "timesheet",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`user_account_id` INTEGER NOT NULL, `project_id` INTEGER NOT NULL, `year` INTEGER NOT NULL, `month` INTEGER NOT NULL, `from_date` INTEGER NOT NULL, `to_date` INTEGER NOT NULL, `status` TEXT NOT NULL DEFAULT 'OPEN', `description` TEXT, `working_days_in_month` INTEGER DEFAULT 0, `working_hours_in_month` INTEGER DEFAULT 0, `id` INTEGER PRIMARY KEY AUTOINCREMENT, `uuid` TEXT, `created_date` INTEGER NOT NULL, `last_modified_date` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "userId",
+            "columnName": "user_account_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "projectId",
+            "columnName": "project_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "year",
+            "columnName": "year",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "month",
+            "columnName": "month",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fromDate",
+            "columnName": "from_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "toDate",
+            "columnName": "to_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "'OPEN'"
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "workingDaysInMonth",
+            "columnName": "working_days_in_month",
+            "affinity": "INTEGER",
+            "notNull": false,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "workingHoursInMonth",
+            "columnName": "working_hours_in_month",
+            "affinity": "INTEGER",
+            "notNull": false,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "createdDate",
+            "columnName": "created_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastModifiedDate",
+            "columnName": "last_modified_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_timesheet_user_account_id_project_id_year_month",
+            "unique": true,
+            "columnNames": [
+              "user_account_id",
+              "project_id",
+              "year",
+              "month"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_timesheet_user_account_id_project_id_year_month` ON `${TABLE_NAME}` (`user_account_id`, `project_id`, `year`, `month`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "timesheet_entry",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`timesheet_id` INTEGER NOT NULL, `workday_week` INTEGER NOT NULL, `workday_date` INTEGER NOT NULL, `type` TEXT NOT NULL DEFAULT 'REGULAR', `start_time` INTEGER NOT NULL, `end_time` INTEGER NOT NULL, `worked_in_min` INTEGER NOT NULL, `break_in_min` INTEGER, `status` TEXT NOT NULL DEFAULT 'OPEN', `comment` TEXT, `use_as_default` INTEGER DEFAULT 0, `id` INTEGER PRIMARY KEY AUTOINCREMENT, `uuid` TEXT, `created_date` INTEGER NOT NULL, `last_modified_date` INTEGER NOT NULL, FOREIGN KEY(`timesheet_id`) REFERENCES `timesheet`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "timesheetId",
+            "columnName": "timesheet_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "workdayWeek",
+            "columnName": "workday_week",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "workdayDate",
+            "columnName": "workday_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "'REGULAR'"
+          },
+          {
+            "fieldPath": "fromTime",
+            "columnName": "start_time",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "toTime",
+            "columnName": "end_time",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "workedMinutes",
+            "columnName": "worked_in_min",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "breakInMin",
+            "columnName": "break_in_min",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "'OPEN'"
+          },
+          {
+            "fieldPath": "comment",
+            "columnName": "comment",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "useAsDefault",
+            "columnName": "use_as_default",
+            "affinity": "INTEGER",
+            "notNull": false,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "createdDate",
+            "columnName": "created_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastModifiedDate",
+            "columnName": "last_modified_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_timesheet_entry_timesheet_id_workday_date",
+            "unique": true,
+            "columnNames": [
+              "timesheet_id",
+              "workday_date"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_timesheet_entry_timesheet_id_workday_date` ON `${TABLE_NAME}` (`timesheet_id`, `workday_date`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "timesheet",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "timesheet_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "invoice",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`timesheet_id` INTEGER NOT NULL, `invoice_number` INTEGER NOT NULL, `client_id` INTEGER NOT NULL, `invoice_recipient_id` INTEGER NOT NULL, `invoice_issuer_id` INTEGER NOT NULL, `reference` TEXT, `invoice_status` TEXT NOT NULL DEFAULT 'OPEN', `billing_date` INTEGER NOT NULL, `billing_period_start_date` INTEGER, `billing_period_end_date` INTEGER, `due_date` INTEGER NOT NULL, `vat` REAL NOT NULL, `amount` REAL NOT NULL DEFAULT 0, `currency` TEXT NOT NULL DEFAULT 'NOK', `invoice_period` TEXT NOT NULL DEFAULT 'monthly', `id` INTEGER PRIMARY KEY AUTOINCREMENT, `uuid` TEXT, `created_date` INTEGER NOT NULL, `last_modified_date` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "timesheetId",
+            "columnName": "timesheet_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "invoiceNumber",
+            "columnName": "invoice_number",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "clientId",
+            "columnName": "client_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "invoiceRecipientId",
+            "columnName": "invoice_recipient_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "invoiceIssuerId",
+            "columnName": "invoice_issuer_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "reference",
+            "columnName": "reference",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "invoice_status",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "'OPEN'"
+          },
+          {
+            "fieldPath": "billingDate",
+            "columnName": "billing_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "billingPeriodStartDate",
+            "columnName": "billing_period_start_date",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "billingPeriodEndDate",
+            "columnName": "billing_period_end_date",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "dueDate",
+            "columnName": "due_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "vat",
+            "columnName": "vat",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "amount",
+            "columnName": "amount",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "currency",
+            "columnName": "currency",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "'NOK'"
+          },
+          {
+            "fieldPath": "invoicePeriod",
+            "columnName": "invoice_period",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "'monthly'"
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "createdDate",
+            "columnName": "created_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastModifiedDate",
+            "columnName": "last_modified_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_invoice_client_id_timesheet_id",
+            "unique": true,
+            "columnNames": [
+              "client_id",
+              "timesheet_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_invoice_client_id_timesheet_id` ON `${TABLE_NAME}` (`client_id`, `timesheet_id`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "timesheet_summary",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`timesheet_id` INTEGER, `year` INTEGER, `week_in_year` INTEGER, `from_date` INTEGER, `to_date` INTEGER, `total_worked_days` INTEGER DEFAULT 0, `total_days_off` INTEGER DEFAULT 0, `total_sick_leave_days` INTEGER DEFAULT 0, `total_worked_hours` REAL DEFAULT 0, `total_billed_amount` REAL DEFAULT 0, `currency` TEXT DEFAULT 'NOK', `id` INTEGER PRIMARY KEY AUTOINCREMENT, `uuid` TEXT, `created_date` INTEGER NOT NULL, `last_modified_date` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "timesheetId",
+            "columnName": "timesheet_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "year",
+            "columnName": "year",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "weekInYear",
+            "columnName": "week_in_year",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fromDate",
+            "columnName": "from_date",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "toDate",
+            "columnName": "to_date",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "totalWorkedDays",
+            "columnName": "total_worked_days",
+            "affinity": "INTEGER",
+            "notNull": false,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "totalDaysOff",
+            "columnName": "total_days_off",
+            "affinity": "INTEGER",
+            "notNull": false,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "totalSickLeaveDays",
+            "columnName": "total_sick_leave_days",
+            "affinity": "INTEGER",
+            "notNull": false,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "totalWorkedHours",
+            "columnName": "total_worked_hours",
+            "affinity": "REAL",
+            "notNull": false,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "totalBilledAmount",
+            "columnName": "total_billed_amount",
+            "affinity": "REAL",
+            "notNull": false,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "currency",
+            "columnName": "currency",
+            "affinity": "TEXT",
+            "notNull": false,
+            "defaultValue": "'NOK'"
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "createdDate",
+            "columnName": "created_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastModifiedDate",
+            "columnName": "last_modified_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_timesheet_summary_timesheet_id_year_week_in_year",
+            "unique": true,
+            "columnNames": [
+              "timesheet_id",
+              "year",
+              "week_in_year"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_timesheet_summary_timesheet_id_year_week_in_year` ON `${TABLE_NAME}` (`timesheet_id`, `year`, `week_in_year`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "project",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`client_id` INTEGER NOT NULL, `project_name` TEXT NOT NULL, `project_description` TEXT, `project_status` TEXT, `hourly_rate` INTEGER, `id` INTEGER PRIMARY KEY AUTOINCREMENT, `uuid` TEXT, `created_date` INTEGER NOT NULL, `last_modified_date` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "clientId",
+            "columnName": "client_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "project_name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "project_description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "project_status",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "hourlyRate",
+            "columnName": "hourly_rate",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "createdDate",
+            "columnName": "created_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastModifiedDate",
+            "columnName": "last_modified_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_project_client_id_project_name",
+            "unique": true,
+            "columnNames": [
+              "client_id",
+              "project_name"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_project_client_id_project_name` ON `${TABLE_NAME}` (`client_id`, `project_name`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "contact_info",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`mobile_number` TEXT, `mobile_number_country_code` TEXT, `email_address` TEXT, `id` INTEGER PRIMARY KEY AUTOINCREMENT, `uuid` TEXT, `created_date` INTEGER NOT NULL, `last_modified_date` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "mobileNumber",
+            "columnName": "mobile_number",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "mobileNumberCountryCode",
+            "columnName": "mobile_number_country_code",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "emailAddress",
+            "columnName": "email_address",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "createdDate",
+            "columnName": "created_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastModifiedDate",
+            "columnName": "last_modified_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "address",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`street_address` TEXT, `postal_code` TEXT, `city` TEXT, `country` TEXT, `country_code` TEXT, `id` INTEGER PRIMARY KEY AUTOINCREMENT, `uuid` TEXT, `created_date` INTEGER NOT NULL, `last_modified_date` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "streetAddress",
+            "columnName": "street_address",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "postalCode",
+            "columnName": "postal_code",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "city",
+            "columnName": "city",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "country",
+            "columnName": "country",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "countryCode",
+            "columnName": "country_code",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "createdDate",
+            "columnName": "created_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastModifiedDate",
+            "columnName": "last_modified_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_address_street_address",
+            "unique": true,
+            "columnNames": [
+              "street_address"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_address_street_address` ON `${TABLE_NAME}` (`street_address`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "person",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`address_id` INTEGER, `contact_info_id` INTEGER, `full_name` TEXT NOT NULL, `date_of_birth` INTEGER, `social_security_number` TEXT, `gender` TEXT, `marital_status` TEXT, `id` INTEGER PRIMARY KEY AUTOINCREMENT, `uuid` TEXT, `created_date` INTEGER NOT NULL, `last_modified_date` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "addressId",
+            "columnName": "address_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "contactInfoId",
+            "columnName": "contact_info_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fullName",
+            "columnName": "full_name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dateOfBirth",
+            "columnName": "date_of_birth",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "socialSecurityNumber",
+            "columnName": "social_security_number",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "gender",
+            "columnName": "gender",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "maritalStatus",
+            "columnName": "marital_status",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "createdDate",
+            "columnName": "created_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastModifiedDate",
+            "columnName": "last_modified_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_person_full_name",
+            "unique": true,
+            "columnNames": [
+              "full_name"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_person_full_name` ON `${TABLE_NAME}` (`full_name`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "organization",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`business_address_id` INTEGER, `postal_address_id` INTEGER, `invoice_address_id` INTEGER, `contact_info_id` INTEGER, `organization_name` TEXT, `organization_number` TEXT, `organization_industry_type` TEXT, `bank_account_number` TEXT, `id` INTEGER PRIMARY KEY AUTOINCREMENT, `uuid` TEXT, `created_date` INTEGER NOT NULL, `last_modified_date` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "businessAddressId",
+            "columnName": "business_address_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "postalAddressId",
+            "columnName": "postal_address_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "invoiceAddressId",
+            "columnName": "invoice_address_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "contactInfoId",
+            "columnName": "contact_info_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "organization_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "organizationNumber",
+            "columnName": "organization_number",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "organizationIndustryType",
+            "columnName": "organization_industry_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "bankAccountNumber",
+            "columnName": "bank_account_number",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "createdDate",
+            "columnName": "created_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastModifiedDate",
+            "columnName": "last_modified_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_organization_organization_number",
+            "unique": true,
+            "columnNames": [
+              "organization_number"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_organization_organization_number` ON `${TABLE_NAME}` (`organization_number`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "invoice_attachment",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`invoice_id` INTEGER NOT NULL, `attachment_file_name` TEXT NOT NULL, `attachment_type` TEXT, `attachment_file_type` TEXT NOT NULL, `attachment_file_content` BLOB NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT, `uuid` TEXT, `created_date` INTEGER NOT NULL, `last_modified_date` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "invoiceId",
+            "columnName": "invoice_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "attachmentFileName",
+            "columnName": "attachment_file_name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "attachmentType",
+            "columnName": "attachment_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "attachmentFileType",
+            "columnName": "attachment_file_type",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "attachmentFileContent",
+            "columnName": "attachment_file_content",
+            "affinity": "BLOB",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "createdDate",
+            "columnName": "created_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastModifiedDate",
+            "columnName": "last_modified_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_invoice_attachment_invoice_id_attachment_type_attachment_file_name_attachment_file_type",
+            "unique": true,
+            "columnNames": [
+              "invoice_id",
+              "attachment_type",
+              "attachment_file_name",
+              "attachment_file_type"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_invoice_attachment_invoice_id_attachment_type_attachment_file_name_attachment_file_type` ON `${TABLE_NAME}` (`invoice_id`, `attachment_type`, `attachment_file_name`, `attachment_file_type`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "client",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`organization_id` INTEGER, `name` TEXT, `contact_person_id` INTEGER, `status` TEXT, `id` INTEGER PRIMARY KEY AUTOINCREMENT, `uuid` TEXT, `created_date` INTEGER NOT NULL, `last_modified_date` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "organizationId",
+            "columnName": "organization_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "contactPersonId",
+            "columnName": "contact_person_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "createdDate",
+            "columnName": "created_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastModifiedDate",
+            "columnName": "last_modified_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_client_organization_id",
+            "unique": true,
+            "columnNames": [
+              "organization_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_client_organization_id` ON `${TABLE_NAME}` (`organization_id`)"
+          }
+        ],
+        "foreignKeys": []
+      }
+    ],
+    "views": [
+      {
+        "viewName": "TimesheetView",
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT * FROM timesheet_entry"
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '06714b1d44f12eccc1fdef0365cc59ba')"
+    ]
+  }
+}

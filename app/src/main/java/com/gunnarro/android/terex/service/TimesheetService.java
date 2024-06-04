@@ -47,17 +47,21 @@ import javax.inject.Singleton;
 public class TimesheetService {
 
     private final TimesheetRepository timesheetRepository;
+    private final UserAccountService userAccountService;
+    private final ProjectService projectService;
 
     /**
      * for unit test only
      */
     public TimesheetService(TimesheetRepository timesheetRepository) {
         this.timesheetRepository = timesheetRepository;
+        this.userAccountService = new UserAccountService();
+        this.projectService = new ProjectService();
     }
 
     @Inject
     public TimesheetService() {
-        this.timesheetRepository = new TimesheetRepository();
+        this(new TimesheetRepository());
     }
 
     // ----------------------------------------
@@ -69,12 +73,16 @@ public class TimesheetService {
     }
 
     public TimesheetDto getTimesheetDto(Long timesheetId) {
-        TimesheetWithEntries timesheet = getTimesheetWithEntries(timesheetId);
-        Integer sumDays = timesheet.getTimesheetEntryList().size();
-        Integer sumHours = timesheet.getTimesheetEntryList().stream().mapToInt(TimesheetEntry::getWorkedMinutes).sum() / 60;
-        return TimesheetMapper.toTimesheetDto(timesheet.getTimesheet(), sumDays, sumHours);
+        Timesheet timesheet = timesheetRepository.getTimesheet(timesheetId);
+        //Integer sumDays = timesheet.getTimesheetEntryList().size();
+        //Integer sumHours = timesheet.getTimesheetEntryList().stream().mapToInt(TimesheetEntry::getWorkedMinutes).sum() / 60;
+        TimesheetDto timesheetDto = TimesheetMapper.toTimesheetDto(timesheet, null, null);
+        timesheetDto.setUserAccountDto(userAccountService.getUserAccount(timesheet.getUserId()));
+        timesheetDto.setProjectDto(projectService.getProject(timesheet.getProjectId()));
+        timesheetDto.setRegisteredWorkedDays(timesheetRepository.getNumberOfRegisteredWorkDays(timesheetId));
+        timesheetDto.setRegisteredWorkedHours(timesheetRepository.getNumberOfRegisteredWorkTime(timesheetId));
+        return timesheetDto;
     }
-
 
     public List<TimesheetDto> getTimesheetsReadyForBilling() {
         List<Timesheet> timesheetList = timesheetRepository.getTimesheets(Timesheet.TimesheetStatusEnum.COMPLETED.name());
@@ -96,6 +104,13 @@ public class TimesheetService {
 
     public List<TimesheetDto> getTimesheetList(Integer year) {
         return TimesheetMapper.toTimesheetDtoList(timesheetRepository.getTimesheetList(year));
+    }
+
+    public List<TimesheetDto> getTimesheetDtoList(Integer year) {
+        List<TimesheetDto> timesheetDtoList = new ArrayList<>();
+        List<Long> timesheetIdList = timesheetRepository.getTimesheetIds(year);
+        timesheetIdList.forEach(id -> timesheetDtoList.add(getTimesheetDto(id)));
+        return timesheetDtoList;
     }
 
     public void deleteTimesheet(Long timesheetId) {
@@ -156,6 +171,9 @@ public class TimesheetService {
     // timesheet entry
     // ----------------------------------------
 
+    public TimesheetEntry getTimesheetEntry(Long timesheetEntryId) {
+       return timesheetRepository.getTimesheetEntry(timesheetEntryId);
+    }
 
     /**
      * At time not possible to update a timesheet entry.
@@ -197,6 +215,7 @@ public class TimesheetService {
             }
             return id;
         } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
             // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();
             throw new TerexApplicationException("Error saving timesheet entry!", e.getMessage(), e.getCause());
@@ -449,4 +468,6 @@ public class TimesheetService {
     public int countTimesheetEntries() {
         return timesheetRepository.countTimesheetEntries();
     }
+
+
 }

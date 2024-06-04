@@ -14,7 +14,6 @@ import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentResultListener;
-import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -59,7 +58,7 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
         super.onCreate(savedInstanceState);
         requireActivity().setTitle(R.string.title_timesheets);
         // todo get from db
-        timesheetYears = List.of(2023, 2024, 2025);
+        timesheetYears = List.of(2024, 2025);
         selectedYear = LocalDate.now().getYear();
         // Get a new or existing ViewModel from the ViewModelProvider.
         try {
@@ -84,7 +83,7 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
         View view = inflater.inflate(R.layout.fragment_recycler_timesheet_list, container, false);
         setHasOptionsMenu(true);
         RecyclerView recyclerView = view.findViewById(R.id.timesheet_list_recyclerview);
-        final TimesheetListAdapter timesheetListAdapter = new TimesheetListAdapter(this, new TimesheetListAdapter.TimesheetDiff());
+        final TimesheetListAdapter timesheetListAdapter = new TimesheetListAdapter(this, new TimesheetListAdapter.TimesheetDtoDiff());
         recyclerView.setAdapter(timesheetListAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         // Update the cached copy of the timesheet entries in the adapter.
@@ -135,7 +134,7 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
                 timesheetViewModel.saveTimesheet(timesheet);
                 showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_saved_msg_format), timesheet.toString(), timesheet.getYear() + "-" + timesheet.getMonth()), R.color.color_snackbar_text_add);
             } else if (TIMESHEET_ACTION_DELETE.equals(action)) {
-                if (timesheet.getStatus().equals("BILLED")) {
+                if (timesheet.isBilled()) {
                     showInfoDialog("Info", "Can not delete timesheet with status BILLED");
                 } else {
                     confirmDeleteTimesheetDialog(getString(R.string.msg_delete_timesheet), getString(R.string.msg_confirm_delete), timesheet.getId());
@@ -211,6 +210,7 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
         TimesheetListAdapter timesheetListAdapter = (TimesheetListAdapter) recyclerView.getAdapter();
         timesheetViewModel.getTimesheetLiveData(selectedYear).observe(requireActivity(), timesheetListAdapter::submitList);
         timesheetListAdapter.notifyDataSetChanged();
+        Log.d("reloadTimesheetData", "reloaded timesheet data, year=" + selectedYear);
     }
 
     private void openTimesheetEntryListView(Bundle bundle) {
@@ -225,26 +225,25 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
         try {
             Timesheet timesheet = timesheetViewModel.getTimesheet(timesheetId);
             timesheetViewModel.deleteTimesheet(timesheet);
-            showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_delete_msg_format), timesheet.toString()), R.color.color_snackbar_text_delete);
+            showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_delete_msg_format), timesheet), R.color.color_snackbar_text_delete);
         } catch (TerexApplicationException | InputValidationException e) {
             showInfoDialog("Info", e.getMessage());
         }
     }
 
     private void enableSwipeToRightAndViewItem(RecyclerView recyclerView) {
-        SwipeCallback swipeToDeleteCallback = new SwipeCallback(requireContext(), ItemTouchHelper.RIGHT, getResources().getColor(R.color.color_bg_swipe_right, null), R.drawable.ic_add_black_24dp) {
+        SwipeCallback swipeToViewCallback = new SwipeCallback(requireContext(), ItemTouchHelper.RIGHT, getResources().getColor(R.color.color_bg_swipe_right, null), R.drawable.ic_add_black_24dp) {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-                LiveData<List<TimesheetDto>> listLiveData = timesheetViewModel.getTimesheetLiveData(selectedYear);
-                int pos = viewHolder.getAbsoluteAdapterPosition();
-                List<TimesheetDto> list = listLiveData.getValue();
+                final int selectedTimesheetPos = viewHolder.getAbsoluteAdapterPosition();
+                TimesheetDto timesheetDto = timesheetViewModel.getTimesheetLiveData(selectedYear).getValue().get(selectedTimesheetPos);
                 Bundle bundle = new Bundle();
-                bundle.putLong(TIMESHEET_ID_KEY, list.get(pos).getTimesheetId());
-                bundle.putBoolean(TIMESHEET_READ_ONLY_KEY, list.get(pos).isBilled());
+                bundle.putLong(TIMESHEET_ID_KEY, timesheetDto.getTimesheetId());
+                bundle.putBoolean(TIMESHEET_READ_ONLY_KEY, timesheetDto.isBilled());
                 openTimesheetDetailsView(bundle);
             }
         };
-        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToViewCallback);
         itemTouchhelper.attachToRecyclerView(recyclerView);
         Log.i(Utility.buildTag(getClass(), "enableSwipeToRightAndAdd"), "enabled swipe handler for timesheet list item");
     }
@@ -253,9 +252,11 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
         SwipeCallback swipeToDeleteCallback = new SwipeCallback(requireContext(), ItemTouchHelper.LEFT, getResources().getColor(R.color.color_bg_swipe_left, null), R.drawable.ic_delete_black_24dp) {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-                final int position = viewHolder.getAbsoluteAdapterPosition();
-                TimesheetDto timesheet = timesheetViewModel.getTimesheetLiveData(selectedYear).getValue().get(position);
-                confirmDeleteTimesheetDialog(getString(R.string.msg_delete_timesheet), getString(R.string.msg_confirm_delete), timesheet.getTimesheetId());
+                final int selectedTimesheetPos = viewHolder.getAbsoluteAdapterPosition();
+                TimesheetDto timesheet = timesheetViewModel.getTimesheetLiveData(selectedYear).getValue().get(selectedTimesheetPos);
+                // confirmDeleteTimesheetDialog(getString(R.string.msg_delete_timesheet), getString(R.string.msg_confirm_delete), timesheet.getTimesheetId());
+               // reloadTimesheetData(selectedYear);
+                Log.d("enableSwipeToLeftAndDeleteItem", "testing: " + timesheet);
             }
         };
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);

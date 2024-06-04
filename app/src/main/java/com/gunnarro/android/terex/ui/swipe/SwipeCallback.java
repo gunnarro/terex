@@ -7,6 +7,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.DrawableRes;
@@ -58,6 +59,7 @@ public abstract class SwipeCallback extends ItemTouchHelper.Callback {
 
         boolean isCancelled = dX == 0 && !isCurrentlyActive;
 
+        Log.d("onChildDraw", "isCurrentlyActive=" + isCurrentlyActive + ", isCancelled=" + isCancelled);
         if (isCancelled) {
             clearCanvas(canvas, itemView.getRight() + dX, (float) itemView.getTop(), (float) itemView.getRight(), (float) itemView.getBottom());
             super.onChildDraw(canvas, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
@@ -91,10 +93,16 @@ public abstract class SwipeCallback extends ItemTouchHelper.Callback {
 
     private void clearCanvas(Canvas canvas, Float left, Float top, Float right, Float bottom) {
         canvas.drawRect(left, top, right, bottom, clearPaint);
+        Log.d("clearCanvas", "cleared ...");
     }
 
     @Override
     public float getSwipeThreshold(@NonNull RecyclerView.ViewHolder viewHolder) {
         return SWIPE_THRESHOLD;
+    }
+
+    @Override
+    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+        Log.d("onSwiped", "checking when this is called..");
     }
 }

@@ -36,7 +36,7 @@ class TimesheetEntryTest {
     void type() {
         TimesheetEntry timeSheetEntry = TimesheetEntry.createDefault(23L, LocalDate.of(2023, 12, 2));
         assertTrue(timeSheetEntry.isRegularWorkDay());
-        timeSheetEntry.setType(TimesheetEntry.TimesheetEntryTypeEnum.HOLIDAY.name());
+        timeSheetEntry.setType(TimesheetEntry.TimesheetEntryTypeEnum.VACATION.name());
         assertFalse(timeSheetEntry.isRegularWorkDay());
     }
 

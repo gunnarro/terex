@@ -15,6 +15,13 @@
         android:text=""
         android:visibility="invisible" />
 
+    <TextView
+        android:id="@+id/timesheet_new_user_account_id"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text=""
+        android:visibility="invisible" />
+
     <RelativeLayout
         android:id="@+id/timesheet_new_main_layout"
         android:layout_width="match_parent"
@@ -132,28 +139,28 @@
                 app:singleSelection="true">
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/timesheet_new_status_new"
+                    android:id="@+id/timesheet_new_status_btn_new"
                     style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/timesheet_status_new" />
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/timesheet_new_status_active"
+                    android:id="@+id/timesheet_new_status_btn_active"
                     style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/timesheet_status_active" />
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/timesheet_new_status_completed"
+                    android:id="@+id/timesheet_new_status_btn_completed"
                     style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/timesheet_status_completed" />
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/timesheet_new_status_billed"
+                    android:id="@+id/timesheet_new_status_btn_billed"
                     style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -165,6 +172,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:hint="@string/lbl_status">
 
                 <androidx.appcompat.widget.AppCompatAutoCompleteTextView

@@ -6,7 +6,9 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
+import com.gunnarro.android.terex.domain.dto.TimesheetDto;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.service.TimesheetService;
@@ -22,9 +24,13 @@ public class TimesheetEntryViewModel extends AndroidViewModel {
 
     private final TimesheetService timesheetService;
 
+    private final MutableLiveData<List<TimesheetEntry>> timesheetEntryListLiveData;
+
     public TimesheetEntryViewModel(@NonNull Application application) {
         super(application);
+        timesheetEntryListLiveData = new MutableLiveData<>();
         timesheetService = new TimesheetService();
+        //timesheetEntryListLiveData.setValue(timesheetService.getTimesheetEntryListLiveData(timesheetId));
     }
 
     public LiveData<List<TimesheetEntry>> getTimesheetEntryLiveData(Long timesheetId) {
@@ -49,5 +55,9 @@ public class TimesheetEntryViewModel extends AndroidViewModel {
 
     public void deleteTimesheetEntry(TimesheetEntry timesheetEntry) {
         timesheetService.deleteTimesheetEntry(timesheetEntry);
+    }
+
+    public TimesheetEntry getTimesheetEntry(Long timesheetEntryId) {
+        return timesheetService.getTimesheetEntry(timesheetEntryId);
     }
 }

@@ -9,14 +9,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.textfield.TextInputEditText;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
@@ -50,12 +49,6 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_timesheet_entry_add, container, false);
 
-        // create status spinner
-        final AutoCompleteTextView statusSpinner = view.findViewById(R.id.timesheet_entry_status_spinner);
-        ArrayAdapter<CharSequence> statusAdapter = ArrayAdapter.createFromResource(requireContext(), R.array.timesheet_statuses, android.R.layout.simple_spinner_item);
-        statusSpinner.setAdapter(statusAdapter);
-        statusSpinner.setListSelection(0);
-
         // workday date picker
         TextInputEditText workdayDay = view.findViewById(R.id.timesheet_entry_workday_day);
         // turn off keyboard popup when clicked
@@ -78,6 +71,15 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
             workdayDatePicker.getDatePicker().setMaxDate(Utility.getLastDayOfMonth(LocalDate.now()).toEpochDay());
             workdayDatePicker.show();
         });
+
+        // timesheet entity type
+        MaterialButtonToggleGroup typeBtnGrp = view.findViewById(R.id.timesheet_entry_type_btn_group_layout);
+        typeBtnGrp.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
+                    MaterialButton button = group.findViewById(checkedId);
+                    button.setChecked(isChecked);
+                    Log.d("typeBtnGrp.addOnButtonCheckedListener", String.format("checkedButton=%s, isChecked=%s", button.getText(), isChecked));
+                }
+        );
 
         // from time time picker
         EditText fromTime = view.findViewById(R.id.timesheet_entry_from_time);
@@ -188,18 +190,17 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
         EditText lastModifiedDateView = view.findViewById(R.id.timesheet_entry_last_modified_date);
         lastModifiedDateView.setText(Utility.formatDateTime(timesheetEntry.getLastModifiedDate()));
 
-        EditText timesheetNameView = view.findViewById(R.id.timesheet_entry_timesheet_spinner);
+        EditText timesheetNameView = view.findViewById(R.id.timesheet_entry_timesheet_name);
         timesheetNameView.setText(timesheetEntry.getTimesheetId().toString());
 
-        AutoCompleteTextView statusSpinner = view.findViewById(R.id.timesheet_entry_status_spinner);
-        statusSpinner.setText(timesheetEntry.getStatus());
-
-        // TODO implement me
-        // AutoCompleteTextView typeSpinner = view.findViewById(R.id.timesheet_entry_type_spinner);
-        // typeSpinner.setText(timesheetEntry.getType());
-
-        EditText hourlyRateView = view.findViewById(R.id.timesheet_entry_hourly_rate);
-        hourlyRateView.setText(String.format("%s", 1200)); //fixme
+        MaterialButtonToggleGroup typeBtnGrp = view.findViewById(R.id.timesheet_entry_type_btn_group_layout);
+        if (timesheetEntry.isRegularWorkDay()) {
+            ((MaterialButton) typeBtnGrp.findViewById(R.id.timesheet_entry_type_regular)).setChecked(true);
+        } else if (timesheetEntry.isVacationDay()) {
+            ((MaterialButton) typeBtnGrp.findViewById(R.id.timesheet_entry_type_vacation)).setChecked(true);
+        } else if (timesheetEntry.isSickDay()) {
+            ((MaterialButton) typeBtnGrp.findViewById(R.id.timesheet_entry_type_sick)).setChecked(true);
+        }
 
         EditText workdayYearView = view.findViewById(R.id.timesheet_entry_workday_year);
         workdayYearView.setText(String.format("%s", timesheetEntry.getWorkdayDate().getYear()));
@@ -233,7 +234,6 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
             lastModifiedDateView.setEnabled(false);
             // disable input that is not allowed to edit
             timesheetNameView.setEnabled(false);
-            hourlyRateView.setEnabled(false);
             workdayYearView.setEnabled(false);
             workdayMonthView.setEnabled(false);
             view.findViewById(R.id.timesheet_entry_date_layout).setVisibility(View.GONE);
@@ -251,7 +251,6 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
             lastModifiedDateView.setEnabled(false);
             // disable input that is not allowed to edit
             timesheetNameView.setEnabled(false);
-            hourlyRateView.setEnabled(false);
             workdayYearView.setEnabled(false);
             workdayMonthView.setEnabled(false);
         }
@@ -296,15 +295,12 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
             timesheetEntry.setLastModifiedDate(lastModifiedDateTime);
         }
 
-        AutoCompleteTextView statusSpinner = requireView().findViewById(R.id.timesheet_entry_status_spinner);
-        timesheetEntry.setStatus(statusSpinner.getText().toString());
+        MaterialButtonToggleGroup typeBtnGrp = requireView().findViewById(R.id.timesheet_entry_type_btn_group_layout);
+        MaterialButton checkedTypeButton = typeBtnGrp.findViewById(typeBtnGrp.getCheckedButtonId());
+        timesheetEntry.setType(TimesheetEntry.TimesheetEntryTypeEnum.valueOf(checkedTypeButton.getText().toString().toUpperCase()).name());
 
-        // TODO implement me
-        //AutoCompleteTextView typeSpinner = requireView().findViewById(R.id.timesheet_entry_type_spinner);
-        timesheetEntry.setType(TimesheetEntry.TimesheetEntryTypeEnum.REGULAR.name());
-
-        TextView hourlyRateView = requireView().findViewById(R.id.timesheet_entry_hourly_rate);
-        //timesheetEntry.setHourlyRate(Integer.parseInt(hourlyRateView.getText().toString())); fixme
+        // always set to OPEN, not possible to change manually.
+        timesheetEntry.setStatus(TimesheetEntry.TimesheetEntryStatusEnum.OPEN.name());
 
         TextView workdayYearView = requireView().findViewById(R.id.timesheet_entry_workday_year);
         TextView workdayMonthView = requireView().findViewById(R.id.timesheet_entry_workday_month);

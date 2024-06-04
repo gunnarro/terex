@@ -1,3 +1,5 @@
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
 -- update user account table data
 DELETE FROM user_account WHERE id > 1000
 INSERT INTO user_account (id, uuid, created_date, last_modified_date, user_name, password, account_type, organization_id, person_id) VALUES (2001, '', current_timestamp, current_timestamp, 'guro', 'change-me', 'BUSINESS', 1100, null )
@@ -34,3 +36,4 @@ INSERT INTO project (id, uuid, created_date, last_modified_date, client_id, proj
 -- update timesheet data
 DELETE FROM timesheet WHERE id > 1000
 INSERT INTO timesheet (id, uuid, created_date, last_modified_date, user_account_id, project_id, year, month, from_date, working_days_in_month, working_hours_in_month, to_date, status, description) VALUES(1099, '', current_timestamp, current_timestamp, 1, 1055, 2024, 7, current_timestamp, 150, 20, current_timestamp, 'ACTIVE', 'test timesheet')
+COMMIT;

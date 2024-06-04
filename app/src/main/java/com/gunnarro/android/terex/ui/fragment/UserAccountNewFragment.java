@@ -124,7 +124,7 @@ public class UserAccountNewFragment extends BaseFragment implements View.OnClick
     private void updateOrganizationInputData(@NotNull View view, @NotNull OrganizationDto organizationDto) {
         // new user account do not have id yet, the id is generated upon save to database
         if (organizationDto.getId() != null) {
-            ((TextView) view.findViewById(R.id.user_account_new_org_id)).setText(organizationDto.getId().toString());
+            ((TextView) view.findViewById(R.id.user_account_new_org_id)).setText(String.format("%s", organizationDto.getId()));
         }
         ((TextView) view.findViewById(R.id.user_account_new_org_name)).setText(organizationDto.getName());
         ((TextView) view.findViewById(R.id.user_account_new_org_number)).setText(organizationDto.getOrganizationNumber());
@@ -166,17 +166,17 @@ public class UserAccountNewFragment extends BaseFragment implements View.OnClick
         }
     }
 
-    private void updateUserAccountInputData(@NotNull View view, @NotNull UserAccountDto userAccountDto) {
+    private void updateUserAccountInputData(@NotNull View view, UserAccountDto userAccountDto) {
         // check if this is a new or existing user account
         if (userAccountDto == null) {
             return;
         }
 
-        ((TextView) view.findViewById(R.id.user_account_new_id)).setText(userAccountDto.getId().toString());
+        ((TextView) view.findViewById(R.id.user_account_new_id)).setText(String.format("%s", userAccountDto.getId()));
         ((TextView) view.findViewById(R.id.user_account_new_username)).setText(userAccountDto.getUserName());
         ((TextView) view.findViewById(R.id.user_account_new_password)).setText(userAccountDto.getPassword());
 
-        if (userAccountDto.getUserAccountType().equals(UserAccount.UserAccountTypeEnum.PRIVATE.name())) {
+        if (userAccountDto.isPrivate()) {
             ((MaterialButton) view.findViewById(R.id.user_account_new_account_type_private)).setChecked(true);
             ((MaterialButton) view.findViewById(R.id.user_account_new_account_type_business)).setChecked(false);
         } else {
@@ -184,7 +184,7 @@ public class UserAccountNewFragment extends BaseFragment implements View.OnClick
             ((MaterialButton) view.findViewById(R.id.user_account_new_account_type_business)).setChecked(true);
         }
 
-        if (userAccountDto.getUserAccountType().equals("BUSINESS")) {
+        if (userAccountDto.isBusiness()) {
             ((TextView) view.findViewById(R.id.user_account_new_org_number)).setText(userAccountDto.getOrganizationDto().getOrganizationNumber());
             ((TextView) view.findViewById(R.id.user_account_new_org_name)).setText(userAccountDto.getOrganizationDto().getName());
 
@@ -192,7 +192,7 @@ public class UserAccountNewFragment extends BaseFragment implements View.OnClick
             ((TextView) view.findViewById(R.id.user_account_new_org_postal_code)).setText(userAccountDto.getOrganizationDto().getBusinessAddress().getPostalCode());
             ((TextView) view.findViewById(R.id.user_account_new_org_city)).setText(userAccountDto.getOrganizationDto().getBusinessAddress().getCity());
             ((TextView) view.findViewById(R.id.user_account_new_org_country)).setText(userAccountDto.getOrganizationDto().getBusinessAddress().getCountry());
-        } else if (userAccountDto.getUserAccountType().equals("PRIVATE")) {
+        } else if (userAccountDto.isPrivate()) {
             showInfoDialog("INFO", "Private user account is not supported yet!");
         }
     }
