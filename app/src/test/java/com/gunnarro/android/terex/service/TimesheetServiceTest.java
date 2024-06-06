@@ -82,7 +82,7 @@ class TimesheetServiceTest {
             timesheetService.saveTimesheet(timesheet);
         });
 
-        Assertions.assertEquals("timesheet already exist. Timesheet{userId=100, projectId=200, year=2023, month=11}, status=NEW", ex.getMessage());
+        Assertions.assertEquals("Timesheet already exist! Timesheet{userId=100, projectId=200, year=2023, month=11, status=NEW}", ex.getMessage());
     }
 
     @Test
@@ -97,7 +97,7 @@ class TimesheetServiceTest {
             timesheetService.saveTimesheet(timesheetUpdated);
         });
 
-        Assertions.assertEquals("timesheet is already billed, no changes is allowed. Timesheet{userId=100, projectId=200, year=2023, month=11}, status=BILLED", ex.getMessage());
+        Assertions.assertEquals("Timesheet is already billed, no changes is allowed. Timesheet{userId=100, projectId=200, year=2023, month=11, status=BILLED}", ex.getMessage());
     }
 
     @Test

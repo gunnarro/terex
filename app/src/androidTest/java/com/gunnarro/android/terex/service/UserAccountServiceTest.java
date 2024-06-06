@@ -74,14 +74,15 @@ public class UserAccountServiceTest {
     }
 
     private UserAccountDto createUserAccountDto(Long id) {
-        UserAccountDto userAccount = new UserAccountDto();
-        userAccount.setId(id);
-        userAccount.setUserName("guro-integration-test");
-        userAccount.setPassword("nope");
-        userAccount.setUserAccountType(UserAccount.UserAccountTypeEnum.BUSINESS.name());
+        UserAccountDto userAccountDto = new UserAccountDto();
+        userAccountDto.setId(id);
+        userAccountDto.setUserName("guro-integration-test");
+        userAccountDto.setPassword("nope");
+        userAccountDto.setDefaultUSer(true);
+        userAccountDto.setUserAccountType(UserAccount.UserAccountTypeEnum.BUSINESS.name());
         OrganizationDto organizationDto = new OrganizationDto();
         organizationDto.setId(11L);
-        userAccount.setOrganizationDto(organizationDto);
-        return userAccount;
+        userAccountDto.setOrganizationDto(organizationDto);
+        return userAccountDto;
     }
 }

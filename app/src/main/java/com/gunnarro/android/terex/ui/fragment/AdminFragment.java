@@ -70,7 +70,7 @@ public class AdminFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_admin, container, false);
 
-        UserAccountDto userAccountDto = userAccountService.getUserAccount(1L);
+        UserAccountDto userAccountDto = userAccountService.getDefaultUserAccount();
         if (userAccountDto != null) {
             ((TextView) view.findViewById(R.id.user_account_account_type_view)).setText(userAccountDto.getUserAccountType());
             ((TextView) view.findViewById(R.id.user_account_username_view)).setText(userAccountDto.getUserName());

@@ -60,7 +60,7 @@ public class ClientServiceTest {
 
     @Test
     public void getClient() {
-        ClientDto clientDto = clientService.getClient(1001L);
+        ClientDto clientDto = clientService.getClient(1L);
         assertNotNull(clientDto);
         assertEquals("GUNNARRO AS", clientDto.getName());
     }

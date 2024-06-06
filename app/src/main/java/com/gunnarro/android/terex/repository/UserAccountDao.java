@@ -12,6 +12,9 @@ import com.gunnarro.android.terex.domain.entity.UserAccount;
 @Dao
 public interface UserAccountDao {
 
+    @Query("SELECT * FROM user_account a WHERE a.is_default_user = 1")
+    UserAccount getDefaultUserAccount();
+
     @Query("SELECT * FROM user_account a WHERE a.id = :userAccountId")
     UserAccount getUserAccount(Long userAccountId);
 
@@ -37,5 +40,4 @@ public interface UserAccountDao {
      */
     @Delete
     void delete(UserAccount userAccount);
-
 }

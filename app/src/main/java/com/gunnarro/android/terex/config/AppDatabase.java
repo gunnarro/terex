@@ -19,6 +19,7 @@ import com.gunnarro.android.terex.domain.entity.InvoiceAttachment;
 import com.gunnarro.android.terex.domain.entity.Organization;
 import com.gunnarro.android.terex.domain.entity.Person;
 import com.gunnarro.android.terex.domain.entity.Project;
+import com.gunnarro.android.terex.domain.entity.ProjectHistory;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
@@ -51,13 +52,14 @@ import java.util.concurrent.Executors;
         Invoice.class,
         TimesheetSummary.class,
         Project.class,
+    //    ProjectHistory.class,
         ContactInfo.class,
         Address.class,
         Person.class,
         Organization.class,
         InvoiceAttachment.class,
         Client.class,
-}, version = 3, views = {TimesheetView.class}, exportSchema = true)
+}, version = 5, views = {TimesheetView.class}, exportSchema = true)
 public abstract class AppDatabase extends RoomDatabase {
     // marking the instance as volatile to ensure atomic access to the variable
     // The Java volatile keyword guarantees visibility of changes to variables across threads
@@ -75,10 +77,10 @@ public abstract class AppDatabase extends RoomDatabase {
                             context.getApplicationContext(),
                             AppDatabase.class, "terex_database")
                     // use this during development
-                    .fallbackToDestructiveMigration()
+                   // .fallbackToDestructiveMigration()
                     .allowMainThreadQueries()
                    // .createFromAsset("database/init_data.sql") // FIXME is not executed
-                   // .addMigrations(getMigration(context, 1, 2))
+                    .addMigrations(getMigration(context, 4, 5))
                     .addCallback(roomCallback)
                     .build();
         }
@@ -97,7 +99,7 @@ public abstract class AppDatabase extends RoomDatabase {
     }
 
     public static Migration getMigration(Context applicationContext, int startVersion, int endVersion) {
-        return new DbMigrationFrom1To2(applicationContext, startVersion, endVersion);
+        return new DbMigration(applicationContext, startVersion, endVersion);
     }
 
     public abstract UserAccountDao userAccountDao();

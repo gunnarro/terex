@@ -348,3 +348,7 @@ p
 @app/schemas/com.gunnarro.android.terex.config.AppDatabase/3.json,8/4/84732d018378afa01c331b24256e10e37589efc6
 p
 @app/schemas/com.gunnarro.android.terex.config.AppDatabase/1.json,e/9/e92146ea07fe92b113b89075e340e150a3d28d5d
+~
+Napp/src/main/java/com/gunnarro/android/terex/domain/entity/ProjectHistory.java,9/f/9f093fa1b13899c9183c2f76081d26aabd652d5d
+t
+Dapp/src/main/java/com/gunnarro/android/terex/config/DbMigration.java,1/0/1069202492ee5bf1bec830e7305c0249fcb153f2

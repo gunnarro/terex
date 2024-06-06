@@ -41,7 +41,7 @@ public class TimesheetMapper {
     public static TimesheetDto toTimesheetDto(Timesheet timesheet) {
         return toTimesheetDto(timesheet, null, null);
     }
-    
+
     public static TimesheetDto toTimesheetDto(Timesheet timesheet, Integer sumDays, Integer sumHours) {
         TimesheetDto timesheetDto = new TimesheetDto();
         timesheetDto.setTimesheetId(timesheet.getId());
@@ -323,6 +323,7 @@ public class TimesheetMapper {
         userAccountDto.setUserAccountType(userAccount.getUserAccountType());
         userAccountDto.setUserName(userAccount.getUserName());
         userAccountDto.setPassword(userAccount.getPassword());
+        userAccountDto.setDefaultUSer(userAccount.isDefaultUser());
         OrganizationDto organizationDto = new OrganizationDto();
         organizationDto.setId(userAccount.getOrganizationId());
         userAccountDto.setOrganizationDto(organizationDto);
@@ -338,6 +339,7 @@ public class TimesheetMapper {
         userAccount.setUserAccountType(userAccountDto.getUserAccountType());
         userAccount.setUserName(userAccountDto.getUserName());
         userAccount.setPassword(userAccountDto.getPassword());
+        userAccount.setDefaultUser(userAccountDto.isDefaultUSer() ? 1 : 0);
         userAccount.setOrganizationId(userAccountDto.getOrganizationDto() != null ? userAccountDto.getOrganizationDto().getId() : null);
         return userAccount;
     }

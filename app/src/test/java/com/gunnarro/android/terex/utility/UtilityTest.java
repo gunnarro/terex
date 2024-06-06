@@ -32,7 +32,7 @@ class UtilityTest {
         LocalTime d1 = LocalTime.now(ZoneId.systemDefault()).withHour(8).withMinute(0).withSecond(0).withNano(0);
         Assertions.assertEquals("08:00", d1.toString());
         LocalTime d2 = d1.plusHours(7).plusMinutes(30);
-        Assertions.assertEquals("7.5", Utility.getTimeDiffInHours(d1, d2));
+        Assertions.assertEquals("7.30", Utility.getTimeDiffInHours(d1, d2));
     }
 
     @Test

@@ -45,6 +45,9 @@ public class UserAccount extends BaseEntity {
     @ColumnInfo(name = "person_id")
     private Long personId;
 
+    @ColumnInfo(name = "is_default_user")
+    private Integer defaultUser;
+
     public String getUserName() {
         return userName;
     }
@@ -67,6 +70,18 @@ public class UserAccount extends BaseEntity {
 
     public void setUserAccountType(String userAccountType) {
         this.userAccountType = userAccountType;
+    }
+
+    public Integer getDefaultUser() {
+        return defaultUser;
+    }
+
+    public boolean isDefaultUser() {
+        return defaultUser != null && defaultUser == 1;
+    }
+
+    public void setDefaultUser(Integer defaultUser) {
+        this.defaultUser = defaultUser;
     }
 
     public Long getOrganizationId() {
@@ -107,6 +122,7 @@ public class UserAccount extends BaseEntity {
         sb.append(", userAccountType='").append(userAccountType).append('\'');
         sb.append(", organizationId='").append(organizationId).append('\'');
         sb.append(", personId='").append(personId).append('\'');
+        sb.append(", defaultUser='").append(defaultUser).append('\'');
         sb.append('}');
         return sb.toString();
     }

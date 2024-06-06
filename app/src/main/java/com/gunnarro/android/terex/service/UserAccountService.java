@@ -41,6 +41,18 @@ public class UserAccountService {
        return getUserAccount(1L).getId();
     }
 
+    public UserAccountDto getDefaultUserAccount() {
+        UserAccount userAccount = userAccountRepository.getDefaultUserAccount();
+        if (userAccount == null) {
+            return null;
+        }
+        UserAccountDto userAccountDto = TimesheetMapper.toUserAccountDto(userAccount);
+        if (userAccount.getUserAccountType().equals(UserAccount.UserAccountTypeEnum.BUSINESS.name())) {
+            userAccountDto.setOrganizationDto(organizationService.getOrganization(userAccount.getOrganizationId()));
+        }
+        return userAccountDto;
+    }
+
     public UserAccountDto getUserAccount(Long userAccountId) {
         UserAccount userAccount = userAccountRepository.getUserAccount(userAccountId);
         if (userAccount == null) {

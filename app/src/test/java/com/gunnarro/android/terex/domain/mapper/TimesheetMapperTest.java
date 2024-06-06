@@ -26,6 +26,7 @@ import com.gunnarro.android.terex.domain.entity.Project;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
+import com.gunnarro.android.terex.domain.entity.UserAccount;
 
 import org.junit.jupiter.api.Test;
 
@@ -304,6 +305,51 @@ class TimesheetMapperTest {
         assertEquals(contactInfoDto.getEmailAddress(), contactInfo.getEmailAddress());
         assertEquals(contactInfoDto.getMobileNumberCountryCode(), contactInfo.getMobileNumberCountryCode());
         assertEquals(contactInfoDto.getMobileNumber(), contactInfo.getMobileNumber());
+    }
+
+    @Test
+    void fromUserAccountDto() {
+        UserAccountDto userAccountDto = new UserAccountDto();
+        userAccountDto.setId(66L);
+        userAccountDto.setUserAccountType(UserAccount.UserAccountTypeEnum.BUSINESS.name());
+        userAccountDto.setDefaultUSer(true);
+        userAccountDto.setUserName("guro");
+        userAccountDto.setPassword("change-me");
+        OrganizationDto organizationDto = new OrganizationDto();
+        organizationDto.setId(44L);
+        userAccountDto.setOrganizationDto(organizationDto);
+        userAccountDto.setPersonDto(null);
+
+        UserAccount userAccount = TimesheetMapper.fromUserAccountDto(userAccountDto);
+
+        assertEquals(userAccountDto.getId(), userAccount.getId());
+        assertEquals(userAccountDto.getUserAccountType(), userAccount.getUserAccountType());
+        assertEquals(userAccountDto.isDefaultUSer(), userAccount.isDefaultUser());
+        assertEquals(userAccountDto.getUserName(), userAccount.getUserName());
+        assertEquals(userAccountDto.getPassword(), userAccount.getPassword());
+        assertEquals(userAccountDto.getOrganizationDto().getId(), userAccount.getOrganizationId());
+        assertNull(userAccount.getPersonId());
+    }
+
+    @Test
+    void toUserAccountDto() {
+        UserAccount userAccount = new UserAccount();
+        userAccount.setId(12L);
+        userAccount.setUserAccountType(UserAccount.UserAccountTypeEnum.BUSINESS.name());
+        userAccount.setDefaultUser(1);
+        userAccount.setUserName("guro");
+        userAccount.setPassword("change-me");
+        userAccount.setOrganizationId(55L);
+        userAccount.setPersonId(null);
+
+        UserAccountDto userAccountDto = TimesheetMapper.toUserAccountDto(userAccount);
+        assertEquals(userAccount.getId(), userAccountDto.getId());
+        assertEquals(userAccount.getUserAccountType(), userAccountDto.getUserAccountType());
+        assertEquals(userAccount.isDefaultUser(), userAccountDto.isDefaultUSer());
+        assertEquals(userAccount.getUserName(), userAccountDto.getUserName());
+        assertEquals(userAccount.getPassword(), userAccountDto.getPassword());
+        assertEquals(userAccount.getOrganizationId(), userAccountDto.getOrganizationDto().getId());
+        assertNull(userAccountDto.getPersonDto());
     }
 
     private Client createClient(Long id, String name) {

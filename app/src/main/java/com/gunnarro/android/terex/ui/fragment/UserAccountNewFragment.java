@@ -85,7 +85,7 @@ public class UserAccountNewFragment extends BaseFragment implements View.OnClick
             navigateTo(R.id.nav_from_user_account_to_admin, null);
         });
 
-        updateUserAccountInputData(view, userAccountService.getUserAccount(1L));
+        updateUserAccountInputData(view, userAccountService.getDefaultUserAccount());
         return view;
     }
 

@@ -130,7 +130,7 @@ public class TimesheetService {
         // first of all, check status
         if (timesheetExisting != null && timesheetExisting.isBilled()) {
             Log.e("", "Timesheet is already billed, no changes is allowed. timesheetId=" + timesheetExisting.getId() + " " + timesheetExisting.getStatus());
-            throw new InputValidationException(String.format("Timesheet is already billed, no changes is allowed. %s, status=%s", timesheetExisting.toString(), timesheetExisting.getStatus()), "40040", null);
+            throw new InputValidationException(String.format("Timesheet is already billed, no changes is allowed. %s", timesheetExisting), "40040", null);
         }
         try {
             Log.d("TimesheetRepository.saveTimesheet", String.format("existingTimesheet: %s", timesheetExisting));

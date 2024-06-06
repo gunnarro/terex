@@ -23,7 +23,7 @@ class TimesheetTest {
 
 
         assertNull(timeSheet.getDescription());
-        assertEquals("Timesheet{userId=100, projectId=200, year=2023, month=11}", timeSheet.toString());
+        assertEquals("Timesheet{userId=100, projectId=200, year=2023, month=11, status=NEW}", timeSheet.toString());
         assertEquals(Timesheet.TimesheetStatusEnum.NEW.name(), timeSheet.getStatus());
 /*
         assertEquals(0, timeSheet.getTotalWorkedDays().intValue());

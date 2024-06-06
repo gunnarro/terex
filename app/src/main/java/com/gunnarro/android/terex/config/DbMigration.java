@@ -17,12 +17,14 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DbMigrationFrom1To2 extends Migration {
+public class DbMigration extends Migration {
 
     private final Context context;
-    public DbMigrationFrom1To2(Context context, int startVersion, int endVersion) {
+
+    public DbMigration(Context context, int startVersion, int endVersion) {
         super(startVersion, endVersion);
         this.context = context;
+        Log.d("DbMigration", String.format("init db migration, startVersion=%s, endVersion=%s", startVersion, endVersion));
     }
 
     /**
@@ -31,17 +33,17 @@ public class DbMigrationFrom1To2 extends Migration {
     @Override
     public void migrate(@NonNull SupportSQLiteDatabase database) {
         List<String> sqlQueryList = readMigrationSqlQueryFile(startVersion, endVersion);
-        sqlQueryList.forEach( query -> {
-            Log.d("DbMigrationFrom1To2.migrate", "migrate sql query: " + query);
+        sqlQueryList.forEach(query -> {
+            Log.d("DbMigration.migrate", "migrate sql query: " + query);
             database.execSQL(query);
         });
-        Log.i("DbMigrationFrom1To2.migrate", String.format("executed database schema migration from version %s to %s", startVersion, endVersion));
+        Log.i("DbMigration.migrate", String.format("executed database schema migration from version %s to %s", startVersion, endVersion));
     }
 
     private List<String> readMigrationSqlQueryFile(int startVersion, int endVersion) {
         List<String> sqlQueryList = new ArrayList<>();
         String migrationFilePath = String.format("database/migration/db_migration_from_v%s_to_v%s.sql", startVersion, endVersion);
-        Log.d("readMigrationSqlQueryFile", String.format("read sql db migration file, file=%s", migrationFilePath));
+        Log.d("DbMigration.readMigrationSqlQueryFile", String.format("read sql db migration file, file=%s", migrationFilePath));
         try (InputStream fis = context.getAssets().open(migrationFilePath); InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8); BufferedReader br = new BufferedReader(isr)) {
             br.lines().forEach(query -> {
                 // skip comments
