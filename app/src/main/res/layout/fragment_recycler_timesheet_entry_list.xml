@@ -18,7 +18,6 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/recyclerview_timesheet_entry_item" />
 
-    <!-- This will be the parent Floating Action Button -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/timesheet_entry_add_btn"
         android:layout_width="wrap_content"

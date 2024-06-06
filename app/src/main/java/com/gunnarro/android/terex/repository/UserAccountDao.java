@@ -15,6 +15,9 @@ public interface UserAccountDao {
     @Query("SELECT * FROM user_account a WHERE a.is_default_user = 1")
     UserAccount getDefaultUserAccount();
 
+    @Query("SELECT id FROM user_account a WHERE a.is_default_user = 1")
+    Long getDefaultUserAccountId();
+
     @Query("SELECT * FROM user_account a WHERE a.id = :userAccountId")
     UserAccount getUserAccount(Long userAccountId);
 

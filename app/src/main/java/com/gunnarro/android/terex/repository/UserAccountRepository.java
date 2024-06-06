@@ -46,10 +46,23 @@ public class UserAccountRepository {
         }
     }
 
+    public Long getDefaultUserAccountId() {
+        try {
+            CompletionService<Long> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
+            service.submit(userAccountDao::getDefaultUserAccountId);
+            Future<Long> future = service.take();
+            return future != null ? future.get() : null;
+        } catch (InterruptedException | ExecutionException e) {
+            // Something crashed, therefore restore interrupted state before leaving.
+            Thread.currentThread().interrupt();
+            throw new TerexApplicationException("error getting user account!", "50050", e);
+        }
+    }
+
     public UserAccount getDefaultUserAccount() {
         try {
             CompletionService<UserAccount> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
-            service.submit(() -> userAccountDao.getDefaultUserAccount());
+            service.submit(userAccountDao::getDefaultUserAccount);
             Future<UserAccount> future = service.take();
             return future != null ? future.get() : null;
         } catch (InterruptedException | ExecutionException e) {

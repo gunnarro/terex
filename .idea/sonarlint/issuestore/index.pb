@@ -165,8 +165,6 @@ x
 Happ/src/main/java/com/gunnarro/android/terex/domain/dto/SpinnerItem.java,9/2/92d27ff26ad5efedba50a04126599731cde58ce6
 {
 Kapp/src/main/java/com/gunnarro/android/terex/domain/entity/ContactInfo.java,2/d/2dcb8d3e33f631b81e664ab5e0d60ab3cb60d75a
-|
-Lapp/src/main/java/com/gunnarro/android/terex/config/DbMigrationFrom1To2.java,2/3/239c9650a060d8eb9e3c43c52107061a41be2152
 x
 Happ/src/main/java/com/gunnarro/android/terex/domain/entity/Contract.java,7/e/7e8ab21b96cd892e8be1937e786803701bcfdd04
 H

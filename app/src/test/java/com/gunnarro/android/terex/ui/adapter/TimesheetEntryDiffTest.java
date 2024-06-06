@@ -23,7 +23,6 @@ class TimesheetEntryDiffTest {
         TimesheetEntryListAdapter.TimesheetEntryDiff diff = new TimesheetEntryListAdapter.TimesheetEntryDiff();
 
         assertTrue(diff.areItemsTheSame(timesheetEntry1, timesheetEntry2));
-
     }
 
     @Test
@@ -58,7 +57,6 @@ class TimesheetEntryDiffTest {
         TimesheetEntryListAdapter.TimesheetEntryDiff diff = new TimesheetEntryListAdapter.TimesheetEntryDiff();
 
         assertTrue(diff.areContentsTheSame(timesheetEntry1, timesheetEntry2));
-
     }
 
     @Test

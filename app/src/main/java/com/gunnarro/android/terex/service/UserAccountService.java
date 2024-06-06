@@ -41,6 +41,10 @@ public class UserAccountService {
        return getUserAccount(1L).getId();
     }
 
+    public Long getDefaultUserAccountId() {
+        return userAccountRepository.getDefaultUserAccountId();
+    }
+
     public UserAccountDto getDefaultUserAccount() {
         UserAccount userAccount = userAccountRepository.getDefaultUserAccount();
         if (userAccount == null) {

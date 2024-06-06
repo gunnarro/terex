@@ -39,7 +39,7 @@
                 android:layout_marginStart="4dp"
                 android:layout_span="1"
                 android:gravity="start"
-                android:text="Nnorway consultiong"
+                android:text=""
                 android:textStyle="bold" />
 
             <ImageView
@@ -63,7 +63,7 @@
                 android:layout_marginStart="4dp"
                 android:layout_span="1"
                 android:gravity="start"
-                android:text="catalystOne"
+                android:text=""
                 android:textStyle="bold" />
         </TableRow>
 
@@ -75,14 +75,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:gravity="start"
-                android:text="08:00 - 15:30" />
+                android:text="" />
 
             <TextView
                 android:id="@+id/timesheet_line_1_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:text="7,5 timer" />
+                android:text="" />
         </TableRow>
 
         <TableRow>
@@ -93,14 +93,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:gravity="start"
-                android:text="Timepris" />
+                android:text="" />
 
             <TextView
                 android:id="@+id/timesheet_line_2_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:text="8.345,00 Kr" />
+                android:text="" />
         </TableRow>
     </TableLayout>
 </RelativeLayout>

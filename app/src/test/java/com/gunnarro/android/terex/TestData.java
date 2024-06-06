@@ -171,6 +171,17 @@ public class TestData {
         return organizationDto;
     }
 
+    public static UserAccount createUserAccount(Long id) {
+        UserAccount userAccount = new UserAccount();
+        userAccount.setId(id);
+        userAccount.setUserName("guro");
+        userAccount.setPassword("nope");
+        userAccount.setDefaultUser(1);
+        userAccount.setUserAccountType(UserAccount.UserAccountTypeEnum.BUSINESS.name());
+        userAccount.setOrganizationId(11L);
+        return userAccount;
+    }
+
     public static UserAccountDto createUserAccountDto(Long id, String userName) {
         UserAccountDto userAccount = new UserAccountDto();
         userAccount.setId(id);

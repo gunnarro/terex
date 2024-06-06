@@ -19,7 +19,7 @@
         android:fontFamily="sans-serif-medium"
         android:gravity="center"
         android:maxLines="3"
-        android:text="25"
+        android:text="dd"
         android:textAlignment="center"
         android:textSize="24sp"
         android:textStyle="bold" />
@@ -40,7 +40,7 @@
                 android:layout_marginStart="4dp"
                 android:layout_span="1"
                 android:gravity="start"
-                android:text="HRIS modenrization"
+                android:text=""
                 android:textStyle="bold" />
 
             <ImageView
@@ -63,14 +63,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:gravity="start"
-                android:text="08:00 - 15:30" />
+                android:text="" />
 
             <TextView
                 android:id="@+id/timesheet_entry_line_1_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:text="7,5 timer" />
+                android:text="" />
         </TableRow>
     </TableLayout>
 </RelativeLayout>

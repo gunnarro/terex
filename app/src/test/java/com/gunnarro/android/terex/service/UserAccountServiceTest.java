@@ -8,6 +8,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
+import com.gunnarro.android.terex.TestData;
 import com.gunnarro.android.terex.domain.dto.OrganizationDto;
 import com.gunnarro.android.terex.domain.dto.UserAccountDto;
 import com.gunnarro.android.terex.domain.entity.UserAccount;
@@ -37,8 +38,27 @@ class UserAccountServiceTest {
     }
 
     @Test
+    void getUserAccount_default() {
+        UserAccount userAccount = TestData.createUserAccount(333L);
+        OrganizationDto organizationDto = new OrganizationDto();
+        organizationDto.setId(userAccount.getOrganizationId());
+
+        when(userAccountRepositoryMock.getDefaultUserAccount()).thenReturn(userAccount);
+        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organizationDto);
+
+        UserAccountDto userAccountDto = userAccountService.getDefaultUserAccount();
+        assertEquals(userAccount.getId(), userAccountDto.getId());
+        assertEquals(userAccount.getUserName(), userAccountDto.getUserName());
+        assertEquals(userAccount.getPassword(), userAccountDto.getPassword());
+        assertEquals(userAccount.isDefaultUser(), userAccountDto.isDefaultUSer());
+        assertNull(userAccountDto.getPersonDto());
+        assertEquals(userAccount.getUserAccountType(), userAccountDto.getUserAccountType());
+        assertEquals(userAccount.getOrganizationId(), userAccountDto.getOrganizationDto().getId());
+    }
+
+    @Test
     void getUserAccount_business() {
-        UserAccount userAccount = createUserAccount(333L);
+        UserAccount userAccount = TestData.createUserAccount(333L);
         OrganizationDto organizationDto = new OrganizationDto();
         organizationDto.setId(userAccount.getOrganizationId());
 
@@ -49,6 +69,7 @@ class UserAccountServiceTest {
         assertEquals(userAccount.getId(), userAccountDto.getId());
         assertEquals(userAccount.getUserName(), userAccountDto.getUserName());
         assertEquals(userAccount.getPassword(), userAccountDto.getPassword());
+        assertEquals(userAccount.isDefaultUser(), userAccountDto.isDefaultUSer());
         assertNull(userAccountDto.getPersonDto());
         assertEquals(userAccount.getUserAccountType(), userAccountDto.getUserAccountType());
         assertEquals(userAccount.getOrganizationId(), userAccountDto.getOrganizationDto().getId());
@@ -56,7 +77,7 @@ class UserAccountServiceTest {
 
     @Test
     void saveUserAccount_new() throws ExecutionException, InterruptedException {
-        UserAccountDto userAccountDto = TimesheetMapper.toUserAccountDto(createUserAccount(null));
+        UserAccountDto userAccountDto = TimesheetMapper.toUserAccountDto(TestData.createUserAccount(null));
 
         when(userAccountRepositoryMock.find(anyString())).thenReturn(null);
         when(organizationServiceMock.save(any())).thenReturn(555L);
@@ -69,22 +90,12 @@ class UserAccountServiceTest {
 
     @Test
     void userAccount_update() {
-        UserAccount userAccount = createUserAccount(400L);
+        UserAccount userAccount = TestData.createUserAccount(400L);
         UserAccountDto userAccountDto = TimesheetMapper.toUserAccountDto(userAccount);
 
         when(userAccountRepositoryMock.getUserAccount(anyLong())).thenReturn(userAccount);
         Long userAccountId = userAccountService.saveUserAccount(userAccountDto);
 
         assertEquals(400L, userAccountId);
-    }
-
-    private UserAccount createUserAccount(Long id) {
-        UserAccount userAccount = new UserAccount();
-        userAccount.setId(id);
-        userAccount.setUserName("guro");
-        userAccount.setPassword("nope");
-        userAccount.setUserAccountType(UserAccount.UserAccountTypeEnum.BUSINESS.name());
-        userAccount.setOrganizationId(11L);
-        return userAccount;
     }
 }
