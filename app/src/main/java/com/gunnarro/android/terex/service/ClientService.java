@@ -67,9 +67,18 @@ public class ClientService {
         return clientDtoList;
     }
 
+    public ClientDto getActiveClient() {
+        Client client = clientRepository.getActiveClient();
+        return createClientDto(client);
+    }
+
     public ClientDto getClient(Long clientId) {
         Client client = clientRepository.getClient(clientId);
         Log.d("getClient", String.format("clientId= %s - %s", clientId, client));
+        return createClientDto(client);
+    }
+
+    private ClientDto createClientDto(Client client) {
         if (client != null) {
             ClientDto clientDto = TimesheetMapper.toClientDto(client);
             // add organization info

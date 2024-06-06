@@ -27,11 +27,11 @@ public class Client extends BaseEntity {
     @ColumnInfo(name = "organization_id")
     private Long organizationId;
 
-    @ColumnInfo(name = "name")
-    private String name;
-
     @ColumnInfo(name = "contact_person_id")
     private Long contactPersonId;
+
+    @ColumnInfo(name = "name")
+    private String name;
 
     @ColumnInfo(name = "status")
     private String status;

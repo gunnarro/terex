@@ -330,7 +330,7 @@ public class TimesheetService {
         return timesheetSummaryByWeek;
     }
 
-    public String createTimesheetSummaryAttachmentHtml(@NotNull Long timesheetId, @NotNull UserAccountDto userAccount, @NotNull ClientDto client, @NotNull String timesheetSummeryMustacheTemplate) {
+    public String createTimesheetSummaryAttachmentHtml(@NotNull Long timesheetId, @NotNull UserAccountDto userAccountDto, @NotNull ClientDto clientDto, @NotNull String timesheetSummeryMustacheTemplate) {
         Timesheet timesheet = getTimesheet(timesheetId);
         List<TimesheetSummary> timesheetSummaryList = getTimesheetSummary(timesheetId);
         double totalBilledAmount = timesheetSummaryList.stream().mapToDouble(TimesheetSummary::getTotalBilledAmount).sum();
@@ -344,9 +344,9 @@ public class TimesheetService {
         context.put("invoiceAttachmentTitle", "Vedlegg til faktura");
         context.put("invoiceBillingPeriod", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM")));
         context.put("timesheetPeriod", String.format("%s/%s", timesheet.getMonth(), timesheet.getYear()));
-        context.put("invoiceIssuer", userAccount);
-        context.put("invoiceReceiver", client);
-        context.put("timesheetProjectCode", timesheet.toString());
+        context.put("invoiceIssuer", userAccountDto);
+        context.put("invoiceReceiver", clientDto);
+        context.put("timesheetProjectCode", projectService.getProject(timesheet.getProjectId()).getName());
         context.put("timesheetSummaryList", timesheetSummaryList);
         context.put("totalBilledHours", Double.toString(totalBilledHours));
         context.put("totalBilledAmount", Double.toString(totalBilledAmount));

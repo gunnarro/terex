@@ -66,7 +66,7 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_timesheet_new, container, false);
 
-        ClientDto clientDto = clientService.getClient(1L);
+        ClientDto clientDto = clientService.getActiveClient();
         if (clientDto == null) {
             // no clients found, display info dialog and return timesheet list
             return view;

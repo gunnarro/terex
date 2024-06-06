@@ -40,6 +40,9 @@ public interface ClientDao {
     @Query("SELECT * FROM client ORDER BY name ASC")
     LiveData<List<Client>> getAllClients();
 
+    @Query("SELECT * FROM client WHERE status = 'ACTIVE' limit 1")
+    Client getActiveClient();
+
     @Transaction
     @Query("SELECT * FROM client WHERE id = :clientId")
     Client getClient(Long clientId);
@@ -76,4 +79,5 @@ public interface ClientDao {
      */
     @Delete
     void delete(Client client);
+
 }
