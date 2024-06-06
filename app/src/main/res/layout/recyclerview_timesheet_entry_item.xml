@@ -3,7 +3,7 @@
     android:id="@+id/timesheet_entry_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
+    android:layout_margin="4dp"
     android:background="@drawable/list_view_cell_shape"
     android:columnCount="2"
     android:elevation="2dp"

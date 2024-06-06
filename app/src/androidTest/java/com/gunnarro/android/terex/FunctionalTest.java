@@ -40,10 +40,10 @@ public class FunctionalTest {
     public void setup() {
         Context appContext = ApplicationProvider.getApplicationContext();
         AppDatabase.init(appContext);
-        timesheetService = new TimesheetService(new TimesheetRepository());
         userAccountService = new UserAccountService();
-        clientService = new ClientService();
         projectService = new ProjectService();
+        timesheetService = new TimesheetService(new TimesheetRepository(), new UserAccountService(), new ProjectService());
+        clientService = new ClientService();
         invoiceService = new InvoiceService();
     }
 

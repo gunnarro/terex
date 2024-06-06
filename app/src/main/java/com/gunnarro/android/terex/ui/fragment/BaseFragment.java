@@ -5,8 +5,13 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.ColorRes;
 import androidx.fragment.app.Fragment;
@@ -33,10 +38,30 @@ abstract class BaseFragment extends Fragment {
         this.navController = Navigation.findNavController(view);
     }
 
+    /**
+     * show on top or bottom
+     */
     protected void showSnackbar(String msg, @ColorRes int bgColor) {
         Resources.Theme theme = getResources().newTheme();
-        Snackbar snackbar = Snackbar.make(requireView(), msg, BaseTransientBottomBar.LENGTH_LONG);
+        Snackbar snackbar = Snackbar.make(requireView().getRootView(), msg, BaseTransientBottomBar.LENGTH_LONG);
         snackbar.setTextColor(getResources().getColor(bgColor, theme));
+
+        // custom snackbar layout
+        // Inflate our custom view
+
+        View snackView = getLayoutInflater().inflate(R.layout.custom_snackbar_layout, null);
+        // Configure the view
+        ImageView imageView = snackView.findViewById(R.id.snackbar_icon);
+        //imageView.setImageBitmap(image);
+        TextView messageView = snackView.findViewById(R.id.snackbar_message);
+        messageView.setText(msg);
+        //messageView.setTextColor(bgColor);
+/*
+        View snackBarView = snackbar.getView();
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snackBarView.getLayoutParams();
+        params.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
+        snackBarView.setLayoutParams(params);
+*/
         snackbar.show();
     }
 

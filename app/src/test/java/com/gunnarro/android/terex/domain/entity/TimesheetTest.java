@@ -16,6 +16,12 @@ class TimesheetTest {
         assertEquals(200, timeSheet.getProjectId());
         assertEquals(11, timeSheet.getMonth().intValue());
         assertEquals(2023, timeSheet.getYear().intValue());
+        assertEquals("2023-11-01", timeSheet.getFromDate().toString());
+        assertEquals("2023-11-30", timeSheet.getToDate().toString());
+        assertNull(timeSheet.getCreatedDate());
+        assertNull(timeSheet.getLastModifiedDate());
+
+
         assertNull(timeSheet.getDescription());
         assertEquals("Timesheet{userId=100, projectId=200, year=2023, month=11}", timeSheet.toString());
         assertEquals(Timesheet.TimesheetStatusEnum.NEW.name(), timeSheet.getStatus());

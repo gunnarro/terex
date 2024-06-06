@@ -1,55 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/timesheet_entry_list_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".ui.fragment.TimesheetEntryListFragment"
-    tools:ignore="ExtraText">
+    tools:context=".ui.fragment.TimesheetEntryListFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/timesheet_entry_list_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/timesheet_entry_list_recyclerview"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/color_bg_list"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:listitem="@layout/recyclerview_timesheet_entry_item" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/timesheet_entry_list_recyclerview"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="@color/color_bg_list"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:listitem="@layout/recyclerview_timesheet_entry_item" />
+    <!-- This will be the parent Floating Action Button -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/timesheet_entry_add_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|bottom"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="56dp"
+        android:contentDescription="@string/btn_add"
+        android:src="@drawable/ic_add_black_24dp"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- This will be the parent Floating Action Button -->
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/timesheet_entry_add_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|bottom"
-            android:layout_margin="16dp"
-            android:contentDescription="@string/btn_add"
-            android:src="@drawable/ic_add_black_24dp"
-            app:fabSize="normal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/timesheet_entry_calendar_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:layout_margin="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="108dp"
-            android:contentDescription="@string/btn_calendar"
-            android:src="@drawable/ic_calendar_month_24"
-            app:fabSize="normal"
-            app:layout_constraintBottom_toTopOf="@+id/timesheet_entry_add_btn"
-            app:layout_constraintEnd_toEndOf="@+id/timesheet_entry_add_btn"
-            app:layout_constraintStart_toStartOf="@+id/timesheet_entry_add_btn" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</LinearLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/timesheet_entry_calendar_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="16dp"
+        android:contentDescription="@string/btn_calendar"
+        android:src="@drawable/ic_calendar_month_24"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toTopOf="@+id/timesheet_entry_add_btn"
+        app:layout_constraintEnd_toEndOf="@+id/timesheet_entry_add_btn"
+        app:layout_constraintStart_toStartOf="@+id/timesheet_entry_add_btn" />
+</androidx.constraintlayout.widget.ConstraintLayout>

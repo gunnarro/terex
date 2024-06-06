@@ -62,7 +62,7 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
         selectedYear = LocalDate.now().getYear();
         // Get a new or existing ViewModel from the ViewModelProvider.
         try {
-            timesheetViewModel = new TimesheetViewModel(requireActivity().getApplication(), selectedYear);//new ViewModelProvider(this).get(TimesheetViewModel.class);
+            timesheetViewModel = new TimesheetViewModel(requireActivity().getApplication(), selectedYear);
         } catch (Exception e) {
             throw new TerexApplicationException("Error creating fragment!", "50051", e);
         }
@@ -255,7 +255,7 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
                 final int selectedTimesheetPos = viewHolder.getAbsoluteAdapterPosition();
                 TimesheetDto timesheet = timesheetViewModel.getTimesheetLiveData(selectedYear).getValue().get(selectedTimesheetPos);
                 // confirmDeleteTimesheetDialog(getString(R.string.msg_delete_timesheet), getString(R.string.msg_confirm_delete), timesheet.getTimesheetId());
-               // reloadTimesheetData(selectedYear);
+                // reloadTimesheetData(selectedYear);
                 Log.d("enableSwipeToLeftAndDeleteItem", "testing: " + timesheet);
             }
         };
@@ -294,5 +294,6 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
     @Override
     public void onItemClick(Bundle bundle) {
         navigateTo(R.id.nav_from_timesheet_list_to_timesheet_entry_list, bundle);
+        // showSnackbar("test snackbar", R.color.color_snackbar_text_delete);
     }
 }

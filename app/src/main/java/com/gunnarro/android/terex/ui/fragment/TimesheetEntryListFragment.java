@@ -8,8 +8,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentResultListener;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,8 +24,6 @@ import com.gunnarro.android.terex.ui.swipe.SwipeCallback;
 import com.gunnarro.android.terex.ui.view.TimesheetEntryViewModel;
 import com.gunnarro.android.terex.utility.Utility;
 
-import java.util.List;
-
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
@@ -39,7 +35,7 @@ public class TimesheetEntryListFragment extends BaseFragment implements ListOnIt
     public static final String TIMESHEET_ENTRY_ACTION_SAVE = "timesheet_entry_save";
     public static final String TIMESHEET_ENTRY_ACTION_DELETE = "timesheet_entry_delete";
     private Long timesheetId;
-
+    private boolean isTimesheetReadOnly;
     private TimesheetEntryViewModel timesheetEntryViewModel;
 
     @Override
@@ -49,7 +45,7 @@ public class TimesheetEntryListFragment extends BaseFragment implements ListOnIt
         requireActivity().setTitle(R.string.title_timesheet_entries);
         // Get a new or existing ViewModel from the ViewModelProvider.
         try {
-            timesheetEntryViewModel = new ViewModelProvider(this).get(TimesheetEntryViewModel.class);
+            timesheetEntryViewModel = new TimesheetEntryViewModel(requireActivity().getApplication(), timesheetId);
         } catch (Exception e) {
             throw new TerexApplicationException("Error creating view!", "50051", e);
         }
@@ -68,7 +64,7 @@ public class TimesheetEntryListFragment extends BaseFragment implements ListOnIt
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_recycler_timesheet_entry_list, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.timesheet_entry_list_recyclerview);
-        final TimesheetEntryListAdapter adapter = new TimesheetEntryListAdapter(this, new TimesheetEntryListAdapter.TimesheetEntryDiff());
+        final TimesheetEntryListAdapter adapter = new TimesheetEntryListAdapter(this, new TimesheetEntryListAdapter.TimesheetEntryDiff(), isTimesheetReadOnly);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -78,7 +74,7 @@ public class TimesheetEntryListFragment extends BaseFragment implements ListOnIt
         }
         // save the timesheet id, needed for view and delete timesheet entry actions.
         timesheetId = getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY);
-        boolean isTimesheetReadOnly = getArguments().getBoolean(TimesheetListFragment.TIMESHEET_READ_ONLY_KEY);
+        isTimesheetReadOnly = getArguments().getBoolean(TimesheetListFragment.TIMESHEET_READ_ONLY_KEY);
 
         // Update the cached copy of the timesheet entries in the adapter.
         timesheetEntryViewModel.getTimesheetEntryLiveData(timesheetId).observe(requireActivity(), adapter::submitList);
@@ -127,7 +123,7 @@ public class TimesheetEntryListFragment extends BaseFragment implements ListOnIt
     }
 
     private void handleTimesheetEntryActions(String timesheetEntryJson, String action) {
-        Log.d(Utility.buildTag(getClass(), "handleTimesheetEntryActions"), String.format("action: %s, timesheet: %s", action, timesheetEntryJson));
+        Log.d(Utility.buildTag(getClass(), "handleTimesheetEntryActions"), String.format("action: %s, timesheetEntryJson: %s", action, timesheetEntryJson));
         try {
             TimesheetEntry timesheetEntry = Utility.gsonMapper().fromJson(timesheetEntryJson, TimesheetEntry.class);
             if (TIMESHEET_ENTRY_ACTION_SAVE.equals(action)) {
@@ -138,8 +134,8 @@ public class TimesheetEntryListFragment extends BaseFragment implements ListOnIt
                     showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_update_msg_format), timesheetEntry.getWorkdayDate(), timesheetEntry.getWorkedHours()), R.color.color_snackbar_text_update);
                 }
             } else if (TIMESHEET_ENTRY_ACTION_DELETE.equals(action)) {
-                timesheetEntryViewModel.deleteTimesheetEntry(timesheetEntry);
-                showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_delete_msg_format), timesheetEntry.getWorkdayDate()), R.color.color_snackbar_text_delete);
+                deleteTimesheetEntry(timesheetEntry.getId());
+                showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_delete_msg_format), "timesheet entry, workday=" + timesheetEntry.getWorkdayDate()), R.color.color_snackbar_text_delete);
             } else {
                 Log.w(Utility.buildTag(getClass(), "handleTimesheetEntryActions"), "unknown action: " + action);
                 showInfoDialog("Error", String.format("Application error!%s Unknown action: %s%s Please report.", action, System.lineSeparator(), System.lineSeparator()));
@@ -182,16 +178,22 @@ public class TimesheetEntryListFragment extends BaseFragment implements ListOnIt
         Log.i(Utility.buildTag(getClass(), "enableSwipeToLeftAndDeleteItem"), "enabled swipe handler for delete timesheet entry list item");
     }
 
+    /**
+     * Only called for delete a timesheet entry item, by click om the garbage icon
+     */
     @Override
     public void onItemClick(Bundle bundle) {
-        handleTimesheetEntryActions(null, bundle.getString(TIMESHEET_ENTRY_ACTION_KEY));
+        TimesheetEntry timesheetEntry = new TimesheetEntry();
+        timesheetEntry.setId(bundle.getLong(TIMESHEET_ENTRY_ID_KEY));
+        handleTimesheetEntryActions(Utility.gsonMapper().toJson(timesheetEntry, TimesheetEntry.class), bundle.getString(TIMESHEET_ENTRY_ACTION_KEY));
     }
 
     private void deleteTimesheetEntry(Long timesheetEntryId) {
         try {
             TimesheetEntry timesheetEntry = timesheetEntryViewModel.getTimesheetEntry(timesheetEntryId);
             timesheetEntryViewModel.deleteTimesheetEntry(timesheetEntry);
-            showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_delete_msg_format), timesheetEntry.toString()), R.color.color_snackbar_text_delete);
+            notifyItemRemoved();
+            showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_delete_msg_format), "timesheet entry, workday=" + timesheetEntry.getWorkdayDate()), R.color.color_snackbar_text_delete);
         } catch (TerexApplicationException | InputValidationException e) {
             showInfoDialog("Info", e.getMessage());
         }
@@ -206,5 +208,11 @@ public class TimesheetEntryListFragment extends BaseFragment implements ListOnIt
                     // nothing to do
                 })
                 .show();
+    }
+
+    private void notifyItemRemoved() {
+        RecyclerView recyclerView = requireView().findViewById(R.id.timesheet_entry_list_recyclerview);
+        recyclerView.getAdapter().notifyDataSetChanged();
+        Log.d("notifyItemRemoved", "notify deleted timesheet entry ...");
     }
 }

@@ -24,20 +24,13 @@ import java.util.List;
 public class LoadTest {
 
     private TimesheetService timesheetService;
-    private UserAccountService userAccountService;
-    private ClientService clientService;
-    private ProjectService projectService;
-    private InvoiceService invoiceService;
+
 
     @Before
     public void setup() {
         Context appContext = ApplicationProvider.getApplicationContext();
         AppDatabase.init(appContext);
-        timesheetService = new TimesheetService(new TimesheetRepository());
-        userAccountService = new UserAccountService();
-        clientService = new ClientService();
-        projectService = new ProjectService();
-        invoiceService = new InvoiceService();
+        timesheetService = new TimesheetService(new TimesheetRepository(), new UserAccountService(), new ProjectService());
     }
 
     @Test

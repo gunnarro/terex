@@ -53,15 +53,15 @@ public class TimesheetService {
     /**
      * for unit test only
      */
-    public TimesheetService(TimesheetRepository timesheetRepository) {
+    public TimesheetService(TimesheetRepository timesheetRepository, UserAccountService userAccountService, ProjectService projectService) {
         this.timesheetRepository = timesheetRepository;
-        this.userAccountService = new UserAccountService();
-        this.projectService = new ProjectService();
+        this.userAccountService = userAccountService;
+        this.projectService = projectService;
     }
 
     @Inject
     public TimesheetService() {
-        this(new TimesheetRepository());
+        this(new TimesheetRepository(), new UserAccountService(), new ProjectService());
     }
 
     // ----------------------------------------
@@ -122,15 +122,15 @@ public class TimesheetService {
     }
 
     public Long saveTimesheet(Timesheet timesheet) {
-        Log.d("saveTimesheet", String.format("%s", timesheet));
+        Log.d("TimesheetRepository.saveTimesheet", String.format("%s", timesheet));
         Timesheet timesheetExisting = timesheetRepository.find(timesheet.getUserId(), timesheet.getProjectId(), timesheet.getYear(), timesheet.getMonth());
         if (timesheetExisting != null && timesheet.isNew()) {
-            throw new InputValidationException(String.format("timesheet already exist. %s, status=%s", timesheetExisting.toString(), timesheetExisting.getStatus()), "40040", null);
+            throw new InputValidationException(String.format("Timesheet already exist! %s", timesheetExisting), "40040", null);
         }
         // first of all, check status
         if (timesheetExisting != null && timesheetExisting.isBilled()) {
-            Log.e("", "timesheet is already billed, no changes is allowed. timesheetId=" + timesheetExisting.getId() + " " + timesheetExisting.getStatus());
-            throw new InputValidationException(String.format("timesheet is already billed, no changes is allowed. %s, status=%s", timesheetExisting.toString(), timesheetExisting.getStatus()), "40040", null);
+            Log.e("", "Timesheet is already billed, no changes is allowed. timesheetId=" + timesheetExisting.getId() + " " + timesheetExisting.getStatus());
+            throw new InputValidationException(String.format("Timesheet is already billed, no changes is allowed. %s, status=%s", timesheetExisting.toString(), timesheetExisting.getStatus()), "40040", null);
         }
         try {
             Log.d("TimesheetRepository.saveTimesheet", String.format("existingTimesheet: %s", timesheetExisting));
@@ -172,7 +172,7 @@ public class TimesheetService {
     // ----------------------------------------
 
     public TimesheetEntry getTimesheetEntry(Long timesheetEntryId) {
-       return timesheetRepository.getTimesheetEntry(timesheetEntryId);
+        return timesheetRepository.getTimesheetEntry(timesheetEntryId);
     }
 
     /**
@@ -183,8 +183,8 @@ public class TimesheetService {
         try {
             TimesheetEntry timesheetEntryExisting = timesheetRepository.getTimesheetEntry(timesheetEntry.getTimesheetId(), timesheetEntry.getWorkdayDate());
             // first of all, check status
-            if (timesheetEntryExisting != null && timesheetEntryExisting.isBilled()) {
-                throw new InputValidationException(String.format("timesheet entry have status billed, no changes is allowed. workday date=%s, status=%s", timesheetEntryExisting.getWorkdayDate(), timesheetEntryExisting.getStatus()), "40040", null);
+            if (timesheetEntryExisting != null && timesheetEntryExisting.isClosed()) {
+                throw new InputValidationException(String.format("timesheet entry have status closed, no changes is allowed. workday date=%s, status=%s", timesheetEntryExisting.getWorkdayDate(), timesheetEntryExisting.getStatus()), "40040", null);
             }
             // the check if this is a new one or update of an existing
             if (timesheetEntryExisting != null) {
@@ -224,22 +224,28 @@ public class TimesheetService {
 
     @Transaction
     public void deleteTimesheetEntry(TimesheetEntry timesheetEntry) {
-        if (timesheetEntry.isBilled()) {
+        TimesheetEntry deleteTimesheetEntry = getTimesheetEntry(timesheetEntry.getId());
+        if (deleteTimesheetEntry == null) {
+            throw new InputValidationException(String.format("Timesheet entry not found! timesheetEntryId=%s", timesheetEntry.getId()), "40044", null);
+        }
+        if (deleteTimesheetEntry.isClosed()) {
             throw new InputValidationException("Timesheet entry is closed, not allowed to delete or update", "40045", null);
         }
-        timesheetRepository.deleteTimesheetEntry(timesheetEntry);
+        timesheetRepository.deleteTimesheetEntry(deleteTimesheetEntry);
     }
 
     @NotNull
     public TimesheetEntry getMostRecentTimeSheetEntry(Long timesheetId) {
         TimesheetEntry timesheetEntry = timesheetRepository.getMostRecentTimeSheetEntry(timesheetId);
+        Log.d("getMostRecentTimeSheetEntry", "most recent: " + timesheetEntry);
         if (timesheetEntry == null) {
             // no timesheet entries found, so simply create a default entry;
-            timesheetEntry = TimesheetEntry.createDefault(timesheetId, LocalDate.now());
-            // then set date equal to the timesheet from date.
+            // then set work date equal to the timesheet from date.
             Timesheet timesheet = timesheetRepository.getTimesheet(timesheetId);
-            timesheetEntry.setWorkdayDate(timesheet.getFromDate());
+            timesheetEntry = TimesheetEntry.createDefault(timesheetId, timesheet.getFromDate());
         }
+        // clear the id, so this will be taken as a new timesheet entry, the created and last modified date will the be overridden upon save.
+        timesheetEntry.setId(null);
         return timesheetEntry;
     }
 

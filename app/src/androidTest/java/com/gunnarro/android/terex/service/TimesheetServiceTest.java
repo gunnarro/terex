@@ -2,6 +2,7 @@ package com.gunnarro.android.terex.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
@@ -13,11 +14,9 @@ import com.gunnarro.android.terex.config.AppDatabase;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.exception.InputValidationException;
-import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.repository.TimesheetRepository;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.time.LocalDate;
@@ -30,7 +29,7 @@ public class TimesheetServiceTest {
     public void setup() {
         Context appContext = ApplicationProvider.getApplicationContext();
         AppDatabase.init(appContext);
-        timesheetService = new TimesheetService(new TimesheetRepository());
+        timesheetService = new TimesheetService(new TimesheetRepository(), new UserAccountService(), new ProjectService());
     }
 
     @Test
@@ -59,31 +58,50 @@ public class TimesheetServiceTest {
         assertNotNull(timesheet.getLastModifiedDate());
         assertEquals(165, timesheet.getWorkingHoursInMonth().intValue());
         assertEquals(22, timesheet.getWorkingDaysInMonth().intValue());
-        //  assertEquals(0, timesheet.getTotalWorkedHours().intValue());
-        //  assertEquals(0, timesheet.getTotalWorkedDays().intValue());
-
-        Timesheet newDuplicateTimesheet = Timesheet.createDefault(100L, 200L, 2023, 11);
-        newTimesheet.setDescription("Times used to develop android timesheet app");
-        InputValidationException ex = assertThrows(InputValidationException.class, () -> {
-            timesheetService.saveTimesheet(newDuplicateTimesheet);
-        });
-
-        assertEquals("timesheet already exist. Timesheet{userId=100, projectId=200, year=2023, month=11}, status=ACTIVE", ex.getMessage());
     }
 
-    @Ignore
     @Test
     public void newTimesheet_already_exist() {
-        Timesheet newTimesheet = Timesheet.createDefault(100L, 200L, 2023, 11);
+        Timesheet newTimesheet = Timesheet.createDefault(100L, 200L, 2023, 10);
+        newTimesheet.setDescription("Times used to develop android timesheet app");
+        InputValidationException ex = assertThrows(InputValidationException.class, () -> {
+            timesheetService.saveTimesheet(newTimesheet);
+            timesheetService.saveTimesheet(Timesheet.createDefault(newTimesheet.getUserId(), newTimesheet.getProjectId(), newTimesheet.getYear(), newTimesheet.getMonth()));
+        });
+        assertEquals("Timesheet already exist! Timesheet{userId=100, projectId=200, year=2023, month=10, status=ACTIVE}", ex.getMessage());
+    }
+
+    @Test
+    public void newTimesheetEntry_already_exist() {
+        Timesheet newTimesheet = Timesheet.createDefault(100L, 200L, 2023, 8);
         newTimesheet.setDescription("Times used to develop android timesheet app");
         Long timesheetId = timesheetService.saveTimesheet(newTimesheet);
-        TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(timesheetId, LocalDate.of(2023, 11, 27));
+        TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(timesheetId, LocalDate.of(2023, 8, 27));
         timesheetEntry.setWorkedMinutes(450);
         timesheetEntry.setBreakInMin(30);
-        TerexApplicationException ex = assertThrows(TerexApplicationException.class, () -> {
+        InputValidationException ex = assertThrows(InputValidationException.class, () -> {
             timesheetService.saveTimesheetEntry(timesheetEntry);
+            timesheetService.saveTimesheetEntry(TimesheetEntry.createDefault(timesheetEntry.getTimesheetId(), timesheetEntry.getWorkdayDate()));
         });
+        assertEquals("Workday already registered and update is not allowed! timesheetId=1, date=2023-08-27, hours=7.5, status=OPEN", ex.getMessage());
+    }
 
-        assertEquals("Application error! Please Report error to app developer. Error=timesheet is already exist, timesheetId=1 NEW", ex.getMessage());
+    @Test
+    public void getMostRecentTimesheetEntry() {
+        Timesheet newTimesheet = Timesheet.createDefault(10011L, 200L, 2023, 9);
+        Long timesheetId = timesheetService.saveTimesheet(newTimesheet);
+        TimesheetEntry timesheetEntry = timesheetService.getMostRecentTimeSheetEntry(timesheetId);
+        assertEquals(newTimesheet.getFromDate().toString(), timesheetEntry.getWorkdayDate().toString());
+
+        Long timesheetEntryId = timesheetService.saveTimesheetEntry(timesheetEntry);
+        TimesheetEntry newTimesheetEntry = timesheetService.getTimesheetEntry(timesheetEntryId);
+        assertEquals("2023-09-01", newTimesheetEntry.getWorkdayDate().toString());
+        assertEquals(timesheetEntryId, newTimesheetEntry.getId());
+        assertEquals(timesheetId, newTimesheetEntry.getTimesheetId());
+
+        TimesheetEntry mostRecentTimesheetEntry = timesheetService.getMostRecentTimeSheetEntry(timesheetId);
+        assertEquals("2023-09-01", mostRecentTimesheetEntry.getWorkdayDate().toString());
+        assertNull(mostRecentTimesheetEntry.getId());
+        assertEquals(timesheetId, mostRecentTimesheetEntry.getTimesheetId());
     }
 }

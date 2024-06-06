@@ -223,6 +223,7 @@ public class Timesheet extends BaseEntity {
         sb.append(", projectId=").append(projectId);
         sb.append(", year=").append(year);
         sb.append(", month=").append(month);
+        sb.append(", status=").append(status);
         sb.append('}');
         return sb.toString();
     }

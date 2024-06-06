@@ -48,7 +48,6 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
         requireActivity().setTitle(R.string.title_register_work);
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_timesheet_entry_add, container, false);
-
         // workday date picker
         TextInputEditText workdayDay = view.findViewById(R.id.timesheet_entry_workday_day);
         // turn off keyboard popup when clicked
@@ -146,7 +145,7 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
 
     private TimesheetEntry readTimesheetEntryFromBundle() {
         String timesheetEntryJson = getArguments() != null ? getArguments().getString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_KEY) : null;
-        Log.d("receives timesheet", "" + timesheetEntryJson);
+        Log.d("readTimesheetEntryFromBundle", "received timesheet entry, timesheetEntryJson=" + timesheetEntryJson);
         if (timesheetEntryJson != null && !timesheetEntryJson.isEmpty()) {
             try {
                 TimesheetEntry timesheetEntry = Utility.gsonMapper().fromJson(timesheetEntryJson, TimesheetEntry.class);
@@ -191,7 +190,7 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
         lastModifiedDateView.setText(Utility.formatDateTime(timesheetEntry.getLastModifiedDate()));
 
         EditText timesheetNameView = view.findViewById(R.id.timesheet_entry_timesheet_name);
-        timesheetNameView.setText(timesheetEntry.getTimesheetId().toString());
+        timesheetNameView.setText("timesheetId: " + timesheetEntry.getTimesheetId());
 
         MaterialButtonToggleGroup typeBtnGrp = view.findViewById(R.id.timesheet_entry_type_btn_group_layout);
         if (timesheetEntry.isRegularWorkDay()) {
@@ -228,7 +227,7 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
             timesheetNameView.setEnabled(false);
             view.findViewById(R.id.timesheet_entry_date_layout).setVisibility(View.GONE);
             view.findViewById(R.id.timesheet_entry_delete_btn).setVisibility(View.GONE);
-        } else if (timesheetEntry.isBilled()) {
+        } else if (timesheetEntry.isClosed()) {
             // timesheet entry is locked
             createdDateView.setEnabled(false);
             lastModifiedDateView.setEnabled(false);
@@ -243,7 +242,7 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
         } else {
             // change button icon to from add new to save
             ((MaterialButton) view.findViewById(R.id.timesheet_entry_save_btn)).setText(getResources().getString(R.string.btn_save));
-            if (timesheetEntry.isBilled()) {
+            if (timesheetEntry.isClosed()) {
                 view.findViewById(R.id.btn_timesheet_new_delete).setVisibility(View.GONE);
                 view.findViewById(R.id.btn_timesheet_new_save).setVisibility(View.GONE);
             }
@@ -324,7 +323,7 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
             return Utility.gsonMapper().toJson(timesheetEntry);
         } catch (Exception e) {
             Log.e("getTimesheetAsJson", e.toString());
-            throw new RuntimeException("unable to parse object to json! " + e);
+            throw new TerexApplicationException("unable to parse object to json!", "50050", e);
         }
     }
 }

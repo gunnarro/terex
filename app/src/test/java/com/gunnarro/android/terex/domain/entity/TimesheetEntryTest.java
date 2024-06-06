@@ -14,6 +14,24 @@ import java.time.LocalDateTime;
 class TimesheetEntryTest {
 
     @Test
+    void createDefault() {
+        TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(22L, LocalDate.of(2024, 5, 1));
+        assertNull(timesheetEntry.getId());
+        assertEquals(22, timesheetEntry.getTimesheetId());
+        assertEquals("2024-05-01", timesheetEntry.getWorkdayDate().toString());
+        assertEquals("7.5", timesheetEntry.getWorkedHours());
+        assertEquals(450, timesheetEntry.getWorkedMinutes());
+        assertEquals(30, timesheetEntry.getBreakInMin());
+        assertEquals("REGULAR", timesheetEntry.getType());
+        assertEquals("OPEN", timesheetEntry.getStatus());
+        assertEquals("08:00", timesheetEntry.getFromTime().toString());
+        assertEquals("15:30", timesheetEntry.getToTime().toString());
+        assertEquals(18, timesheetEntry.getWorkdayWeek());
+        assertNull(timesheetEntry.getCreatedDate());
+        assertNull(timesheetEntry.getLastModifiedDate());
+    }
+
+    @Test
     void cloneTimesheetEntry() {
         TimesheetEntry timesheetEntry1 = new TimesheetEntry();
         timesheetEntry1.setId(23L);
@@ -45,7 +63,7 @@ class TimesheetEntryTest {
         TimesheetEntry timeSheetEntry = TimesheetEntry.createDefault(23L, LocalDate.of(2023, 12, 2));
         assertTrue(timeSheetEntry.isOpen());
         timeSheetEntry.setStatus(TimesheetEntry.TimesheetEntryStatusEnum.CLOSED.name());
-        assertTrue(timeSheetEntry.isBilled());
+        assertTrue(timeSheetEntry.isClosed());
     }
 
     @Test

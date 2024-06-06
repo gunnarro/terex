@@ -92,9 +92,6 @@ android {
 
 }
 
-
-
-
 dependencies {
     // quickfix for kotlin duplicate class error message
     //  implementation "org.jetbrains.kotlin:kotlin-bom:1.8.0"
@@ -129,11 +126,11 @@ dependencies {
     //noinspection GradleDependency
     implementation "androidx.navigation:navigation-ui:$androidx_navigation_ui"
     // For REST services
-    implementation "com.squareup.okhttp3:okhttp:4.12.0"
+    implementation "com.squareup.okhttp3:okhttp:$okhttp3_okhttp"
     implementation "com.google.code.gson:gson:$google_gson"
 
-    implementation('com.squareup.retrofit2:retrofit:2.11.0')
-    implementation('com.squareup.retrofit2:converter-gson:2.11.0')
+    implementation "com.squareup.retrofit2:retrofit:$retrofit2_retrofit"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit2_retrofit"
 
     // google
     //noinspection GradleDependency

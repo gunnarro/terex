@@ -51,10 +51,14 @@ class TimesheetServiceTest {
 
     @Mock
     private TimesheetRepository timesheetRepositoryMock;
+    @Mock
+    private UserAccountService userAccountServiceMock;
+    @Mock
+    private ProjectService projectServiceMock;
 
     @BeforeEach
     public void setup() {
-        timesheetService = new TimesheetService(timesheetRepositoryMock);
+        timesheetService = new TimesheetService(timesheetRepositoryMock, userAccountServiceMock, projectServiceMock);
     }
 
     @Test
@@ -183,7 +187,7 @@ class TimesheetServiceTest {
             timesheetService.saveTimesheetEntry(timesheetEntry);
         });
 
-        Assertions.assertEquals("timesheet entry have status billed, no changes is allowed. workday date=2023-12-02, status=CLOSED", ex.getMessage());
+        Assertions.assertEquals("timesheet entry have status closed, no changes is allowed. workday date=2023-12-02, status=CLOSED", ex.getMessage());
     }
 
     @Test
@@ -216,7 +220,10 @@ class TimesheetServiceTest {
     @Test
     void deleteTimesheetEntry_status_not_allowed() {
         TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(23L, LocalDate.of(2023, 12, 2));
+        timesheetEntry.setId(11L);
         timesheetEntry.setStatus(TimesheetEntry.TimesheetEntryStatusEnum.CLOSED.name());
+
+        when(timesheetRepositoryMock.getTimesheetEntry(anyLong())).thenReturn(timesheetEntry);
         InputValidationException ex = assertThrows(InputValidationException.class, () -> {
             timesheetService.deleteTimesheetEntry(timesheetEntry);
         });

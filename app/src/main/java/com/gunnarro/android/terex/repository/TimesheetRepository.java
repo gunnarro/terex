@@ -184,23 +184,6 @@ public class TimesheetRepository {
         }
     }
 
-    /**
-     * Return a clone of data for the last added timesheet or from the timesheet marked as uses as default.
-     * Note! all data is not returned, such as id, created and last modified date, for example.
-     */
-    public TimesheetEntry getMostRecentTimeSheetEntry(Long timesheetId) {
-        try {
-            CompletionService<TimesheetEntry> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
-            service.submit(() -> timesheetEntryDao.getMostRecent(timesheetId));
-            Future<TimesheetEntry> future = service.take();
-            return TimesheetEntry.clone(future.get());
-        } catch (InterruptedException | ExecutionException e) {
-            // Something crashed, therefore restore interrupted state before leaving.
-            Thread.currentThread().interrupt();
-            throw new TerexApplicationException("Error getting most recent timesheet", e.getMessage(), e.getCause());
-        }
-    }
-
     // Room executes all queries on a separate thread.
     // Observed LiveData will notify the observer when the data has changed.
     public LiveData<List<TimesheetEntry>> getTimesheetEntryListLiveData(Long timesheetId) {
@@ -240,6 +223,23 @@ public class TimesheetRepository {
             timesheetDao.delete(timesheet);
             Log.d("TimesheetRepository.delete", "deleted, timesheetId=" + timesheet.getId());
         });
+    }
+
+    /**
+     * Return a clone of data for the last added timesheet or from the timesheet marked as uses as default.
+     * Note! all data is not returned, such as id, created and last modified date, for example.
+     */
+    public TimesheetEntry getMostRecentTimeSheetEntry(final Long timesheetId) {
+        try {
+            CompletionService<TimesheetEntry> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
+            service.submit(() -> timesheetEntryDao.getMostRecent(timesheetId));
+            Future<TimesheetEntry> future = service.take();
+            return future != null ? future.get() : null;
+        } catch (InterruptedException | ExecutionException e) {
+            // Something crashed, therefore restore interrupted state before leaving.
+            Thread.currentThread().interrupt();
+            throw new TerexApplicationException("Error getting most recent timesheet", e.getMessage(), e.getCause());
+        }
     }
 
     public TimesheetEntry getTimesheetEntry(Long timesheetEntryId) {
@@ -304,9 +304,10 @@ public class TimesheetRepository {
                 timesheetEntryDao.delete(timesheetEntry);
             });
         } else {
-            Log.d("", "not allowed to delete in this status!");
+            Log.d("deleteTimesheetEntry", "not allowed to delete timesheet entry in this status!");
             return 0;
         }
+        Log.d("deleteTimesheetEntry", "deleted timesheet entry, id=" + timesheetEntry.getId());
         return 1;
     }
 

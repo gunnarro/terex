@@ -8,13 +8,10 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.gunnarro.android.terex.domain.dto.TimesheetDto;
-import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.service.TimesheetService;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Repository is completely separated from the UI through the ViewModel.
@@ -26,23 +23,24 @@ public class TimesheetEntryViewModel extends AndroidViewModel {
 
     private final MutableLiveData<List<TimesheetEntry>> timesheetEntryListLiveData;
 
-    public TimesheetEntryViewModel(@NonNull Application application) {
+    public TimesheetEntryViewModel(@NonNull Application application, Long timesheetId) {
         super(application);
         timesheetEntryListLiveData = new MutableLiveData<>();
         timesheetService = new TimesheetService();
-        //timesheetEntryListLiveData.setValue(timesheetService.getTimesheetEntryListLiveData(timesheetId));
+        timesheetEntryListLiveData.setValue(timesheetService.getTimesheetEntryList(timesheetId));
+    }
+
+    @Deprecated
+    public LiveData<List<TimesheetEntry>> getTimesheetEntryLiveData_old(Long timesheetId) {
+        LiveData<List<TimesheetEntry>> listLiveData = timesheetService.getTimesheetEntryListLiveData(timesheetId);
+        Log.d("getTimesheetEntryLiveData", String.format("timesheetId=%s, timesheetEntries=%s", timesheetId, listLiveData.getValue()));
+        return listLiveData;
     }
 
     public LiveData<List<TimesheetEntry>> getTimesheetEntryLiveData(Long timesheetId) {
-        LiveData<List<TimesheetEntry>> listLiveData = timesheetService.getTimesheetEntryListLiveData(timesheetId);
-        Log.d("getTimesheetLiveData", String.format("timesheetId=%s, timesheetEntries=%s", timesheetId, listLiveData.getValue()));
-        return listLiveData;
-    }
-
-    public LiveData<Map<Timesheet, List<TimesheetEntry>>> getTimesheetLiveData(Long timesheetId) {
-        LiveData<Map<Timesheet, List<TimesheetEntry>>> listLiveData = timesheetService.getTimesheetLiveData(timesheetId);
-        Log.d("getTimesheetLiveData", String.format("timesheetId=%s, timesheetEntries=%s", timesheetId, listLiveData.getValue()));
-        return listLiveData;
+        Log.d("getTimesheetEntryLiveData", "timesheetId=" + timesheetId);
+        timesheetEntryListLiveData.setValue(timesheetService.getTimesheetEntryList(timesheetId));
+        return timesheetEntryListLiveData;
     }
 
     public TimesheetEntry getMostRecentTimesheetEntry(Long timesheetId) {

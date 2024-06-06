@@ -86,11 +86,10 @@ ext {
     androidx_lifecycle_extensions = '2.2.0'
     androidx_legacy_support_v4 = '1.0.0'
     androidx_drawerlayout = '1.2.0'
-    androidx_appcompat = '1.6.1'
     androidx_recyclerview = '1.3.2'
     androidx_preference = '1.2.1'
-    androidx_lifecycle_livedata_ktx = '2.8.0'
-    androidx_lifecycle_viewmodel_ktx = '2.8.0'
+    androidx_lifecycle_livedata_ktx = '2.8.1'
+    androidx_lifecycle_viewmodel_ktx = '2.8.1'
     androidx_annotation = '1.8.0'
     androidx_navigation_fragment = '2.7.7'
     androidx_navigation_ui = '2.7.7'
@@ -131,5 +130,7 @@ ext {
     spullara_mustache_java = '0.9.13'
     android_database_sqlcipher = "4.5.4"
     security_crypto = "1.1.0-alpha06"
+    okhttp3_okhttp = "4.12.0"
+    retrofit2_retrofit = "2.11.0"
 }
 

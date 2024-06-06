@@ -46,6 +46,10 @@ public class TimesheetEntry extends BaseEntity {
         REGULAR, VACATION, SICK
     }
 
+    /**
+     * A timesheet entry status is set to OPEN as default. The status is set equal to CLOSED when the timesheet is billed.
+     * It is not allowed to edit a timesheet og a timesheet entry when the timesheet has status BILLED.
+     */
     public enum TimesheetEntryStatusEnum {
         OPEN, CLOSED
     }
@@ -231,19 +235,19 @@ public class TimesheetEntry extends BaseEntity {
         return status.equals(TimesheetEntryStatusEnum.OPEN.name());
     }
 
-    public boolean isBilled() {
+    public boolean isClosed() {
         return status.equals(TimesheetEntryStatusEnum.CLOSED.name());
     }
 
-    public static TimesheetEntry createDefault(Long timesheetId, LocalDate workDayDate) {
+    public static TimesheetEntry createDefault(@NotNull Long timesheetId, @NotNull LocalDate workDayDate) {
         TimesheetEntry timesheetEntry = new TimesheetEntry();
         timesheetEntry.setTimesheetId(timesheetId);
         timesheetEntry.setStatus(TimesheetEntryStatusEnum.OPEN.name());
         timesheetEntry.setType(TimesheetEntryTypeEnum.REGULAR.name());
         timesheetEntry.setWorkdayDate(workDayDate);
         timesheetEntry.setWorkdayWeek(timesheetEntry.getWorkdayDate().get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()));
-        timesheetEntry.setFromTime(LocalTime.now(ZoneId.systemDefault()).withHour(8).withMinute(0).withSecond(0).withSecond(0).withNano(0));
         // add 7,5 hours
+        timesheetEntry.setFromTime(LocalTime.now(ZoneId.systemDefault()).withHour(8).withMinute(0).withSecond(0).withSecond(0).withNano(0));
         timesheetEntry.setToTime(timesheetEntry.getFromTime().plusMinutes(Utility.DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES));
         timesheetEntry.setWorkedMinutes((int) ChronoUnit.MINUTES.between(timesheetEntry.getFromTime(), timesheetEntry.getToTime()));
         timesheetEntry.setBreakInMin(Utility.DEFAULT_DAILY_BREAK_IN_MINUTES);
