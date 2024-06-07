@@ -4,6 +4,7 @@ import com.gunnarro.android.terex.domain.dto.AddressDto;
 import com.gunnarro.android.terex.domain.dto.BusinessAddressDto;
 import com.gunnarro.android.terex.domain.dto.ClientDto;
 import com.gunnarro.android.terex.domain.dto.ContactInfoDto;
+import com.gunnarro.android.terex.domain.dto.InvoiceDto;
 import com.gunnarro.android.terex.domain.dto.OrganizationDto;
 import com.gunnarro.android.terex.domain.dto.PersonDto;
 import com.gunnarro.android.terex.domain.dto.ProjectDto;
@@ -14,6 +15,7 @@ import com.gunnarro.android.terex.domain.dto.UserAccountDto;
 import com.gunnarro.android.terex.domain.entity.Address;
 import com.gunnarro.android.terex.domain.entity.Client;
 import com.gunnarro.android.terex.domain.entity.ContactInfo;
+import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.Organization;
 import com.gunnarro.android.terex.domain.entity.Person;
 import com.gunnarro.android.terex.domain.entity.Project;
@@ -342,5 +344,31 @@ public class TimesheetMapper {
         userAccount.setDefaultUser(userAccountDto.isDefaultUSer() ? 1 : 0);
         userAccount.setOrganizationId(userAccountDto.getOrganizationDto() != null ? userAccountDto.getOrganizationDto().getId() : null);
         return userAccount;
+    }
+
+    public static InvoiceDto toInvoiceDto(Invoice invoice) {
+        if (invoice == null) {
+            return null;
+        }
+        InvoiceDto invoiceDto = new InvoiceDto();
+        invoiceDto.setId(invoice.getId());
+        invoiceDto.setStatus(invoice.getStatus());
+        invoiceDto.setAmount(invoice.getAmount());
+        invoiceDto.setBillingDate(invoice.getBillingDate());
+        UserAccountDto userAccountDto = new UserAccountDto();
+        userAccountDto.setId(invoice.getInvoiceIssuerId());
+        invoiceDto.setInvoiceIssuer(userAccountDto);
+        ClientDto clientDto = new ClientDto();
+        clientDto.setId(invoice.getInvoiceRecipientId());
+        invoiceDto.setInvoiceRecipient(clientDto);
+        invoiceDto.setInvoiceNumber(invoice.getInvoiceNumber());
+        invoiceDto.setCurrency(invoice.getCurrency());
+        invoiceDto.setDueDate(invoice.getDueDate());
+        invoiceDto.setAmount(invoice.getAmount());
+        invoiceDto.setReference(invoice.getReference());
+        invoiceDto.setVat(invoice.getVat());
+        invoiceDto.setBillingPeriodStartDate(invoice.getBillingPeriodStartDate());
+        invoiceDto.setBillingPeriodEndDate(invoice.getBillingPeriodEndDate());
+        return invoiceDto;
     }
 }

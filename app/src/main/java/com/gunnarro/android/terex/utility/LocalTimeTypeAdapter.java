@@ -21,7 +21,7 @@ public class LocalTimeTypeAdapter implements JsonSerializer<LocalTime>, JsonDese
 
     @Override
     public LocalTime deserialize(final JsonElement json, final Type typeOfT,
-                                     final JsonDeserializationContext context) throws JsonParseException {
+                                 final JsonDeserializationContext context) throws JsonParseException {
         return LocalTime.parse(json.getAsString(), Utility.getTimeFormatter());
     }
 }

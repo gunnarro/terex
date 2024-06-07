@@ -24,7 +24,7 @@ public class ProjectViewModel extends AndroidViewModel {
         projectService = new ProjectService();
     }
 
-    public LiveData<List<Project>> getProjectLiveData(Long clientId, ProjectRepository.ProjectStatusEnum status) {
+    public LiveData<List<Project>> getProjectsLiveData(Long clientId, ProjectRepository.ProjectStatusEnum status) {
         return projectService.getProjectsLiveData(clientId, status);
     }
 

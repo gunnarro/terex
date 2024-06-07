@@ -19,10 +19,13 @@ public interface InvoiceDao {
     Invoice getInvoiceById(long invoiceId);
 
     @Query("SELECT * FROM invoice ORDER BY billing_date ASC")
-    LiveData<List<Invoice>> getAll();
+    List<Invoice> getAll();
 
     @Query("SELECT * FROM invoice i WHERE i.id = :invoiceId")
     Invoice getInvoice(long invoiceId);
+
+    @Query("SELECT id FROM invoice")
+    List<Long> getAllInvoiceIds();
 
     /**
      * @param invoice timesheet to be inserted. Abort if conflict, i.e. silently drop the insert

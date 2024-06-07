@@ -29,7 +29,7 @@ public class ClientViewModel extends AndroidViewModel {
         clientsLiveData.setValue(clientService.getClients());
     }
 
-    public LiveData<List<ClientDto>> getAllClients() {
+    public LiveData<List<ClientDto>> getClientsLiveData() {
         return clientsLiveData;
     }
 

@@ -50,7 +50,7 @@ public class ProjectNewFragment extends BaseFragment implements View.OnClickList
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requireActivity().setTitle(R.string.title_register_work);
+        requireActivity().setTitle(R.string.title_project_new);
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_project_new, container, false);
 
@@ -141,10 +141,10 @@ public class ProjectNewFragment extends BaseFragment implements View.OnClickList
         statusSpinner.setText(Project.ProjectStatusEnum.ACTIVE.name()); //FIXME
 
         EditText hourlyRateView = view.findViewById(R.id.project_hourly_rate);
-        hourlyRateView.setText(String.format("%s", project.getHourlyRate()));
+        hourlyRateView.setText(String.format("%s", project.getHourlyRate() != null ? project.getHourlyRate() : ""));
 
         EditText workdayYearView = view.findViewById(R.id.project_description);
-        workdayYearView.setText(String.format("%s", project.getDescription()));
+        workdayYearView.setText(String.format("%s", project.getDescription() != null ? project.getDescription() : ""));
 
         // hide fields if this is a new
         if (project.getId() == null) {
@@ -197,7 +197,7 @@ public class ProjectNewFragment extends BaseFragment implements View.OnClickList
         }
         projectDto.setName(((TextView) requireView().findViewById(R.id.project_name)).getText().toString());
         projectDto.setDescription(((TextView) requireView().findViewById(R.id.project_description)).getText().toString());
-        projectDto.setHourlyRate( Integer.valueOf(((TextView) requireView().findViewById(R.id.project_hourly_rate)).getText().toString()));
+        projectDto.setHourlyRate(Integer.valueOf(((TextView) requireView().findViewById(R.id.project_hourly_rate)).getText().toString()));
         projectDto.setStatus(((AutoCompleteTextView) requireView().findViewById(R.id.project_status_spinner)).getText().toString());
         return projectDto;
     }
@@ -207,7 +207,7 @@ public class ProjectNewFragment extends BaseFragment implements View.OnClickList
             return Utility.gsonMapper().toJson(getProjectData());
         } catch (Exception e) {
             Log.e("getProjectAsJson", e.toString());
-            throw new RuntimeException("unable to parse object to json! " + e);
+            throw new TerexApplicationException("unable to parse ProjectDto object to json!", "50050", e);
         }
     }
 
@@ -215,12 +215,10 @@ public class ProjectNewFragment extends BaseFragment implements View.OnClickList
         try {
             ProjectDto projectDto = getProjectData();
             projectService.saveProject(projectDto);
-            showSnackbar(String.format("dded new project! %s", projectDto.getName()), R.color.color_snackbar_text_add);
+            showSnackbar(String.format("Added new project! %s", projectDto.getName()), R.color.color_snackbar_text_add);
         } catch (TerexApplicationException | InputValidationException ex) {
-            ex.printStackTrace();
             showInfoDialog("Error", String.format("%s", ex.getMessage()));
         } catch (Exception e) {
-            e.printStackTrace();
             showInfoDialog("Error", String.format("%s", e.getCause()));
         }
     }

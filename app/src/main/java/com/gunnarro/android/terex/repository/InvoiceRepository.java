@@ -37,7 +37,6 @@ public class InvoiceRepository {
 
     private final InvoiceAttachmentDao invoiceAttachmentDao;
     private final TimesheetSummaryDao timesheetSummaryDao;
-    private final LiveData<List<Invoice>> allInvoices;
 
     // Note that in order to unit test the WordRepository, you have to remove the Application
     // dependency. This adds complexity and much more code, and this sample is not about testing.
@@ -47,13 +46,16 @@ public class InvoiceRepository {
         invoiceDao = AppDatabase.getDatabase().invoiceDao();
         invoiceAttachmentDao = AppDatabase.getDatabase().invoiceAttachmentDao();
         timesheetSummaryDao = AppDatabase.getDatabase().timesheetSummaryDao();
-        allInvoices = invoiceDao.getAll();
     }
 
     // Room executes all queries on a separate thread.
     // Observed LiveData will notify the observer when the data has changed.
-    public LiveData<List<Invoice>> getAllInvoices() {
-        return allInvoices;
+    public List<Invoice> getAllInvoices() {
+        return invoiceDao.getAll();
+    }
+
+    public List<Long> getAllInvoiceIds() {
+        return invoiceDao.getAllInvoiceIds();
     }
 
     public Invoice getInvoice(Long invoiceId) {

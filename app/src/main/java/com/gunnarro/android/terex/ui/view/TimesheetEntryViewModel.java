@@ -23,7 +23,7 @@ public class TimesheetEntryViewModel extends AndroidViewModel {
 
     private final MutableLiveData<List<TimesheetEntry>> timesheetEntryListLiveData;
 
-    public TimesheetEntryViewModel(@NonNull Application application, Long timesheetId) {
+    public TimesheetEntryViewModel(@NonNull Application application, @NonNull Long timesheetId) {
         super(application);
         timesheetEntryListLiveData = new MutableLiveData<>();
         timesheetService = new TimesheetService();
@@ -38,8 +38,8 @@ public class TimesheetEntryViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<TimesheetEntry>> getTimesheetEntryLiveData(Long timesheetId) {
-        Log.d("getTimesheetEntryLiveData", "timesheetId=" + timesheetId);
-        timesheetEntryListLiveData.setValue(timesheetService.getTimesheetEntryList(timesheetId));
+        Log.d("getTimesheetEntryLiveData", String.format("timesheetId=%s, entries=%s", timesheetId, timesheetEntryListLiveData.getValue().size()));
+        //timesheetEntryListLiveData.setValue(timesheetService.getTimesheetEntryList(timesheetId));
         return timesheetEntryListLiveData;
     }
 

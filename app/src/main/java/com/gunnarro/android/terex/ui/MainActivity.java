@@ -7,7 +7,6 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -32,8 +31,6 @@ public class MainActivity extends AppCompatActivity {
     public static final int PERMISSION_REQUEST = 1;
 
     AppBarConfiguration appBarConfiguration;
-
-    private DrawerLayout drawer;
 
     public MainActivity() {
     }
@@ -64,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_content_frame);
         NavController navController = navHostFragment.getNavController();
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
-        // In oder to add navigation support as default to the action bar, mus also override onSupportNavigateUp() method.
+        // In oder to add navigation support as default to the action bar, must also override onSupportNavigateUp() method.
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         // end new navigation
         // Finally, check and grant or deny permissions

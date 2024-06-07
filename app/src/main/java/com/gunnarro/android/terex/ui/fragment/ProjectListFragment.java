@@ -69,7 +69,7 @@ public class ProjectListFragment extends BaseFragment implements ListOnItemClick
         }
 
         Long clientId = getArguments().getLong(ClientListFragment.CLIENT_ID_KEY);
-        projectViewModel.getProjectLiveData(clientId, ProjectRepository.ProjectStatusEnum.ACTIVE).observe(requireActivity(), adapter::submitList);
+        projectViewModel.getProjectsLiveData(clientId, ProjectRepository.ProjectStatusEnum.ACTIVE).observe(requireActivity(), adapter::submitList);
 
         FloatingActionButton addButton = view.findViewById(R.id.project_list_add_btn);
         addButton.setOnClickListener(v -> {

@@ -43,6 +43,9 @@ public class TimesheetEntryListFragment extends BaseFragment implements ListOnIt
         super.onCreate(savedInstanceState);
         super.setHasOptionsMenu(false);
         requireActivity().setTitle(R.string.title_timesheet_entries);
+        // save the timesheet id, needed for view and delete timesheet entry actions.
+        timesheetId = getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY);
+        isTimesheetReadOnly = getArguments().getBoolean(TimesheetListFragment.TIMESHEET_READ_ONLY_KEY);
         // Get a new or existing ViewModel from the ViewModelProvider.
         try {
             timesheetEntryViewModel = new TimesheetEntryViewModel(requireActivity().getApplication(), timesheetId);
@@ -63,6 +66,7 @@ public class TimesheetEntryListFragment extends BaseFragment implements ListOnIt
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_recycler_timesheet_entry_list, container, false);
+        getActivity().setTitle("testing ...");
         RecyclerView recyclerView = view.findViewById(R.id.timesheet_entry_list_recyclerview);
         final TimesheetEntryListAdapter adapter = new TimesheetEntryListAdapter(this, new TimesheetEntryListAdapter.TimesheetEntryDiff(), isTimesheetReadOnly);
         recyclerView.setAdapter(adapter);
@@ -73,8 +77,8 @@ public class TimesheetEntryListFragment extends BaseFragment implements ListOnIt
             throw new TerexApplicationException("Missing timesheet id!", "50023", null);
         }
         // save the timesheet id, needed for view and delete timesheet entry actions.
-        timesheetId = getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY);
-        isTimesheetReadOnly = getArguments().getBoolean(TimesheetListFragment.TIMESHEET_READ_ONLY_KEY);
+        //timesheetId = getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY);
+        //isTimesheetReadOnly = getArguments().getBoolean(TimesheetListFragment.TIMESHEET_READ_ONLY_KEY);
 
         // Update the cached copy of the timesheet entries in the adapter.
         timesheetEntryViewModel.getTimesheetEntryLiveData(timesheetId).observe(requireActivity(), adapter::submitList);
@@ -90,7 +94,7 @@ public class TimesheetEntryListFragment extends BaseFragment implements ListOnIt
         );
 
         // flip gui based on timesheet status, hide buttons if timesheet has status BILLED
-        Log.d("isTimesheetReadOnly", "isTimesheetReadOnly=" + isTimesheetReadOnly);
+        Log.d("isTimesheetReadOnly", String.format("timesheetId=%s, isTimesheetReadOnly=%s", timesheetId, isTimesheetReadOnly));
         if (isTimesheetReadOnly) {
             addButton.setVisibility(View.GONE);
             calendarButton.setVisibility(View.GONE);

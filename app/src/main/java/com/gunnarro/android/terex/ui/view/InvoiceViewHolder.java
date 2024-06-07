@@ -8,7 +8,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gunnarro.android.terex.R;
-import com.gunnarro.android.terex.domain.entity.Invoice;
+import com.gunnarro.android.terex.domain.dto.InvoiceDto;
 import com.gunnarro.android.terex.repository.InvoiceRepository;
 
 import java.time.format.DateTimeFormatter;
@@ -39,20 +39,20 @@ public class InvoiceViewHolder extends RecyclerView.ViewHolder {
     }
 
 
-    public void bindListLine(Invoice invoice) {
-        invoiceLineHeaderView.setText(String.format("%s", invoice.getReference()));
-        invoiceLine1StatusView.setText(invoice.getBillingDate().format(DateTimeFormatter.ofPattern("MMM", Locale.getDefault())));
+    public void bindListLine(InvoiceDto invoiceDto) {
+        invoiceLineHeaderView.setText(String.format("%s", invoiceDto.getInvoiceRecipient().getName()));
+        invoiceLine1StatusView.setText(invoiceDto.getBillingDate().format(DateTimeFormatter.ofPattern("MMM", Locale.getDefault())));
 
-        if (invoice.getStatus().equals(InvoiceRepository.InvoiceStatusEnum.NEW.name())) {
+        if (invoiceDto.getStatus().equals(InvoiceRepository.InvoiceStatusEnum.NEW.name())) {
             invoiceLine1StatusView.setTextColor(invoiceLine1StatusView.getResources().getColor(R.color.invoice_status_open, null));
-        } else if (invoice.getStatus().equals(InvoiceRepository.InvoiceStatusEnum.COMPLETED.name())) {
+        } else if (invoiceDto.getStatus().equals(InvoiceRepository.InvoiceStatusEnum.COMPLETED.name())) {
             invoiceLine1StatusView.setTextColor(invoiceLine1StatusView.getResources().getColor(R.color.invoice_status_completed, null));
-        } else if (invoice.getStatus().equals(InvoiceRepository.InvoiceStatusEnum.SENT.name())) {
+        } else if (invoiceDto.getStatus().equals(InvoiceRepository.InvoiceStatusEnum.SENT.name())) {
             invoiceLine1StatusView.setTextColor(invoiceLine1StatusView.getResources().getColor(R.color.invoice_status_sent, null));
         }
         invoiceLine1LabelView.setText(R.string.lbl_billing_date);
-        invoiceLine1ValueView.setText(String.format("%s", invoice.getBillingDate()));
+        invoiceLine1ValueView.setText(String.format("%s", invoiceDto.getBillingDate()));
         invoiceLine2LabelView.setText(R.string.lbl_billed_amount);
-        invoiceLine2ValueView.setText(String.format("%s", invoice.getAmount()));
+        invoiceLine2ValueView.setText(String.format("%s", invoiceDto.getAmount()));
     }
 }

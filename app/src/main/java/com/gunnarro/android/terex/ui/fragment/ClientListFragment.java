@@ -62,11 +62,11 @@ public class ClientListFragment extends BaseFragment implements ListOnItemClickL
         final ClientListAdapter adapter = new ClientListAdapter(this, new ClientListAdapter.ClientDtoDiff());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        // Add an observer on the LiveData returned by getAlphabetizedWords.
+        // Add an observer on the LiveData returned by getAllClients.
         // The onChanged() method fires when the observed data changes and the activity is
         // in the foreground.
         // Update the cached copy of the words in the adapter.
-        clientViewModel.getAllClients().observe(requireActivity(), adapter::submitList);
+        clientViewModel.getClientsLiveData().observe(requireActivity(), adapter::submitList);
 
         FloatingActionButton addButton = view.findViewById(R.id.client_list_add_btn);
         addButton.setOnClickListener(v -> navigateTo(R.id.nav_from_client_list_to_client_new, null));

@@ -5,10 +5,12 @@ import android.util.Log;
 import androidx.room.Transaction;
 
 import com.gunnarro.android.terex.domain.dto.ClientDto;
+import com.gunnarro.android.terex.domain.dto.InvoiceDto;
 import com.gunnarro.android.terex.domain.dto.TimesheetSummaryDto;
 import com.gunnarro.android.terex.domain.dto.UserAccountDto;
 import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.InvoiceAttachment;
+import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.repository.InvoiceRepository;
 
@@ -17,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -73,6 +76,25 @@ public class InvoiceService {
     @Inject
     public InvoiceService() {
         this(new InvoiceRepository(), new TimesheetService(), new ClientService(), new UserAccountService());
+    }
+
+    public List<Invoice> getAllInvoices() {
+        return invoiceRepository.getAllInvoices();
+    }
+
+    public List<InvoiceDto> getInvoiceDtoList() {
+        List<Long> invoceIdList = invoiceRepository.getAllInvoiceIds();
+        List<InvoiceDto> invoiceDtoList = new ArrayList<>();
+        invoceIdList.forEach(id -> invoiceDtoList.add(getInvoiceDto(id)));
+        return invoiceDtoList;
+    }
+
+    public InvoiceDto getInvoiceDto(Long invoiceId) {
+        Invoice invoice = invoiceRepository.getInvoice(invoiceId);
+        InvoiceDto invoiceDto = TimesheetMapper.toInvoiceDto(invoice);
+        invoiceDto.setInvoiceIssuer(userAccountService.getUserAccount(invoice.getInvoiceIssuerId()));
+        invoiceDto.setInvoiceRecipient(clientService.getClient(invoice.getInvoiceRecipientId()));
+        return invoiceDto;
     }
 
     public Invoice getInvoice(Long invoiceId) {

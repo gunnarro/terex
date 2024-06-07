@@ -237,7 +237,7 @@ public class TimesheetService {
     @NotNull
     public TimesheetEntry getMostRecentTimeSheetEntry(Long timesheetId) {
         TimesheetEntry timesheetEntry = timesheetRepository.getMostRecentTimeSheetEntry(timesheetId);
-        Log.d("getMostRecentTimeSheetEntry", "most recent: " + timesheetEntry);
+        Log.d("getMostRecentTimeSheetEntry", String.format("timesheetId=%s, most recent:%s ", timesheetId, timesheetEntry));
         if (timesheetEntry == null) {
             // no timesheet entries found, so simply create a default entry;
             // then set work date equal to the timesheet from date.

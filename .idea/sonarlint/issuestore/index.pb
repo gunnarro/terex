@@ -350,3 +350,5 @@ p
 Napp/src/main/java/com/gunnarro/android/terex/domain/entity/ProjectHistory.java,9/f/9f093fa1b13899c9183c2f76081d26aabd652d5d
 t
 Dapp/src/main/java/com/gunnarro/android/terex/config/DbMigration.java,1/0/1069202492ee5bf1bec830e7305c0249fcb153f2
+w
+Gapp/src/main/java/com/gunnarro/android/terex/domain/dto/InvoiceDto.java,c/a/caa4fb2583787985739a3410163f0b3bba634c61
