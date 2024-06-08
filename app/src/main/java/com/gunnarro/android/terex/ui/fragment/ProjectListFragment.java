@@ -27,7 +27,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class ProjectListFragment extends BaseFragment implements ListOnItemClickListener {
-    public static final String PROJECT_REQUEST_KEY = "800";
+    public static final String PROJECT_REQUEST_KEY = "project_request";
     public static final String PROJECT_ID_KEY = "project_id";
     public static final String PROJECT_ACTION_KEY = "project_action";
     public static final String PROJECT_ACTION_VIEW = "project_view";

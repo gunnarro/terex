@@ -17,8 +17,6 @@ import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.service.TimesheetService;
 import com.gunnarro.android.terex.utility.Utility;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,7 +43,6 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         requireActivity().setTitle(R.string.title_timesheet_calendar);
         timesheetService = new TimesheetService();
-        Log.d(Utility.buildTag(getClass(), "onCreate"), "");
     }
 
     @Override
@@ -59,7 +56,7 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
         //calendarView.setDisabledDays(createSelectedDates(timesheetId));
         calendarView.setCalendarDays(createSelectedDates(timesheetId));
         //  @Deprecated("Use setCalendarDays() instead")
-      //  calendarView.setEvents(createEventDays(timesheetId));
+        //  calendarView.setEvents(createEventDays(timesheetId));
         //  @Deprecated("Use setOnCalendarDayClickListener instead")
         calendarView.setOnCalendarDayClickListener(day -> {
             selectedWorkDayDate = LocalDate.of(
@@ -102,9 +99,8 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
             v.setEnabled(true);
         });
 
-
         view.findViewById(R.id.btn_timesheet_calendar_cancel).setOnClickListener(v -> {
-            view.findViewById(R.id.btn_timesheet_calendar_cancel).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
+            view.findViewById(R.id.btn_timesheet_calendar_cancel).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_default, view.getContext().getTheme()));
             // Simply return back to the timesheet list
             Bundle bundle = new Bundle();
             bundle.putLong(TimesheetListFragment.TIMESHEET_ID_KEY, timesheetId);
@@ -115,17 +111,9 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
         return view;
     }
 
-    /**
-     * Update backup info after view is successfully create
-     */
-    @Override
-    public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
-
     private TimesheetEntry readTimesheetEntryFromBundle() {
         String timesheetEntryJson = getArguments() != null ? getArguments().getString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_KEY) : null;
-        Log.d("receives timesheet", "" + timesheetEntryJson);
+        Log.d("receives timesheet", String.format("%s", timesheetEntryJson));
         if (timesheetEntryJson != null && !timesheetEntryJson.isEmpty()) {
             try {
                 TimesheetEntry timesheetEntry = Utility.gsonMapper().fromJson(timesheetEntryJson, TimesheetEntry.class);
@@ -154,10 +142,10 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
         timesheetEntryList.forEach(t -> {
             Calendar cal = Calendar.getInstance();
             cal.set(t.getWorkdayDate().getYear(), t.getWorkdayDate().getMonth().getValue() - 1, t.getWorkdayDate().getDayOfMonth());
-           // calendarDays.add(new CalendarDay(cal, R.drawable.timesheet_day_ok_24, getResources().getColor(R.color.color_btn_bg_delete, null)));
+            // calendarDays.add(new CalendarDay(cal, R.drawable.timesheet_day_ok_24, getResources().getColor(R.color.color_btn_bg_delete, null)));
             CalendarDay calendarDay = new CalendarDay(cal);
             calendarDay.setLabelColor(R.drawable.timesheet_day_ok_24);
-            calendarDay.setSelectedBackgroundResource(getResources().getColor(R.color.color_btn_bg_delete, null));
+            calendarDay.setSelectedBackgroundResource(getResources().getColor(R.color.color_btn_bg_default, null));
             calendarDays.add(calendarDay);
             Log.d("TimesheetCustomCalendarFragment", "ADD SELECTED DATE: " + t.getWorkdayDate().toString());
         });
@@ -171,7 +159,7 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
         timesheetEntryList.forEach(t -> {
             Calendar cal = Calendar.getInstance();
             cal.set(t.getWorkdayDate().getYear(), t.getWorkdayDate().getMonth().getValue() - 1, t.getWorkdayDate().getDayOfMonth());
-            eventDays.add(new EventDay(cal, R.drawable.timesheet_day_ok_24, getResources().getColor(R.color.color_btn_bg_delete, null)));
+            eventDays.add(new EventDay(cal, R.drawable.timesheet_day_ok_24, getResources().getColor(R.color.color_btn_bg_default, null)));
             Log.d("TimesheetCustomCalendarFragment", "ADD SELECTED DATE: " + t.getWorkdayDate().toString());
         });
         return eventDays;
@@ -219,7 +207,8 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
             timesheetService.saveTimesheetEntry(timesheetEntry);
             showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_add_msg_format), timesheetEntry.getWorkdayDate(), timesheetEntry.getWorkedHours()), R.color.color_snackbar_text_add);
         } catch (TerexApplicationException | InputValidationException e) {
-           showInfoDialog("Info", e.getMessage());
+            Log.e("handleButtonSaveClick", e.getMessage());
+            showInfoDialog("Error", e.getMessage());
         }
     }
 }

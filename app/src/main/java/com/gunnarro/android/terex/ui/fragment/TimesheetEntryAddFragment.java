@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.button.MaterialButton;
@@ -19,7 +20,9 @@ import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.textfield.TextInputEditText;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
+import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
+import com.gunnarro.android.terex.service.TimesheetService;
 import com.gunnarro.android.terex.utility.Utility;
 
 import org.jetbrains.annotations.NotNull;
@@ -37,9 +40,18 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class TimesheetEntryAddFragment extends BaseFragment implements View.OnClickListener {
 
+    private final TimesheetService timesheetService;
+
     @Inject
     public TimesheetEntryAddFragment() {
         // Needed by dagger framework
+        timesheetService = new TimesheetService();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requireActivity().setTitle(R.string.title_project_new);
     }
 
     @Override
@@ -115,27 +127,29 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
         // disable save button as default
         view.findViewById(R.id.timesheet_entry_save_btn).setEnabled(true);
         view.findViewById(R.id.timesheet_entry_save_btn).setOnClickListener(v -> {
-            view.findViewById(R.id.timesheet_entry_save_btn).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
-            Bundle result = new Bundle();
-            result.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_KEY, getTimesheetEntryAsJson());
-            result.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_KEY, TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_SAVE);
-            getParentFragmentManager().setFragmentResult(TimesheetEntryListFragment.TIMESHEET_ENTRY_REQUEST_KEY, result);
-            Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new timesheet entry intent: " + getTimesheetEntryAsJson());
+            view.findViewById(R.id.timesheet_entry_save_btn).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_default, view.getContext().getTheme()));
+            //Bundle result = new Bundle();
+            //result.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_KEY, getTimesheetEntryAsJson());
+            //result.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_KEY, TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_SAVE);
+            //getParentFragmentManager().setFragmentResult(TimesheetEntryListFragment.TIMESHEET_ENTRY_REQUEST_KEY, result);
+            //Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new timesheet entry intent: " + getTimesheetEntryAsJson());
+            saveTimesheetEntry();
             returnToTimesheetEntryList(getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY));
         });
 
         view.findViewById(R.id.timesheet_entry_delete_btn).setOnClickListener(v -> {
-            view.findViewById(R.id.timesheet_entry_delete_btn).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
-            Bundle result = new Bundle();
-            result.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_KEY, getTimesheetEntryAsJson());
-            result.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_KEY, TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_DELETE);
-            getParentFragmentManager().setFragmentResult(TimesheetEntryListFragment.TIMESHEET_ENTRY_REQUEST_KEY, result);
-            Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new delete item intent");
+            view.findViewById(R.id.timesheet_entry_delete_btn).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_default, view.getContext().getTheme()));
+            //Bundle result = new Bundle();
+            //result.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_KEY, getTimesheetEntryAsJson());
+            //result.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_KEY, TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_DELETE);
+            //getParentFragmentManager().setFragmentResult(TimesheetEntryListFragment.TIMESHEET_ENTRY_REQUEST_KEY, result);
+            //Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new delete item intent");
+
             returnToTimesheetEntryList(getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY));
         });
 
         view.findViewById(R.id.timesheet_entry_cancel_btn).setOnClickListener(v -> {
-            view.findViewById(R.id.timesheet_entry_cancel_btn).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
+            view.findViewById(R.id.timesheet_entry_cancel_btn).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_default, view.getContext().getTheme()));
             returnToTimesheetEntryList(getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY));
         });
 
@@ -165,7 +179,7 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
         }
     }
 
-    private void returnToTimesheetEntryList(Long timesheetId) {
+    private void returnToTimesheetEntryList(@NonNull Long timesheetId) {
         Bundle bundle = new Bundle();
         bundle.putLong(TimesheetListFragment.TIMESHEET_ID_KEY, timesheetId);
         navigateTo(R.id.nav_from_timesheet_entry_details_to_timesheet_entry_list, bundle);
@@ -274,6 +288,15 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
     }
 
     private String getTimesheetEntryAsJson() {
+        try {
+            return Utility.gsonMapper().toJson(getTimesheetEntry());
+        } catch (Exception e) {
+            Log.e("getTimesheetAsJson", e.toString());
+            throw new TerexApplicationException("unable to parse object to json!", "50050", e);
+        }
+    }
+
+    private TimesheetEntry getTimesheetEntry() {
         TimesheetEntry timesheetEntry = new TimesheetEntry();
 
         TextView timesheetIdView = requireView().findViewById(R.id.timesheet_entry_timesheet_id);
@@ -319,11 +342,18 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
         timesheetEntry.setComment(commentView.getText().toString());
         // determine and set worked minutes
         timesheetEntry.setWorkedMinutes(Long.valueOf(ChronoUnit.MINUTES.between(timesheetEntry.getFromTime(), timesheetEntry.getToTime())).intValue());
+        return timesheetEntry;
+    }
+
+    private void saveTimesheetEntry() {
         try {
-            return Utility.gsonMapper().toJson(timesheetEntry);
+            TimesheetEntry timesheetEntry = getTimesheetEntry();
+            timesheetService.saveTimesheetEntry(timesheetEntry);
+            showSnackbar(String.format("Added new timesheet entry! %s", timesheetEntry.getWorkdayDate()), R.color.color_snackbar_text_add);
+        } catch (TerexApplicationException | InputValidationException ex) {
+            showInfoDialog("Error", String.format("%s", ex.getMessage()));
         } catch (Exception e) {
-            Log.e("getTimesheetAsJson", e.toString());
-            throw new TerexApplicationException("unable to parse object to json!", "50050", e);
+            showInfoDialog("Error", String.format("%s", e.getCause()));
         }
     }
 }

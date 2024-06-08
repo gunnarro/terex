@@ -33,7 +33,7 @@ public class TimesheetListAdapter extends ListAdapter<TimesheetDto, TimesheetVie
         viewHolder.itemView.findViewById(R.id.ic_timesheet_row_view).setOnClickListener(v -> {
             Bundle bundle = new Bundle();
             TimesheetDto timesheetDto = getItem(viewHolder.getBindingAdapterPosition());
-            bundle.putLong(TimesheetListFragment.TIMESHEET_ID_KEY, getItem(viewHolder.getBindingAdapterPosition()).getTimesheetId());
+            bundle.putLong(TimesheetListFragment.TIMESHEET_ID_KEY, getItem(viewHolder.getBindingAdapterPosition()).getId());
             bundle.putBoolean(TimesheetListFragment.TIMESHEET_READ_ONLY_KEY, timesheetDto.isBilled());
             bundle.putString(TimesheetListFragment.TIMESHEET_ACTION_KEY, TimesheetListFragment.TIMESHEET_ACTION_EDIT);
             listOnItemClickListener.onItemClick(bundle);

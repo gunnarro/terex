@@ -33,18 +33,19 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class ProjectNewFragment extends BaseFragment implements View.OnClickListener {
 
-    private ProjectService projectService;
+    private final ProjectService projectService;
 
     @Inject
     public ProjectNewFragment() {
         // Needed by dagger framework
+        projectService = new ProjectService();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requireActivity().setTitle(R.string.title_project_new);
-        projectService = new ProjectService();
+
     }
 
     @Override
@@ -77,17 +78,17 @@ public class ProjectNewFragment extends BaseFragment implements View.OnClickList
         });
 
         view.findViewById(R.id.project_delete_btn).setOnClickListener(v -> {
-            view.findViewById(R.id.project_delete_btn).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
+            view.findViewById(R.id.project_delete_btn).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_default, view.getContext().getTheme()));
             Bundle result = new Bundle();
             result.putString(ProjectListFragment.PROJECT_JSON_KEY, getProjectAsJson());
             result.putString(ProjectListFragment.PROJECT_ACTION_KEY, ProjectListFragment.PROJECT_ACTION_DELETE);
             getParentFragmentManager().setFragmentResult(ProjectListFragment.PROJECT_REQUEST_KEY, result);
-            Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new delete item intent");
+            Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new project item intent");
             returnToProjectList(getArguments().getLong(ClientListFragment.CLIENT_ID_KEY));
         });
 
         view.findViewById(R.id.project_cancel_btn).setOnClickListener(v -> {
-            view.findViewById(R.id.project_cancel_btn).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
+            view.findViewById(R.id.project_cancel_btn).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_default, view.getContext().getTheme()));
             returnToProjectList(getArguments().getLong(ClientListFragment.CLIENT_ID_KEY));
         });
 

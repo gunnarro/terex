@@ -40,7 +40,7 @@ class TimesheetMapperTest {
     void toTimesheetDto() {
         Timesheet timesheet = Timesheet.createDefault(100L, 200L, 2024, 5);
         TimesheetDto timesheetDto = TimesheetMapper.toTimesheetDto(timesheet);
-        assertEquals(timesheet.getId(), timesheetDto.getTimesheetId());
+        assertEquals(timesheet.getId(), timesheetDto.getId());
         assertEquals(timesheet.getProjectId(), timesheetDto.getProjectDto().getId());
         assertEquals(timesheet.getUserId(), timesheetDto.getUserAccountDto().getId());
         assertEquals(timesheet.getYear(), timesheetDto.getYear());
@@ -51,7 +51,7 @@ class TimesheetMapperTest {
     @Test
     void fromTimesheetDto() {
         TimesheetDto timesheetDto = new TimesheetDto();
-        timesheetDto.setTimesheetId(22L);
+        timesheetDto.setId(22L);
         ProjectDto projectDto = new ProjectDto();
         projectDto.setId(666L);
         timesheetDto.setProjectDto(projectDto);
@@ -62,7 +62,7 @@ class TimesheetMapperTest {
         timesheetDto.setYear(2024);
         timesheetDto.setMonth(7);
         Timesheet timesheet = TimesheetMapper.fromTimesheetDto(timesheetDto);
-        assertEquals(timesheetDto.getTimesheetId(), timesheet.getId());
+        assertEquals(timesheetDto.getId(), timesheet.getId());
         assertEquals(timesheetDto.getProjectDto().getId(), timesheet.getProjectId());
         assertEquals(timesheetDto.getUserAccountDto().getId(), timesheet.getUserId());
         assertEquals(timesheetDto.getYear(), timesheet.getYear());

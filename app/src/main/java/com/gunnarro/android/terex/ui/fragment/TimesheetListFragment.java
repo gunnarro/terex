@@ -40,7 +40,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class TimesheetListFragment extends BaseFragment implements ListOnItemClickListener, DialogActionListener {
     // keys used for fragment communication
-    public static final String TIMESHEET_REQUEST_KEY = "100";
+    public static final String TIMESHEET_REQUEST_KEY = "timesheet_request";
     public static final String TIMESHEET_JSON_KEY = "timesheet_as_json";
     public static final String TIMESHEET_ID_KEY = "timesheet_id";
     public static final String TIMESHEET_READ_ONLY_KEY = "timesheet_read_only";
@@ -52,6 +52,8 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
     private TimesheetViewModel timesheetViewModel;
     private List<Integer> timesheetYears;
     private Integer selectedYear = LocalDate.now().getYear();
+
+    private boolean isTimesheetReadOnly;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -184,14 +186,14 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
         // set fragment specific menu items
         inflater.inflate(R.menu.timesheet_menu, menu);
         MenuItem m = menu.findItem(R.id.year_dropdown_menu);
-        Spinner spinner = (Spinner) m.getActionView();
+        Spinner yearSpinner = (Spinner) m.getActionView();
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<Integer> adapter = new ArrayAdapter<>(requireActivity().getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, timesheetYears);
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        yearSpinner.setAdapter(adapter);
+        yearSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selectedYear = timesheetYears.get(position);
@@ -208,7 +210,7 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
     private void reloadTimesheetData(Integer selectedYear) {
         RecyclerView recyclerView = requireView().findViewById(R.id.timesheet_list_recyclerview);
         TimesheetListAdapter timesheetListAdapter = (TimesheetListAdapter) recyclerView.getAdapter();
-        timesheetViewModel.getTimesheetLiveData(selectedYear).observe(requireActivity(), timesheetListAdapter::submitList);
+        timesheetViewModel.getTimesheetLiveData(selectedYear);
         timesheetListAdapter.notifyDataSetChanged();
         Log.d("reloadTimesheetData", "reloaded timesheet data, year=" + selectedYear);
     }
@@ -238,7 +240,7 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
                 final int selectedTimesheetPos = viewHolder.getAbsoluteAdapterPosition();
                 TimesheetDto timesheetDto = timesheetViewModel.getTimesheetLiveData(selectedYear).getValue().get(selectedTimesheetPos);
                 Bundle bundle = new Bundle();
-                bundle.putLong(TIMESHEET_ID_KEY, timesheetDto.getTimesheetId());
+                bundle.putLong(TIMESHEET_ID_KEY, timesheetDto.getId());
                 bundle.putBoolean(TIMESHEET_READ_ONLY_KEY, timesheetDto.isBilled());
                 openTimesheetDetailsView(bundle);
             }
@@ -253,10 +255,10 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
                 final int selectedTimesheetPos = viewHolder.getAbsoluteAdapterPosition();
-                TimesheetDto timesheet = timesheetViewModel.getTimesheetLiveData(selectedYear).getValue().get(selectedTimesheetPos);
-                // confirmDeleteTimesheetDialog(getString(R.string.msg_delete_timesheet), getString(R.string.msg_confirm_delete), timesheet.getTimesheetId());
+                TimesheetDto timesheetDto = timesheetViewModel.getTimesheetLiveData(selectedYear).getValue().get(selectedTimesheetPos);
+                confirmDeleteTimesheetDialog(getString(R.string.msg_delete_timesheet), getString(R.string.msg_confirm_delete), timesheetDto.getId());
                 // reloadTimesheetData(selectedYear);
-                Log.d("enableSwipeToLeftAndDeleteItem", "testing: " + timesheet);
+                Log.d("enableSwipeToLeftAndDeleteItem", "testing: " + timesheetDto);
             }
         };
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);

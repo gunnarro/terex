@@ -46,7 +46,7 @@ public class TimesheetMapper {
 
     public static TimesheetDto toTimesheetDto(Timesheet timesheet, Integer sumDays, Integer sumHours) {
         TimesheetDto timesheetDto = new TimesheetDto();
-        timesheetDto.setTimesheetId(timesheet.getId());
+        timesheetDto.setId(timesheet.getId());
         ProjectDto projectDto = new ProjectDto();
         projectDto.setId(timesheet.getProjectId());
         timesheetDto.setProjectDto(projectDto);
@@ -68,7 +68,7 @@ public class TimesheetMapper {
 
     public static Timesheet fromTimesheetDto(TimesheetDto timesheetDto) {
         Timesheet timesheet = new Timesheet();
-        timesheet.setId(timesheetDto.getTimesheetId());
+        timesheet.setId(timesheetDto.getId());
         timesheet.setProjectId(timesheetDto.getProjectDto().getId());
         timesheet.setUserId(timesheetDto.getUserAccountDto().getId());
         timesheet.setDescription(timesheetDto.getDescription());

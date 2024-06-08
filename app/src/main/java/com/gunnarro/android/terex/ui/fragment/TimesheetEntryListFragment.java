@@ -28,7 +28,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class TimesheetEntryListFragment extends BaseFragment implements ListOnItemClickListener {
-    public static final String TIMESHEET_ENTRY_REQUEST_KEY = "200";
+    public static final String TIMESHEET_ENTRY_REQUEST_KEY = "timesheet_entry_request";
     public static final String TIMESHEET_ENTRY_JSON_KEY = "timesheet_entry_as_json";
     public static final String TIMESHEET_ENTRY_ID_KEY = "timesheet_entry_id";
     public static final String TIMESHEET_ENTRY_ACTION_KEY = "211";
@@ -59,14 +59,12 @@ public class TimesheetEntryListFragment extends BaseFragment implements ListOnIt
                 handleFragmentResult(bundle);
             }
         });
-        Log.d(Utility.buildTag(getClass(), "onCreate"), "");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_recycler_timesheet_entry_list, container, false);
-        getActivity().setTitle("testing ...");
         RecyclerView recyclerView = view.findViewById(R.id.timesheet_entry_list_recyclerview);
         final TimesheetEntryListAdapter adapter = new TimesheetEntryListAdapter(this, new TimesheetEntryListAdapter.TimesheetEntryDiff(), isTimesheetReadOnly);
         recyclerView.setAdapter(adapter);
@@ -100,9 +98,8 @@ public class TimesheetEntryListFragment extends BaseFragment implements ListOnIt
             calendarButton.setVisibility(View.GONE);
         }
         // enable swipe
-        enableSwipeToLeftAndDeleteItem(recyclerView);
+        enableSwipeToLeftAndDeleteItem(recyclerView, isTimesheetReadOnly);
         enableSwipeToRightAndViewItem(recyclerView);
-        Log.d(Utility.buildTag(getClass(), "onCreateView"), "");
         return view;
     }
 
@@ -119,10 +116,11 @@ public class TimesheetEntryListFragment extends BaseFragment implements ListOnIt
         if (bundle == null) {
             return;
         }
+        Log.w("handleFragmentResult", String.format("received action: %s", bundle));
         if (bundle.getString(TIMESHEET_ENTRY_ACTION_KEY) != null) {
             handleTimesheetEntryActions(bundle.getString(TIMESHEET_ENTRY_JSON_KEY), bundle.getString(TIMESHEET_ENTRY_ACTION_KEY));
         } else {
-            Log.w("unknown action!", "unknown action: " + bundle);
+            Log.w("handleFragmentResult", String.format("unknown action: %s", bundle));
         }
     }
 
@@ -168,7 +166,11 @@ public class TimesheetEntryListFragment extends BaseFragment implements ListOnIt
         Log.i(Utility.buildTag(getClass(), "enableSwipeToRightAndAdd"), "enabled swipe handler for timesheet entry list item");
     }
 
-    private void enableSwipeToLeftAndDeleteItem(RecyclerView recyclerView) {
+    private void enableSwipeToLeftAndDeleteItem(RecyclerView recyclerView, boolean isTimesheetReadOnly) {
+        if (isTimesheetReadOnly) {
+            // do not enable delete if timesheet is read only.
+            return;
+        }
         SwipeCallback swipeToDeleteCallback = new SwipeCallback(requireContext(), ItemTouchHelper.LEFT, getResources().getColor(R.color.color_bg_swipe_left, null), R.drawable.ic_delete_black_24dp) {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
@@ -196,7 +198,8 @@ public class TimesheetEntryListFragment extends BaseFragment implements ListOnIt
         try {
             TimesheetEntry timesheetEntry = timesheetEntryViewModel.getTimesheetEntry(timesheetEntryId);
             timesheetEntryViewModel.deleteTimesheetEntry(timesheetEntry);
-            notifyItemRemoved();
+            RecyclerView recyclerView = requireView().findViewById(R.id.timesheet_entry_list_recyclerview);
+            recyclerView.getAdapter().notifyDataSetChanged();
             showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_delete_msg_format), "timesheet entry, workday=" + timesheetEntry.getWorkdayDate()), R.color.color_snackbar_text_delete);
         } catch (TerexApplicationException | InputValidationException e) {
             showInfoDialog("Info", e.getMessage());

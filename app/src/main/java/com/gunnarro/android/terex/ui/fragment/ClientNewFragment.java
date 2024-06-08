@@ -33,18 +33,19 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class ClientNewFragment extends BaseFragment implements View.OnClickListener {
 
     private final BregService bregService;
-    private ClientService clientService;
+    private final ClientService clientService;
 
     @Inject
     public ClientNewFragment() {
         bregService = new BregService();
+        clientService = new ClientService();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requireActivity().setTitle(R.string.title_client_new);
-        clientService = new ClientService();
+
     }
 
     @Override
@@ -67,13 +68,13 @@ public class ClientNewFragment extends BaseFragment implements View.OnClickListe
                 showInfoDialog("INFO", "Invalid input data! Please check!");
                 return;
             }
-            view.findViewById(R.id.client_new_save_btn).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
+            view.findViewById(R.id.client_new_save_btn).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_default, view.getContext().getTheme()));
             saveClient();
             navigateTo(R.id.nav_from_client_new_to_client_list, null);
         });
 
         view.findViewById(R.id.client_new_cancel_btn).setOnClickListener(v -> {
-            view.findViewById(R.id.client_new_cancel_btn).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
+            view.findViewById(R.id.client_new_cancel_btn).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_default, view.getContext().getTheme()));
             // Simply return back to home page
             navigateTo(R.id.nav_from_client_new_to_client_list, null);
         });

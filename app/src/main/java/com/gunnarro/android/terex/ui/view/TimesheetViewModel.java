@@ -35,7 +35,7 @@ public class TimesheetViewModel extends AndroidViewModel {
 
     public LiveData<List<TimesheetDto>> getTimesheetLiveData(Integer year) {
         Log.d("getTimesheetLiveData", "selected year=" + year);
-        //timesheetListLiveData.setValue(timesheetService.getTimesheetDtoList(year));
+        timesheetListLiveData.setValue(timesheetService.getTimesheetDtoList(year));
         return timesheetListLiveData;
     }
 

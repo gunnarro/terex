@@ -27,7 +27,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class ClientListFragment extends BaseFragment implements ListOnItemClickListener {
-    public static final String CLIENT_REQUEST_KEY = "400";
+    public static final String CLIENT_REQUEST_KEY = "client_request";
     public static final String CLIENT_ID_KEY = "client_id";
     public static final String CLIENT_JSON_KEY = "client_json";
     public static final String CLIENT_ACTION_KEY = "client_action";

@@ -42,26 +42,25 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
-
 @AndroidEntryPoint
 public class TimesheetNewFragment extends BaseFragment implements View.OnClickListener {
 
-    private TimesheetService timesheetService;
-    private ClientService clientService;
-    private UserAccountService userAccountService;
+    private final TimesheetService timesheetService;
+    private final ClientService clientService;
+    private final UserAccountService userAccountService;
 
     @Inject
     public TimesheetNewFragment() {
         // Needed by dagger framework
+        timesheetService = new TimesheetService();
+        clientService = new ClientService();
+        userAccountService = new UserAccountService();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requireActivity().setTitle(R.string.title_timesheet);
-        timesheetService = new TimesheetService();
-        clientService = new ClientService();
-        userAccountService = new UserAccountService();
     }
 
     @Override
@@ -80,22 +79,12 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
             return view;
         }
 
-        Long userId = userAccountService.getDefaultUserAccountId();
         String[] clients = new String[]{clientDto.getName()};
-        Long[] projects = clientDto.getProjectList().stream().map(ProjectDto::getId).toArray(Long[]::new);
 
-        Timesheet timesheet = Timesheet.createDefault(userId, projects[0], LocalDate.now().getYear(), LocalDate.now().getMonthValue());
         // check if this is an existing or a new timesheet
         Long timesheetId = getArguments() != null ? getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY) : null;
-        if (timesheetId != null && timesheetId > 0) {
-            try {
-                timesheet = timesheetService.getTimesheet(timesheetId);
-                Log.d(Utility.buildTag(getClass(), "onCreateView"), String.format("timesheet=%s", timesheet));
-            } catch (Exception e) {
-                Log.e("Timesheet new error!", e.toString());
-                throw new TerexApplicationException("Application Error!", "5000", e);
-            }
-        }
+        // get existing or create a new timesheet with default data
+        Timesheet timesheet = getTimesheet(timesheetId, clientDto);
 
         // status button group - some styling problem - buttons are disabled as default
         MaterialButtonToggleGroup statusBtnGrp = view.findViewById(R.id.timesheet_new_status_btn_group_layout);
@@ -124,6 +113,7 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
         projectSpinner.setListSelection(0);
 
         // create timesheet statuses spinner
+        /*
         final AutoCompleteTextView statusSpinner = view.findViewById(R.id.timesheet_new_status_spinner);
         ArrayAdapter<CharSequence> statusAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, Timesheet.TimesheetStatusEnum.names());
         statusSpinner.setAdapter(statusAdapter);
@@ -145,7 +135,7 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
                 return null;
             }
         });
-
+        */
         // create timesheet year spinner
         final AutoCompleteTextView yearSpinner = view.findViewById(R.id.timesheet_new_year_spinner);
         ArrayAdapter<CharSequence> yearAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, Utility.getYears());
@@ -230,6 +220,28 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
                 navigateTo(R.id.nav_to_timesheet_list, savedInstanceState, true);
             }
         }
+    }
+
+    /**
+     *  get existing or create a new timesheet with default data
+     */
+    private Timesheet getTimesheet(Long timesheetId, ClientDto clientDto) {
+        Timesheet timesheet;
+        if (timesheetId != null && timesheetId > 0) {
+            try {
+                timesheet = timesheetService.getTimesheet(timesheetId);
+                Log.d(Utility.buildTag(getClass(), "onCreateView"), String.format("timesheet=%s", timesheet));
+            } catch (Exception e) {
+                Log.e("Timesheet new error!", e.toString());
+                throw new TerexApplicationException("Application Error!", "5000", e);
+            }
+        } else {
+            // this is a new timesheet, populate with default data
+            Long userId = userAccountService.getDefaultUserAccountId();
+            Long[] projectIds = clientDto.getProjectList().stream().map(ProjectDto::getId).toArray(Long[]::new);
+            timesheet = Timesheet.createDefault(userId, projectIds[0], LocalDate.now().getYear(), LocalDate.now().getMonthValue());
+        }
+        return timesheet;
     }
 
     private void saveTimesheet() {

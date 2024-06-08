@@ -1,12 +1,14 @@
 package com.gunnarro.android.terex.domain.dto;
 
+import androidx.annotation.NonNull;
+
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 
 import java.time.LocalDate;
 import java.util.Objects;
 
 public class TimesheetDto {
-    private Long timesheetId;
+    private Long id;
     private UserAccountDto userAccountDto;
     private ProjectDto projectDto;
     private String status;
@@ -24,12 +26,12 @@ public class TimesheetDto {
     private Integer registeredVacationHours;
     private String description;
 
-    public Long getTimesheetId() {
-        return timesheetId;
+    public Long getId() {
+        return id;
     }
 
-    public void setTimesheetId(Long timesheetId) {
-        this.timesheetId = timesheetId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getStatus() {
@@ -194,10 +196,11 @@ public class TimesheetDto {
     }
 
 
+    @NonNull
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("TimesheetDto{");
-        sb.append("timesheetId=").append(timesheetId);
+        sb.append("id=").append(id);
         sb.append(", status='").append(status).append('\'');
         sb.append(", year=").append(year);
         sb.append(", month=").append(month);

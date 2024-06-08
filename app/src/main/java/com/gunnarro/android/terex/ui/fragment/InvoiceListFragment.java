@@ -23,7 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class InvoiceListFragment extends BaseFragment implements ListOnItemClickListener {
-    public static final String INVOICE_REQUEST_KEY = "300";
+    public static final String INVOICE_REQUEST_KEY = "invoice_request";
     public static final String INVOICE_ID_KEY = "invoice_id";
     public static final String INVOICE_ACTION_KEY = "invoice_action";
     public static final String INVOICE_ACTION_VIEW = "invoice_view";
