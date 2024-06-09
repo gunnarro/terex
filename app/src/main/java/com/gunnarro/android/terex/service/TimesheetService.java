@@ -1,5 +1,6 @@
 package com.gunnarro.android.terex.service;
 
+import android.app.LocaleConfig;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -359,8 +360,11 @@ public class TimesheetService {
         return writer.toString();
     }
 
+    /**
+     * Not in use yet, used bt TimesheetSummaryFragment
+     */
     public String createTimesheetSummaryHtml(@NotNull Long timesheetId, @NotNull Integer hourlyRate, @NotNull String timesheetSummaryMustacheTemplate) {
-        Timesheet timesheet = getTimesheet(timesheetId);
+        TimesheetDto timesheet = getTimesheetDto(timesheetId);
         List<TimesheetSummary> timesheetSummaryList = createTimesheetSummary(timesheetId, "WEEK", hourlyRate);
         double totalBilledAmount = timesheetSummaryList.stream().mapToDouble(TimesheetSummary::getTotalBilledAmount).sum();
         double totalBilledHours = timesheetSummaryList.stream().mapToDouble(TimesheetSummary::getTotalWorkedHours).sum();
@@ -373,8 +377,8 @@ public class TimesheetService {
         context.put("invoiceAttachmentTitle", "Vedlegg til faktura");
         context.put("invoiceBillingPeriod", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM")));
         context.put("timesheetPeriod", String.format("%s/%s", timesheet.getMonth(), timesheet.getYear()));
-        context.put("company", null);// organizationService.getOrganization(1L)); //fixme
-        context.put("client", null);//organizationService.getOrganization(2L)); // fixme
+        context.put("company", timesheet.getUserAccountDto().getOrganizationDto());
+        context.put("client", null);
         context.put("timesheetProjectCode", timesheet.toString());
         context.put("timesheetSummaryList", TimesheetMapper.toTimesheetSummaryDtoList(timesheetSummaryList));
         context.put("totalBilledHours", String.format(Locale.getDefault(), "%.1f", totalBilledHours));
@@ -389,23 +393,23 @@ public class TimesheetService {
     }
 
     public String createTimesheetListHtml(@NotNull Long timesheetId, @NotNull String clientTimesheetMustacheTemplate) {
-        Timesheet timesheet = getTimesheet(timesheetId);
+        TimesheetDto timesheetDto = getTimesheetDto(timesheetId);
+
         List<TimesheetEntryDto> timesheetEntryDtoList = getTimesheetEntryDtoListReadyForBilling(timesheetId);
         Double sumBilledHours = timesheetEntryDtoList.stream().mapToDouble(TimesheetEntryDto::getWorkedMinutes).sum() / 60;
         Integer numberOfWorkedDays = timesheetEntryDtoList.stream().filter(e -> e.getWorkedMinutes() != null && e.getWorkedMinutes() > 0).collect(Collectors.toList()).size();
         MustacheFactory mf = new DefaultMustacheFactory();
         Mustache mustache = mf.compile(new StringReader(clientTimesheetMustacheTemplate), "");
         Map<String, Object> context = new HashMap<>();
-        context.put("title", "Timeliste for konsulentbistand");
-        context.put("consultantName", "Gunnar Rønneberg");
-        context.put("clientProjectName", "");
-        context.put("clientName", "");
+        context.put("title", "Timeliste");
+        context.put("consultantName", timesheetDto.getUserAccountDto().getUserName());
+        context.put("consultantCompanyName", timesheetDto.getUserAccountDto().getOrganizationDto().getName());
+        context.put("clientProjectName", timesheetDto.getProjectDto().getName());
+        context.put("clientName", timesheetDto.getProjectDto().getClientId());
         context.put("clientContactPersonName", "");
         context.put("clientContactPersonMobile", "");
         context.put("clientContactPersonEmail", "");
-
-
-        context.put("timesheetPeriod", String.format("%s/%s", timesheet.getMonth(), timesheet.getYear()));
+        context.put("timesheetPeriod", String.format("%s", timesheetDto.getFromDate().format(DateTimeFormatter.ofPattern("MMMM yyyy"))));
         context.put("timesheetEntryDtoList", timesheetEntryDtoList);
         context.put("numberOfWorkedDays", numberOfWorkedDays);
         context.put("sunBilledHours", String.format(Locale.getDefault(), "%.1f", sumBilledHours));

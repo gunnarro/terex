@@ -27,13 +27,13 @@ public interface ProjectDao {
     @Query("SELECT * FROM project p WHERE p.id = :projectId")
     Project getProject(long projectId);
 
-    @Query("select * from project p where p.client_id = :clientId and p.project_status = :status  order by project_name")
+    @Query("select * from project p where p.client_id = :clientId and p.status = :status  order by name")
     LiveData<List<Project>> getProjectsLiveData(Long clientId, String status);
 
-    @Query("select * from project p where p.client_id = :clientId and p.project_status = :status order by project_name")
+    @Query("select * from project p where p.client_id = :clientId and p.status = :status order by name")
     List<Project> getProjects(Long clientId, String status);
 
-    @Query("select * from project p where p.client_id = :clientId and p.project_name = :projectName order by project_name")
+    @Query("select * from project p where p.client_id = :clientId and p.name = :projectName order by name")
     Project findProject(Long clientId, String projectName);
 
     /**

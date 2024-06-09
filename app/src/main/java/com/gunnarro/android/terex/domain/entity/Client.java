@@ -24,6 +24,15 @@ public class Client extends BaseEntity {
 
     public enum ClientStatusEnum {ACTIVE, DEACTIVATED}
 
+    /**
+     * EHF: invoice is sent to customers billing system, only for business.
+     * E_INVOICE: invoice is sent to customers online banking (nettbank), for private persons.
+     * E_MAIL: invoice is sent to customers email address.
+     */
+    public enum InvoiceTypeEnum {
+        EHF, E_INVOICE, E_MAIL
+    }
+
     @ColumnInfo(name = "organization_id")
     private Long organizationId;
 
@@ -35,6 +44,9 @@ public class Client extends BaseEntity {
 
     @ColumnInfo(name = "status")
     private String status;
+
+    @ColumnInfo(name = "invoice_type")
+    private String invoiceType;
 
     public Long getOrganizationId() {
         return organizationId;
@@ -66,6 +78,14 @@ public class Client extends BaseEntity {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getInvoiceType() {
+        return invoiceType;
+    }
+
+    public void setInvoiceType(String invoiceType) {
+        this.invoiceType = invoiceType;
     }
 
     @Override

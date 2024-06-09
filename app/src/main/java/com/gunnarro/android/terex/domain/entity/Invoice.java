@@ -22,7 +22,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @TypeConverters({LocalDateConverter.class, LocalDateTimeConverter.class})
-@Entity(tableName = "invoice", indices = {@Index(value = {"client_id", "timesheet_id"},
+@Entity(tableName = "invoice", indices = {@Index(value = {"timesheet_id", "recipient_id"},
         unique = true)})
 public class Invoice extends BaseEntity {
 
@@ -31,6 +31,14 @@ public class Invoice extends BaseEntity {
      */
     public enum InvoicePeriodEnum {
         MONTH
+    }
+
+    public enum InvoiceTypeEnum {
+        INVOICE
+    }
+
+    public enum InvoiceStatusEnum {
+        CREATED, REJECTED, PENDING, EXPIRED, APPROVED, DELETED, REVOKED
     }
 
     /**
@@ -42,22 +50,26 @@ public class Invoice extends BaseEntity {
     @NotNull
     @ColumnInfo(name = "invoice_number")
     private Integer invoiceNumber;
+
     @NotNull
-    @ColumnInfo(name = "client_id")
-    private Long clientId;
+    @ColumnInfo(name = "invoice_type")
+    private String invoiceType = InvoiceTypeEnum.INVOICE.name();
+
     /**
      * invoice recipient : fakturamottaker
+     * This id refers ta a client id
      */
     @NotNull
-    @ColumnInfo(name = "invoice_recipient_id")
-    private Long invoiceRecipientId;
+    @ColumnInfo(name = "recipient_id")
+    private Long recipientId;
 
     /**
      * invoice issuer : fakturautsteder
+     * This id refers to a user_account id
      */
     @NotNull
-    @ColumnInfo(name = "invoice_issuer_id")
-    private Long invoiceIssuerId;
+    @ColumnInfo(name = "issuer_id")
+    private Long issuerId;
     @ColumnInfo(name = "reference")
     private String reference;
     @NotNull
@@ -110,28 +122,28 @@ public class Invoice extends BaseEntity {
         this.invoiceNumber = invoiceNumber;
     }
 
-    public Long getClientId() {
-        return clientId;
+    public String getInvoiceType() {
+        return invoiceType;
     }
 
-    public void setClientId(Long clientId) {
-        this.clientId = clientId;
+    public void setInvoiceType(String invoiceType) {
+        this.invoiceType = invoiceType;
     }
 
-    public Long getInvoiceRecipientId() {
-        return invoiceRecipientId;
+    public Long getRecipientId() {
+        return recipientId;
     }
 
-    public void setInvoiceRecipientId(Long invoiceRecipientId) {
-        this.invoiceRecipientId = invoiceRecipientId;
+    public void setRecipientId(Long recipientId) {
+        this.recipientId = recipientId;
     }
 
-    public Long getInvoiceIssuerId() {
-        return invoiceIssuerId;
+    public Long getIssuerId() {
+        return issuerId;
     }
 
-    public void setInvoiceIssuerId(Long invoiceIssuerId) {
-        this.invoiceIssuerId = invoiceIssuerId;
+    public void setIssuerId(Long issuerId) {
+        this.issuerId = issuerId;
     }
 
     public String getReference() {
@@ -229,11 +241,11 @@ public class Invoice extends BaseEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Invoice invoice = (Invoice) o;
-        return timesheetId.equals(invoice.timesheetId) && clientId.equals(invoice.clientId);
+        return timesheetId.equals(invoice.timesheetId) && recipientId.equals(invoice.recipientId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(timesheetId, clientId);
+        return Objects.hash(timesheetId, recipientId);
     }
 }

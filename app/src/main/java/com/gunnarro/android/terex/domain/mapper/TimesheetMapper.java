@@ -88,12 +88,24 @@ public class TimesheetMapper {
 
     public static TimesheetEntryDto toTimesheetEntryDto(TimesheetEntry timesheetEntry) {
         TimesheetEntryDto timesheetEntryDto = new TimesheetEntryDto();
+        timesheetEntryDto.setType(timesheetEntryDto.getType());
         timesheetEntryDto.setWorkdayDate(timesheetEntry.getWorkdayDate());
         timesheetEntryDto.setFromTime(timesheetEntry.getFromTime());
         timesheetEntryDto.setToTime(timesheetEntry.getToTime());
         timesheetEntryDto.setWorkedMinutes(timesheetEntry.getWorkedMinutes());
         timesheetEntryDto.setComments(timesheetEntry.getComment());
         return timesheetEntryDto;
+    }
+
+    public static TimesheetEntry fromTimesheetEntryDto(TimesheetEntryDto timesheetEntryDto) {
+        TimesheetEntry timesheetEntry = new TimesheetEntry();
+        timesheetEntry.setType(timesheetEntryDto.getType());
+        timesheetEntry.setWorkdayDate(timesheetEntry.getWorkdayDate());
+        timesheetEntry.setFromTime(timesheetEntry.getFromTime());
+        timesheetEntry.setToTime(timesheetEntry.getToTime());
+        timesheetEntry.setWorkedMinutes(timesheetEntry.getWorkedMinutes());
+        timesheetEntry.setComment(timesheetEntry.getComment());
+        return timesheetEntry;
     }
 
     public static List<TimesheetSummaryDto> toTimesheetSummaryDtoList(List<TimesheetSummary> timesheetSummaryList) {
@@ -325,7 +337,7 @@ public class TimesheetMapper {
         userAccountDto.setUserAccountType(userAccount.getUserAccountType());
         userAccountDto.setUserName(userAccount.getUserName());
         userAccountDto.setPassword(userAccount.getPassword());
-        userAccountDto.setDefaultUSer(userAccount.isDefaultUser());
+        userAccountDto.setDefaultUser(userAccount.isDefaultUser());
         OrganizationDto organizationDto = new OrganizationDto();
         organizationDto.setId(userAccount.getOrganizationId());
         userAccountDto.setOrganizationDto(organizationDto);
@@ -341,7 +353,7 @@ public class TimesheetMapper {
         userAccount.setUserAccountType(userAccountDto.getUserAccountType());
         userAccount.setUserName(userAccountDto.getUserName());
         userAccount.setPassword(userAccountDto.getPassword());
-        userAccount.setDefaultUser(userAccountDto.isDefaultUSer() ? 1 : 0);
+        userAccount.setDefaultUser(userAccountDto.isDefaultUser() ? 1 : 0);
         userAccount.setOrganizationId(userAccountDto.getOrganizationDto() != null ? userAccountDto.getOrganizationDto().getId() : null);
         return userAccount;
     }
@@ -356,10 +368,10 @@ public class TimesheetMapper {
         invoiceDto.setAmount(invoice.getAmount());
         invoiceDto.setBillingDate(invoice.getBillingDate());
         UserAccountDto userAccountDto = new UserAccountDto();
-        userAccountDto.setId(invoice.getInvoiceIssuerId());
+        userAccountDto.setId(invoice.getIssuerId());
         invoiceDto.setInvoiceIssuer(userAccountDto);
         ClientDto clientDto = new ClientDto();
-        clientDto.setId(invoice.getInvoiceRecipientId());
+        clientDto.setId(invoice.getRecipientId());
         invoiceDto.setInvoiceRecipient(clientDto);
         invoiceDto.setInvoiceNumber(invoice.getInvoiceNumber());
         invoiceDto.setCurrency(invoice.getCurrency());

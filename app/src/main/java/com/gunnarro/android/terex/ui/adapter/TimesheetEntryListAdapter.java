@@ -22,8 +22,9 @@ public class TimesheetEntryListAdapter extends ListAdapter<TimesheetEntry, Times
 
     public TimesheetEntryListAdapter(@NonNull ListOnItemClickListener listOnItemClickListener, @NonNull DiffUtil.ItemCallback<TimesheetEntry> diffCallback, boolean isTimesheetReadOnly) {
         super(diffCallback);
-        // do not have stable id's, since items can be deleted and inserted into the list. Can be with the same timesheet id and and workday date, but the id have changed.
-        this.setHasStableIds(false);
+        // do not have stable id's, since items can be deleted and inserted into the list.
+        // Can be with the same timesheet id and and workday date, but the id have changed.
+        this.setHasStableIds(true);
         this.listOnItemClickListener = listOnItemClickListener;
         this.isTimesheetReadOnly = isTimesheetReadOnly;
     }

@@ -312,7 +312,7 @@ class TimesheetMapperTest {
         UserAccountDto userAccountDto = new UserAccountDto();
         userAccountDto.setId(66L);
         userAccountDto.setUserAccountType(UserAccount.UserAccountTypeEnum.BUSINESS.name());
-        userAccountDto.setDefaultUSer(true);
+        userAccountDto.setDefaultUser(true);
         userAccountDto.setUserName("guro");
         userAccountDto.setPassword("change-me");
         OrganizationDto organizationDto = new OrganizationDto();
@@ -324,7 +324,7 @@ class TimesheetMapperTest {
 
         assertEquals(userAccountDto.getId(), userAccount.getId());
         assertEquals(userAccountDto.getUserAccountType(), userAccount.getUserAccountType());
-        assertEquals(userAccountDto.isDefaultUSer(), userAccount.isDefaultUser());
+        assertEquals(userAccountDto.isDefaultUser(), userAccount.isDefaultUser());
         assertEquals(userAccountDto.getUserName(), userAccount.getUserName());
         assertEquals(userAccountDto.getPassword(), userAccount.getPassword());
         assertEquals(userAccountDto.getOrganizationDto().getId(), userAccount.getOrganizationId());
@@ -345,7 +345,7 @@ class TimesheetMapperTest {
         UserAccountDto userAccountDto = TimesheetMapper.toUserAccountDto(userAccount);
         assertEquals(userAccount.getId(), userAccountDto.getId());
         assertEquals(userAccount.getUserAccountType(), userAccountDto.getUserAccountType());
-        assertEquals(userAccount.isDefaultUser(), userAccountDto.isDefaultUSer());
+        assertEquals(userAccount.isDefaultUser(), userAccountDto.isDefaultUser());
         assertEquals(userAccount.getUserName(), userAccountDto.getUserName());
         assertEquals(userAccount.getPassword(), userAccountDto.getPassword());
         assertEquals(userAccount.getOrganizationId(), userAccountDto.getOrganizationDto().getId());

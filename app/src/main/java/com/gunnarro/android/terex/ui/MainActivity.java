@@ -30,9 +30,10 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int PERMISSION_REQUEST = 1;
 
-    AppBarConfiguration appBarConfiguration;
+    private AppBarConfiguration appBarConfiguration;
 
     public MainActivity() {
+        // intentional empty
     }
 
     @Override
@@ -55,9 +56,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // new navigation https://developer.android.com/guide/navigation/integrations/ui
-
-//        CollapsingToolbarLayout layout = findViewById(R.id.collapsing_toolbar_layout);
-//        Toolbar toolbar = findViewById(R.id.toolbar);
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_content_frame);
         NavController navController = navHostFragment.getNavController();
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();

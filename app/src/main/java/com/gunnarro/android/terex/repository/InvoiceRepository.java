@@ -2,8 +2,6 @@ package com.gunnarro.android.terex.repository;
 
 import android.util.Log;
 
-import androidx.lifecycle.LiveData;
-
 import com.gunnarro.android.terex.config.AppDatabase;
 import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.InvoiceAttachment;
@@ -177,13 +175,13 @@ public class InvoiceRepository {
                 invoiceAttachment.setCreatedDate(LocalDateTime.now());
                 invoiceAttachment.setLastModifiedDate(LocalDateTime.now());
                 id = insertInvoiceAttachment(invoiceAttachment);
-                Log.d("saveInvoiceAttachment", "inserted new invoice file: " + id + " - " + invoiceAttachment.getAttachmentFileName());
+                Log.d("saveInvoiceAttachment", "inserted new invoice file: " + id + " - " + invoiceAttachment.getFileName());
             } else {
                 invoiceAttachment.setId(invoiceAttachmentExisting.getId());
                 invoiceAttachment.setLastModifiedDate(LocalDateTime.now());
                 updateInvoiceAttachment(invoiceAttachment);
                 id = invoiceAttachment.getId();
-                Log.d("saveInvoiceAttachment", "updated invoice file: " + id + " - " + invoiceAttachment.getAttachmentFileName());
+                Log.d("saveInvoiceAttachment", "updated invoice file: " + id + " - " + invoiceAttachment.getFileName());
             }
             return id;
         } catch (Exception e) {

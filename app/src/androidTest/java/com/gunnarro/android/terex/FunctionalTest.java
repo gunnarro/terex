@@ -82,20 +82,20 @@ public class FunctionalTest {
         Long timesheetSummaryAttachmentId = invoiceService.createTimesheetSummaryAttachment(invoiceId, timesheetSummaryMustacheTemplate);
         assertNotNull(timesheetSummaryAttachmentId);
         InvoiceAttachment timesheetSummaryAttachment = invoiceService.getInvoiceAttachment(invoiceId, InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY, InvoiceService.InvoiceAttachmentFileTypes.HTML);
-        assertNotNull(timesheetSummaryAttachment.getAttachmentFileContent());
+        assertNotNull(timesheetSummaryAttachment.getFileContent());
         // create client timesheet pdf and timesheet summery pdf, used as attachment for the invoice
         String clientTimesheetMustacheTemplate = Utility.loadMustacheTemplate(ApplicationProvider.getApplicationContext(), InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET);
         Long invoiceAttachmentId = invoiceService.createClientTimesheetAttachment(invoiceId, timesheetId, clientTimesheetMustacheTemplate);
         assertNotNull(invoiceAttachmentId);
         InvoiceAttachment clientTimesheetAttachment = invoiceService.getInvoiceAttachment(invoiceId, InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET, InvoiceService.InvoiceAttachmentFileTypes.HTML);
-        assertNotNull(clientTimesheetAttachment.getAttachmentFileContent());
+        assertNotNull(clientTimesheetAttachment.getFileContent());
 
         // check invoice status
         Invoice invoice = invoiceService.getInvoice(invoiceId);
         assertEquals(invoiceId, invoice.getId());
         assertEquals(timesheetId, invoice.getTimesheetId());
-        assertEquals(userAccountId, invoice.getInvoiceIssuerId());
-        assertEquals(clientId, invoice.getInvoiceRecipientId());
+        assertEquals(userAccountId, invoice.getIssuerId());
+        assertEquals(clientId, invoice.getRecipientId());
         assertEquals(InvoiceRepository.InvoiceStatusEnum.COMPLETED.name(), invoice.getStatus());
 
         // try to delete timesheet after billing, not allowed

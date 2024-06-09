@@ -27,13 +27,13 @@ public class ProjectHistory extends BaseEntity {
     private Long clientId;
 
     @NotNull
-    @ColumnInfo(name = "project_name")
+    @ColumnInfo(name = "name")
     private String name;
 
-    @ColumnInfo(name = "project_description")
+    @ColumnInfo(name = "description")
     private String description;
 
-    @ColumnInfo(name = "project_status")
+    @ColumnInfo(name = "status")
     private String status;
 
     @ColumnInfo(name = "hourly_rate")

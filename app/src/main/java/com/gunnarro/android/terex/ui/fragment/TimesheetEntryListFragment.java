@@ -99,7 +99,7 @@ public class TimesheetEntryListFragment extends BaseFragment implements ListOnIt
         }
         // enable swipe
         enableSwipeToLeftAndDeleteItem(recyclerView, isTimesheetReadOnly);
-        enableSwipeToRightAndViewItem(recyclerView);
+        // enableSwipeToRightAndViewItem(recyclerView); not enabled, should be removed
         return view;
     }
 
@@ -168,7 +168,7 @@ public class TimesheetEntryListFragment extends BaseFragment implements ListOnIt
 
     private void enableSwipeToLeftAndDeleteItem(RecyclerView recyclerView, boolean isTimesheetReadOnly) {
         if (isTimesheetReadOnly) {
-            // do not enable delete if timesheet is read only.
+            // do not enable swipe to delete for any items if timesheet is read only.
             return;
         }
         SwipeCallback swipeToDeleteCallback = new SwipeCallback(requireContext(), ItemTouchHelper.LEFT, getResources().getColor(R.color.color_bg_swipe_left, null), R.drawable.ic_delete_black_24dp) {

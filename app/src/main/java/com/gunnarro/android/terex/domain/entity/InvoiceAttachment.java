@@ -20,7 +20,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @TypeConverters({LocalDateTimeConverter.class})
-@Entity(tableName = "invoice_attachment", indices = {@Index(value = {"invoice_id", "attachment_type", "attachment_file_name", "attachment_file_type"},
+@Entity(tableName = "invoice_attachment", indices = {@Index(value = {"invoice_id", "type", "file_name", "file_type"},
         unique = true)})
 public class InvoiceAttachment extends BaseEntity {
     @NotNull
@@ -28,88 +28,57 @@ public class InvoiceAttachment extends BaseEntity {
     private Long invoiceId;
 
     @NotNull
-    @ColumnInfo(name = "attachment_file_name")
-    private String attachmentFileName;
+    @ColumnInfo(name = "file_name")
+    private String fileName;
 
-    @ColumnInfo(name = "attachment_type")
-    private String attachmentType;
-
-    @NotNull
-    @ColumnInfo(name = "attachment_file_type")
-    private String attachmentFileType;
+    @ColumnInfo(name = "type")
+    private String type;
 
     @NotNull
-    @ColumnInfo(name = "attachment_file_content", typeAffinity = ColumnInfo.BLOB)
-    private byte[] attachmentFileContent;
+    @ColumnInfo(name = "file_type")
+    private String fileType;
 
     @NotNull
+    @ColumnInfo(name = "file_content", typeAffinity = ColumnInfo.BLOB)
+    private byte[] fileContent;
+
     public Long getInvoiceId() {
         return invoiceId;
     }
 
-    public void setInvoiceId(@NotNull Long invoiceId) {
+    public void setInvoiceId(Long invoiceId) {
         this.invoiceId = invoiceId;
     }
 
-    @NotNull
-    public String getAttachmentFileName() {
-        return attachmentFileName;
+    public String getFileName() {
+        return fileName;
     }
 
-    public void setAttachmentFileName(@NotNull String attachmentFileName) {
-        this.attachmentFileName = attachmentFileName;
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
-    public String getAttachmentType() {
-        return attachmentType;
+    public String getType() {
+        return type;
     }
 
-    public void setAttachmentType(String attachmentType) {
-        this.attachmentType = attachmentType;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    @NotNull
-    public String getAttachmentFileType() {
-        return attachmentFileType;
+    public String getFileType() {
+        return fileType;
     }
 
-    public void setAttachmentFileType(@NotNull String attachmentFileType) {
-        this.attachmentFileType = attachmentFileType;
+    public void setFileType(String fileType) {
+        this.fileType = fileType;
     }
 
-    @NotNull
-    public byte[] getAttachmentFileContent() {
-        return attachmentFileContent;
+    public byte[] getFileContent() {
+        return fileContent;
     }
 
-    public void setAttachmentFileContent(@NotNull byte[] attachmentFileContent) {
-        this.attachmentFileContent = attachmentFileContent;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        InvoiceAttachment that = (InvoiceAttachment) o;
-        return invoiceId.equals(that.invoiceId) && attachmentFileName.equals(that.attachmentFileName) && attachmentType.equals(that.attachmentType) && attachmentFileType.equals(that.attachmentFileType);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(invoiceId, attachmentFileName, attachmentType, attachmentFileType);
-    }
-
-    @NonNull
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("InvoiceAttachment{");
-        sb.append("id=").append(getId());
-        sb.append(", uuid=").append(getUuid());
-        sb.append(", invoiceId=").append(invoiceId);
-        sb.append(", attachmentFileName='").append(attachmentFileName).append('\'');
-        sb.append(", attachmentType='").append(attachmentType).append('\'');
-        sb.append(", attachmentFileType='").append(attachmentFileType).append('\'');
-        sb.append('}');
-        return sb.toString();
+    public void setFileContent(byte[] fileContent) {
+        this.fileContent = fileContent;
     }
 }

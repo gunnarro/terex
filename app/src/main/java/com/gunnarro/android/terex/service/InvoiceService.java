@@ -33,7 +33,7 @@ import kotlin.random.Random;
 public class InvoiceService {
 
     public enum InvoiceAttachmentTypesEnum {
-        CLIENT_TIMESHEET("template/html/norway-consulting-timesheet.mustache"),
+        CLIENT_TIMESHEET("template/html/default-client-timesheet.mustache"),
         TIMESHEET_SUMMARY("template/html/invoice-timesheet-summary-attachment.mustache");
 
         private final String template;
@@ -92,8 +92,8 @@ public class InvoiceService {
     public InvoiceDto getInvoiceDto(Long invoiceId) {
         Invoice invoice = invoiceRepository.getInvoice(invoiceId);
         InvoiceDto invoiceDto = TimesheetMapper.toInvoiceDto(invoice);
-        invoiceDto.setInvoiceIssuer(userAccountService.getUserAccount(invoice.getInvoiceIssuerId()));
-        invoiceDto.setInvoiceRecipient(clientService.getClient(invoice.getInvoiceRecipientId()));
+        invoiceDto.setInvoiceIssuer(userAccountService.getUserAccount(invoice.getIssuerId()));
+        invoiceDto.setInvoiceRecipient(clientService.getClient(invoice.getRecipientId()));
         return invoiceDto;
     }
 
@@ -102,9 +102,9 @@ public class InvoiceService {
     }
 
     public Long saveInvoiceAttachment(InvoiceAttachment invoiceAttachment) {
-        InvoiceAttachment invoiceAttachmentExisting = invoiceRepository.findInvoiceAttachment(invoiceAttachment.getInvoiceId(), invoiceAttachment.getAttachmentType(), invoiceAttachment.getAttachmentFileName(), invoiceAttachment.getAttachmentFileType());
+        InvoiceAttachment invoiceAttachmentExisting = invoiceRepository.findInvoiceAttachment(invoiceAttachment.getInvoiceId(), invoiceAttachment.getType(), invoiceAttachment.getFileName(), invoiceAttachment.getFileType());
         if (invoiceAttachmentExisting != null) {
-            throw new TerexApplicationException(String.format("Attachment already exist. id=%s, type=%s, file=%s, type=%s", invoiceAttachment.getId(), invoiceAttachment.getAttachmentType(), invoiceAttachment.getAttachmentFileName(), invoiceAttachment.getAttachmentFileType()), "50050", null);
+            throw new TerexApplicationException(String.format("Attachment already exist. id=%s, type=%s, file=%s, type=%s", invoiceAttachment.getId(), invoiceAttachment.getType(), invoiceAttachment.getFileName(), invoiceAttachment.getFileType()), "50050", null);
         }
         return invoiceRepository.saveInvoiceAttachment(invoiceAttachment);
     }
@@ -121,9 +121,8 @@ public class InvoiceService {
         Invoice invoice = new Invoice();
         invoice.setInvoiceNumber(generateInvoiceNumber());
         invoice.setTimesheetId(timesheetId);
-        invoice.setClientId(clientId);
-        invoice.setInvoiceRecipientId(clientId);
-        invoice.setInvoiceIssuerId(invoiceIssuerId);
+        invoice.setRecipientId(clientId);
+        invoice.setIssuerId(invoiceIssuerId);
         // ensure that a timesheet is only billed once.
         //invoice.setReference(String.format("%s-%s", client.getName(), timesheetId));
         invoice.setStatus(InvoiceRepository.InvoiceStatusEnum.NEW.name());
@@ -151,8 +150,8 @@ public class InvoiceService {
         try {
             Invoice invoice = getInvoice(invoiceId);
             Log.d("createTimesheetSummaryAttachment", "timesheetId=" + invoice.getTimesheetId());
-            UserAccountDto invoiceIssuer = userAccountService.getUserAccount(invoice.getInvoiceIssuerId());
-            ClientDto invoiceReceiver = clientService.getClient(invoice.getClientId());
+            UserAccountDto invoiceIssuer = userAccountService.getUserAccount(invoice.getIssuerId());
+            ClientDto invoiceReceiver = clientService.getClient(invoice.getRecipientId());
 
             String invoiceSummaryHtml = timesheetService.createTimesheetSummaryAttachmentHtml(invoice.getTimesheetId(), invoiceIssuer, invoiceReceiver, timesheetSummaryTemplate);
             Log.d("createInvoiceSummaryAttachment", invoiceSummaryHtml);
@@ -160,10 +159,10 @@ public class InvoiceService {
 
             InvoiceAttachment timesheetSummaryAttachment = new InvoiceAttachment();
             timesheetSummaryAttachment.setInvoiceId(invoiceId);
-            timesheetSummaryAttachment.setAttachmentType(InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.name());
-            timesheetSummaryAttachment.setAttachmentFileName(invoiceAttachmentFileName);
-            timesheetSummaryAttachment.setAttachmentFileType(InvoiceAttachmentFileTypes.HTML.name());
-            timesheetSummaryAttachment.setAttachmentFileContent(invoiceSummaryHtml.getBytes(StandardCharsets.UTF_8));
+            timesheetSummaryAttachment.setType(InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.name());
+            timesheetSummaryAttachment.setFileName(invoiceAttachmentFileName);
+            timesheetSummaryAttachment.setFileType(InvoiceAttachmentFileTypes.HTML.name());
+            timesheetSummaryAttachment.setFileContent(invoiceSummaryHtml.getBytes(StandardCharsets.UTF_8));
             return saveInvoiceAttachment(timesheetSummaryAttachment);
         } catch (Exception e) {
             throw new TerexApplicationException(String.format("Error crating invoice attachment, invoice ref=%s", invoiceId), "50023", e);
@@ -181,10 +180,10 @@ public class InvoiceService {
             String timesheetAttachmentFileName = InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.name().toLowerCase(Locale.getDefault()) + "_attachment_" + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
             InvoiceAttachment clientTimesheetAttachment = new InvoiceAttachment();
             clientTimesheetAttachment.setInvoiceId(invoiceId);
-            clientTimesheetAttachment.setAttachmentType(InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.name());
-            clientTimesheetAttachment.setAttachmentFileName(timesheetAttachmentFileName);
-            clientTimesheetAttachment.setAttachmentFileType(InvoiceAttachmentFileTypes.HTML.name());
-            clientTimesheetAttachment.setAttachmentFileContent(timesheetAttachmentHtml.getBytes(StandardCharsets.UTF_8));
+            clientTimesheetAttachment.setType(InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.name());
+            clientTimesheetAttachment.setFileName(timesheetAttachmentFileName);
+            clientTimesheetAttachment.setFileType(InvoiceAttachmentFileTypes.HTML.name());
+            clientTimesheetAttachment.setFileContent(timesheetAttachmentHtml.getBytes(StandardCharsets.UTF_8));
             return saveInvoiceAttachment(clientTimesheetAttachment);
         } catch (Exception e) {
             throw new TerexApplicationException(String.format("Error crating client timesheet attachment, timesheetId=%s", timesheetId), "50023", e);

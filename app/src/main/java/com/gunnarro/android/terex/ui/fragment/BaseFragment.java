@@ -5,17 +5,15 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.ColorRes;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -81,6 +79,8 @@ abstract class BaseFragment extends Fragment {
      */
     protected void navigateTo(int toFragmentId, Bundle bundle) {
         navController.navigate(toFragmentId, bundle);
+        // do not save any navigation history, tyr to force to follow the navigation graph, i.e, always return to parent view.
+        navController.clearBackStack(toFragmentId);
     }
 
     protected void navigateTo(int toFragmentId, Bundle bundle, boolean isDirect) {
@@ -96,10 +96,6 @@ abstract class BaseFragment extends Fragment {
         navController.navigate(R.id.nav_to_home, bundle);
     }
 
-    protected NavController getNavController() {
-        return navController;
-    }
-
     // -------------------------------------
     // common data input validation
     // -------------------------------------
@@ -107,7 +103,7 @@ abstract class BaseFragment extends Fragment {
     /**
      * used to check if a input field is empty or not
      *
-     * @param e inputfield to check
+     * @param e input field to check
      * @return true if not empty, otherwise false
      */
     protected boolean hasText(Editable e) {
@@ -137,5 +133,4 @@ abstract class BaseFragment extends Fragment {
             }
         };
     }
-
 }

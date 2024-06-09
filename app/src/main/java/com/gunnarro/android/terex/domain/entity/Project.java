@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @TypeConverters({LocalDateConverter.class, LocalDateTimeConverter.class})
-@Entity(tableName = "project", indices = {@Index(value = {"client_id", "project_name"},
+@Entity(tableName = "project", indices = {@Index(value = {"client_id", "name"},
         unique = true)})
 public class Project extends BaseEntity {
 
@@ -32,13 +32,13 @@ public class Project extends BaseEntity {
     private Long clientId;
 
     @NotNull
-    @ColumnInfo(name = "project_name")
+    @ColumnInfo(name = "name")
     private String name;
 
-    @ColumnInfo(name = "project_description")
+    @ColumnInfo(name = "description")
     private String description;
 
-    @ColumnInfo(name = "project_status")
+    @ColumnInfo(name = "status")
     private String status;
 
     @ColumnInfo(name = "hourly_rate")

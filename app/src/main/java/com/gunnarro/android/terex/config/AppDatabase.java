@@ -19,7 +19,6 @@ import com.gunnarro.android.terex.domain.entity.InvoiceAttachment;
 import com.gunnarro.android.terex.domain.entity.Organization;
 import com.gunnarro.android.terex.domain.entity.Person;
 import com.gunnarro.android.terex.domain.entity.Project;
-import com.gunnarro.android.terex.domain.entity.ProjectHistory;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
@@ -59,8 +58,10 @@ import java.util.concurrent.Executors;
         Organization.class,
         InvoiceAttachment.class,
         Client.class,
-}, version = 11, views = {TimesheetView.class}, exportSchema = true)
+}, version = AppDatabase.DB_SCHEMA_VERSION, views = {TimesheetView.class}, exportSchema = true)
 public abstract class AppDatabase extends RoomDatabase {
+    // Increase the version with one if the database schema has changed.
+    public static final int DB_SCHEMA_VERSION = 12;
     // marking the instance as volatile to ensure atomic access to the variable
     // The Java volatile keyword guarantees visibility of changes to variables across threads
     private static AppDatabase INSTANCE;
@@ -80,7 +81,7 @@ public abstract class AppDatabase extends RoomDatabase {
                    // .fallbackToDestructiveMigration()
                     .allowMainThreadQueries()
                    // .createFromAsset("database/init_data.sql") // FIXME is not executed
-                    .addMigrations(getMigration(context, 10, 11))
+                    .addMigrations(getMigration(context, DB_SCHEMA_VERSION - 1, DB_SCHEMA_VERSION))
                     .addCallback(roomCallback)
                     .build();
         }

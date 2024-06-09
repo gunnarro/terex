@@ -78,7 +78,7 @@ public class UserAccountServiceTest {
         userAccountDto.setId(id);
         userAccountDto.setUserName("guro-integration-test");
         userAccountDto.setPassword("nope");
-        userAccountDto.setDefaultUSer(true);
+        userAccountDto.setDefaultUser(true);
         userAccountDto.setUserAccountType(UserAccount.UserAccountTypeEnum.BUSINESS.name());
         OrganizationDto organizationDto = new OrganizationDto();
         organizationDto.setId(11L);

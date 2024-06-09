@@ -5,6 +5,7 @@ import com.gunnarro.android.terex.domain.dto.ClientDto;
 import com.gunnarro.android.terex.domain.dto.ContactInfoDto;
 import com.gunnarro.android.terex.domain.dto.OrganizationDto;
 import com.gunnarro.android.terex.domain.dto.PersonDto;
+import com.gunnarro.android.terex.domain.dto.ProjectDto;
 import com.gunnarro.android.terex.domain.dto.UserAccountDto;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
@@ -183,15 +184,14 @@ public class TestData {
     }
 
     public static UserAccountDto createUserAccountDto(Long id, String userName) {
-        UserAccountDto userAccount = new UserAccountDto();
-        userAccount.setId(id);
-        userAccount.setUserName(userName);
-        userAccount.setPassword("nope");
-        userAccount.setUserAccountType(UserAccount.UserAccountTypeEnum.BUSINESS.name());
-        OrganizationDto organizationDto = new OrganizationDto();
-        organizationDto.setId(11L);
-        userAccount.setOrganizationDto(organizationDto);
-        return userAccount;
+        UserAccountDto userAccountDto = new UserAccountDto();
+        userAccountDto.setId(id);
+        userAccountDto.setUserName(userName);
+        userAccountDto.setPassword("nope");
+        userAccountDto.setDefaultUser(true);
+        userAccountDto.setUserAccountType(UserAccount.UserAccountTypeEnum.BUSINESS.name());
+        userAccountDto.setOrganizationDto(TestData.createOrganizationDto(1L,"gunnarro as", "1122334455" ));
+        return userAccountDto;
     }
 
     public static ClientDto createClientDto(Long id, String orgName) {
@@ -212,5 +212,14 @@ public class TestData {
         contactInfoDto.setMobileNumber("44556677");
         contactPersonDto.setContactInfo(contactInfoDto);
         return contactPersonDto;
+    }
+
+    public static ProjectDto createProjectDto(Long id, Long clientId, String name) {
+        ProjectDto projectDto = new ProjectDto();
+        projectDto.setId(id);
+        projectDto.setName(name);
+        projectDto.setClientId(clientId);
+        projectDto.setHourlyRate(1000);
+        return projectDto;
     }
 }

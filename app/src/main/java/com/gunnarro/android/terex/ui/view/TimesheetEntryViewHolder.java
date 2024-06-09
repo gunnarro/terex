@@ -3,9 +3,9 @@ package com.gunnarro.android.terex.ui.view;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gunnarro.android.terex.R;
@@ -16,22 +16,19 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 public class TimesheetEntryViewHolder extends RecyclerView.ViewHolder {
+    private final ImageView timesheetEntryDeleteIconView;
     private final TextView timesheetEntryLineHeaderView;
     private final TextView timesheetEntryLine1StatusView;
     private final TextView timesheetEntryLine1LabelView;
     private final TextView timesheetEntryLine1ValueView;
-    // private final TextView timesheetEntryLine2LabelView;
-    //private final TextView timesheetEntryLine2ValueView;
-
 
     private TimesheetEntryViewHolder(View itemView) {
         super(itemView);
+        timesheetEntryDeleteIconView = itemView.findViewById(R.id.ic_timesheet_entry_row_delete);
         timesheetEntryLineHeaderView = itemView.findViewById(R.id.timesheet_entry_line_header);
         timesheetEntryLine1StatusView = itemView.findViewById(R.id.timesheet_entry_line_1_status);
         timesheetEntryLine1LabelView = itemView.findViewById(R.id.timesheet_entry_line_1_label);
         timesheetEntryLine1ValueView = itemView.findViewById(R.id.timesheet_entry_line_1_value);
-        // timesheetEntryLine2LabelView = itemView.findViewById(R.id.timesheet_entry_line_2_label);
-        // timesheetEntryLine2ValueView = itemView.findViewById(R.id.timesheet_entry_line_2_value);
     }
 
     public static TimesheetEntryViewHolder create(ViewGroup parent) {
@@ -40,6 +37,10 @@ public class TimesheetEntryViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bindListLine(TimesheetEntry timesheetEntry) {
+        if (timesheetEntry.isClosed()) {
+            // hide the delete icon
+            timesheetEntryDeleteIconView.setVisibility(View.INVISIBLE);
+        }
         timesheetEntryLineHeaderView.setText(timesheetEntry.getType() + ", timesheetId: " + timesheetEntry.getTimesheetId());
         if (timesheetEntry.isRegularWorkDay()) {
             timesheetEntryLineHeaderView.setTextColor(timesheetEntryLine1StatusView.getResources().getColor(R.color.timesheet_entry_type_regular, null));
@@ -59,7 +60,5 @@ public class TimesheetEntryViewHolder extends RecyclerView.ViewHolder {
         }
         timesheetEntryLine1LabelView.setText(String.format("%s - %s", Utility.formatTime(timesheetEntry.getFromTime()), Utility.formatTime(timesheetEntry.getToTime())));
         timesheetEntryLine1ValueView.setText(Utility.getTimeDiffInHours(timesheetEntry.getFromTime(), timesheetEntry.getToTime()));
-        // timesheetEntryLine2LabelView.setText(String.format("%s", "na")); // FIXME
-        //timesheetEntryLine2ValueView.setText(String.format("%s", 1200 * (timesheetEntry.getWorkedMinutes() / 60)));
     }
 }

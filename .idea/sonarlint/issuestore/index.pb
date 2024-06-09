@@ -352,3 +352,11 @@ t
 Dapp/src/main/java/com/gunnarro/android/terex/config/DbMigration.java,1/0/1069202492ee5bf1bec830e7305c0249fcb153f2
 w
 Gapp/src/main/java/com/gunnarro/android/terex/domain/dto/InvoiceDto.java,c/a/caa4fb2583787985739a3410163f0b3bba634c61
+w
+Gapp/src/main/java/com/gunnarro/android/terex/domain/entity/Billing.java,1/1/1104acfdde7d8655b3b18145a76f75ea2000ecf7
+Z
+*app/src/test/default-client-timesheet.html,d/e/de7a66f60fe83f48bcb32aee6fe8d70090c350d8
+f
+6app/src/test/invoice-timesheet-summary-attachment.html,6/0/60f2e4eea71dfaf5dc43de5a61eb04376912e588
+‚
+Rapp/src/test/java/com/gunnarro/android/terex/domain/dto/TimesheetEntryDtoTest.java,7/c/7c7102355b8ff435feb73043f7299706ea3b0b60

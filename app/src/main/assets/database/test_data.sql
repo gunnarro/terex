@@ -31,7 +31,7 @@ INSERT INTO client (id, uuid, created_date, last_modified_date, organization_id,
 
 -- update project data
 DELETE FROM project WHERE id > 1000;
-INSERT INTO project (id, uuid, created_date, last_modified_date, client_id, project_name, project_description, project_status, hourly_rate) VALUES(1055, '', current_timestamp, current_timestamp, 1001, 'CatalystOne HRIS modernisering', 'Fra monlith til microservice arkitektur', 'ACTIVE', 1250);
+INSERT INTO project (id, uuid, created_date, last_modified_date, client_id, name, description, status, hourly_rate) VALUES(1055, '', current_timestamp, current_timestamp, 1001, 'CatalystOne HRIS modernisering', 'Fra monlith til microservice arkitektur', 'ACTIVE', 1250);
 
 -- update timesheet data
 DELETE FROM timesheet WHERE id > 1000;

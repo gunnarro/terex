@@ -50,7 +50,7 @@ class UserAccountServiceTest {
         assertEquals(userAccount.getId(), userAccountDto.getId());
         assertEquals(userAccount.getUserName(), userAccountDto.getUserName());
         assertEquals(userAccount.getPassword(), userAccountDto.getPassword());
-        assertEquals(userAccount.isDefaultUser(), userAccountDto.isDefaultUSer());
+        assertEquals(userAccount.isDefaultUser(), userAccountDto.isDefaultUser());
         assertNull(userAccountDto.getPersonDto());
         assertEquals(userAccount.getUserAccountType(), userAccountDto.getUserAccountType());
         assertEquals(userAccount.getOrganizationId(), userAccountDto.getOrganizationDto().getId());
@@ -69,7 +69,7 @@ class UserAccountServiceTest {
         assertEquals(userAccount.getId(), userAccountDto.getId());
         assertEquals(userAccount.getUserName(), userAccountDto.getUserName());
         assertEquals(userAccount.getPassword(), userAccountDto.getPassword());
-        assertEquals(userAccount.isDefaultUser(), userAccountDto.isDefaultUSer());
+        assertEquals(userAccount.isDefaultUser(), userAccountDto.isDefaultUser());
         assertNull(userAccountDto.getPersonDto());
         assertEquals(userAccount.getUserAccountType(), userAccountDto.getUserAccountType());
         assertEquals(userAccount.getOrganizationId(), userAccountDto.getOrganizationDto().getId());

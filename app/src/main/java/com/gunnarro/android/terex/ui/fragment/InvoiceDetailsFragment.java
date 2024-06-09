@@ -130,7 +130,7 @@ public class InvoiceDetailsFragment extends BaseFragment {
         invoiceAttachmentTypes = invoiceService.getInvoiceAttachmentTypes();
         byte[] invoiceAttachmentHtml = null;
         try {
-            invoiceAttachmentHtml = invoiceService.getInvoiceAttachment(invoiceId, invoiceAttachmentType, InvoiceService.InvoiceAttachmentFileTypes.HTML).getAttachmentFileContent();
+            invoiceAttachmentHtml = invoiceService.getInvoiceAttachment(invoiceId, invoiceAttachmentType, InvoiceService.InvoiceAttachmentFileTypes.HTML).getFileContent();
         } catch (Exception e) {
             showInfoDialog("Error", String.format("Application error!%sError: %s%s Please report.", e.getMessage(), System.lineSeparator(), System.lineSeparator()));
         }

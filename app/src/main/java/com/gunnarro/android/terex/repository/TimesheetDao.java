@@ -67,7 +67,7 @@ public interface TimesheetDao {
     @Query("SELECT sum(timesheet_entry.worked_in_min) FROM timesheet INNER JOIN timesheet_entry ON timesheet_entry.timesheet_id = timesheet.id WHERE timesheet.id = :timesheetId")
     Integer getWorkedMinutes(Long timesheetId);
 
-    @Query("SELECT project.project_name FROM timesheet INNER JOIN project ON project.id = timesheet.project_id WHERE timesheet.id = :timesheetId")
+    @Query("SELECT project.name FROM timesheet INNER JOIN project ON project.id = timesheet.project_id WHERE timesheet.id = :timesheetId")
     String getProjectName(Long timesheetId);
 
     @Query("SELECT user_account.user_name FROM timesheet INNER JOIN user_account ON user_account.id = timesheet.user_account_id WHERE timesheet.id = :timesheetId")

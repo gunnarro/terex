@@ -60,6 +60,7 @@ public class TestData {
     public static UserAccountDto createUserAccountDto(Long id, String userName) {
         UserAccountDto userAccountDto = new UserAccountDto();
         userAccountDto.setId(id);
+        userAccountDto.setDefaultUser(true);
         userAccountDto.setUserName(userName);
         userAccountDto.setPassword("nope");
         userAccountDto.setUserAccountType(UserAccount.UserAccountTypeEnum.BUSINESS.name());

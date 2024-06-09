@@ -12,10 +12,10 @@ import com.gunnarro.android.terex.domain.entity.InvoiceAttachment;
 @Dao
 public interface InvoiceAttachmentDao {
 
-    @Query("SELECT * FROM invoice_attachment i WHERE i.invoice_id = :invoiceId AND i.attachment_type = :attachmentType AND i.attachment_file_name = :attachmentFileName AND i.attachment_file_type = :attachmentFileType")
+    @Query("SELECT * FROM invoice_attachment a WHERE a.invoice_id = :invoiceId AND a.type = :attachmentType AND a.file_name = :attachmentFileName AND a.file_type = :attachmentFileType")
     InvoiceAttachment findInvoiceAttachment(Long invoiceId, String attachmentType, String attachmentFileName, String attachmentFileType);
 
-    @Query("SELECT * FROM invoice_attachment i WHERE i.invoice_id = :invoiceId AND i.attachment_type = :attachmentType AND i.attachment_file_type = :attachmentFileType")
+    @Query("SELECT * FROM invoice_attachment a WHERE a.invoice_id = :invoiceId AND a.type = :attachmentType AND a.file_type = :attachmentFileType")
     InvoiceAttachment getInvoiceAttachment(Long invoiceId, String attachmentType, String attachmentFileType);
 
     /**

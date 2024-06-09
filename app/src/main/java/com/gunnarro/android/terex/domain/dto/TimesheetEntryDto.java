@@ -1,5 +1,7 @@
 package com.gunnarro.android.terex.domain.dto;
 
+import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -12,6 +14,7 @@ public class TimesheetEntryDto {
     private LocalTime toTime;
     private Integer workedMinutes;
     private String comments;
+    private String type = TimesheetEntry.TimesheetEntryTypeEnum.REGULAR.name();
 
     public TimesheetEntryDto() {
     }
@@ -56,6 +59,14 @@ public class TimesheetEntryDto {
         this.comments = comments;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     // helper methods
 
     public String getWorkedHours() {
@@ -71,5 +82,25 @@ public class TimesheetEntryDto {
         } else {
             return workdayDate.format(DateTimeFormatter.ofPattern("dd"));
         }
+    }
+
+    public String getWorkdayDateDayName() {
+        return workdayDate.format(DateTimeFormatter.ofPattern("EEEE"));
+    }
+
+    public boolean isWeekend() {
+        return workdayDate.format(DateTimeFormatter.ofPattern("EEE")).equalsIgnoreCase("sat") || workdayDate.format(DateTimeFormatter.ofPattern("EEE")).equalsIgnoreCase("sun");
+    }
+
+    public boolean isRegularWorkDay() {
+        return type.equals(TimesheetEntry.TimesheetEntryTypeEnum.REGULAR.name());
+    }
+
+    public boolean isVacationDay() {
+        return type.equals(TimesheetEntry.TimesheetEntryTypeEnum.VACATION.name());
+    }
+
+    public boolean isSickDay() {
+        return type.equals(TimesheetEntry.TimesheetEntryTypeEnum.SICK.name());
     }
 }

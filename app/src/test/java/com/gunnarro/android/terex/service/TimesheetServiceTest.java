@@ -318,11 +318,15 @@ class TimesheetServiceTest {
     }
 
     @Test
-    void createTimesheetListHtml() throws IOException {
+    void createClientTimesheetHtml() throws IOException {
         Timesheet timesheet = new Timesheet();
         timesheet.setId(23L);
+        timesheet.setUserId(1L);
+        timesheet.setProjectId(2L);
         timesheet.setFromDate(LocalDate.of(2023, 12, 1));
         timesheet.setToDate(LocalDate.of(2023, 12, 31));
+        timesheet.setYear(2024);
+        timesheet.setMonth(6);
 
         File mustacheTemplateFile = new File("src/main/assets/" + InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.getTemplate());
         Context applicationContextMock = mock(Context.class);
@@ -331,6 +335,8 @@ class TimesheetServiceTest {
         when(applicationContextMock.getAssets()).thenReturn(assetManagerMock);
         List<TimesheetEntry> timesheetEntryList = TestData.generateTimesheetEntries(timesheet.getFromDate().getYear(), timesheet.getFromDate().getMonthValue());
 
+        when(projectServiceMock.getProject(anyLong())).thenReturn(TestData.createProjectDto(22L, 1L, "terex development"));
+        when(userAccountServiceMock.getUserAccount(anyLong())).thenReturn(TestData.createUserAccountDto(23L, "Petter Dass"));
         when(timesheetRepositoryMock.getTimesheet(anyLong())).thenReturn(timesheet);
         when(timesheetRepositoryMock.getTimesheetEntryList(anyLong())).thenReturn(timesheetEntryList);
 
@@ -338,15 +344,20 @@ class TimesheetServiceTest {
 
         String templateHtml = timesheetService.createTimesheetListHtml(23L, clientTimesheetMustacheTemplate);
         assertNotNull(templateHtml);
-        //saveToFile("src/test/" + InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.getFileName() + ".html", templateHtml);
+        saveToFile("src/test/" + InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.getFileName() + ".html", templateHtml);
     }
 
     @Test
     void createTimesheetSummaryHtml() throws IOException {
         Timesheet timesheet = new Timesheet();
         timesheet.setId(23L);
+        timesheet.setUserId(1L);
+        timesheet.setProjectId(2L);
         timesheet.setFromDate(LocalDate.of(2023, 12, 1));
         timesheet.setToDate(LocalDate.of(2023, 12, 31));
+        timesheet.setYear(2023);
+        timesheet.setMonth(12);
+
         File mustacheTemplateFile = new File("src/main/assets/" + InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getTemplate());
         Context applicationContextMock = mock(Context.class);
         AssetManager assetManagerMock = mock(AssetManager.class);
@@ -355,11 +366,13 @@ class TimesheetServiceTest {
 
         String timesheetSummaryMustacheTemplate = loadMustacheTemplate(applicationContextMock, InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY);
 
+        when(projectServiceMock.getProject(anyLong())).thenReturn(TestData.createProjectDto(22L, 1L, "terex development"));
+        when(userAccountServiceMock.getUserAccount(anyLong())).thenReturn(TestData.createUserAccountDto(23L, "Petter Dass"));
         when(timesheetRepositoryMock.getTimesheet(anyLong())).thenReturn(timesheet);
         when(timesheetRepositoryMock.getTimesheetEntryList(anyLong())).thenReturn(TestData.generateTimesheetEntries(2023, 12));
         String templateHtml = timesheetService.createTimesheetSummaryHtml(23L, 1250, timesheetSummaryMustacheTemplate);
         assertNotNull(templateHtml);
-        // saveToFile("src/test/" + InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getFileName() + ".html", templateHtml);
+        saveToFile("src/test/" + InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getFileName() + ".html", templateHtml);
     }
 
     @Test
@@ -391,7 +404,7 @@ class TimesheetServiceTest {
 
         String templateHtml = timesheetService.createTimesheetSummaryAttachmentHtml(timesheet.getId(), invoiceIssuer, invoiceReceiver, timesheetSummaryMustacheTemplate);
         assertNotNull(templateHtml);
-        //saveToFile("src/test/" + InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getFileName() + ".html", templateHtml);
+        saveToFile("src/test/" + InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getFileName() + ".html", templateHtml);
     }
 
     private void saveToFile(String filePath, String content) throws IOException {
