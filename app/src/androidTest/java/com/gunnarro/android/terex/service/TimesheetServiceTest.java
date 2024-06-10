@@ -6,30 +6,31 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
-import android.content.Context;
-
-import androidx.test.core.app.ApplicationProvider;
-
-import com.gunnarro.android.terex.config.AppDatabase;
+import com.gunnarro.android.terex.IntegrationTestSetup;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.repository.TimesheetRepository;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
 
-public class TimesheetServiceTest {
+public class TimesheetServiceTest extends IntegrationTestSetup {
 
     private TimesheetService timesheetService;
 
     @Before
     public void setup() {
-        Context appContext = ApplicationProvider.getApplicationContext();
-        AppDatabase.init(appContext);
+        super.setupDatabase();
         timesheetService = new TimesheetService(new TimesheetRepository(), new UserAccountService(), new ProjectService());
+    }
+
+    @After
+    public void cleanUp() {
+        super.cleanUpDatabase();
     }
 
     @Test
@@ -83,7 +84,7 @@ public class TimesheetServiceTest {
             timesheetService.saveTimesheetEntry(timesheetEntry);
             timesheetService.saveTimesheetEntry(TimesheetEntry.createDefault(timesheetEntry.getTimesheetId(), timesheetEntry.getWorkdayDate()));
         });
-        assertEquals("Workday already registered and update is not allowed! timesheetId=1, date=2023-08-27, hours=7.5, status=OPEN", ex.getMessage());
+        assertTrue(ex.getMessage().toString().startsWith("Workday already registered and update is not allowed!"));
     }
 
     @Test

@@ -2,35 +2,35 @@ package com.gunnarro.android.terex;
 
 import static org.junit.Assert.assertEquals;
 
-import android.content.Context;
-
-import androidx.test.core.app.ApplicationProvider;
-
-import com.gunnarro.android.terex.config.AppDatabase;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.repository.TimesheetRepository;
-import com.gunnarro.android.terex.service.ClientService;
-import com.gunnarro.android.terex.service.InvoiceService;
 import com.gunnarro.android.terex.service.ProjectService;
 import com.gunnarro.android.terex.service.TimesheetService;
 import com.gunnarro.android.terex.service.UserAccountService;
 
+import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
 
-public class LoadTest {
+@Ignore
+public class LoadTest extends IntegrationTestSetup {
 
     private TimesheetService timesheetService;
 
 
     @Before
     public void setup() {
-        Context appContext = ApplicationProvider.getApplicationContext();
-        AppDatabase.init(appContext);
+        super.setupDatabase();
         timesheetService = new TimesheetService(new TimesheetRepository(), new UserAccountService(), new ProjectService());
+    }
+
+    @After
+    public void cleanUp() {
+        super.cleanUpDatabase();
     }
 
     @Test

@@ -4,11 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
-import android.content.Context;
-
 import androidx.test.core.app.ApplicationProvider;
 
-import com.gunnarro.android.terex.config.AppDatabase;
 import com.gunnarro.android.terex.domain.dto.ClientDto;
 import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.InvoiceAttachment;
@@ -23,12 +20,13 @@ import com.gunnarro.android.terex.service.TimesheetService;
 import com.gunnarro.android.terex.service.UserAccountService;
 import com.gunnarro.android.terex.utility.Utility;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
 
-public class FunctionalTest {
+public class FunctionalTest extends IntegrationTestSetup {
 
     private TimesheetService timesheetService;
     private UserAccountService userAccountService;
@@ -38,13 +36,17 @@ public class FunctionalTest {
 
     @Before
     public void setup() {
-        Context appContext = ApplicationProvider.getApplicationContext();
-        AppDatabase.init(appContext);
+        super.setupDatabase();
         userAccountService = new UserAccountService();
         projectService = new ProjectService();
         timesheetService = new TimesheetService(new TimesheetRepository(), new UserAccountService(), new ProjectService());
         clientService = new ClientService();
         invoiceService = new InvoiceService();
+    }
+
+    @After
+    public void cleanUp() {
+        super.cleanUpDatabase();
     }
 
     /**

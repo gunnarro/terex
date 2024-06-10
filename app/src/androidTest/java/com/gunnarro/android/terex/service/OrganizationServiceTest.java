@@ -4,13 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import android.content.Context;
-
-import androidx.room.Room;
-import androidx.test.core.app.ApplicationProvider;
-
-import com.gunnarro.android.terex.DbHelper;
-import com.gunnarro.android.terex.config.AppDatabase;
+import com.gunnarro.android.terex.IntegrationTestSetup;
 import com.gunnarro.android.terex.domain.dto.BusinessAddressDto;
 import com.gunnarro.android.terex.domain.dto.ContactInfoDto;
 import com.gunnarro.android.terex.domain.dto.OrganizationDto;
@@ -18,28 +12,23 @@ import com.gunnarro.android.terex.domain.dto.PersonDto;
 import com.gunnarro.android.terex.repository.AddressRepository;
 import com.gunnarro.android.terex.repository.OrganizationRepository;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.List;
-
-public class OrganizationServiceTest {
+public class OrganizationServiceTest extends IntegrationTestSetup {
 
     private OrganizationService organizationService;
 
     @Before
     public void setup() {
-        Context appContext = ApplicationProvider.getApplicationContext();
-        AppDatabase appDatabase = Room.inMemoryDatabaseBuilder(appContext, AppDatabase.class).build();
-        AppDatabase.init(appContext);
+        super.setupDatabase();
         organizationService = new OrganizationService(new OrganizationRepository(), new AddressRepository(), new ContactInfoService(), new PersonService());
-        // load test data
-        List<String> sqlQueryList = DbHelper.readMigrationSqlQueryFile(appContext, "database/test_data.sql");
-        sqlQueryList.forEach(query -> {
-            System.out.println(query);
-            appDatabase.getOpenHelper().getWritableDatabase().execSQL(query);
-        });
-        assertTrue(appDatabase.getOpenHelper().getWritableDatabase().isDatabaseIntegrityOk());
+    }
+
+    @After
+    public void cleanUp() {
+        super.cleanUpDatabase();
     }
 
     @Test

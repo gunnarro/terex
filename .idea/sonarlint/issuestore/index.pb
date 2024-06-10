@@ -358,3 +358,5 @@ f
 6app/src/test/invoice-timesheet-summary-attachment.html,6/0/60f2e4eea71dfaf5dc43de5a61eb04376912e588
 ‚
 Rapp/src/test/java/com/gunnarro/android/terex/domain/dto/TimesheetEntryDtoTest.java,7/c/7c7102355b8ff435feb73043f7299706ea3b0b60
+}
+Mapp/src/androidTest/java/com/gunnarro/android/terex/IntegrationTestSetup.java,f/9/f961107cd584230b59728fffddeae9cc67dc7a72

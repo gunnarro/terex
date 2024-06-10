@@ -2,53 +2,32 @@ package com.gunnarro.android.terex.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
-import android.content.Context;
-
-import androidx.room.Room;
-import androidx.test.core.app.ApplicationProvider;
-
-import com.gunnarro.android.terex.DbHelper;
-import com.gunnarro.android.terex.config.AppDatabase;
+import com.gunnarro.android.terex.IntegrationTestSetup;
 import com.gunnarro.android.terex.domain.dto.OrganizationDto;
 import com.gunnarro.android.terex.domain.dto.UserAccountDto;
 import com.gunnarro.android.terex.domain.entity.UserAccount;
 import com.gunnarro.android.terex.repository.UserAccountRepository;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.List;
-
-public class UserAccountServiceTest {
+public class UserAccountServiceTest extends IntegrationTestSetup {
 
     private UserAccountService userAccountService;
-    private AppDatabase appDatabase;
 
     @Before
     public void setup() {
-        Context appContext = ApplicationProvider.getApplicationContext();
-        appDatabase = Room.inMemoryDatabaseBuilder(appContext, AppDatabase.class).build();
-        AppDatabase.init(appContext);
+        super.setupDatabase();
         userAccountService = new UserAccountService(new UserAccountRepository(), new OrganizationService());
-        // load test data
-        List<String> sqlQueryList = DbHelper.readMigrationSqlQueryFile(appContext, "database/test_data.sql");
-        appDatabase.getOpenHelper().getWritableDatabase().beginTransaction();
-        sqlQueryList.forEach(query -> {
-            System.out.println(query);
-            appDatabase.getOpenHelper().getWritableDatabase().execSQL(query);
-        });
-        appDatabase.getOpenHelper().getWritableDatabase().endTransaction();
-        assertTrue(appDatabase.getOpenHelper().getWritableDatabase().isDatabaseIntegrityOk());
     }
-/* fixme
-    @Test
-    public void getUserAccount_business() {
-        UserAccountDto userAccountDto = userAccountService.getUserAccount(2001L);
-        assertEquals(2001, userAccountDto.getId().longValue());
+
+    @After
+    public void cleanUp() {
+        super.cleanUpDatabase();
     }
-*/
+
     @Test
     public void getUserAccount_not_found() {
         assertNull(userAccountService.getUserAccount(456L));

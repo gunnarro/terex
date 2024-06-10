@@ -3,14 +3,8 @@ package com.gunnarro.android.terex.service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
-import android.content.Context;
-
-import androidx.room.Room;
-import androidx.test.core.app.ApplicationProvider;
-
-import com.gunnarro.android.terex.config.AppDatabase;
+import com.gunnarro.android.terex.IntegrationTestSetup;
 import com.gunnarro.android.terex.domain.dto.BusinessAddressDto;
 import com.gunnarro.android.terex.domain.dto.ClientDto;
 import com.gunnarro.android.terex.domain.dto.ContactInfoDto;
@@ -20,31 +14,25 @@ import com.gunnarro.android.terex.domain.entity.Client;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.repository.ClientRepository;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
 
-public class ClientServiceTest {
+public class ClientServiceTest extends IntegrationTestSetup {
 
     private ClientService clientService;
 
     @Before
     public void setup() {
-        Context appContext = ApplicationProvider.getApplicationContext();
-        AppDatabase appDatabase = Room.inMemoryDatabaseBuilder(appContext, AppDatabase.class).build();
-        AppDatabase.init(appContext);
+        super.setupDatabase();
         clientService = new ClientService(new ClientRepository(), new OrganizationService(), new ProjectService(), new PersonService());
-        // load test data
-        /*
-        List<String> sqlQueryList = DbHelper.readMigrationSqlQueryFile(appContext, "database/test_data.sql");
-        appDatabase.runInTransaction(() -> sqlQueryList.forEach(query -> {
-            System.out.printf("DB test data sql query: %s%n", query);
-            appDatabase.getOpenHelper().getWritableDatabase().execSQL(query);
-        }));
-         */
-        appDatabase.clientDao().insert(createClient());
-        assertTrue(appDatabase.getOpenHelper().getWritableDatabase().isDatabaseIntegrityOk());
+    }
+
+    @After
+    public void cleanUp() {
+        super.cleanUpDatabase();
     }
 
     @Test(expected = TerexApplicationException.class)
@@ -53,16 +41,19 @@ public class ClientServiceTest {
     }
 
     @Test
-    public void getClientByTimesheetId() {
-        ClientDto clientDto = clientService.getClientByTimesheetId(99L);
-        assertEquals("", clientDto.getName());
+    public void getClientByTimesheetId_error() {
+        try {
+            clientService.getClientByTimesheetId(99L);
+        } catch (TerexApplicationException e) {
+            assertEquals("Application error! Please Report error to app developer. Error=Timesheet id is not linked to a client! timesheetId=99", e.getMessage());
+        }
     }
 
     @Test
     public void getClient() {
         ClientDto clientDto = clientService.getClient(1L);
         assertNotNull(clientDto);
-        assertEquals("GUNNARRO AS", clientDto.getName());
+        assertEquals("gunnarro unittest as", clientDto.getName());
     }
 
     @Test
