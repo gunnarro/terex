@@ -139,8 +139,6 @@ Napp/src/main/java/com/gunnarro/android/terex/repository/TimesheetEntryDao.java
 Oapp/src/main/java/com/gunnarro/android/terex/domain/mapper/TimesheetMapper.java,1/9/192fc739c44371dd9497d407e741daf0dd160639
 y
 Iapp/src/main/java/com/gunnarro/android/terex/domain/dto/TimesheetDto.java,c/3/c33a2efc576d54e69234ffd5a40a1cada41d2467
-]
--app/src/test/norway-consulting-timesheet.html,a/6/a66369ffaf9c248178c65b070d428a445f90fbc0
 ƒ
 Sapp/src/test/java/com/gunnarro/android/terex/domain/mapper/TimesheetMapperTest.java,b/6/b6f8eca402db2dd97c5eb4171b52e530bb9fe649
 ~
