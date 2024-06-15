@@ -67,9 +67,6 @@
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title"><strong>Oversikt fakturerte timer</strong></h3>
-                </div>
                 <div class="panel-body">
                     <div class="table-responsive">
                         <table class="table table-condensed">
@@ -78,7 +75,6 @@
                             <tr>
                                 <th class="text-center">Dato</th>
                                 <th class="text-center">Dag</th>
-                                <th class="text-center">Type</th>
                                 <th class="text-center">Tid</th>
                                 <th class="text-center">Timer</th>
                                 <th class="text-center">Beskrivelse</th>
@@ -87,16 +83,14 @@
                             <tbody>
                             {{#timesheetEntryDtoList}}
                             <tr>
-                                <td class="text-start {{#isWeekend}}text-danger{{/isWeekend}}"">{{workdayDateDay}}</td>
-                                <td class="text-start {{#isWeekend}}text-danger{{/isWeekend}}">{{workdayDateDayName}}</td>
-                                <td class="text-center">{{type}}</td>
+                                <td class="text-start {{#isWeekend}}text-primary{{/isWeekend}} {{#isSickDay}}text-muted{{/isSickDay}} {{#isVacationDay}}text-muted{{/isVacationDay}}">{{workdayDateDay}}</td>
+                                <td class="text-start {{#isWeekend}}text-primary{{/isWeekend}} {{#isSickDay}}text-muted{{/isSickDay}} {{#isVacationDay}}text-muted{{/isVacationDay}}">{{workdayDateDayName}}</td>
                                 <td class="text-center">{{fromTime}} - {{toTime}}</td>
                                 <td class="text-end text-primary">{{workedHours}}</td>
-                                <td class="text-end">{{comment}}</td>
+                                <td class="text-start">{{#isSickDay}}sick{{/isSickDay}} {{#isVacationDay}}vacation{{/isVacationDay}} {{comment}} {{type}}</td>
                             </tr>
                             {{/timesheetEntryDtoList}}
                             <tr>
-                                <td class="thick-line"></td>
                                 <td class="thick-line"></td>
                                 <td class="thick-line"></td>
                                 <td class="thick-line text-center"><strong>Sum</strong></td>

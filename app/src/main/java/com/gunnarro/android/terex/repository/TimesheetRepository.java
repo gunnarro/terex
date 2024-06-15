@@ -315,12 +315,12 @@ public class TimesheetRepository {
         return timesheetDao.getTimesheetStatus(timesheetId);
     }
 
-    public Integer getNumberOfRegisteredWorkDays(Long timesheetId) {
+    public Integer getTotalWorkedDays(Long timesheetId) {
         Integer days = timesheetDao.getWorkedDays(timesheetId);
         return days != null ? days : 0;
     }
 
-    public Integer getNumberOfRegisteredWorkTime(Long timesheetId) {
+    public Integer getTotalWorkedHours(Long timesheetId) {
         Integer minutes = timesheetDao.getWorkedMinutes(timesheetId);
         return minutes != null ? minutes / 60 : 0;
     }

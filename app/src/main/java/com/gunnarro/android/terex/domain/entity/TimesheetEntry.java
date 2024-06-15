@@ -73,7 +73,7 @@ public class TimesheetEntry extends BaseEntity {
      */
     @NonNull
     @ColumnInfo(name = "type", defaultValue = "REGULAR")
-    private String type;
+    private String type = TimesheetEntryTypeEnum.REGULAR.name();
 
     @NonNull
     @ColumnInfo(name = "start_time")

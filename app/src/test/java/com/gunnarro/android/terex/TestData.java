@@ -77,7 +77,7 @@ public class TestData {
 
     public static List<TimesheetSummary> buildTimesheetSummaryByWeek(Long timesheetId, Integer year, Integer month, Integer hourlyRate) {
         Map<Integer, List<TimesheetEntry>> weekMap = new HashMap<>();
-        generateTimesheetEntries(year, month).forEach(t -> {
+        generateTimesheetEntries(year, month, List.of(), List.of()).forEach(t -> {
             int week = getWeek(t.getWorkdayDate());
             if (!weekMap.containsKey(week)) {
                 weekMap.put(week, new ArrayList<>());
@@ -110,12 +110,18 @@ public class TestData {
      * @param year  current year
      * @param month from january to december, for example Month.MARCH
      */
-    public static List<TimesheetEntry> generateTimesheetEntries(Integer year, Integer month) {
-        return getWorkingDays(year, month).stream().map(TestData::createTimesheetEntry).collect(Collectors.toList());
+    public static List<TimesheetEntry> generateTimesheetEntries(Integer year, Integer month, List<Integer> sickDates, List<Integer> vacationDates) {
+        return getWorkingDays(year, month).stream().map(e -> TestData.createTimesheetEntry(e, sickDates, vacationDates)).collect(Collectors.toList());
     }
 
-    private static TimesheetEntry createTimesheetEntry(LocalDate day) {
-        return TimesheetEntry.createDefault(new java.util.Random().nextLong(), day);
+    private static TimesheetEntry createTimesheetEntry(LocalDate day, List<Integer> sickDates, List<Integer> vacationDates) {
+        TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(new java.util.Random().nextLong(), day);
+        if (sickDates.contains(timesheetEntry.getWorkdayDate().getDayOfMonth())) {
+            timesheetEntry.setType(TimesheetEntry.TimesheetEntryTypeEnum.SICK.name());
+        } else if (vacationDates.contains(timesheetEntry.getWorkdayDate().getDayOfMonth())) {
+            timesheetEntry.setType(TimesheetEntry.TimesheetEntryTypeEnum.VACATION.name());
+        }
+        return timesheetEntry;
     }
 
     public static List<LocalDate> getWorkingDays(Integer year, Integer month) {
@@ -193,7 +199,7 @@ public class TestData {
         userAccountDto.setPassword("nope");
         userAccountDto.setDefaultUser(true);
         userAccountDto.setUserAccountType(UserAccount.UserAccountTypeEnum.BUSINESS.name());
-        userAccountDto.setOrganizationDto(TestData.createOrganizationDto(1L,"gunnarro as", "1122334455" ));
+        userAccountDto.setOrganizationDto(TestData.createOrganizationDto(1L, "gunnarro as", "1122334455"));
         return userAccountDto;
     }
 

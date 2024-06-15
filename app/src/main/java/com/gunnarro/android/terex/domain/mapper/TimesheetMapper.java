@@ -88,7 +88,7 @@ public class TimesheetMapper {
 
     public static TimesheetEntryDto toTimesheetEntryDto(TimesheetEntry timesheetEntry) {
         TimesheetEntryDto timesheetEntryDto = new TimesheetEntryDto();
-        timesheetEntryDto.setType(timesheetEntryDto.getType());
+        timesheetEntryDto.setType(timesheetEntry.getType());
         timesheetEntryDto.setWorkdayDate(timesheetEntry.getWorkdayDate());
         timesheetEntryDto.setFromTime(timesheetEntry.getFromTime());
         timesheetEntryDto.setToTime(timesheetEntry.getToTime());

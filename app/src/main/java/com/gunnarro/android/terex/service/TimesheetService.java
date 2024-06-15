@@ -79,8 +79,8 @@ public class TimesheetService {
         TimesheetDto timesheetDto = TimesheetMapper.toTimesheetDto(timesheet, null, null);
         timesheetDto.setUserAccountDto(userAccountService.getUserAccount(timesheet.getUserId()));
         timesheetDto.setProjectDto(projectService.getProject(timesheet.getProjectId()));
-        timesheetDto.setRegisteredWorkedDays(timesheetRepository.getNumberOfRegisteredWorkDays(timesheetId));
-        timesheetDto.setRegisteredWorkedHours(timesheetRepository.getNumberOfRegisteredWorkTime(timesheetId));
+        timesheetDto.setRegisteredWorkedDays(timesheetRepository.getTotalWorkedDays(timesheetId));
+        timesheetDto.setRegisteredWorkedHours(timesheetRepository.getTotalWorkedHours(timesheetId));
         return timesheetDto;
     }
 
@@ -453,11 +453,10 @@ public class TimesheetService {
                 }
             }
             if (!isInList) {
-                TimesheetEntry timesheetEntry = new TimesheetEntry();
-                timesheetEntry.setTimesheetId(timesheetId);
-                timesheetEntry.setStatus(TimesheetEntry.TimesheetEntryStatusEnum.CLOSED.name());
-                timesheetEntry.setWorkdayDate(date);
+                TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(timesheetId, date);
                 timesheetEntry.setWorkedMinutes(0);
+                timesheetEntry.setBreakInMin(0);
+                timesheetEntry.setStatus(TimesheetEntry.TimesheetEntryStatusEnum.CLOSED.name());
                 timesheetEntryList.add(timesheetEntry);
             }
         }

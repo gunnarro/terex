@@ -288,7 +288,7 @@ class TimesheetServiceTest {
         regularTimesheetEntry.setBreakInMin(30);
 
 
-        List<TimesheetEntry> timesheetEntryList = TestData.generateTimesheetEntries(timesheetExisting.getYear(), timesheetExisting.getMonth());
+        List<TimesheetEntry> timesheetEntryList = TestData.generateTimesheetEntries(timesheetExisting.getYear(), timesheetExisting.getMonth(), List.of(), List.of());
         when(timesheetRepositoryMock.getTimesheet(timesheetExisting.getId())).thenReturn(timesheetExisting);
         when(timesheetRepositoryMock.getTimesheetEntryList(regularTimesheetEntry.getTimesheetId())).thenReturn(timesheetEntryList);
 
@@ -324,7 +324,7 @@ class TimesheetServiceTest {
         regularTimesheetEntry.setWorkedMinutes(450);
         regularTimesheetEntry.setBreakInMin(30);
 
-        List<TimesheetEntry> timesheetEntryList = TestData.generateTimesheetEntries(timesheetExisting.getYear(), timesheetExisting.getMonth());
+        List<TimesheetEntry> timesheetEntryList = TestData.generateTimesheetEntries(timesheetExisting.getYear(), timesheetExisting.getMonth(), List.of(), List.of());
         // remove 3 days from week 3
         Predicate<TimesheetEntry> workday8 = item -> item.getWorkdayDate().isEqual(LocalDate.of(month.getYear(), month.getMonthValue(), 8));
         Predicate<TimesheetEntry> workday14 = item -> item.getWorkdayDate().isEqual(LocalDate.of(month.getYear(), month.getMonthValue(), 14));
@@ -367,18 +367,7 @@ class TimesheetServiceTest {
         regularTimesheetEntry.setWorkedMinutes(450);
         regularTimesheetEntry.setBreakInMin(30);
 
-        List<TimesheetEntry> timesheetEntryList = TestData.generateTimesheetEntries(timesheetExisting.getYear(), timesheetExisting.getMonth());
-
-        // remove 3 days from week 3
-        Predicate<TimesheetEntry> workday8 = item -> item.getWorkdayDate().isEqual(LocalDate.of(month.getYear(), month.getMonthValue(), 8));
-        Predicate<TimesheetEntry> workday14 = item -> item.getWorkdayDate().isEqual(LocalDate.of(month.getYear(), month.getMonthValue(), 14));
-        Predicate<TimesheetEntry> workday15 = item -> item.getWorkdayDate().isEqual(LocalDate.of(month.getYear(), month.getMonthValue(), 15));
-        Predicate<TimesheetEntry> workday16 = item -> item.getWorkdayDate().isEqual(LocalDate.of(month.getYear(), month.getMonthValue(), 16));
-
-        timesheetEntryList.stream().filter(workday8).findAny().get().setType(TimesheetEntry.TimesheetEntryTypeEnum.SICK.name());
-        timesheetEntryList.stream().filter(workday14).findAny().get().setType(TimesheetEntry.TimesheetEntryTypeEnum.VACATION.name());
-        timesheetEntryList.stream().filter(workday15).findAny().get().setType(TimesheetEntry.TimesheetEntryTypeEnum.VACATION.name());
-        timesheetEntryList.stream().filter(workday16).findAny().get().setType(TimesheetEntry.TimesheetEntryTypeEnum.SICK.name());
+        List<TimesheetEntry> timesheetEntryList = TestData.generateTimesheetEntries(timesheetExisting.getYear(), timesheetExisting.getMonth(), List.of(8, 16), List.of(14, 15));
 
         when(timesheetRepositoryMock.getTimesheet(timesheetExisting.getId())).thenReturn(timesheetExisting);
         when(timesheetRepositoryMock.getTimesheetEntryList(regularTimesheetEntry.getTimesheetId())).thenReturn(timesheetEntryList);
@@ -403,10 +392,7 @@ class TimesheetServiceTest {
     }
 
 
-    private static void assertTimesheetSummaryDto(TimesheetSummaryDto timesheetSummaryDto,
-                                                  LocalDate month,
-                                                  long timesheetId,
-                                                  int weekInYear, String period, int workedDays, int vacationDays, int sickDays, String workedHours, String billedAmount) {
+    private static void assertTimesheetSummaryDto(TimesheetSummaryDto timesheetSummaryDto, LocalDate month, long timesheetId, int weekInYear, String period, int workedDays, int vacationDays, int sickDays, String workedHours, String billedAmount) {
         assertEquals(timesheetId, timesheetSummaryDto.getTimesheetId());
         assertEquals(month.getYear(), timesheetSummaryDto.getYear());
         assertEquals(weekInYear, timesheetSummaryDto.getWeekInYear());
@@ -420,21 +406,23 @@ class TimesheetServiceTest {
 
     @Test
     void createClientTimesheetHtml() throws IOException {
+        LocalDate month = LocalDate.of(2023, 11, 1);
         Timesheet timesheet = new Timesheet();
         timesheet.setId(23L);
         timesheet.setUserId(1L);
         timesheet.setProjectId(2L);
-        timesheet.setFromDate(LocalDate.of(2023, 12, 1));
-        timesheet.setToDate(LocalDate.of(2023, 12, 31));
-        timesheet.setYear(2024);
-        timesheet.setMonth(6);
+        timesheet.setFromDate(LocalDate.of(month.getYear(), month.getMonthValue(), 1));
+        timesheet.setToDate(LocalDate.of(month.getYear(), month.getMonthValue(), 30));
+        timesheet.setYear(month.getYear());
+        timesheet.setMonth(month.getMonthValue());
 
         File mustacheTemplateFile = new File("src/main/assets/" + InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.getTemplate());
         Context applicationContextMock = mock(Context.class);
         AssetManager assetManagerMock = mock(AssetManager.class);
         when(assetManagerMock.open(anyString())).thenReturn(new FileInputStream(mustacheTemplateFile));
         when(applicationContextMock.getAssets()).thenReturn(assetManagerMock);
-        List<TimesheetEntry> timesheetEntryList = TestData.generateTimesheetEntries(timesheet.getFromDate().getYear(), timesheet.getFromDate().getMonthValue());
+
+        List<TimesheetEntry> timesheetEntryList = TestData.generateTimesheetEntries(timesheet.getFromDate().getYear(), timesheet.getFromDate().getMonthValue(), List.of(8, 16), List.of(14, 15));
 
         when(projectServiceMock.getProject(anyLong())).thenReturn(TestData.createProjectDto(22L, 1L, "terex development"));
         when(userAccountServiceMock.getUserAccount(anyLong())).thenReturn(TestData.createUserAccountDto(23L, "Petter Dass"));
@@ -446,34 +434,6 @@ class TimesheetServiceTest {
         String templateHtml = timesheetService.createTimesheetListHtml(23L, clientTimesheetMustacheTemplate);
         assertNotNull(templateHtml);
         saveToFile("src/test/" + InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.getFileName() + ".html", templateHtml);
-    }
-
-    @Test
-    void createTimesheetSummaryHtml() throws IOException {
-        Timesheet timesheet = new Timesheet();
-        timesheet.setId(23L);
-        timesheet.setUserId(1L);
-        timesheet.setProjectId(2L);
-        timesheet.setFromDate(LocalDate.of(2023, 12, 1));
-        timesheet.setToDate(LocalDate.of(2023, 12, 31));
-        timesheet.setYear(2023);
-        timesheet.setMonth(12);
-
-        File mustacheTemplateFile = new File("src/main/assets/" + InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getTemplate());
-        Context applicationContextMock = mock(Context.class);
-        AssetManager assetManagerMock = mock(AssetManager.class);
-        when(assetManagerMock.open(anyString())).thenReturn(new FileInputStream(mustacheTemplateFile));
-        when(applicationContextMock.getAssets()).thenReturn(assetManagerMock);
-
-        String timesheetSummaryMustacheTemplate = loadMustacheTemplate(applicationContextMock, InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY);
-
-        when(projectServiceMock.getProject(anyLong())).thenReturn(TestData.createProjectDto(22L, 1L, "terex development"));
-        when(userAccountServiceMock.getUserAccount(anyLong())).thenReturn(TestData.createUserAccountDto(23L, "Petter Dass"));
-        when(timesheetRepositoryMock.getTimesheet(anyLong())).thenReturn(timesheet);
-        when(timesheetRepositoryMock.getTimesheetEntryList(anyLong())).thenReturn(TestData.generateTimesheetEntries(2023, 12));
-        String templateHtml = timesheetService.createTimesheetSummaryHtml(23L, 1250, timesheetSummaryMustacheTemplate);
-        assertNotNull(templateHtml);
-        saveToFile("src/test/" + InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getFileName() + ".html", templateHtml);
     }
 
     @Test

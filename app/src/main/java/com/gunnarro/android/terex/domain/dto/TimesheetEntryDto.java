@@ -1,5 +1,7 @@
 package com.gunnarro.android.terex.domain.dto;
 
+import androidx.annotation.NonNull;
+
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 
 import java.time.LocalDate;
@@ -9,12 +11,17 @@ import java.util.Locale;
 
 public class TimesheetEntryDto {
 
+    @NonNull
     private LocalDate workdayDate;
+    @NonNull
     private LocalTime fromTime;
+    @NonNull
     private LocalTime toTime;
+    @NonNull
     private Integer workedMinutes;
     private String comments;
-    private String type = TimesheetEntry.TimesheetEntryTypeEnum.REGULAR.name();
+    @NonNull
+    private String type;
 
     public TimesheetEntryDto() {
     }

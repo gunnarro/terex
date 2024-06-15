@@ -2,12 +2,11 @@ package com.gunnarro.android.terex.service;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
-
-import androidx.annotation.NonNull;
 
 import com.gunnarro.android.terex.TestData;
 import com.gunnarro.android.terex.domain.dto.ClientDto;
@@ -77,7 +76,7 @@ class InvoiceServiceTest {
     @Test
     void generateTimesheet() {
         TimesheetService timesheetService = new TimesheetService();
-        List<TimesheetEntry> timesheetEntries = TestData.generateTimesheetEntries(2023, 2);
+        List<TimesheetEntry> timesheetEntries = TestData.generateTimesheetEntries(2023, 2, List.of(), List.of());
         assertEquals(19, timesheetEntries.size());
         assertEquals(30, timesheetEntries.get(0).getBreakInMin());
         assertEquals("Open", timesheetEntries.get(0).getStatus());
@@ -85,7 +84,7 @@ class InvoiceServiceTest {
         assertEquals("2023-02-01", timesheetEntries.get(0).getWorkdayDate().toString());
         assertEquals("08:00", timesheetEntries.get(0).getFromTime().toString());
         assertEquals("15:30", timesheetEntries.get(0).getToTime().toString());
-        assertEquals(null, timesheetEntries.get(0).getComment());
+        assertNull(timesheetEntries.get(0).getComment());
     }
 
     /**

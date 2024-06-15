@@ -73,10 +73,11 @@ class TimesheetMapperTest {
     @Test
     void toTimesheetEntryDto() {
         LocalDate localDate = LocalDate.of(2023, 12, 1);
-        List<TimesheetEntry> timesheetEntryList = TestData.generateTimesheetEntries(localDate.getYear(), localDate.getMonthValue());
+        List<TimesheetEntry> timesheetEntryList = TestData.generateTimesheetEntries(localDate.getYear(), localDate.getMonthValue(), List.of(), List.of());
 
         TimesheetEntryDto timesheetEntryDto = TimesheetMapper.toTimesheetEntryDto(timesheetEntryList.get(0));
         assertEquals("2023-12-01", timesheetEntryDto.getWorkdayDate().toString());
+        assertEquals("REGULAR", timesheetEntryDto.getType());
         assertEquals("08:00", timesheetEntryDto.getFromTime().toString());
         assertEquals("15:30", timesheetEntryDto.getToTime().toString());
         assertEquals("7.5", timesheetEntryDto.getWorkedHours());
@@ -86,7 +87,7 @@ class TimesheetMapperTest {
     @Test
     void toTimesheetEntryDtoList() {
         LocalDate localDate = LocalDate.of(2023, 12, 1);
-        List<TimesheetEntry> timesheetEntryList = TestData.generateTimesheetEntries(localDate.getYear(), localDate.getMonthValue());
+        List<TimesheetEntry> timesheetEntryList = TestData.generateTimesheetEntries(localDate.getYear(), localDate.getMonthValue(), List.of(), List.of());
 
         List<TimesheetEntryDto> timesheetEntryDtoList = TimesheetMapper.toTimesheetEntryDtoList(timesheetEntryList);
         assertEquals(21, timesheetEntryDtoList.size());
