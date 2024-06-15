@@ -97,13 +97,17 @@ class TimesheetMapperTest {
         LocalDate localDate = LocalDate.of(2023, 12, 1);
         List<TimesheetSummary> timesheetSummaryList = TestData.buildTimesheetSummaryByWeek(23L, localDate.getYear(), localDate.getMonthValue(), 1250);
 
-        TimesheetSummaryDto timesheetSummaryDto = TimesheetMapper.toTimesheetSummaryDto(timesheetSummaryList.get(0));
-        assertEquals(23, timesheetSummaryDto.getTimesheetId());
-        assertEquals("01.12", timesheetSummaryDto.getFromDateDDMM());
-        assertEquals("9375.00", timesheetSummaryDto.getTotalBilledAmount());
-        assertEquals("12", timesheetSummaryDto.getFromDateMM());
-        assertEquals("48", timesheetSummaryDto.getWeekInYear().toString());
-        assertEquals("7.5", timesheetSummaryDto.getTotalWorkedHours());
+        TimesheetSummaryDto timesheetWeekSummaryDto = TimesheetMapper.toTimesheetSummaryDto(timesheetSummaryList.get(0));
+        assertEquals(23, timesheetWeekSummaryDto.getTimesheetId());
+        assertEquals("WEEK", timesheetWeekSummaryDto.getSummedByPeriod());
+        assertEquals("01.12", timesheetWeekSummaryDto.getFromDateDDMM());
+        assertEquals("9375.00", timesheetWeekSummaryDto.getTotalBilledAmount());
+        assertEquals("12", timesheetWeekSummaryDto.getFromDateMM());
+        assertEquals("48", timesheetWeekSummaryDto.getWeekInYear().toString());
+        assertEquals("7.5", timesheetWeekSummaryDto.getTotalWorkedHours());
+        assertEquals(1, timesheetWeekSummaryDto.getTotalWorkedDays());
+        assertEquals(0, timesheetWeekSummaryDto.getTotalSickLeaveDays());
+        assertEquals(0, timesheetWeekSummaryDto.getTotalVacationDays());
     }
 
     @Test

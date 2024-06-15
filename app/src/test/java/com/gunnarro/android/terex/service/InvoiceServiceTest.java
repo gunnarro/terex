@@ -7,6 +7,8 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
+import androidx.annotation.NonNull;
+
 import com.gunnarro.android.terex.TestData;
 import com.gunnarro.android.terex.domain.dto.ClientDto;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
@@ -55,15 +57,7 @@ class InvoiceServiceTest {
 
     @Test
     void createInvoice() {
-        TimesheetSummary timesheetSummaryWeek1 = new TimesheetSummary();
-        timesheetSummaryWeek1.setTimesheetId(1L);
-        timesheetSummaryWeek1.setCurrency("NOK");
-        timesheetSummaryWeek1.setYear(2023);
-        timesheetSummaryWeek1.setWeekInYear(40);
-        timesheetSummaryWeek1.setTotalDaysOff(0);
-        timesheetSummaryWeek1.setTotalWorkedDays(5);
-        timesheetSummaryWeek1.setTotalWorkedHours(37.5);
-        timesheetSummaryWeek1.setTotalBilledAmount(25000d);
+        TimesheetSummary timesheetSummaryWeek1 = TestData.createTimesheetSummary(22L);
 
         ClientDto clientDto = new ClientDto();
         clientDto.setId(234L);

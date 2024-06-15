@@ -44,6 +44,7 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Predicate;
 
 @ExtendWith(MockitoExtension.class)
 class TimesheetServiceTest {
@@ -64,7 +65,7 @@ class TimesheetServiceTest {
 
     @Test
     void generateTimesheetForMonth() {
-        assertEquals(30, TestData.createTimesheetEntriesForMonth(1L, 2023, 1).size());
+        assertEquals(30, TestData.createTimesheetEntriesForMonth(1L, LocalDate.of(2023, 1, 1)).size());
     }
 
     @Test
@@ -271,50 +272,150 @@ class TimesheetServiceTest {
     }
 
     @Test
-    void createTimesheetSummary() {
-        Timesheet timesheetExisting = Timesheet.createDefault(100L, 200L, 2023, 11);
+    void createTimesheetSummaryForMount() {
+        LocalDate month = LocalDate.of(2023, 11, 1);
+        assertEquals("NOVEMBER", month.getMonth().name());
+        assertEquals(11, month.getMonth().getValue());
+
+        Timesheet timesheetExisting = Timesheet.createDefault(100L, 200L, month.getYear(), month.getMonthValue());
         timesheetExisting.setId(23L);
+        assertEquals(month.toString(), timesheetExisting.getFromDate().toString());
+        // Set timesheet ready for billing
         timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
-        TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(timesheetExisting.getId(), LocalDate.of(2023, 12, 21));
-        timesheetEntry.setWorkedMinutes(450);
-        timesheetEntry.setBreakInMin(30);
+        // create regular time sheet entry, i.e, worked 7.5 hours and 30 min break
+        TimesheetEntry regularTimesheetEntry = TimesheetEntry.createDefault(timesheetExisting.getId(), LocalDate.of(month.getYear(), month.getMonthValue(), 21));
+        regularTimesheetEntry.setWorkedMinutes(450);
+        regularTimesheetEntry.setBreakInMin(30);
+
 
         List<TimesheetEntry> timesheetEntryList = TestData.generateTimesheetEntries(timesheetExisting.getYear(), timesheetExisting.getMonth());
         when(timesheetRepositoryMock.getTimesheet(timesheetExisting.getId())).thenReturn(timesheetExisting);
-        when(timesheetRepositoryMock.getTimesheetEntryList(timesheetEntry.getTimesheetId())).thenReturn(timesheetEntryList);
+        when(timesheetRepositoryMock.getTimesheetEntryList(regularTimesheetEntry.getTimesheetId())).thenReturn(timesheetEntryList);
+
+        // check generated month
+        assertEquals(22, timesheetEntryList.size());
+        List<TimesheetSummaryDto> timesheetSummaryDtoList = timesheetService.createTimesheetSummaryForBilling(timesheetExisting.getId(), 1250);
+        // number of week in the month
+        assertEquals(5, timesheetSummaryDtoList.size());
+        // check date
+        assertEquals("WEEK", timesheetSummaryDtoList.get(0).getSummedByPeriod());
+        // week 1
+        assertTimesheetSummaryDto(timesheetSummaryDtoList.get(0), month, 23, 44, "WEEK", 3, 0, 0, "22.5", "28125.00");
+        // week 2
+        assertTimesheetSummaryDto(timesheetSummaryDtoList.get(1), month, 23, 45, "WEEK", 5, 0, 0, "37.5", "46875.00");
+        // week 3
+        assertTimesheetSummaryDto(timesheetSummaryDtoList.get(2), month, 23, 46, "WEEK", 5, 0, 0, "37.5", "46875.00");
+        // week 4
+        assertTimesheetSummaryDto(timesheetSummaryDtoList.get(3), month, 23, 47, "WEEK", 5, 0, 0, "37.5", "46875.00");
+        // week 5
+        assertTimesheetSummaryDto(timesheetSummaryDtoList.get(4), month, 23, 48, "WEEK", 4, 0, 0, "30.0", "37500.00");
+    }
+
+    @Test
+    void createTimesheetSummaryForMountPartlyFilled() {
+        LocalDate month = LocalDate.of(2023, 11, 1);
+        assertEquals("NOVEMBER", month.getMonth().name());
+        Timesheet timesheetExisting = Timesheet.createDefault(100L, 200L, month.getYear(), month.getMonthValue());
+        timesheetExisting.setId(23L);
+        // Set timesheet ready for billing
+        timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
+        // create regular time sheet entry, i.e, worked 7.5 hours and 30 min break
+        TimesheetEntry regularTimesheetEntry = TimesheetEntry.createDefault(timesheetExisting.getId(), LocalDate.of(month.getYear(), month.getMonthValue(), 21));
+        regularTimesheetEntry.setWorkedMinutes(450);
+        regularTimesheetEntry.setBreakInMin(30);
+
+        List<TimesheetEntry> timesheetEntryList = TestData.generateTimesheetEntries(timesheetExisting.getYear(), timesheetExisting.getMonth());
+        // remove 3 days from week 3
+        Predicate<TimesheetEntry> workday8 = item -> item.getWorkdayDate().isEqual(LocalDate.of(month.getYear(), month.getMonthValue(), 8));
+        Predicate<TimesheetEntry> workday14 = item -> item.getWorkdayDate().isEqual(LocalDate.of(month.getYear(), month.getMonthValue(), 14));
+        Predicate<TimesheetEntry> workday15 = item -> item.getWorkdayDate().isEqual(LocalDate.of(month.getYear(), month.getMonthValue(), 15));
+        Predicate<TimesheetEntry> workday16 = item -> item.getWorkdayDate().isEqual(LocalDate.of(month.getYear(), month.getMonthValue(), 16));
+        timesheetEntryList.removeIf(workday8.or(workday14).or(workday15).or(workday16));
+
+        when(timesheetRepositoryMock.getTimesheet(timesheetExisting.getId())).thenReturn(timesheetExisting);
+        when(timesheetRepositoryMock.getTimesheetEntryList(regularTimesheetEntry.getTimesheetId())).thenReturn(timesheetEntryList);
+        // check generated month
+        assertEquals(18, timesheetEntryList.size());
 
         List<TimesheetSummaryDto> timesheetSummaryDtoList = timesheetService.createTimesheetSummaryForBilling(timesheetExisting.getId(), 1250);
-        // week 1
+        // number of week in the month
         assertEquals(5, timesheetSummaryDtoList.size());
-        assertEquals(23, timesheetSummaryDtoList.get(0).getTimesheetId());
-        assertEquals(0, timesheetSummaryDtoList.get(0).getTotalDaysOff());
-        assertEquals(3, timesheetSummaryDtoList.get(0).getTotalWorkedDays().intValue());
-        assertEquals("22.5", timesheetSummaryDtoList.get(0).getTotalWorkedHours());
-        assertEquals("28125.00", timesheetSummaryDtoList.get(0).getTotalBilledAmount());
+        // check date
+        assertEquals("WEEK", timesheetSummaryDtoList.get(0).getSummedByPeriod());
+        // week 1
+        assertTimesheetSummaryDto(timesheetSummaryDtoList.get(0), month, 23, 44, "WEEK", 3, 0, 0, "22.5", "28125.00");
         // week 2
-        assertEquals(23, timesheetSummaryDtoList.get(1).getTimesheetId());
-        assertEquals(0, timesheetSummaryDtoList.get(1).getTotalDaysOff());
-        assertEquals(5, timesheetSummaryDtoList.get(1).getTotalWorkedDays().intValue());
-        assertEquals("37.5", timesheetSummaryDtoList.get(1).getTotalWorkedHours());
-        assertEquals("46875.00", timesheetSummaryDtoList.get(1).getTotalBilledAmount());
+        assertTimesheetSummaryDto(timesheetSummaryDtoList.get(1), month, 23, 45, "WEEK", 4, 0, 0, "30.0", "37500.00");
         // week 3
-        assertEquals(23, timesheetSummaryDtoList.get(2).getTimesheetId());
-        assertEquals(0, timesheetSummaryDtoList.get(2).getTotalDaysOff());
-        assertEquals(5, timesheetSummaryDtoList.get(2).getTotalWorkedDays().intValue());
-        assertEquals("37.5", timesheetSummaryDtoList.get(2).getTotalWorkedHours());
-        assertEquals("46875.00", timesheetSummaryDtoList.get(2).getTotalBilledAmount());
+        assertTimesheetSummaryDto(timesheetSummaryDtoList.get(2), month, 23, 46, "WEEK", 2, 0, 0, "15.0", "18750.00");
         // week 4
-        assertEquals(23, timesheetSummaryDtoList.get(3).getTimesheetId());
-        assertEquals(0, timesheetSummaryDtoList.get(3).getTotalDaysOff());
-        assertEquals(5, timesheetSummaryDtoList.get(3).getTotalWorkedDays().intValue());
-        assertEquals("37.5", timesheetSummaryDtoList.get(3).getTotalWorkedHours());
-        assertEquals("46875.00", timesheetSummaryDtoList.get(3).getTotalBilledAmount());
+        assertTimesheetSummaryDto(timesheetSummaryDtoList.get(3), month, 23, 47, "WEEK", 5, 0, 0, "37.5", "46875.00");
         // week 5
-        assertEquals(23, timesheetSummaryDtoList.get(4).getTimesheetId());
-        assertEquals(0, timesheetSummaryDtoList.get(4).getTotalDaysOff());
-        assertEquals(3, timesheetSummaryDtoList.get(4).getTotalWorkedDays().intValue());
-        assertEquals("22.5", timesheetSummaryDtoList.get(4).getTotalWorkedHours());
-        assertEquals("28125.00", timesheetSummaryDtoList.get(4).getTotalBilledAmount());
+        assertTimesheetSummaryDto(timesheetSummaryDtoList.get(4), month, 23, 48, "WEEK", 4, 0, 0, "30.0", "37500.00");
+    }
+
+    @Test
+    void createTimesheetSummaryForMountWithDaysOff() {
+        LocalDate month = LocalDate.of(2023, 11, 1);
+        assertEquals("NOVEMBER", month.getMonth().name());
+        Timesheet timesheetExisting = Timesheet.createDefault(100L, 200L, month.getYear(), month.getMonthValue());
+        timesheetExisting.setId(23L);
+        // Set timesheet ready for billing
+        timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
+        // create regular time sheet entry, i.e, worked 7.5 hours and 30 min break
+        TimesheetEntry regularTimesheetEntry = TimesheetEntry.createDefault(timesheetExisting.getId(), LocalDate.of(month.getYear(), month.getMonthValue(), 21));
+        regularTimesheetEntry.setWorkedMinutes(450);
+        regularTimesheetEntry.setBreakInMin(30);
+
+        List<TimesheetEntry> timesheetEntryList = TestData.generateTimesheetEntries(timesheetExisting.getYear(), timesheetExisting.getMonth());
+
+        // remove 3 days from week 3
+        Predicate<TimesheetEntry> workday8 = item -> item.getWorkdayDate().isEqual(LocalDate.of(month.getYear(), month.getMonthValue(), 8));
+        Predicate<TimesheetEntry> workday14 = item -> item.getWorkdayDate().isEqual(LocalDate.of(month.getYear(), month.getMonthValue(), 14));
+        Predicate<TimesheetEntry> workday15 = item -> item.getWorkdayDate().isEqual(LocalDate.of(month.getYear(), month.getMonthValue(), 15));
+        Predicate<TimesheetEntry> workday16 = item -> item.getWorkdayDate().isEqual(LocalDate.of(month.getYear(), month.getMonthValue(), 16));
+
+        timesheetEntryList.stream().filter(workday8).findAny().get().setType(TimesheetEntry.TimesheetEntryTypeEnum.SICK.name());
+        timesheetEntryList.stream().filter(workday14).findAny().get().setType(TimesheetEntry.TimesheetEntryTypeEnum.VACATION.name());
+        timesheetEntryList.stream().filter(workday15).findAny().get().setType(TimesheetEntry.TimesheetEntryTypeEnum.VACATION.name());
+        timesheetEntryList.stream().filter(workday16).findAny().get().setType(TimesheetEntry.TimesheetEntryTypeEnum.SICK.name());
+
+        when(timesheetRepositoryMock.getTimesheet(timesheetExisting.getId())).thenReturn(timesheetExisting);
+        when(timesheetRepositoryMock.getTimesheetEntryList(regularTimesheetEntry.getTimesheetId())).thenReturn(timesheetEntryList);
+
+        // check generated month
+        assertEquals(22, timesheetEntryList.size());
+        List<TimesheetSummaryDto> timesheetSummaryDtoList = timesheetService.createTimesheetSummaryForBilling(timesheetExisting.getId(), 1250);
+        // number of week in the month
+        assertEquals(5, timesheetSummaryDtoList.size());
+        // check date
+        assertEquals("WEEK", timesheetSummaryDtoList.get(0).getSummedByPeriod());
+        // week 1
+        assertTimesheetSummaryDto(timesheetSummaryDtoList.get(0), month, 23, 44, "WEEK", 3, 0, 0, "22.5", "28125.00");
+        // week 2
+        assertTimesheetSummaryDto(timesheetSummaryDtoList.get(1), month, 23, 45, "WEEK", 4, 0, 1, "30.0", "37500.00");
+        // week 3
+        assertTimesheetSummaryDto(timesheetSummaryDtoList.get(2), month, 23, 46, "WEEK", 2, 2, 1, "15.0", "18750.00");
+        // week 4
+        assertTimesheetSummaryDto(timesheetSummaryDtoList.get(3), month, 23, 47, "WEEK", 5, 0, 0, "37.5", "46875.00");
+        // week 5
+        assertTimesheetSummaryDto(timesheetSummaryDtoList.get(4), month, 23, 48, "WEEK", 4, 0, 0, "30.0", "37500.00");
+    }
+
+
+    private static void assertTimesheetSummaryDto(TimesheetSummaryDto timesheetSummaryDto,
+                                                  LocalDate month,
+                                                  long timesheetId,
+                                                  int weekInYear, String period, int workedDays, int vacationDays, int sickDays, String workedHours, String billedAmount) {
+        assertEquals(timesheetId, timesheetSummaryDto.getTimesheetId());
+        assertEquals(month.getYear(), timesheetSummaryDto.getYear());
+        assertEquals(weekInYear, timesheetSummaryDto.getWeekInYear());
+        assertEquals(period, timesheetSummaryDto.getSummedByPeriod());
+        assertEquals(workedDays, timesheetSummaryDto.getTotalWorkedDays().intValue());
+        assertEquals(vacationDays, timesheetSummaryDto.getTotalVacationDays());
+        assertEquals(sickDays, timesheetSummaryDto.getTotalSickLeaveDays());
+        assertEquals(workedHours, timesheetSummaryDto.getTotalWorkedHours());
+        assertEquals(billedAmount, timesheetSummaryDto.getTotalBilledAmount());
     }
 
     @Test

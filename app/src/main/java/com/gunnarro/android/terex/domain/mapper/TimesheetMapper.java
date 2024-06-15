@@ -115,6 +115,7 @@ public class TimesheetMapper {
     public static TimesheetSummaryDto toTimesheetSummaryDto(TimesheetSummary timesheetSummary) {
         TimesheetSummaryDto timesheetSummaryDto = new TimesheetSummaryDto();
         timesheetSummaryDto.setTimesheetId(timesheetSummary.getTimesheetId());
+        timesheetSummaryDto.setSummedByPeriod(timesheetSummary.getSummedByPeriod());
         timesheetSummaryDto.setCurrency(timesheetSummary.getCurrency());
         timesheetSummaryDto.setFromDate(timesheetSummary.getFromDate());
         timesheetSummaryDto.setToDate(timesheetSummary.getToDate());
@@ -123,6 +124,8 @@ public class TimesheetMapper {
         timesheetSummaryDto.setTotalWorkedHours(timesheetSummary.getTotalWorkedHours());
         timesheetSummaryDto.setTotalBilledAmount(timesheetSummary.getTotalBilledAmount());
         timesheetSummaryDto.setTotalWorkedDays(timesheetSummary.getTotalWorkedDays());
+        timesheetSummaryDto.setTotalSickLeaveDays(timesheetSummary.getTotalSickLeaveDays());
+        timesheetSummaryDto.setTotalVacationDays(timesheetSummary.getTotalVacationDays());
         return timesheetSummaryDto;
     }
 

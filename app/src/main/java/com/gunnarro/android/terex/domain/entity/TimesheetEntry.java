@@ -33,7 +33,6 @@ import lombok.Setter;
 //@Builder
 // default constructor, Room accepts only one
 @NoArgsConstructor
-//@AllArgsConstructor
 @Getter
 @Setter
 @TypeConverters({LocalDateConverter.class, LocalTimeConverter.class, LocalDateTimeConverter.class})

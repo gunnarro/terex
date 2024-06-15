@@ -1,5 +1,7 @@
 package com.gunnarro.android.terex;
 
+import androidx.annotation.NonNull;
+
 import com.gunnarro.android.terex.domain.dto.BusinessAddressDto;
 import com.gunnarro.android.terex.domain.dto.ClientDto;
 import com.gunnarro.android.terex.domain.dto.ContactInfoDto;
@@ -38,12 +40,12 @@ import java.util.stream.Stream;
 
 public class TestData {
 
-    public static List<TimesheetEntry> createTimesheetEntriesForMonth(Long timesheetId, Integer year, Integer month) {
+    public static List<TimesheetEntry> createTimesheetEntriesForMonth(Long timesheetId, LocalDate workDay) {
         List<TimesheetEntry> timesheetEntryList = new ArrayList<>();
         // get timesheet
         Timesheet timesheet = new Timesheet();
-        timesheet.setFromDate(LocalDate.of(year, month, 1));
-        timesheet.setToDate(LocalDate.of(year, month, Utility.getLastDayOfMonth(LocalDate.of(year, month, 1)).getDayOfMonth()));
+        timesheet.setFromDate(LocalDate.of(workDay.getYear(), workDay.getMonthValue(), 1));
+        timesheet.setToDate(LocalDate.of(workDay.getYear(), workDay.getMonthValue(), Utility.getLastDayOfMonth(LocalDate.of(workDay.getYear(), workDay.getMonthValue(), 1)).getDayOfMonth()));
         // interpolate missing days in the month.
         TimesheetEntry timesheetEntry = new TimesheetEntry();
         timesheetEntry.setTimesheetId(timesheetId);
@@ -116,7 +118,7 @@ public class TestData {
         return TimesheetEntry.createDefault(new java.util.Random().nextLong(), day);
     }
 
-    private static List<LocalDate> getWorkingDays(Integer year, Integer month) {
+    public static List<LocalDate> getWorkingDays(Integer year, Integer month) {
         // validate year and mount
         try {
             Year.of(year);
@@ -132,10 +134,11 @@ public class TestData {
         LocalDate startDate = LocalDate.of(Year.of(year).getValue(), Month.of(month).getValue(), 1);
         ValueRange range = startDate.range(ChronoField.DAY_OF_MONTH);
         LocalDate endDate = startDate.withDayOfMonth((int) range.getMaximum());
+        System.out.print("======================================== " + endDate.toString() + ", range " + range.getMaximum() + ", " + endDate.getDayOfWeek());
 
         Predicate<LocalDate> isWeekend = date -> date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY;
-
-        long daysBetween = ChronoUnit.DAYS.between(startDate, endDate);
+        // pluss 1in orer to include the last day of the mount
+        long daysBetween = ChronoUnit.DAYS.between(startDate, endDate.plusDays(1));
         return Stream.iterate(startDate, date -> date.plusDays(1)).limit(daysBetween).filter(isWeekend.negate()).collect(Collectors.toList());
     }
 
@@ -222,4 +225,20 @@ public class TestData {
         projectDto.setHourlyRate(1000);
         return projectDto;
     }
+
+    @NonNull
+    public static TimesheetSummary createTimesheetSummary(Long timesheetId) {
+        TimesheetSummary timesheetSummaryWeek1 = new TimesheetSummary();
+        timesheetSummaryWeek1.setTimesheetId(timesheetId);
+        timesheetSummaryWeek1.setCurrency("NOK");
+        timesheetSummaryWeek1.setYear(2023);
+        timesheetSummaryWeek1.setWeekInYear(40);
+        timesheetSummaryWeek1.setTotalSickLeaveDays(0);
+        timesheetSummaryWeek1.setTotalVacationDays(0);
+        timesheetSummaryWeek1.setTotalWorkedDays(5);
+        timesheetSummaryWeek1.setTotalWorkedHours(37.5);
+        timesheetSummaryWeek1.setTotalBilledAmount(25000d);
+        return timesheetSummaryWeek1;
+    }
+
 }

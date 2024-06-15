@@ -22,6 +22,12 @@ import java.util.Objects;
 @Entity(tableName = "timesheet_summary", indices = {@Index(value = {"timesheet_id", "year", "week_in_year"},
         unique = true)})
 public class TimesheetSummary extends BaseEntity {
+    /**
+     * The timesheet entry summary period.
+     */
+    public enum TimesheetSummaryPeriodEnum {
+        YEAR, MONTH, WEEK
+    }
 
     /**
      * Hold a unique reference to the timesheet that is used as the basis for the summary
@@ -32,14 +38,19 @@ public class TimesheetSummary extends BaseEntity {
     private Integer year;
     @ColumnInfo(name = "week_in_year")
     private Integer weekInYear;
+    /**
+     * Default is by week.
+     */
+    @ColumnInfo(name = "summed_by_period")
+    private String summedByPeriod = TimesheetSummaryPeriodEnum.WEEK.name();
     @ColumnInfo(name = "from_date")
     private LocalDate fromDate;
     @ColumnInfo(name = "to_date")
     private LocalDate toDate;
     @ColumnInfo(name = "total_worked_days", defaultValue = "0")
     private Integer totalWorkedDays = 0;
-    @ColumnInfo(name = "total_days_off", defaultValue = "0")
-    private Integer totalDaysOff = 0;
+    @ColumnInfo(name = "total_vacation_days", defaultValue = "0")
+    private Integer totalVacationDays = 0;
     @ColumnInfo(name = "total_sick_leave_days", defaultValue = "0")
     private Integer totalSickLeaveDays = 0;
     @ColumnInfo(name = "total_worked_hours", defaultValue = "0")
@@ -79,6 +90,14 @@ public class TimesheetSummary extends BaseEntity {
         this.weekInYear = weekInYear;
     }
 
+    public String getSummedByPeriod() {
+        return summedByPeriod;
+    }
+
+    public void setSummedByPeriod(String summedByPeriod) {
+        this.summedByPeriod = summedByPeriod;
+    }
+
     public LocalDate getFromDate() {
         return fromDate;
     }
@@ -115,12 +134,12 @@ public class TimesheetSummary extends BaseEntity {
         this.totalWorkedDays = totalWorkedDays;
     }
 
-    public Integer getTotalDaysOff() {
-        return totalDaysOff;
+    public Integer getTotalVacationDays() {
+        return totalVacationDays;
     }
 
-    public void setTotalDaysOff(Integer totalDaysOff) {
-        this.totalDaysOff = totalDaysOff;
+    public void setTotalVacationDays(Integer totalVacationDays) {
+        this.totalVacationDays = totalVacationDays;
     }
 
     public Integer getTotalSickLeaveDays() {

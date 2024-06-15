@@ -18,11 +18,13 @@ public class TimesheetSummaryDto {
 
     private Integer weekInYear;
 
+    private String summedByPeriod;
+
     private LocalDate fromDate;
 
     private LocalDate toDate;
     private Integer totalWorkedDays = 0;
-    private Integer totalDaysOff = 0;
+    private Integer totalVacationDays = 0;
     private Integer totalSickLeaveDays = 0;
     private double totalWorkedHours = 0;
     private double totalBilledAmount = 0;
@@ -58,6 +60,14 @@ public class TimesheetSummaryDto {
         this.weekInYear = weekInYear;
     }
 
+    public String getSummedByPeriod() {
+        return summedByPeriod;
+    }
+
+    public void setSummedByPeriod(String summedByPeriod) {
+        this.summedByPeriod = summedByPeriod;
+    }
+
     public void setFromDate(LocalDate fromDate) {
         this.fromDate = fromDate;
     }
@@ -74,12 +84,12 @@ public class TimesheetSummaryDto {
         this.totalWorkedDays = totalWorkedDays;
     }
 
-    public Integer getTotalDaysOff() {
-        return totalDaysOff;
+    public Integer getTotalVacationDays() {
+        return totalVacationDays;
     }
 
-    public void setTotalDaysOff(Integer totalDaysOff) {
-        this.totalDaysOff = totalDaysOff;
+    public void setTotalVacationDays(Integer totalVacationDays) {
+        this.totalVacationDays = totalVacationDays;
     }
 
     public Integer getTotalSickLeaveDays() {

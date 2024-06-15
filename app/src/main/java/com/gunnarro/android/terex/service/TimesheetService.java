@@ -1,6 +1,5 @@
 package com.gunnarro.android.terex.service;
 
-import android.app.LocaleConfig;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -301,7 +300,7 @@ public class TimesheetService {
             throw new TerexApplicationException(String.format("Application error, timesheet not ready for billing, no entries found! timesheetId=%s, status=%s", timesheetId, timesheet.getStatus()), "50023", null);
         }
 
-        List<TimesheetSummary> timesheetSummaryByWeek = createTimesheetSummary(timesheetId, "WEEK", hourlyRate);
+        List<TimesheetSummary> timesheetSummaryByWeek = createTimesheetSummary(timesheetId, TimesheetSummary.TimesheetSummaryPeriodEnum.WEEK.name(), hourlyRate);
         timesheetSummaryByWeek.forEach(this::saveTimesheetSummary);
         // close the timesheet after invoice have been generated, is not possible to do any form of changes on the time list.
         timesheet.setStatus(Timesheet.TimesheetStatusEnum.BILLED.name());
@@ -312,11 +311,11 @@ public class TimesheetService {
         return TimesheetMapper.toTimesheetSummaryDtoList(timesheetSummaryByWeek);
     }
 
-    private List<TimesheetSummary> createTimesheetSummary(Long timesheetId, String by, Integer hourlyRate) {
+    private List<TimesheetSummary> createTimesheetSummary(Long timesheetId, String summedByPeriod, Integer hourlyRate) {
         List<TimesheetEntry> timesheetEntryList = getTimesheetEntryList(timesheetId);
         Log.d("createTimesheetSummary", String.format("timesheet entries: %s", timesheetEntryList));
-        // accumulate timesheet by week for the mount
-        Map<Integer, List<TimesheetEntry>> timesheetWeekMap = switch (by) {
+        // create a map based on summery type
+        Map<Integer, List<TimesheetEntry>> timesheetWeekMap = switch (summedByPeriod) {
             case "WEEK" ->
                     timesheetEntryList.stream().collect(Collectors.groupingBy(TimesheetEntry::getWorkdayWeek));
             case "MONTH" ->
@@ -325,8 +324,10 @@ public class TimesheetService {
                     timesheetEntryList.stream().collect(Collectors.groupingBy(TimesheetEntry::getWorkdayYear));
             default -> Map.of();
         };
+
+        timesheetWeekMap.forEach((p, list) ->  list.forEach( i -> System.out.println( p + ", " + list.size() + " - " + i.getWorkdayDate() +  ", " + i.getType() + ", " + i.getWorkedHours())));
         List<TimesheetSummary> timesheetSummaryByWeek = new ArrayList<>();
-        timesheetWeekMap.forEach((k, e) -> timesheetSummaryByWeek.add(buildTimesheetSummaryForWeek(timesheetId, k, e, hourlyRate)));
+        timesheetWeekMap.forEach((period, list) -> timesheetSummaryByWeek.add(buildTimesheetSummaryForWeek(timesheetId, period, list, hourlyRate)));
         timesheetSummaryByWeek.sort(Comparator.comparing(TimesheetSummary::getWeekInYear));
         return timesheetSummaryByWeek;
     }
@@ -365,7 +366,7 @@ public class TimesheetService {
      */
     public String createTimesheetSummaryHtml(@NotNull Long timesheetId, @NotNull Integer hourlyRate, @NotNull String timesheetSummaryMustacheTemplate) {
         TimesheetDto timesheet = getTimesheetDto(timesheetId);
-        List<TimesheetSummary> timesheetSummaryList = createTimesheetSummary(timesheetId, "WEEK", hourlyRate);
+        List<TimesheetSummary> timesheetSummaryList = createTimesheetSummary(timesheetId, TimesheetSummary.TimesheetSummaryPeriodEnum.WEEK.name(), hourlyRate);
         double totalBilledAmount = timesheetSummaryList.stream().mapToDouble(TimesheetSummary::getTotalBilledAmount).sum();
         double totalBilledHours = timesheetSummaryList.stream().mapToDouble(TimesheetSummary::getTotalWorkedHours).sum();
         double vat = 25;
@@ -425,13 +426,17 @@ public class TimesheetService {
         timesheetSummary.setLastModifiedDate(LocalDateTime.now());
         timesheetSummary.setTimesheetId(timesheetId);
         timesheetSummary.setWeekInYear(week);
+        // get to and from date form the first entry in the list
         timesheetSummary.setYear(timesheetEntryList.get(0).getWorkdayDate().getYear());
         timesheetSummary.setFromDate(Utility.getFirstDayOfWeek(timesheetEntryList.get(0).getWorkdayDate(), week));
         timesheetSummary.setToDate(Utility.getLastDayOfWeek(timesheetEntryList.get(0).getWorkdayDate(), week));
-        timesheetSummary.setTotalWorkedDays(timesheetEntryList.size());
         timesheetEntryList.forEach(t -> {
-            timesheetSummary.setTotalBilledAmount(timesheetSummary.getTotalBilledAmount() + (hourlyRate * ((double) t.getWorkedMinutes() / 60))); //FIXME
-            timesheetSummary.setTotalWorkedHours(timesheetSummary.getTotalWorkedHours() + (double) t.getWorkedMinutes() / 60);
+            // only sum regular work days
+            timesheetSummary.setTotalBilledAmount(t.isRegularWorkDay() ? timesheetSummary.getTotalBilledAmount() + (hourlyRate * ((double) t.getWorkedMinutes() / 60)) : timesheetSummary.getTotalBilledAmount());
+            timesheetSummary.setTotalWorkedHours(t.isRegularWorkDay() ? timesheetSummary.getTotalWorkedHours() + (double) t.getWorkedMinutes() / 60 : timesheetSummary.getTotalWorkedHours());
+            timesheetSummary.setTotalWorkedDays(t.isRegularWorkDay() ? timesheetSummary.getTotalWorkedDays() + 1 : timesheetSummary.getTotalWorkedDays());
+            timesheetSummary.setTotalSickLeaveDays(t.isSickDay() ? timesheetSummary.getTotalSickLeaveDays() + 1 : timesheetSummary.getTotalSickLeaveDays());
+            timesheetSummary.setTotalVacationDays(t.isVacationDay() ? timesheetSummary.getTotalVacationDays() + 1 : timesheetSummary.getTotalVacationDays());
         });
         return timesheetSummary;
     }
