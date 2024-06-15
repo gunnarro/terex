@@ -47,8 +47,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="10dp"
-        android:orientation="vertical"
-        tools:ignore="UselessParent">
+        android:orientation="vertical">
 
         <!-- user account info -->
         <LinearLayout
@@ -57,8 +56,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:baselineAligned="false"
-            android:orientation="vertical"
-            tools:ignore="UselessParent">
+            android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/user_account_new_username_layout"
@@ -127,8 +125,7 @@
             android:layout_below="@id/user_account_new_account_info_layout"
             android:layout_margin="10dp"
             android:baselineAligned="true"
-            android:orientation="vertical"
-            tools:ignore="UselessParent">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -172,8 +169,7 @@
             android:layout_below="@id/lookup_org_layout"
             android:layout_margin="10dp"
             android:baselineAligned="false"
-            android:orientation="vertical"
-            tools:ignore="UselessParent">
+            android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/user_account_new_org_name_layout"

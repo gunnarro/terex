@@ -27,8 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="10dp"
-        android:orientation="horizontal"
-        tools:ignore="UselessParent">
+        android:orientation="horizontal">
 
         <!-- horizontal date layout -->
         <LinearLayout
@@ -37,8 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:baselineAligned="false"
-            android:orientation="horizontal"
-            tools:ignore="UselessParent">
+            android:orientation="horizontal">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/timesheet_new_created_date_layout"
@@ -86,8 +84,7 @@
             android:layout_marginTop="-10dp"
             android:layout_marginBottom="10dp"
             android:baselineAligned="false"
-            android:orientation="vertical"
-            tools:ignore="UselessParent">
+            android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/timesheet_new_client_spinner_layout"
@@ -196,8 +193,7 @@
             android:layout_below="@id/timesheet_new_spinner_layout"
             android:layout_margin="10dp"
             android:baselineAligned="false"
-            android:orientation="horizontal"
-            tools:ignore="UselessParent">
+            android:orientation="horizontal">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/timesheet_new_year_spinner_layout"
@@ -248,8 +244,7 @@
             android:layout_below="@id/timesheet_new_year_month_layout"
             android:layout_margin="10dp"
             android:baselineAligned="false"
-            android:orientation="horizontal"
-            tools:ignore="UselessParent">
+            android:orientation="horizontal">
 
             <!-- none editable fields, disabled -->
             <com.google.android.material.textfield.TextInputLayout
@@ -299,8 +294,7 @@
             android:layout_below="@id/timesheet_new_from_to_layout"
             android:layout_margin="10dp"
             android:baselineAligned="false"
-            android:orientation="horizontal"
-            tools:ignore="UselessParent">
+            android:orientation="horizontal">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/timesheet_new_created_description_layout"

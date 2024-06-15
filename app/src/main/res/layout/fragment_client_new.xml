@@ -47,51 +47,42 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="10dp"
-        android:orientation="vertical"
-        tools:ignore="UselessParent">
+        android:orientation="vertical">
 
         <!-- lookup organization -->
         <LinearLayout
-            android:id="@+id/lookup_org_layout"
+            android:id="@id/lookup_org_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:baselineAligned="true"
-            android:orientation="vertical"
-            tools:ignore="UselessParent">
+            android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/client_new_search_org_number_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:enabled="true"
+                android:hint="@string/lbl_organization_number">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/client_new_search_org_number_layout"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                    android:layout_width="0dp"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/client_new_search_org_number"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="5dp"
-                    android:layout_weight="1"
                     android:enabled="true"
-                    android:hint="@string/lbl_organization_number">
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/client_new_search_org_number"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:enabled="true"
-                        android:inputType="text" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/client_new_search_org_number_btn"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/btn_lookup"
-                    app:iconTint="@color/color_btn_bg_cancel" />
-            </LinearLayout>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/client_new_search_org_number_btn"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:text="@string/btn_lookup"
+                app:iconTint="@color/color_btn_bg_cancel" />
         </LinearLayout>
 
         <!-- result organization lookup -->
@@ -102,8 +93,7 @@
             android:layout_below="@id/lookup_org_layout"
             android:layout_margin="10dp"
             android:baselineAligned="false"
-            android:orientation="vertical"
-            tools:ignore="UselessParent">
+            android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/client_new_org_name_layout"
@@ -223,8 +213,7 @@
             android:layout_below="@id/client_new_org_address_layout"
             android:layout_margin="10dp"
             android:baselineAligned="false"
-            android:orientation="vertical"
-            tools:ignore="UselessParent">
+            android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/client_new_contact_person_full_name_layout"

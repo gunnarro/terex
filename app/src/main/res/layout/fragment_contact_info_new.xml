@@ -12,8 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="10dp"
-        android:orientation="vertical"
-        tools:ignore="UselessParent">
+        android:orientation="vertical">
 
         <!-- org contact info -->
         <LinearLayout
@@ -23,8 +22,7 @@
 
             android:layout_margin="10dp"
             android:baselineAligned="false"
-            android:orientation="vertical"
-            tools:ignore="UselessParent">
+            android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/client_new_org_contact_info_mobile_layout"
@@ -67,8 +65,7 @@
             android:layout_below="@id/client_new_org_contact_info_layout"
             android:layout_margin="10dp"
             android:baselineAligned="false"
-            android:orientation="vertical"
-            tools:ignore="UselessParent">
+            android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/client_new_contact_person_full_name_layout"

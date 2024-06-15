@@ -26,8 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="10dp"
-        android:orientation="vertical"
-        tools:ignore="UselessParent">
+        android:orientation="vertical">
 
         <!-- horizontal date layout -->
         <LinearLayout
@@ -36,8 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:baselineAligned="false"
-            android:orientation="horizontal"
-            tools:ignore="UselessParent">
+            android:orientation="horizontal">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/project_created_date_layout"
@@ -81,8 +79,7 @@
             android:layout_below="@id/project_date_layout"
             android:layout_margin="10dp"
             android:baselineAligned="false"
-            android:orientation="vertical"
-            tools:ignore="UselessParent">
+            android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/project_name_layout"
