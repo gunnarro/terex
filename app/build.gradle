@@ -184,6 +184,9 @@ dependencies {
     // html template engine
     implementation "com.github.spullara.mustache.java:compiler:$spullara_mustache_java"
 
+    // for reading files
+    implementation("commons-io:commons-io:2.16.1")
+
     // for unit tests
     testImplementation "org.junit.vintage:junit-vintage-engine:$junit_vintage_engine"
     testImplementation "org.junit.jupiter:junit-jupiter:$junit_jupiter"

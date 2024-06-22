@@ -3,6 +3,7 @@ package com.gunnarro.android.terex.repository;
 import android.util.Log;
 
 import com.gunnarro.android.terex.config.AppDatabase;
+import com.gunnarro.android.terex.domain.entity.Organization;
 import com.gunnarro.android.terex.domain.entity.Person;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 
@@ -65,5 +66,12 @@ public class PersonRepository {
         service.submit(() -> personDao.update(person));
         Future<Integer> future = service.take();
         return future != null ? future.get() : null;
+    }
+
+    public void delete(Person person) {
+        AppDatabase.databaseExecutor.execute(() -> {
+            personDao.delete(person);
+            Log.d("OrganizationRepository.delete", "deleted, personId=" + person.getId());
+        });
     }
 }

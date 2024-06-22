@@ -92,10 +92,24 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
             throw new TerexApplicationException("Error creating view!", "50051", e);
         }
 
-        view.findViewById(R.id.btn_timesheet_calendar_save).setEnabled(true);
-        view.findViewById(R.id.btn_timesheet_calendar_save).setOnClickListener(v -> {
+        view.findViewById(R.id.btn_timesheet_calendar_save_regular).setEnabled(true);
+        view.findViewById(R.id.btn_timesheet_calendar_save_regular).setOnClickListener(v -> {
             v.setEnabled(false);
-            handleButtonSaveClick();
+            addTimesheetEntry(TimesheetEntry.TimesheetEntryTypeEnum.REGULAR);
+            v.setEnabled(true);
+        });
+
+        view.findViewById(R.id.btn_timesheet_calendar_save_vacation).setEnabled(true);
+        view.findViewById(R.id.btn_timesheet_calendar_save_vacation).setOnClickListener(v -> {
+            v.setEnabled(false);
+            addTimesheetEntry(TimesheetEntry.TimesheetEntryTypeEnum.VACATION);
+            v.setEnabled(true);
+        });
+
+        view.findViewById(R.id.btn_timesheet_calendar_save_sick).setEnabled(true);
+        view.findViewById(R.id.btn_timesheet_calendar_save_sick).setOnClickListener(v -> {
+            v.setEnabled(false);
+            addTimesheetEntry(TimesheetEntry.TimesheetEntryTypeEnum.SICK);
             v.setEnabled(true);
         });
 
@@ -177,10 +191,15 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
         return selectedDates;
     }
 
-    private TimesheetEntry getTimesheetEntry() {
+    private TimesheetEntry getTimesheetEntry(TimesheetEntry.TimesheetEntryTypeEnum type) {
         TimesheetEntry timesheetEntry = readTimesheetEntryFromBundle();
         // need only update the work day date because we all other data is read from the last added timesheet.
+        timesheetEntry.setType(type.name());
         timesheetEntry.setWorkdayDate(selectedWorkDayDate);
+        if (timesheetEntry.isVacationDay() || timesheetEntry.isSickDay()) {
+            timesheetEntry.setWorkedMinutes(0);
+            timesheetEntry.setBreakInMin(0);
+        }
         return timesheetEntry;
     }
 
@@ -197,15 +216,15 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
     /**
      * When button save is click and new timesheet entry event is sent in order to insert it into the database
      */
-    private void handleButtonSaveClick() {
+    private void addTimesheetEntry(TimesheetEntry.TimesheetEntryTypeEnum type) {
         if (selectedWorkDayDate == null) {
             showInfoDialog("Info", "You must select a workday date!");
             return;
         }
         try {
-            TimesheetEntry timesheetEntry = getTimesheetEntry();
+            TimesheetEntry timesheetEntry = getTimesheetEntry(type);
             timesheetService.saveTimesheetEntry(timesheetEntry);
-            showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_add_msg_format), timesheetEntry.getWorkdayDate(), timesheetEntry.getWorkedHours()), R.color.color_snackbar_text_add);
+            showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_add_msg_format), timesheetEntry.getWorkdayDate(), timesheetEntry.getType() + " " + timesheetEntry.getWorkedHours()), R.color.color_snackbar_text_add);
         } catch (TerexApplicationException | InputValidationException e) {
             Log.e("handleButtonSaveClick", e.getMessage());
             showInfoDialog("Error", e.getMessage());

@@ -20,6 +20,10 @@ public class ClientDto {
     private OrganizationDto organizationDto;
     private List<ProjectDto> projectList;
 
+    public ClientDto(Long id) {
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }

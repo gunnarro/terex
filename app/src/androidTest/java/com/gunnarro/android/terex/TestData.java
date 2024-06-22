@@ -71,7 +71,7 @@ public class TestData {
     }
 
     public static ClientDto createClientDto(Long id, String name) {
-        ClientDto clientDto = new ClientDto();
+        ClientDto clientDto = new ClientDto(null);
         clientDto.setId(id);
         clientDto.setName(name);
         clientDto.setStatus("ACTIVE");
@@ -80,7 +80,7 @@ public class TestData {
 
     public static ProjectDto createProjectDto(Long id, Long clientId, String projectName) {
         ProjectDto newProjectDto = new ProjectDto();
-        newProjectDto.setClientId(clientId);
+        newProjectDto.setClientDto(new ClientDto(clientId));
         newProjectDto.setName(projectName);
         newProjectDto.setId(id);
         newProjectDto.setDescription("some project description");

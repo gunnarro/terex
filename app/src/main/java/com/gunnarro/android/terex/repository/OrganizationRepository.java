@@ -3,6 +3,7 @@ package com.gunnarro.android.terex.repository;
 import android.util.Log;
 
 import com.gunnarro.android.terex.config.AppDatabase;
+import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.Organization;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 
@@ -90,6 +91,13 @@ public class OrganizationRepository {
         service.submit(() -> organizationDao.update(organization));
         Future<Integer> future = service.take();
         return future != null ? future.get() : null;
+    }
+
+    public void delete(Organization organization) {
+        AppDatabase.databaseExecutor.execute(() -> {
+            organizationDao.delete(organization);
+            Log.d("OrganizationRepository.delete", "deleted, organizationId=" + organization.getId());
+        });
     }
 
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures

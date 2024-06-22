@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import com.gunnarro.android.terex.IntegrationTestSetup;
+import com.gunnarro.android.terex.domain.dto.ClientDto;
 import com.gunnarro.android.terex.domain.dto.ProjectDto;
 import com.gunnarro.android.terex.domain.entity.Project;
 import com.gunnarro.android.terex.repository.ProjectRepository;
@@ -38,7 +39,7 @@ public class ProjectServiceTest extends IntegrationTestSetup {
         assertNull(projectService.getProjectWithTimesheet(1L));
 
         ProjectDto newProjectDto = new ProjectDto();
-        newProjectDto.setClientId(200L);
+        newProjectDto.setClientDto(new ClientDto(200L));
         newProjectDto.setName("gunnarro timesheet project");
         newProjectDto.setId(null);// for new projects id is not set
         newProjectDto.setDescription("develop a timesheet app");

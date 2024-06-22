@@ -13,7 +13,6 @@ import android.widget.TextView;
 import androidx.annotation.ColorRes;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
-import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;

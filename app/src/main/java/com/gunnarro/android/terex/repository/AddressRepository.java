@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.gunnarro.android.terex.config.AppDatabase;
 import com.gunnarro.android.terex.domain.entity.Address;
+import com.gunnarro.android.terex.domain.entity.Integration;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 
 import org.jetbrains.annotations.NotNull;
@@ -68,6 +69,13 @@ public class AddressRepository {
         service.submit(() -> addressDao.update(address));
         Future<Integer> future = service.take();
         return future != null ? future.get() : null;
+    }
+
+    public void delete(Address address) {
+        AppDatabase.databaseExecutor.execute(() -> {
+            addressDao.delete(address);
+            Log.d("AddressRepository.delete", "deleted, addressId=" + address.getId());
+        });
     }
 
     public Long save(@NotNull final Address address) {

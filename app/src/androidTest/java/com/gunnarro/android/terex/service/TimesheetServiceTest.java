@@ -62,6 +62,11 @@ public class TimesheetServiceTest extends IntegrationTestSetup {
     }
 
     @Test
+    public void getTimesheetDto() {
+        assertNull(timesheetService.getTimesheetDto(23L));
+    }
+
+    @Test
     public void newTimesheet_already_exist() {
         Timesheet newTimesheet = Timesheet.createDefault(100L, 200L, 2023, 10);
         newTimesheet.setDescription("Times used to develop android timesheet app");

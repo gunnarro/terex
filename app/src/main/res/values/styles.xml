@@ -14,6 +14,16 @@
         <item name="android:switchStyle">@style/RobotoSwitchStyle</item>
     </style>
 
+    <style name="TextAppearance.App.Subtitle1" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="ShapeAppearance.App.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">cut</item>
+        <item name="cornerSize">4dp</item>
+    </style>
+
     <style name="RobotoTextViewStyle" parent="android:Widget.TextView">
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textColor">@color/colorText</item>
@@ -58,7 +68,8 @@
 
     <!-- custom shapes -->
     <style name="Widget.MyApp.MaterialButtonTopLeftCut" parent="Widget.MaterialComponents.Button.TextButton">
-        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.MyApp.Button.corner.cut</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.MyApp.Button.corner.cut
+        </item>
     </style>
 
     <style name="ShapeAppearanceOverlay.MyApp.Button.corner.cut" parent="">
@@ -70,6 +81,4 @@
         <item name="cornerSizeTopRight">5%</item>
         <item name="cornerFamilyTopRight">rounded</item>
     </style>
-
-
 </resources>

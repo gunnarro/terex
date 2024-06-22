@@ -9,6 +9,7 @@ import com.gunnarro.android.terex.domain.dto.AddressDto;
 import com.gunnarro.android.terex.domain.dto.BusinessAddressDto;
 import com.gunnarro.android.terex.domain.dto.ClientDto;
 import com.gunnarro.android.terex.domain.dto.ContactInfoDto;
+import com.gunnarro.android.terex.domain.dto.IntegrationDto;
 import com.gunnarro.android.terex.domain.dto.OrganizationDto;
 import com.gunnarro.android.terex.domain.dto.PersonDto;
 import com.gunnarro.android.terex.domain.dto.PostalAddressDto;
@@ -20,6 +21,7 @@ import com.gunnarro.android.terex.domain.dto.UserAccountDto;
 import com.gunnarro.android.terex.domain.entity.Address;
 import com.gunnarro.android.terex.domain.entity.Client;
 import com.gunnarro.android.terex.domain.entity.ContactInfo;
+import com.gunnarro.android.terex.domain.entity.Integration;
 import com.gunnarro.android.terex.domain.entity.Organization;
 import com.gunnarro.android.terex.domain.entity.Person;
 import com.gunnarro.android.terex.domain.entity.Project;
@@ -133,7 +135,7 @@ class TimesheetMapperTest {
         ProjectDto projectDto = TimesheetMapper.toProjectDto(project);
 
         assertEquals(1, projectDto.getId().intValue());
-        assertEquals(1001, projectDto.getClientId().intValue());
+        assertEquals(1001, projectDto.getClientDto().getId().intValue());
         assertEquals("gunnarro timesheet project", projectDto.getName());
         assertEquals("develop a timesheet app", projectDto.getDescription());
         assertEquals(1200, projectDto.getHourlyRate());
@@ -144,7 +146,7 @@ class TimesheetMapperTest {
     @Test
     void fromProjectDto() {
         ProjectDto projectDto = new ProjectDto();
-        projectDto.setClientId(1001L);
+        projectDto.setClientDto(new ClientDto(1001L));
         projectDto.setName("gunnarro timesheet project");
         projectDto.setId(1L);
         projectDto.setDescription("develop a timesheet app");
@@ -154,7 +156,7 @@ class TimesheetMapperTest {
         Project project = TimesheetMapper.fromProjectDto(projectDto);
 
         assertEquals(projectDto.getId(), project.getId().intValue());
-        assertEquals(projectDto.getClientId(), project.getClientId().intValue());
+        assertEquals(projectDto.getClientDto().getId(), project.getClientId().intValue());
         assertEquals(projectDto.getName(), project.getName());
         assertEquals(projectDto.getDescription(), project.getDescription());
         assertEquals(projectDto.getStatus(), project.getStatus());
@@ -185,7 +187,7 @@ class TimesheetMapperTest {
 
     @Test
     void fromClientDto() {
-        ClientDto clientDto = new ClientDto();
+        ClientDto clientDto = new ClientDto(null);
         clientDto.setId(23L);
         OrganizationDto orgDto = new OrganizationDto();
         orgDto.setOrganizationNumber("828707933");
@@ -356,6 +358,57 @@ class TimesheetMapperTest {
         assertEquals(userAccount.getOrganizationId(), userAccountDto.getOrganizationDto().getId());
         assertNull(userAccountDto.getPersonDto());
     }
+
+    @Test
+    void toIntegrationDto() {
+        Integration integration = new Integration();
+        integration.setId(44L);
+        integration.setSystem("BREG");
+        integration.setBaseUrl("https://breg.no");
+        integration.setServiceType("REST");
+        integration.setUserName("guro");
+        integration.setPassword("change-me");
+        integration.setSchemaUrl("https://breg.no/swagger");
+        integration.setAuthenticationType("PASSWORD");
+        integration.setAccessToken(null);
+
+        IntegrationDto integrationDto = TimesheetMapper.toIntegrationDto(integration);
+        assertEquals(integration.getId(), integrationDto.getId());
+        assertEquals(integration.getSystem(), integrationDto.getSystem());
+        assertEquals(integration.getBaseUrl(), integrationDto.getBaseUrl());
+        assertEquals(integration.getServiceType(), integrationDto.getServiceType());
+        assertEquals(integration.getUserName(), integrationDto.getUserName());
+        assertEquals(integration.getPassword(), integrationDto.getPassword());
+        assertEquals(integration.getSchemaUrl(), integrationDto.getSchemaUrl());
+        assertEquals(integration.getAuthenticationType(), integrationDto.getAuthenticationType());
+        assertEquals(integration.getAccessToken(), integrationDto.getAccessToken());
+    }
+
+    @Test
+    void fromIntegrationDto() {
+        IntegrationDto integrationDto = new IntegrationDto();
+        integrationDto.setId(44L);
+        integrationDto.setSystem("BREG");
+        integrationDto.setBaseUrl("https://breg.no");
+        integrationDto.setServiceType("REST");
+        integrationDto.setUserName("guro");
+        integrationDto.setPassword("change-me");
+        integrationDto.setSchemaUrl("https://breg.no/swagger");
+        integrationDto.setAuthenticationType("PASSWORD");
+        integrationDto.setAccessToken(null);
+
+        Integration integration = TimesheetMapper.fromIntegrationDto(integrationDto);
+        assertEquals(integrationDto.getId(), integration.getId());
+        assertEquals(integrationDto.getSystem(), integration.getSystem());
+        assertEquals(integrationDto.getBaseUrl(), integration.getBaseUrl());
+        assertEquals(integrationDto.getServiceType(), integration.getServiceType());
+        assertEquals(integrationDto.getUserName(), integration.getUserName());
+        assertEquals(integrationDto.getPassword(), integration.getPassword());
+        assertEquals(integrationDto.getSchemaUrl(), integration.getSchemaUrl());
+        assertEquals(integrationDto.getAuthenticationType(), integration.getAuthenticationType());
+        assertEquals(integrationDto.getAccessToken(), integration.getAccessToken());
+    }
+
 
     private Client createClient(Long id, String name) {
         Client client = new Client();

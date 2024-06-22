@@ -68,7 +68,7 @@ class ClientServiceTest {
 
         ProjectDto projectDto = new ProjectDto();
         projectDto.setId(111L);
-        projectDto.setClientId(client.getId());
+        projectDto.setClientDto(new ClientDto(client.getId()));
         projectDto.setName("terex app development");
         projectDto.setStatus("ACTIVE");
 
@@ -90,14 +90,14 @@ class ClientServiceTest {
         assertEquals("33445566", clientDto.getContactPersonDto().getContactInfo().getMobileNumber());
 
         assertEquals(1, clientDto.getProjectList().size());
-        assertEquals(projectDto.getClientId(), clientDto.getProjectList().get(0).getClientId());
+        assertEquals(projectDto.getClientDto().getId(), clientDto.getProjectList().get(0).getClientDto().getId());
         assertEquals(projectDto.getName(), clientDto.getProjectList().get(0).getName());
         assertEquals(projectDto.getStatus(), clientDto.getProjectList().get(0).getStatus());
     }
 
     @Test
     void saveClient_new() throws ExecutionException, InterruptedException {
-        ClientDto clientDto = new ClientDto();
+        ClientDto clientDto = new ClientDto(null);
         clientDto.setName("gunnarro as");
         clientDto.setStatus("ACTIVE");
         clientDto.setOrganizationDto(TestData.createOrganizationDto(null, "my org name", "123456789"));
@@ -113,7 +113,7 @@ class ClientServiceTest {
 
     @Test
     void saveClient_update() throws ExecutionException, InterruptedException {
-        ClientDto clientDto = new ClientDto();
+        ClientDto clientDto = new ClientDto(null);
         clientDto.setId(100L);
         clientDto.setName("gunnarro as");
         clientDto.setStatus("ACTIVE");

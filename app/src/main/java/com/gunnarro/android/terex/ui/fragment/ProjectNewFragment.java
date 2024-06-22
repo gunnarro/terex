@@ -15,6 +15,7 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 
 import com.gunnarro.android.terex.R;
+import com.gunnarro.android.terex.domain.dto.ClientDto;
 import com.gunnarro.android.terex.domain.dto.ProjectDto;
 import com.gunnarro.android.terex.domain.entity.Project;
 import com.gunnarro.android.terex.exception.InputValidationException;
@@ -180,7 +181,7 @@ public class ProjectNewFragment extends BaseFragment implements View.OnClickList
         ProjectDto projectDto = new ProjectDto();
 
         TextView clientIdView = requireView().findViewById(R.id.project_client_id);
-        projectDto.setClientId(Utility.isInteger(clientIdView.getText().toString()) ? Long.parseLong(clientIdView.getText().toString()) : null);
+        projectDto.setClientDto(new ClientDto(Utility.isInteger(clientIdView.getText().toString()) ? Long.parseLong(clientIdView.getText().toString()) : null));
 
         TextView idView = requireView().findViewById(R.id.project_project_id);
         projectDto.setId(Utility.isInteger(idView.getText().toString()) ? Long.parseLong(idView.getText().toString()) : null);

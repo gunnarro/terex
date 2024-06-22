@@ -3,6 +3,7 @@ package com.gunnarro.android.terex.repository;
 import android.util.Log;
 
 import com.gunnarro.android.terex.config.AppDatabase;
+import com.gunnarro.android.terex.domain.entity.ContactInfo;
 import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.InvoiceAttachment;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
@@ -134,6 +135,13 @@ public class InvoiceRepository {
         service.submit(() -> invoiceDao.update(invoice));
         Future<Integer> future = service.take();
         return future != null ? future.get() : null;
+    }
+
+    public void deleteInvoice(Invoice invoice) {
+        AppDatabase.databaseExecutor.execute(() -> {
+            invoiceDao.delete(invoice);
+            Log.d("InvoiceRepository.delete", "deleted, invoiceId=" + invoice.getId());
+        });
     }
 
     // ----------------------------------------------------------

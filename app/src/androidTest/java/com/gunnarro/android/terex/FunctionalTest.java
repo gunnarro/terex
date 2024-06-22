@@ -91,7 +91,6 @@ public class FunctionalTest extends IntegrationTestSetup {
         assertNotNull(invoiceAttachmentId);
         InvoiceAttachment clientTimesheetAttachment = invoiceService.getInvoiceAttachment(invoiceId, InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET, InvoiceService.InvoiceAttachmentFileTypes.HTML);
         assertNotNull(clientTimesheetAttachment.getFileContent());
-
         // check invoice status
         Invoice invoice = invoiceService.getInvoice(invoiceId);
         assertEquals(invoiceId, invoice.getId());
@@ -99,7 +98,6 @@ public class FunctionalTest extends IntegrationTestSetup {
         assertEquals(userAccountId, invoice.getIssuerId());
         assertEquals(clientId, invoice.getRecipientId());
         assertEquals(InvoiceRepository.InvoiceStatusEnum.COMPLETED.name(), invoice.getStatus());
-
         // try to delete timesheet after billing, not allowed
         try {
             timesheetService.deleteTimesheet(timesheetId);

@@ -58,7 +58,6 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requireActivity().setTitle(R.string.title_timesheets);
         // todo get from db
         timesheetYears = List.of(2024, 2025);
         selectedYear = LocalDate.now().getYear();
@@ -84,6 +83,7 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_recycler_timesheet_list, container, false);
         setHasOptionsMenu(true);
+        requireActivity().setTitle(R.string.title_timesheets);
         RecyclerView recyclerView = view.findViewById(R.id.timesheet_list_recyclerview);
         final TimesheetListAdapter timesheetListAdapter = new TimesheetListAdapter(this, new TimesheetListAdapter.TimesheetDtoDiff());
         recyclerView.setAdapter(timesheetListAdapter);

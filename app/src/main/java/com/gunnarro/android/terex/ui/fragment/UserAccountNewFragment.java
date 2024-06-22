@@ -20,6 +20,7 @@ import com.gunnarro.android.terex.domain.entity.UserAccount;
 import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.integration.breg.BregService;
+import com.gunnarro.android.terex.service.IntegrationService;
 import com.gunnarro.android.terex.service.UserAccountService;
 import com.gunnarro.android.terex.utility.Utility;
 

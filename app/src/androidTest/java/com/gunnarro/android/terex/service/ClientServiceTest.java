@@ -20,6 +20,7 @@ import org.junit.Test;
 
 import java.time.LocalDateTime;
 
+
 public class ClientServiceTest extends IntegrationTestSetup {
 
     private ClientService clientService;
@@ -64,7 +65,7 @@ public class ClientServiceTest extends IntegrationTestSetup {
 
     @Test
     public void newAndUpdateClient() {
-        ClientDto newClientDto = new ClientDto();
+        ClientDto newClientDto = new ClientDto(null);
         OrganizationDto organizationDto = new OrganizationDto();
         organizationDto.setName("gunnarro unittest as");
         organizationDto.setOrganizationNumber("822707922");

@@ -325,7 +325,21 @@ public class TimesheetRepository {
         return minutes != null ? minutes / 60 : 0;
     }
 
+    public Integer getTotalVacationDays(Long timesheetId) {
+        Integer days = timesheetDao.getVacationDays(timesheetId);
+        return days != null ? days : 0;
+    }
+
+    public Integer getTotalSickDays(Long timesheetId) {
+        Integer days = timesheetDao.getSickDays(timesheetId);
+        return days != null ? days : 0;
+    }
+
     public int countTimesheetEntries() {
         return timesheetEntryDao.count();
+    }
+
+    public String getTimesheetTitle(Long timesheetId) {
+        return timesheetDao.getTimesheetTitle(timesheetId);
     }
 }

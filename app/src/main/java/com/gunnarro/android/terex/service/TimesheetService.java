@@ -74,14 +74,17 @@ public class TimesheetService {
 
     public TimesheetDto getTimesheetDto(Long timesheetId) {
         Timesheet timesheet = timesheetRepository.getTimesheet(timesheetId);
-        //Integer sumDays = timesheet.getTimesheetEntryList().size();
-        //Integer sumHours = timesheet.getTimesheetEntryList().stream().mapToInt(TimesheetEntry::getWorkedMinutes).sum() / 60;
-        TimesheetDto timesheetDto = TimesheetMapper.toTimesheetDto(timesheet, null, null);
-        timesheetDto.setUserAccountDto(userAccountService.getUserAccount(timesheet.getUserId()));
-        timesheetDto.setProjectDto(projectService.getProject(timesheet.getProjectId()));
-        timesheetDto.setRegisteredWorkedDays(timesheetRepository.getTotalWorkedDays(timesheetId));
-        timesheetDto.setRegisteredWorkedHours(timesheetRepository.getTotalWorkedHours(timesheetId));
-        return timesheetDto;
+        if (timesheet != null) {
+            TimesheetDto timesheetDto = TimesheetMapper.toTimesheetDto(timesheet, null, null);
+            timesheetDto.setUserAccountDto(userAccountService.getUserAccount(timesheet.getUserId()));
+            timesheetDto.setProjectDto(projectService.getProject(timesheet.getProjectId()));
+            timesheetDto.setRegisteredWorkedDays(timesheetRepository.getTotalWorkedDays(timesheetId));
+            timesheetDto.setRegisteredWorkedHours(timesheetRepository.getTotalWorkedHours(timesheetId));
+            timesheetDto.setVacationDays(timesheetRepository.getTotalVacationDays(timesheetId));
+            timesheetDto.setSickDays(timesheetRepository.getTotalSickDays(timesheetId));
+            return timesheetDto;
+        }
+        return null;
     }
 
     public List<TimesheetDto> getTimesheetsReadyForBilling() {
@@ -92,6 +95,10 @@ public class TimesheetService {
     public List<Timesheet> getTimesheetsByStatus(String status) {
         Log.d("getTimesheetsByStatus", "status: " + status);
         return timesheetRepository.getTimesheets(status);
+    }
+
+    public String getTimesheetTitle(Long timesheetId) {
+        return timesheetRepository.getTimesheetTitle(timesheetId);
     }
 
     public Timesheet getTimesheet(Long timesheetId) {
@@ -215,7 +222,6 @@ public class TimesheetService {
             }
             return id;
         } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
             // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();
             throw new TerexApplicationException("Error saving timesheet entry!", e.getMessage(), e.getCause());
@@ -325,7 +331,7 @@ public class TimesheetService {
             default -> Map.of();
         };
 
-        timesheetWeekMap.forEach((p, list) ->  list.forEach( i -> System.out.println( p + ", " + list.size() + " - " + i.getWorkdayDate() +  ", " + i.getType() + ", " + i.getWorkedHours())));
+        timesheetWeekMap.forEach((p, list) -> list.forEach(i -> System.out.println(p + ", " + list.size() + " - " + i.getWorkdayDate() + ", " + i.getType() + ", " + i.getWorkedHours())));
         List<TimesheetSummary> timesheetSummaryByWeek = new ArrayList<>();
         timesheetWeekMap.forEach((period, list) -> timesheetSummaryByWeek.add(buildTimesheetSummaryForWeek(timesheetId, period, list, hourlyRate)));
         timesheetSummaryByWeek.sort(Comparator.comparing(TimesheetSummary::getWeekInYear));
@@ -406,7 +412,7 @@ public class TimesheetService {
         context.put("consultantName", timesheetDto.getUserAccountDto().getUserName());
         context.put("consultantCompanyName", timesheetDto.getUserAccountDto().getOrganizationDto().getName());
         context.put("clientProjectName", timesheetDto.getProjectDto().getName());
-        context.put("clientName", timesheetDto.getProjectDto().getClientId());
+        context.put("clientName", timesheetDto.getProjectDto().getClientDto().getId());
         context.put("clientContactPersonName", "");
         context.put("clientContactPersonMobile", "");
         context.put("clientContactPersonEmail", "");

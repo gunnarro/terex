@@ -5,6 +5,7 @@ import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
+import com.gunnarro.android.terex.domain.dto.ClientDto;
 import com.gunnarro.android.terex.domain.dto.ProjectDto;
 import com.gunnarro.android.terex.domain.entity.Project;
 import com.gunnarro.android.terex.domain.entity.ProjectWithTimesheet;
@@ -35,11 +36,13 @@ public class ProjectService {
 
     @Inject
     public ProjectService() {
-        this.projectRepository = new ProjectRepository();
+        this(new ProjectRepository());
     }
 
     public ProjectDto getProject(Long projectId) {
-        return TimesheetMapper.toProjectDto(projectRepository.getProject(projectId));
+        ProjectDto projectDto = TimesheetMapper.toProjectDto(projectRepository.getProject(projectId));
+        projectDto.getClientDto().setName(projectRepository.getClientName(projectDto.getId()));
+        return projectDto;
     }
 
     public Integer getProjectHourlyRate(Long timesheetId) {

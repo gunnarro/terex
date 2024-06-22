@@ -36,8 +36,14 @@ public interface ProjectDao {
     @Query("select * from project p where p.client_id = :clientId and p.name = :projectName order by name")
     Project findProject(Long clientId, String projectName);
 
+    @Query("SELECT client.name FROM project"
+            + " INNER JOIN client ON client.id = project.client_id"
+            + " WHERE project.id = :projectId")
+    String getClientName(Long projectId);
+
     /**
      * Get hourly rate for timesheet id
+     *
      * @param timesheetId timesheet id
      * @return hourly rate
      */

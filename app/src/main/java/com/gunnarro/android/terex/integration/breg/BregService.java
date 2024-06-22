@@ -5,12 +5,12 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
-import com.gunnarro.android.terex.config.AppDatabase;
+import com.gunnarro.android.terex.domain.dto.IntegrationDto;
 import com.gunnarro.android.terex.domain.dto.OrganizationDto;
-import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.integration.breg.model.BregMapper;
 import com.gunnarro.android.terex.integration.breg.model.Enhet;
+import com.gunnarro.android.terex.service.IntegrationService;
 
 import java.io.IOException;
 import java.util.concurrent.CompletionService;
@@ -21,6 +21,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
 import okhttp3.Call;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -29,6 +31,20 @@ import okhttp3.Response;
 
 /**
  * https://api.skatteetaten.no/api/innkreving/restanser/v2/
+ * <p>
+ * https://api.skatteetaten.no/api/formuesgrunnlageiendomsskatt/v1/
+ * <p>
+ * sentral godkjenning
+ * https://sgregister.dibk.no/api
+ * curl https://sgregister.dibk.no/api/enterprises/123456789.json \
+ * -H 'Accept: application/vnd.sgpub.v1'
+ * <p>
+ * https://api.skatteetaten.no/api/formuesgrunnlageiendomsskatt/v1/
+ * <p>
+ * sentral godkjenning
+ * https://sgregister.dibk.no/api
+ * curl https://sgregister.dibk.no/api/enterprises/123456789.json \
+ * -H 'Accept: application/vnd.sgpub.v1'
  * <p>
  * https://api.skatteetaten.no/api/formuesgrunnlageiendomsskatt/v1/
  * <p>
@@ -52,22 +68,33 @@ import okhttp3.Response;
  */
 public class BregService {
 
+    private static final String SERVICE_NAME = "BREG";
     public static final ExecutorService serviceExecutor = Executors.newFixedThreadPool(2);
     private final OkHttpClient okHttpClient;
+    private final IntegrationDto integrationDto;// = "https://data.brreg.no/enhetsregisteret/api/enheter/";
 
-    private final String bregUrl = "https://data.brreg.no/enhetsregisteret/api/enheter/";
-
-    public BregService() {
+    /**
+     * for unit testing
+     */
+    @Inject
+    public BregService(IntegrationService integrationService) {
+        integrationDto = integrationService.getIntegrationBySystem(SERVICE_NAME);
         //  int cacheSize = 10 * 1024 * 1024;
         //  File cacheDirectory = new File("src/test/resources/cache");
         //  Cache cache = new Cache(cacheDirectory, cacheSize);
         okHttpClient = new OkHttpClient.Builder()
                 .followRedirects(false)
                 //.cache(cache)
-                .readTimeout(5000, TimeUnit.MILLISECONDS)
+                .readTimeout(integrationDto.getReadTimeoutMs(), TimeUnit.MILLISECONDS)
+                .connectTimeout(integrationDto.getConnectionTimeoutMs(), TimeUnit.MILLISECONDS)
                 .retryOnConnectionFailure(false)
-                .addInterceptor(new DefaultContentTypeInterceptor("application/vnd.brreg.enhetsregisteret.enhet.v2+json;charset=UTF-8"))
+                .addInterceptor(new DefaultContentTypeInterceptor(integrationDto.getHttpHeaderContentType()))
                 .build();
+    }
+
+    @Inject
+    public BregService() {
+        this(new IntegrationService());
     }
 
     public OrganizationDto findOrganization(String organizationNumber) {
@@ -94,7 +121,7 @@ public class BregService {
 
         // data.brreg.no: 195.43.63.68
         Request request = new Request.Builder()
-                .url(bregUrl + organizationNumber)
+                .url(integrationDto.getBaseUrl() + organizationNumber)
                 .build();
 
         try {
@@ -136,9 +163,10 @@ public class BregService {
         //return null;
     }
 
-
+    /**
+     * Used to add http headers to rest request
+     */
     static class DefaultContentTypeInterceptor implements Interceptor {
-
         private final String contentType;
 
         public DefaultContentTypeInterceptor(String contentType) {

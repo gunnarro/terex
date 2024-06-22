@@ -20,10 +20,8 @@ public class TimesheetDto {
     private Integer workingHoursInMonth;
     private Integer registeredWorkedDays;
     private Integer registeredWorkedHours;
-    private Integer registeredSickLeaveDays;
-    private Integer registeredSickLeaveHours;
-    private Integer registeredVacationDays;
-    private Integer registeredVacationHours;
+    private Integer sickDays;
+    private Integer vacationDays;
     private String description;
 
     public Long getId() {
@@ -106,36 +104,20 @@ public class TimesheetDto {
         this.registeredWorkedHours = registeredWorkedHours;
     }
 
-    public Integer getRegisteredSickLeaveDays() {
-        return registeredSickLeaveDays;
+    public Integer getSickDays() {
+        return sickDays;
     }
 
-    public void setRegisteredSickLeaveDays(Integer registeredSickLeaveDays) {
-        this.registeredSickLeaveDays = registeredSickLeaveDays;
+    public void setSickDays(Integer sickDays) {
+        this.sickDays = sickDays;
     }
 
-    public Integer getRegisteredSickLeaveHours() {
-        return registeredSickLeaveHours;
+    public Integer getVacationDays() {
+        return vacationDays;
     }
 
-    public void setRegisteredSickLeaveHours(Integer registeredSickLeaveHours) {
-        this.registeredSickLeaveHours = registeredSickLeaveHours;
-    }
-
-    public Integer getRegisteredVacationDays() {
-        return registeredVacationDays;
-    }
-
-    public void setRegisteredVacationDays(Integer registeredVacationDays) {
-        this.registeredVacationDays = registeredVacationDays;
-    }
-
-    public Integer getRegisteredVacationHours() {
-        return registeredVacationHours;
-    }
-
-    public void setRegisteredVacationHours(Integer registeredVacationHours) {
-        this.registeredVacationHours = registeredVacationHours;
+    public void setVacationDays(Integer vacationDays) {
+        this.vacationDays = vacationDays;
     }
 
     public String getDescription() {

@@ -80,6 +80,8 @@ public class TimesheetEntryListFragment extends BaseFragment implements ListOnIt
 
         // Update the cached copy of the timesheet entries in the adapter.
         timesheetEntryViewModel.getTimesheetEntryLiveData(timesheetId).observe(requireActivity(), adapter::submitList);
+        String timesheetTitle = timesheetEntryViewModel.getTimesheetTitle(timesheetId);
+        requireActivity().setTitle(timesheetTitle);
 
         FloatingActionButton addButton = view.findViewById(R.id.timesheet_entry_add_btn);
         addButton.setOnClickListener(v ->

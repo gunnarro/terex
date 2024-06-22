@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 
 import com.gunnarro.android.terex.config.AppDatabase;
+import com.gunnarro.android.terex.domain.entity.Address;
 import com.gunnarro.android.terex.domain.entity.Client;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 
@@ -139,5 +140,12 @@ public class ClientRepository {
         service.submit(() -> clientDao.update(client));
         Future<Integer> future = service.take();
         return future != null ? future.get() : null;
+    }
+
+    public void delete(Client client) {
+        AppDatabase.databaseExecutor.execute(() -> {
+            clientDao.delete(client);
+            Log.d("ClientRepository.delete", "deleted, clientId=" + client.getId());
+        });
     }
 }

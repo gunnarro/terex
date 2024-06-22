@@ -21,6 +21,7 @@ import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.integration.breg.BregService;
 import com.gunnarro.android.terex.service.ClientService;
+import com.gunnarro.android.terex.service.IntegrationService;
 import com.gunnarro.android.terex.utility.Utility;
 
 import org.jetbrains.annotations.NotNull;
@@ -45,13 +46,11 @@ public class ClientNewFragment extends BaseFragment implements View.OnClickListe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requireActivity().setTitle(R.string.title_client_new);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         // do not show the action bar
         setHasOptionsMenu(true);
         // Inflate the layout for this fragment
@@ -159,7 +158,7 @@ public class ClientNewFragment extends BaseFragment implements View.OnClickListe
     }
 
     private ClientDto readClientInputData() {
-        ClientDto clientDto = new ClientDto();
+        ClientDto clientDto = new ClientDto(null);
 
         TextView clientIdView = requireView().findViewById(R.id.client_new_id);
         if (clientIdView.getText() != null && !clientIdView.getText().toString().isBlank()) {

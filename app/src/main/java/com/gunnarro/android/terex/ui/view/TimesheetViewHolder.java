@@ -22,6 +22,8 @@ public class TimesheetViewHolder extends RecyclerView.ViewHolder {
     private final TextView timesheetLine1ValueView;
     private final TextView timesheetLine2LabelView;
     private final TextView timesheetLine2ValueView;
+    private final TextView timesheetLine3LabelView;
+    private final TextView timesheetLine3ValueView;
 
     private TimesheetViewHolder(View itemView) {
         super(itemView);
@@ -32,6 +34,8 @@ public class TimesheetViewHolder extends RecyclerView.ViewHolder {
         timesheetLine1ValueView = itemView.findViewById(R.id.timesheet_line_1_value);
         timesheetLine2LabelView = itemView.findViewById(R.id.timesheet_line_2_label);
         timesheetLine2ValueView = itemView.findViewById(R.id.timesheet_line_2_value);
+        timesheetLine3LabelView = itemView.findViewById(R.id.timesheet_line_3_label);
+        timesheetLine3ValueView = itemView.findViewById(R.id.timesheet_line_3_value);
     }
 
     public static TimesheetViewHolder create(ViewGroup parent) {
@@ -43,12 +47,12 @@ public class TimesheetViewHolder extends RecyclerView.ViewHolder {
         if (timesheetDto == null) {
             return;
         }
-        String title = timesheetDto.getProjectDto().getName();
+        String title = timesheetDto.getProjectDto().getClientDto().getName();
         if (title != null && title.length() > TITLE_MAX_LENGTH) {
             title = title.substring(0, TITLE_MAX_LENGTH) + "...";
         }
         timesheetLineHeaderView1.setText(title);
-        timesheetLineHeaderView2.setText(timesheetDto.getUserAccountDto().getUserName());
+        timesheetLineHeaderView2.setText(timesheetDto.getProjectDto().getName());
         timesheetLine1StatusView.setText(timesheetDto.getFromDate().format(DateTimeFormatter.ofPattern("MMM", Locale.getDefault())));
 
         if (timesheetDto.isNew()) {
@@ -64,5 +68,7 @@ public class TimesheetViewHolder extends RecyclerView.ViewHolder {
         timesheetLine1ValueView.setText(String.format("%s of %s days", timesheetDto.getRegisteredWorkedDays(), timesheetDto.getWorkingDaysInMonth()));
         timesheetLine2LabelView.setText(R.string.lbl_worked_hours);
         timesheetLine2ValueView.setText(String.format("%s of %s hours", timesheetDto.getRegisteredWorkedHours(), timesheetDto.getWorkingHoursInMonth()));
+        timesheetLine3LabelView.setText(String.format("%s / %s", timesheetLine3LabelView.getResources().getString(R.string.lbl_sick), timesheetLine3LabelView.getResources().getString(R.string.lbl_vacation)));
+        timesheetLine3ValueView.setText(String.format("%s / %s", timesheetDto.getSickDays(), timesheetDto.getVacationDays()));
     }
 }

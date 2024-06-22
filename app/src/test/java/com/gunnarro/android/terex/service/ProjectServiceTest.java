@@ -7,6 +7,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
+import com.gunnarro.android.terex.domain.dto.ClientDto;
 import com.gunnarro.android.terex.domain.dto.ProjectDto;
 import com.gunnarro.android.terex.domain.entity.Project;
 import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
@@ -37,7 +38,7 @@ class ProjectServiceTest {
     @Test
     void saveProject_new() throws ExecutionException, InterruptedException {
         ProjectDto projectDto = new ProjectDto();
-        projectDto.setClientId(1002L);
+        projectDto.setClientDto(new ClientDto(1001L));
         projectDto.setName("timerex");
         projectDto.setStatus(Project.ProjectStatusEnum.ACTIVE.name());
         projectDto.setDescription("develop a timesheet android app");
@@ -53,7 +54,7 @@ class ProjectServiceTest {
     void saveProject_update() throws ExecutionException, InterruptedException {
         ProjectDto projectDto = new ProjectDto();
         projectDto.setId(23L);
-        projectDto.setClientId(1002L);
+        projectDto.setClientDto(new ClientDto(1002L));
         projectDto.setName("timerex");
         projectDto.setStatus(Project.ProjectStatusEnum.ACTIVE.name());
         projectDto.setDescription("develop a timesheet android app");

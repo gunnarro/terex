@@ -81,6 +81,19 @@ public class ProjectRepository {
         }
     }
 
+    public String getClientName(Long projectId) {
+        try {
+            CompletionService<String> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
+            service.submit(() -> projectDao.getClientName(projectId));
+            Future<String> future = service.take();
+            return future != null ? future.get() : null;
+        } catch (InterruptedException | ExecutionException e) {
+            // Something crashed, therefore restore interrupted state before leaving.
+            Thread.currentThread().interrupt();
+            throw new TerexApplicationException("error getting project!", "50050", e);
+        }
+    }
+
     public Project getProject(Long projectId) {
         try {
             CompletionService<Project> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
@@ -123,5 +136,12 @@ public class ProjectRepository {
         service.submit(() -> projectDao.update(project));
         Future<Integer> future = service.take();
         return future != null ? future.get() : null;
+    }
+
+    public void delete(Project project) {
+        AppDatabase.databaseExecutor.execute(() -> {
+            projectDao.delete(project);
+            Log.d("ProjectRepository.delete", "deleted, projectId=" + project.getId());
+        });
     }
 }

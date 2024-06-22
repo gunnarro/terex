@@ -19,11 +19,18 @@ import java.util.Map;
 @Dao
 public interface TimesheetDao {
 
-    @Query("SELECT * FROM timesheet t JOIN timesheet_entry e ON t.id = e.timesheet_id WHERE t.id = :timesheetId")
+    @Query("SELECT * FROM timesheet t"
+            + " JOIN timesheet_entry e ON t.id = e.timesheet_id"
+            + " WHERE t.id = :timesheetId")
     LiveData<Map<Timesheet, List<TimesheetEntry>>> getTimesheetLiveData(Long timesheetId);
 
     @Query("SELECT * FROM timesheet WHERE id = :id")
     Timesheet getTimesheetById(Long id);
+
+    @Query("SELECT p.name || ' ' || t.year || '/' || t.month FROM timesheet t"
+            + " JOIN project p ON t.project_id"
+            + " WHERE t.id = :timesheetId")
+    String getTimesheetTitle(Long timesheetId);
 
     /**
      * use transactions since this method return a aggregate object
@@ -36,9 +43,9 @@ public interface TimesheetDao {
     Timesheet find(Long userAccountId, Long projectId, Integer year, Integer month);
 
     @Query("SELECT * FROM timesheet where year = :year ORDER BY year, month")
-   // @Query("SELECT t.*, count(e.timesheet_id) AS registeredWorkingDays , sum(e.worked_in_min) as  registeredWorkingHours FROM timesheet t"
-   //         + " INNER JOIN  timesheet_entry e ON e.timesheet_id = t.id "
-   //         + " WHERE year = :year")
+        // @Query("SELECT t.*, count(e.timesheet_id) AS registeredWorkingDays , sum(e.worked_in_min) as  registeredWorkingHours FROM timesheet t"
+        //         + " INNER JOIN  timesheet_entry e ON e.timesheet_id = t.id "
+        //         + " WHERE year = :year")
     LiveData<List<Timesheet>> getTimesheetByYear(Integer year);
 
     @Query("SELECT * FROM timesheet where year = :year ORDER BY year, month")
@@ -54,23 +61,47 @@ public interface TimesheetDao {
     String getTimesheetStatus(Long timesheetId);
 
     /**
-     *
      * @return number of registered worked days
      */
-    @Query("SELECT count(timesheet_entry.id) FROM timesheet INNER JOIN timesheet_entry ON timesheet_entry.timesheet_id = timesheet.id WHERE timesheet.id = :timesheetId")
+    @Query("SELECT count(timesheet_entry.id) FROM timesheet"
+            + " INNER JOIN timesheet_entry ON timesheet_entry.timesheet_id = timesheet.id"
+            + " WHERE timesheet.id = :timesheetId AND timesheet_entry.type = 'REGULAR'")
     Integer getWorkedDays(Long timesheetId);
 
     /**
-     *
+     * @return number of registered sick days
+     */
+    @Query("SELECT count(timesheet_entry.id) FROM timesheet"
+            + " INNER JOIN timesheet_entry ON timesheet_entry.timesheet_id = timesheet.id"
+            + " WHERE timesheet.id = :timesheetId"
+            + " AND timesheet_entry.type = 'SICK'")
+    Integer getSickDays(Long timesheetId);
+
+    /**
+     * @return number of registered vacation days
+     */
+    @Query("SELECT count(timesheet_entry.id) FROM timesheet"
+            + " INNER JOIN timesheet_entry ON timesheet_entry.timesheet_id = timesheet.id"
+            + " WHERE timesheet.id = :timesheetId"
+            + " AND timesheet_entry.type = 'VACATION'")
+    Integer getVacationDays(Long timesheetId);
+
+    /**
      * @return return registered worked time in minutes
      */
-    @Query("SELECT sum(timesheet_entry.worked_in_min) FROM timesheet INNER JOIN timesheet_entry ON timesheet_entry.timesheet_id = timesheet.id WHERE timesheet.id = :timesheetId")
+    @Query("SELECT sum(timesheet_entry.worked_in_min) FROM timesheet"
+            + " INNER JOIN timesheet_entry ON timesheet_entry.timesheet_id = timesheet.id"
+            + " WHERE timesheet.id = :timesheetId AND timesheet_entry.type = 'REGULAR'")
     Integer getWorkedMinutes(Long timesheetId);
 
-    @Query("SELECT project.name FROM timesheet INNER JOIN project ON project.id = timesheet.project_id WHERE timesheet.id = :timesheetId")
+    @Query("SELECT project.name FROM timesheet"
+            + " INNER JOIN project ON project.id = timesheet.project_id"
+            + " WHERE timesheet.id = :timesheetId")
     String getProjectName(Long timesheetId);
 
-    @Query("SELECT user_account.user_name FROM timesheet INNER JOIN user_account ON user_account.id = timesheet.user_account_id WHERE timesheet.id = :timesheetId")
+    @Query("SELECT user_account.user_name FROM timesheet"
+            + " INNER JOIN user_account ON user_account.id = timesheet.user_account_id"
+            + " WHERE timesheet.id = :timesheetId")
     String getUserName(String timesheetId);
 
     /**

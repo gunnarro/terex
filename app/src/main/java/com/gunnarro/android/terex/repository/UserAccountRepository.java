@@ -23,6 +23,7 @@ public class UserAccountRepository {
 
     /**
      * For unit testing only
+     *
      * @param userAccountDao user account dao mock
      */
     public UserAccountRepository(UserAccountDao userAccountDao) {
@@ -101,6 +102,13 @@ public class UserAccountRepository {
         service.submit(() -> userAccountDao.update(userAccount));
         Future<Integer> future = service.take();
         return future != null ? future.get() : null;
+    }
+
+    public void delete(UserAccount userAccount) {
+        AppDatabase.databaseExecutor.execute(() -> {
+            userAccountDao.delete(userAccount);
+            Log.d("UserAccountRepository.delete", "deleted, userAccountId=" + userAccount.getId());
+        });
     }
 
     public Long save(@NotNull final UserAccount userAccount) {

@@ -204,7 +204,7 @@ public class TestData {
     }
 
     public static ClientDto createClientDto(Long id, String orgName) {
-        ClientDto clientDto = new ClientDto();
+        ClientDto clientDto = new ClientDto(null);
         clientDto.setId(id);
         clientDto.setName(orgName);
         clientDto.setStatus("ACTIVE");
@@ -227,7 +227,7 @@ public class TestData {
         ProjectDto projectDto = new ProjectDto();
         projectDto.setId(id);
         projectDto.setName(name);
-        projectDto.setClientId(clientId);
+        projectDto.setClientDto(new ClientDto(clientId));
         projectDto.setHourlyRate(1000);
         return projectDto;
     }

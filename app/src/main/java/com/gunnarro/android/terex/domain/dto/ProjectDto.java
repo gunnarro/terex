@@ -5,12 +5,11 @@ import java.util.Objects;
 
 public class ProjectDto {
     private Long id;
-    private Long clientId;
     private String name;
     private String description;
     private String status;
     private Integer hourlyRate;
-
+    private ClientDto clientDto;
     private List<TimesheetDto> timesheetDto;
 
     public Long getId() {
@@ -21,13 +20,6 @@ public class ProjectDto {
         this.id = id;
     }
 
-    public Long getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(Long clientId) {
-        this.clientId = clientId;
-    }
 
     public String getName() {
         return name;
@@ -61,6 +53,14 @@ public class ProjectDto {
         this.hourlyRate = hourlyRate;
     }
 
+    public ClientDto getClientDto() {
+        return clientDto;
+    }
+
+    public void setClientDto(ClientDto clientDto) {
+        this.clientDto = clientDto;
+    }
+
     public List<TimesheetDto> getTimesheetDto() {
         return timesheetDto;
     }
@@ -74,11 +74,11 @@ public class ProjectDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ProjectDto that = (ProjectDto) o;
-        return Objects.equals(clientId, that.clientId) && Objects.equals(name, that.name);
+        return Objects.equals(name, that.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(clientId, name);
+        return Objects.hash(name);
     }
 }

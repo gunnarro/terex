@@ -14,6 +14,7 @@ import com.gunnarro.android.terex.domain.dbview.TimesheetView;
 import com.gunnarro.android.terex.domain.entity.Address;
 import com.gunnarro.android.terex.domain.entity.Client;
 import com.gunnarro.android.terex.domain.entity.ContactInfo;
+import com.gunnarro.android.terex.domain.entity.Integration;
 import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.InvoiceAttachment;
 import com.gunnarro.android.terex.domain.entity.Organization;
@@ -27,6 +28,7 @@ import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.repository.AddressDao;
 import com.gunnarro.android.terex.repository.ClientDao;
 import com.gunnarro.android.terex.repository.ContactInfoDao;
+import com.gunnarro.android.terex.repository.IntegrationDao;
 import com.gunnarro.android.terex.repository.InvoiceAttachmentDao;
 import com.gunnarro.android.terex.repository.InvoiceDao;
 import com.gunnarro.android.terex.repository.OrganizationDao;
@@ -58,10 +60,11 @@ import java.util.concurrent.Executors;
         Organization.class,
         InvoiceAttachment.class,
         Client.class,
+        Integration.class,
 }, version = AppDatabase.DB_SCHEMA_VERSION, views = {TimesheetView.class}, exportSchema = true)
 public abstract class AppDatabase extends RoomDatabase {
     // Increase the version with one if the database schema has changed.
-    public static final int DB_SCHEMA_VERSION = 12;
+    public static final int DB_SCHEMA_VERSION = 15;
     // marking the instance as volatile to ensure atomic access to the variable
     // The Java volatile keyword guarantees visibility of changes to variables across threads
     private static AppDatabase INSTANCE;
@@ -127,6 +130,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract ContactInfoDao contactInfoDao();
 
+    public abstract IntegrationDao integrationDao();
     /**
      * Called when the database is created for the first time. This is called after all the tables are created.
      */

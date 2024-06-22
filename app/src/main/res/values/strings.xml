@@ -184,4 +184,9 @@
     <string name="timesheet_entry_type_regular">Regular</string>
     <string name="timesheet_entry_type_vacation">Vacation</string>
     <string name="timesheet_entry_type_sick">Sick</string>
+    <string name="btn_add_regular">Regular</string>
+    <string name="btn_add_vacation">Vacation</string>
+    <string name="btn_add_sick">Sick</string>
+    <string name="lbl_vacation">Vacation</string>
+    <string name="lbl_sick">Sick</string>
 </resources>

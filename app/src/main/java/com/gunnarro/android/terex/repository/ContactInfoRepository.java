@@ -66,4 +66,11 @@ public class ContactInfoRepository {
         Future<Integer> future = service.take();
         return future != null ? future.get() : null;
     }
+
+    public void delete(ContactInfo contactInfo) {
+        AppDatabase.databaseExecutor.execute(() -> {
+            contactInfoDao.delete(contactInfo);
+            Log.d("ContactInfoRepository.delete", "deleted, contactInfoId=" + contactInfo.getId());
+        });
+    }
 }

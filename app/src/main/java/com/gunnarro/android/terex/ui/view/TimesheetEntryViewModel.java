@@ -58,4 +58,8 @@ public class TimesheetEntryViewModel extends AndroidViewModel {
     public TimesheetEntry getTimesheetEntry(Long timesheetEntryId) {
         return timesheetService.getTimesheetEntry(timesheetEntryId);
     }
+
+    public String getTimesheetTitle(Long timesheetId) {
+        return timesheetService.getTimesheetTitle(timesheetId);
+    }
 }

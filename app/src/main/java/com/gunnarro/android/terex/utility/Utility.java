@@ -125,6 +125,9 @@ public class Utility {
     }
 
     public static String getTimeDiffInHours(LocalTime t1, LocalTime t2) {
+        if (t1 == null || t2 == null) {
+            return "0";
+        }
         Duration diff = Duration.between(t1, t2);
         return String.format("%s.%s", diff.toHours(), diff.toMinutes() % 60);
     }

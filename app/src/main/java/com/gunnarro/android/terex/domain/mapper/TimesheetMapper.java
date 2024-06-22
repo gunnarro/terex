@@ -4,6 +4,7 @@ import com.gunnarro.android.terex.domain.dto.AddressDto;
 import com.gunnarro.android.terex.domain.dto.BusinessAddressDto;
 import com.gunnarro.android.terex.domain.dto.ClientDto;
 import com.gunnarro.android.terex.domain.dto.ContactInfoDto;
+import com.gunnarro.android.terex.domain.dto.IntegrationDto;
 import com.gunnarro.android.terex.domain.dto.InvoiceDto;
 import com.gunnarro.android.terex.domain.dto.OrganizationDto;
 import com.gunnarro.android.terex.domain.dto.PersonDto;
@@ -15,6 +16,7 @@ import com.gunnarro.android.terex.domain.dto.UserAccountDto;
 import com.gunnarro.android.terex.domain.entity.Address;
 import com.gunnarro.android.terex.domain.entity.Client;
 import com.gunnarro.android.terex.domain.entity.ContactInfo;
+import com.gunnarro.android.terex.domain.entity.Integration;
 import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.Organization;
 import com.gunnarro.android.terex.domain.entity.Person;
@@ -142,7 +144,7 @@ public class TimesheetMapper {
         }
         ProjectDto projectDto = new ProjectDto();
         projectDto.setId(project.getId());
-        projectDto.setClientId(project.getClientId());
+        projectDto.setClientDto(new ClientDto(project.getClientId()));
         projectDto.setName(project.getName());
         projectDto.setDescription(project.getDescription());
         projectDto.setStatus(project.getStatus());
@@ -156,7 +158,7 @@ public class TimesheetMapper {
         }
         Project project = new Project();
         project.setId(projectDto.getId());
-        project.setClientId(projectDto.getClientId());
+        project.setClientId(projectDto.getClientDto().getId());
         project.setName(projectDto.getName());
         project.setDescription(projectDto.getDescription());
         project.setStatus(projectDto.getStatus());
@@ -181,7 +183,7 @@ public class TimesheetMapper {
     }
 
     public static ClientDto toClientDto(Client client) {
-        ClientDto clientDto = new ClientDto();
+        ClientDto clientDto = new ClientDto(null);
         clientDto.setId(client.getId());
         clientDto.setName(client.getName());
         clientDto.setStatus(client.getStatus());
@@ -373,7 +375,7 @@ public class TimesheetMapper {
         UserAccountDto userAccountDto = new UserAccountDto();
         userAccountDto.setId(invoice.getIssuerId());
         invoiceDto.setInvoiceIssuer(userAccountDto);
-        ClientDto clientDto = new ClientDto();
+        ClientDto clientDto = new ClientDto(null);
         clientDto.setId(invoice.getRecipientId());
         invoiceDto.setInvoiceRecipient(clientDto);
         invoiceDto.setInvoiceNumber(invoice.getInvoiceNumber());
@@ -385,5 +387,47 @@ public class TimesheetMapper {
         invoiceDto.setBillingPeriodStartDate(invoice.getBillingPeriodStartDate());
         invoiceDto.setBillingPeriodEndDate(invoice.getBillingPeriodEndDate());
         return invoiceDto;
+    }
+
+    public static List<IntegrationDto> toIntegrationDtoList(List<Integration> integrationList) {
+        if (integrationList == null) {
+            return new ArrayList<>();
+        }
+        return integrationList.stream().map(TimesheetMapper::toIntegrationDto).collect(Collectors.toList());
+    }
+
+    public static IntegrationDto toIntegrationDto(Integration integration) {
+        if (integration == null) {
+            return null;
+        }
+        IntegrationDto integrationDto = new IntegrationDto();
+        integrationDto.setId(integration.getId());
+        integrationDto.setSystem(integration.getSystem());
+        integrationDto.setBaseUrl(integration.getBaseUrl());
+        integrationDto.setServiceType(integration.getServiceType());
+        integrationDto.setUserName(integration.getUserName());
+        integrationDto.setPassword(integration.getPassword());
+        integrationDto.setSchemaUrl(integration.getSchemaUrl());
+        integrationDto.setAuthenticationType(integration.getAuthenticationType());
+        integrationDto.setAccessToken(integration.getAccessToken());
+        return integrationDto;
+    }
+
+
+    public static Integration fromIntegrationDto(IntegrationDto integrationDto) {
+        if (integrationDto == null) {
+            return null;
+        }
+        Integration integration = new Integration();
+        integration.setId(integrationDto.getId());
+        integration.setSystem(integrationDto.getSystem());
+        integration.setBaseUrl(integrationDto.getBaseUrl());
+        integration.setServiceType(integrationDto.getServiceType());
+        integration.setUserName(integrationDto.getUserName());
+        integration.setPassword(integrationDto.getPassword());
+        integration.setSchemaUrl(integrationDto.getSchemaUrl());
+        integration.setAuthenticationType(integrationDto.getAuthenticationType());
+        integration.setAccessToken(integrationDto.getAccessToken());
+        return integration;
     }
 }

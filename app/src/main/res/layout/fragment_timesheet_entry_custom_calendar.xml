@@ -7,44 +7,37 @@
     tools:context=".ui.fragment.TimesheetEntryCustomCalendarFragment"
     tools:ignore="ExtraText">
 
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/timesheet_calendar_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="10dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_margin="4dp"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/timesheet_calendar_layout"
+        <com.applandeo.materialcalendarview.CalendarView
+            android:id="@+id/view_timesheet_custom_calendar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.applandeo.materialcalendarview.CalendarView
-                android:id="@+id/view_timesheet_custom_calendar"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:headerColor="@color/colorBackground"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:selectionBetweenMonthsEnabled="true"
-                app:headerLabelColor="@color/calendar_header"
-                app:selectionColor="@color/calendar_selected_date"
-                app:disabledDaysLabelsColor="@color/calendar_disabled_date"
-                app:todayLabelColor="@color/calendar_today_date"
-                app:swipeEnabled="true"
-                app:eventsEnabled="true"
-                app:firstDayOfWeek="monday"
-                app:type="many_days_picker" />
-        </LinearLayout>
+            android:layout_height="match_parent"
+            app:disabledDaysLabelsColor="@color/calendar_disabled_date"
+            app:eventsEnabled="true"
+            app:firstDayOfWeek="monday"
+            app:headerColor="@color/colorBackground"
+            app:headerLabelColor="@color/calendar_header"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:selectionBetweenMonthsEnabled="true"
+            app:selectionColor="@color/calendar_selected_date"
+            app:swipeEnabled="true"
+            app:todayLabelColor="@color/calendar_today_date"
+            app:type="many_days_picker" />
 
         <LinearLayout
             android:id="@+id/tbl_timesheet_register_buttons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/timesheet_calendar_layout"
-            android:layout_marginLeft="50dp"
-            android:layout_marginTop="50dp"
-            android:layout_marginRight="50dp"
+            android:layout_marginTop="10dp"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -53,19 +46,39 @@
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
+                android:layout_marginEnd="4dp"
                 android:layout_weight="1"
                 android:text="@string/btn_cancel"
                 app:iconTint="@color/color_btn_bg_cancel" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_timesheet_calendar_save"
+                android:id="@+id/btn_timesheet_calendar_save_sick"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/btn_add"
+                android:text="@string/btn_add_sick"
+                app:iconTint="@color/color_btn_bg_add" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_timesheet_calendar_save_vacation"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:layout_weight="1"
+                android:text="@string/btn_add_vacation"
+                app:iconTint="@color/color_btn_bg_add" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_timesheet_calendar_save_regular"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:layout_weight="1"
+                android:text="@string/btn_add_regular"
                 app:iconTint="@color/color_btn_bg_add" />
         </LinearLayout>
-    </RelativeLayout>
+    </LinearLayout>
 </FrameLayout>

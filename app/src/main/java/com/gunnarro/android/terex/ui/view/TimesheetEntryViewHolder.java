@@ -15,6 +15,7 @@ import com.gunnarro.android.terex.utility.Utility;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
+
 public class TimesheetEntryViewHolder extends RecyclerView.ViewHolder {
     private final ImageView timesheetEntryDeleteIconView;
     private final TextView timesheetEntryLineHeaderView;
@@ -39,9 +40,9 @@ public class TimesheetEntryViewHolder extends RecyclerView.ViewHolder {
     public void bindListLine(TimesheetEntry timesheetEntry) {
         if (timesheetEntry.isClosed()) {
             // hide the delete icon
-            timesheetEntryDeleteIconView.setVisibility(View.INVISIBLE);
+            timesheetEntryDeleteIconView.setVisibility(View.GONE);
         }
-        timesheetEntryLineHeaderView.setText(timesheetEntry.getType() + ", timesheetId: " + timesheetEntry.getTimesheetId());
+        timesheetEntryLineHeaderView.setText(timesheetEntry.getType().toLowerCase());
         if (timesheetEntry.isRegularWorkDay()) {
             timesheetEntryLineHeaderView.setTextColor(timesheetEntryLine1StatusView.getResources().getColor(R.color.timesheet_entry_type_regular, null));
         } else if (timesheetEntry.isVacationDay()) {

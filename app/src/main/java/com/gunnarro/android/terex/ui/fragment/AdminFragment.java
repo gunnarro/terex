@@ -106,20 +106,20 @@ public class AdminFragment extends BaseFragment {
 
     private void generateTestData() {
         // create a client
-        ClientDto clientDto = new ClientDto();
+        ClientDto clientDto = new ClientDto(null);
         clientDto.setName("gunnarro sandbox");
         clientDto.setStatus(Client.ClientStatusEnum.ACTIVE.name());
         Long clientId = clientService.saveClient(clientDto);
 
         ProjectDto projectDto1 = new ProjectDto();
-        projectDto1.setClientId(clientId);
+        projectDto1.setClientDto(new ClientDto(clientId));
         projectDto1.setName("terex load test");
         projectDto1.setStatus(Project.ProjectStatusEnum.ACTIVE.name());
         projectDto1.setHourlyRate(990);
         Long projectId1 = projectService.saveProject(projectDto1);
 
         ProjectDto projectDto2 = new ProjectDto();
-        projectDto2.setClientId(clientId);
+        projectDto2.setClientDto(new ClientDto(clientId));
         projectDto2.setName("terex functional testing");
         projectDto2.setStatus(Project.ProjectStatusEnum.ACTIVE.name());
         projectDto2.setHourlyRate(1100);
