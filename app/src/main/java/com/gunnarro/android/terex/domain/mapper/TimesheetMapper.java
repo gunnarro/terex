@@ -92,21 +92,21 @@ public class TimesheetMapper {
         TimesheetEntryDto timesheetEntryDto = new TimesheetEntryDto();
         timesheetEntryDto.setType(timesheetEntry.getType());
         timesheetEntryDto.setWorkdayDate(timesheetEntry.getWorkdayDate());
-        timesheetEntryDto.setFromTime(timesheetEntry.getFromTime());
-        timesheetEntryDto.setToTime(timesheetEntry.getToTime());
-        timesheetEntryDto.setWorkedMinutes(timesheetEntry.getWorkedMinutes());
-        timesheetEntryDto.setComments(timesheetEntry.getComment());
+        timesheetEntryDto.setFromTime(timesheetEntry.getStartTime());
+        timesheetEntryDto.setToTime(timesheetEntry.getEndTime());
+        timesheetEntryDto.setWorkedSeconds(timesheetEntry.getWorkedSeconds());
+        timesheetEntryDto.setComments(timesheetEntry.getComments());
         return timesheetEntryDto;
     }
 
     public static TimesheetEntry fromTimesheetEntryDto(TimesheetEntryDto timesheetEntryDto) {
         TimesheetEntry timesheetEntry = new TimesheetEntry();
         timesheetEntry.setType(timesheetEntryDto.getType());
-        timesheetEntry.setWorkdayDate(timesheetEntry.getWorkdayDate());
-        timesheetEntry.setFromTime(timesheetEntry.getFromTime());
-        timesheetEntry.setToTime(timesheetEntry.getToTime());
-        timesheetEntry.setWorkedMinutes(timesheetEntry.getWorkedMinutes());
-        timesheetEntry.setComment(timesheetEntry.getComment());
+        timesheetEntry.setWorkdayDate(timesheetEntryDto.getWorkdayDate());
+        timesheetEntry.setStartTime(timesheetEntryDto.getFromTime());
+        timesheetEntry.setEndTime(timesheetEntryDto.getToTime());
+        timesheetEntry.setWorkedSeconds(timesheetEntryDto.getWorkedSeconds());
+        timesheetEntry.setComments(timesheetEntryDto.getComments());
         return timesheetEntry;
     }
 

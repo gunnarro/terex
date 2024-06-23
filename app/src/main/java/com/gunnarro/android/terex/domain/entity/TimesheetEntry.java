@@ -17,7 +17,6 @@ import org.jetbrains.annotations.NotNull;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.time.temporal.WeekFields;
 import java.util.Locale;
 import java.util.Objects;
@@ -77,18 +76,18 @@ public class TimesheetEntry extends BaseEntity {
 
     @NonNull
     @ColumnInfo(name = "start_time")
-    private LocalTime fromTime;
+    private LocalTime startTime;
 
-    @NonNull
+    @Deprecated
     @ColumnInfo(name = "end_time")
-    private LocalTime toTime;
+    private LocalTime endTime;
 
     @NotNull
-    @ColumnInfo(name = "worked_in_min")
-    private Integer workedMinutes;
+    @ColumnInfo(name = "worked_seconds")
+    private Long workedSeconds;
 
-    @ColumnInfo(name = "break_in_min")
-    private Integer breakInMin;
+    @ColumnInfo(name = "break_seconds")
+    private Integer breakSeconds;
 
     /**
      * Status can only be OPEN and CLOSED. When CLOSED is not possible to change or delete the entry.
@@ -98,8 +97,8 @@ public class TimesheetEntry extends BaseEntity {
     @ColumnInfo(name = "status", defaultValue = "OPEN")
     private String status;
 
-    @ColumnInfo(name = "comment")
-    private String comment;
+    @ColumnInfo(name = "comments")
+    private String comments;
 
     /**
      * Indicate if it data in this entry should be used as default setting for new entries. Set to not default as default.
@@ -143,42 +142,41 @@ public class TimesheetEntry extends BaseEntity {
     }
 
     @NonNull
-    public LocalTime getFromTime() {
-        return fromTime;
+    public LocalTime getStartTime() {
+        return startTime;
     }
 
-    public void setFromTime(@NonNull LocalTime fromTime) {
-        this.fromTime = fromTime;
-    }
-
-    @NonNull
-    public LocalTime getToTime() {
-        return toTime;
-    }
-
-    public void setToTime(@NonNull LocalTime toTime) {
-        this.toTime = toTime;
+    public void setStartTime(@NonNull LocalTime startTime) {
+        this.startTime = startTime;
     }
 
     @NonNull
-    public Integer getWorkedMinutes() {
-        return workedMinutes;
+    public LocalTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(@NonNull LocalTime endTime) {
+        this.endTime = endTime;
     }
 
     public String getWorkedHours() {
-        return Double.toString((double) workedMinutes / 60);
+        return Double.toString((double) workedSeconds / (60 * 60));
     }
 
-    public void setWorkedMinutes(@NonNull Integer workedMinutes) {
-        this.workedMinutes = workedMinutes;
+    public Integer getBreakSeconds() {
+        return breakSeconds;
     }
 
-    public Integer getBreakInMin() {
-        return breakInMin;
+    public void setBreakSeconds(Integer breakSeconds) {
+        this.breakSeconds = breakSeconds;
     }
 
-    public void setBreakInMin(Integer breakInMin) {
-        this.breakInMin = breakInMin;
+    public Long getWorkedSeconds() {
+        return workedSeconds;
+    }
+
+    public void setWorkedSeconds(Long workedSeconds) {
+        this.workedSeconds = workedSeconds;
     }
 
     /**
@@ -193,12 +191,12 @@ public class TimesheetEntry extends BaseEntity {
         this.status = status;
     }
 
-    public String getComment() {
-        return comment;
+    public String getComments() {
+        return comments;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void setComments(String comments) {
+        this.comments = comments;
     }
 
     public Integer getUseAsDefault() {
@@ -246,10 +244,10 @@ public class TimesheetEntry extends BaseEntity {
         timesheetEntry.setWorkdayDate(workDayDate);
         timesheetEntry.setWorkdayWeek(timesheetEntry.getWorkdayDate().get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()));
         // add 7,5 hours
-        timesheetEntry.setFromTime(LocalTime.now(ZoneId.systemDefault()).withHour(8).withMinute(0).withSecond(0).withSecond(0).withNano(0));
-        timesheetEntry.setToTime(timesheetEntry.getFromTime().plusMinutes(Utility.DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES));
-        timesheetEntry.setWorkedMinutes((int) ChronoUnit.MINUTES.between(timesheetEntry.getFromTime(), timesheetEntry.getToTime()));
-        timesheetEntry.setBreakInMin(Utility.DEFAULT_DAILY_BREAK_IN_MINUTES);
+        timesheetEntry.setStartTime(LocalTime.now(ZoneId.systemDefault()).withHour(8).withMinute(0).withSecond(0).withSecond(0).withNano(0));
+        timesheetEntry.setEndTime(timesheetEntry.getStartTime().plusMinutes(Utility.DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES));
+        timesheetEntry.setWorkedSeconds((Utility.DEFAULT_DAILY_WORKING_HOURS_IN_SECONDS));
+        timesheetEntry.setBreakSeconds((Utility.DEFAULT_DAILY_BREAK_IN_SECONDS));
         return timesheetEntry;
     }
 
@@ -259,15 +257,14 @@ public class TimesheetEntry extends BaseEntity {
         }
         TimesheetEntry clone = new TimesheetEntry();
         clone.setTimesheetId(timesheetEntry.getTimesheetId());
-        clone.setBreakInMin(timesheetEntry.getBreakInMin());
-        clone.setWorkedMinutes(timesheetEntry.getWorkedMinutes());
         clone.setStatus(timesheetEntry.getStatus());
         clone.setType(timesheetEntry.getType());
         clone.setWorkdayWeek(timesheetEntry.getWorkdayWeek());
-        clone.setBreakInMin(timesheetEntry.getBreakInMin());
-        clone.setFromTime(timesheetEntry.getFromTime());
-        clone.setToTime(timesheetEntry.getToTime());
-        clone.setComment(timesheetEntry.getComment());
+        clone.setStartTime(timesheetEntry.getStartTime());
+        clone.setEndTime(timesheetEntry.getEndTime());
+        clone.setWorkedSeconds(timesheetEntry.getWorkedSeconds());
+        clone.setBreakSeconds(timesheetEntry.getBreakSeconds());
+        clone.setComments(timesheetEntry.getComments());
         return clone;
     }
 
@@ -295,13 +292,13 @@ public class TimesheetEntry extends BaseEntity {
         sb.append(", lastModifiedDate=").append(getLastModifiedDate());
         sb.append(", workdayWeek=").append(workdayWeek);
         sb.append(", workdayDate=").append(workdayDate);
-        sb.append(", fromTime=").append(fromTime);
-        sb.append(", toTime=").append(toTime);
-        sb.append(", workedMinutes=").append(workedMinutes);
-        sb.append(", breakInMin=").append(breakInMin);
+        sb.append(", startTime=").append(startTime);
+        sb.append(", endTime=").append(endTime);
+        sb.append(", workedSeconds=").append(workedSeconds);
+        sb.append(", breakSeconds=").append(breakSeconds);
         sb.append(", status='").append(status);
         sb.append(", type=").append(type);
-        sb.append(", comment='").append(comment);
+        sb.append(", comment='").append(comments);
         sb.append(", useAsDefault='").append(useAsDefault);
         sb.append('}');
         return sb.toString();

@@ -1,7 +1,6 @@
 package com.gunnarro.android.terex.domain.dto;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
@@ -35,10 +34,10 @@ class TimesheetEntryDtoTest {
     @Test
     void workedHours() {
         TimesheetEntryDto timesheetEntryDto = new TimesheetEntryDto();
-        assertNull(timesheetEntryDto.getWorkedHours());
-        timesheetEntryDto.setWorkedMinutes(480);
+        assertEquals("0.0", timesheetEntryDto.getWorkedHours());
+        timesheetEntryDto.setWorkedSeconds((long) 480 * 60);
         assertEquals("8.0", timesheetEntryDto.getWorkedHours());
-        timesheetEntryDto.setWorkedMinutes(450);
+        timesheetEntryDto.setWorkedSeconds((long) 450 * 60);
         assertEquals("7.5", timesheetEntryDto.getWorkedHours());
     }
 }

@@ -3,11 +3,11 @@ package com.gunnarro.android.terex.domain.dto;
 import androidx.annotation.NonNull;
 
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
+import com.gunnarro.android.terex.utility.Utility;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 
 public class TimesheetEntryDto {
 
@@ -18,7 +18,7 @@ public class TimesheetEntryDto {
     @NonNull
     private LocalTime toTime;
     @NonNull
-    private Integer workedMinutes;
+    private long workedSeconds;
     private String comments;
     @NonNull
     private String type;
@@ -50,12 +50,13 @@ public class TimesheetEntryDto {
         this.toTime = toTime;
     }
 
-    public Integer getWorkedMinutes() {
-        return workedMinutes;
+    @NonNull
+    public Long getWorkedSeconds() {
+        return workedSeconds;
     }
 
-    public void setWorkedMinutes(Integer workedMinutes) {
-        this.workedMinutes = workedMinutes;
+    public void setWorkedSeconds(@NonNull Long workedSeconds) {
+        this.workedSeconds = workedSeconds;
     }
 
     public String getComments() {
@@ -77,10 +78,7 @@ public class TimesheetEntryDto {
     // helper methods
 
     public String getWorkedHours() {
-        if (workedMinutes != null && workedMinutes > 0) {
-            return String.format(Locale.getDefault(), "%.1f", (double) workedMinutes / 60);
-        }
-        return null;
+        return Utility.fromSecondsToHours(workedSeconds);
     }
 
     public String getWorkdayDateDay() {

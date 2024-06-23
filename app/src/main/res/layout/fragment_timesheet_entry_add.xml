@@ -230,7 +230,23 @@
                     android:maxLength="5"
                     android:text="@string/hh_mm" />
             </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/timesheet_entry_worked_hours_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/lbl_worked_hours">
 
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/timesheet_entry_worked_hours"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:maxLength="3"
+                    android:text="hh.m" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <!--
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/timesheet_entry_to_time_layout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
@@ -247,6 +263,7 @@
                     android:maxLength="5"
                     android:text="@string/hh_mm" />
             </com.google.android.material.textfield.TextInputLayout>
+-->
         </LinearLayout>
 
         <!-- horizontal break layout -->

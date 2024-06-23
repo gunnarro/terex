@@ -39,7 +39,7 @@ public interface TimesheetEntryDao {
     Integer getRegisteredWorkedDays(Long timesheetId);
 
     // https://www.sqlitetutorial.net/sqlite-sum/
-    @Query("SELECT sum(worked_in_min/60) FROM timesheet_entry WHERE timesheet_id = :timesheetId")
+    @Query("SELECT sum(worked_seconds/60) FROM timesheet_entry WHERE timesheet_id = :timesheetId")
     Integer getRegisteredWorkedHours(Long timesheetId);
 
     /**

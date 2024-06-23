@@ -89,7 +89,7 @@ public interface TimesheetDao {
     /**
      * @return return registered worked time in minutes
      */
-    @Query("SELECT sum(timesheet_entry.worked_in_min) FROM timesheet"
+    @Query("SELECT sum(timesheet_entry.worked_seconds)/60 FROM timesheet"
             + " INNER JOIN timesheet_entry ON timesheet_entry.timesheet_id = timesheet.id"
             + " WHERE timesheet.id = :timesheetId AND timesheet_entry.type = 'REGULAR'")
     Integer getWorkedMinutes(Long timesheetId);

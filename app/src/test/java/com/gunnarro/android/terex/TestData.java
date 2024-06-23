@@ -63,10 +63,10 @@ public class TestData {
                 timesheetEntry1.setStatus(TimesheetEntry.TimesheetEntryStatusEnum.OPEN.name());
                 timesheetEntry1.setType(TimesheetEntry.TimesheetEntryTypeEnum.REGULAR.name());
                 timesheetEntry1.setWorkdayDate(date);
-                timesheetEntry1.setFromTime(LocalTime.of(7, 0, 0));
-                timesheetEntry1.setToTime(LocalTime.of(3, 0, 0));
-                timesheetEntry1.setBreakInMin(30);
-                timesheetEntry1.setWorkedMinutes(420);
+                timesheetEntry1.setStartTime(LocalTime.of(7, 0, 0));
+                timesheetEntry1.setEndTime(LocalTime.of(3, 0, 0));
+                timesheetEntry1.setBreakSeconds(30 * 60);
+                timesheetEntry1.setWorkedSeconds((long) 420 * 60);
                 timesheetEntry1.setWorkdayWeek(date.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()));
                 timesheetEntryList.add(timesheetEntry1);
             }
@@ -99,8 +99,8 @@ public class TestData {
             timesheetSummary.setTotalWorkedDays(e.size());
             timesheetSummaryByWeek.add(timesheetSummary);
             Objects.requireNonNull(weekMap.get(k)).forEach(t -> {
-                timesheetSummary.setTotalBilledAmount(timesheetSummary.getTotalBilledAmount() + (hourlyRate * ((double) t.getWorkedMinutes() / 60)));
-                timesheetSummary.setTotalWorkedHours(timesheetSummary.getTotalWorkedHours() + (double) t.getWorkedMinutes() / 60);
+                timesheetSummary.setTotalBilledAmount(timesheetSummary.getTotalBilledAmount() + (hourlyRate * ((double) t.getWorkedSeconds() / 3600)));
+                timesheetSummary.setTotalWorkedHours(timesheetSummary.getTotalWorkedHours() + (double) t.getWorkedSeconds() / 3600);
             });
         });
         return timesheetSummaryByWeek;

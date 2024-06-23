@@ -32,10 +32,13 @@ import java.util.stream.Stream;
 
 public class Utility {
 
+    @Deprecated
     public static final Integer DEFAULT_DAILY_BREAK_IN_MINUTES = 30;
-    public static final Integer DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES = 8 * 60 - DEFAULT_DAILY_BREAK_IN_MINUTES;
+    public static final Integer DEFAULT_DAILY_BREAK_IN_SECONDS = 30 * 60;
+    @Deprecated
+    public static final Integer DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES = (8 * 60) - DEFAULT_DAILY_BREAK_IN_MINUTES;
+    public static final Long DEFAULT_DAILY_WORKING_HOURS_IN_SECONDS = (long) ((8 * 60 * 60) - DEFAULT_DAILY_BREAK_IN_SECONDS);
     private static final Pattern POSITIVE_INTEGER_PATTERN = Pattern.compile("\\d+");
-    public static final Integer DEFAULT_HOURLY_RATE = 1250;
     private static final String DATE_TIME_PATTERN = "dd-MM-yyyy HH:mm";
     private static final String DATE_PATTERN = "dd-MM-yyyy";
     private static final String TIME_PATTERN = "HH:mm";
@@ -74,6 +77,30 @@ public class Utility {
                 .append(", UUID=").append(currentUUID)
                 .append(", thread=").append(Thread.currentThread().getName())
                 .toString();
+    }
+
+    /**
+     * Convert 7:30 to 7.5 hours format
+     * Return hours on the 7.5 format.
+     */
+    public static String fromSecondsToHours(long seconds) {
+        LocalTime hours = LocalTime.ofSecondOfDay(seconds);
+        return String.format("%s.%s", hours.getHour(), (hours.getMinute() * 10 / 60));
+    }
+
+    /**
+     * The hours format is hh.m, i.e 7.5.
+     */
+    public static Long fromHoursToSeconds(String hours) {
+        String[] HHmm = hours.split("\\.");
+        if (HHmm.length != 2) {
+            return null;
+        }
+
+        int hh = Integer.parseInt(HHmm[0]);
+        int mm = Integer.parseInt(HHmm[1]);
+
+        return (long)LocalTime.of(hh, mm*60/10).toSecondOfDay();
     }
 
     public static String formatDateTime(LocalDateTime localDateTime) {

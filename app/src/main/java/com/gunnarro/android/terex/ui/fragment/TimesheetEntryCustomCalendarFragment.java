@@ -53,8 +53,9 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
         Long timesheetId = getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY);
         // calendarView.setSelectedDates(selectedDates);
         //@Deprecated("Use setCalendarDays(List<CalendarDay>) with isEnabled = false")
-        //calendarView.setDisabledDays(createSelectedDates(timesheetId));
-        calendarView.setCalendarDays(createSelectedDates(timesheetId));
+        calendarView.setDisabledDays(createSelectedCalendarDates(timesheetId));
+        //calendarView.setCalendarDays(createSelectedDates(timesheetId));
+        //calendarView.setSelectedDates(createSelectedCalendarDates(timesheetId));
         //  @Deprecated("Use setCalendarDays() instead")
         //  calendarView.setEvents(createEventDays(timesheetId));
         //  @Deprecated("Use setOnCalendarDayClickListener instead")
@@ -191,14 +192,28 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
         return selectedDates;
     }
 
+    private List<Calendar> createSelectedCalendarDates(Long timesheetId) {
+        List<TimesheetEntry> timesheetEntryList = timesheetService.getTimesheetEntryList(timesheetId);
+        List<Calendar> selectedDates = new ArrayList<>();
+        timesheetEntryList.forEach(t -> {
+            Calendar cal = Calendar.getInstance();
+            cal.set(t.getWorkdayDate().getYear(), t.getWorkdayDate().getMonth().getValue() - 1, t.getWorkdayDate().getDayOfMonth());
+            selectedDates.add(cal);
+            Log.d("TimesheetCustomCalendarFragment", "ADD SELECTED DATE: " + t.getWorkdayDate());
+        });
+        return selectedDates;
+    }
+
     private TimesheetEntry getTimesheetEntry(TimesheetEntry.TimesheetEntryTypeEnum type) {
         TimesheetEntry timesheetEntry = readTimesheetEntryFromBundle();
         // need only update the work day date because we all other data is read from the last added timesheet.
         timesheetEntry.setType(type.name());
         timesheetEntry.setWorkdayDate(selectedWorkDayDate);
         if (timesheetEntry.isVacationDay() || timesheetEntry.isSickDay()) {
-            timesheetEntry.setWorkedMinutes(0);
-            timesheetEntry.setBreakInMin(0);
+            // set worked time to 0.
+            timesheetEntry.setEndTime(timesheetEntry.getStartTime());
+            timesheetEntry.setWorkedSeconds(0L);
+            timesheetEntry.setBreakSeconds(0);
         }
         return timesheetEntry;
     }

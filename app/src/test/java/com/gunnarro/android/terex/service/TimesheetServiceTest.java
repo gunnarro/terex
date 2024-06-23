@@ -108,9 +108,9 @@ class TimesheetServiceTest {
         timesheet.setId(23L);
         timesheet.setStatus(Timesheet.TimesheetStatusEnum.ACTIVE.name());
         TimesheetEntry timesheetEntry1 = TimesheetEntry.createDefault(1L, LocalDate.now());
-        timesheetEntry1.setWorkedMinutes(450);
+        timesheetEntry1.setWorkedSeconds((long) 450 * 60);
         TimesheetEntry timesheetEntry2 = TimesheetEntry.createDefault(2L, LocalDate.now());
-        timesheetEntry2.setWorkedMinutes(450);
+        timesheetEntry2.setWorkedSeconds((long) 450 * 60);
 
 //        when(timesheetRepositoryMock.getTimesheetEntryList(any())).thenReturn(List.of(timesheetEntry1, timesheetEntry2));
 //        when(timesheetRepositoryMock.getTimesheet(timesheet.getId())).thenReturn(timesheet);
@@ -133,8 +133,8 @@ class TimesheetServiceTest {
         TimesheetEntry timesheetEntry1 = TimesheetEntry.createDefault(1L, LocalDate.now());
         TimesheetEntry timesheetEntry2 = TimesheetEntry.createDefault(2L, LocalDate.now());
         // simulate worked hours for a month
-        timesheetEntry1.setWorkedMinutes(5080);
-        timesheetEntry2.setWorkedMinutes(5080);
+        timesheetEntry1.setWorkedSeconds((long) 5080 * 60);
+        timesheetEntry2.setWorkedSeconds((long) 5080 * 60);
 //        when(timesheetRepositoryMock.getTimesheet(timesheet.getClientName(), timesheet.getProjectCode(), timesheet.getYear(), timesheet.getMonth())).thenReturn(timesheet);
 //        when(timesheetRepositoryMock.getTimesheetEntryList(any())).thenReturn(List.of(timesheetEntry1, timesheetEntry2));
 //        when(timesheetRepositoryMock.getTimesheet(timesheet.getId())).thenReturn(timesheet);
@@ -252,8 +252,8 @@ class TimesheetServiceTest {
         timesheetExisting.setId(23L);
         timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
         TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(timesheetExisting.getId(), LocalDate.of(2023, 12, 21));
-        timesheetEntry.setWorkedMinutes(450);
-        timesheetEntry.setBreakInMin(30);
+        timesheetEntry.setWorkedSeconds((long) 450 * 60);
+        timesheetEntry.setBreakSeconds(30 * 60);
 
         when(timesheetRepositoryMock.getTimesheet(timesheetExisting.getId())).thenReturn(timesheetExisting);
         when(timesheetRepositoryMock.getTimesheetEntryList(timesheetEntry.getTimesheetId())).thenReturn(List.of());
@@ -284,9 +284,8 @@ class TimesheetServiceTest {
         timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
         // create regular time sheet entry, i.e, worked 7.5 hours and 30 min break
         TimesheetEntry regularTimesheetEntry = TimesheetEntry.createDefault(timesheetExisting.getId(), LocalDate.of(month.getYear(), month.getMonthValue(), 21));
-        regularTimesheetEntry.setWorkedMinutes(450);
-        regularTimesheetEntry.setBreakInMin(30);
-
+        regularTimesheetEntry.setWorkedSeconds((long) 450 * 60);
+        regularTimesheetEntry.setBreakSeconds(30 * 60);
 
         List<TimesheetEntry> timesheetEntryList = TestData.generateTimesheetEntries(timesheetExisting.getYear(), timesheetExisting.getMonth(), List.of(), List.of());
         when(timesheetRepositoryMock.getTimesheet(timesheetExisting.getId())).thenReturn(timesheetExisting);
@@ -321,8 +320,8 @@ class TimesheetServiceTest {
         timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
         // create regular time sheet entry, i.e, worked 7.5 hours and 30 min break
         TimesheetEntry regularTimesheetEntry = TimesheetEntry.createDefault(timesheetExisting.getId(), LocalDate.of(month.getYear(), month.getMonthValue(), 21));
-        regularTimesheetEntry.setWorkedMinutes(450);
-        regularTimesheetEntry.setBreakInMin(30);
+        regularTimesheetEntry.setWorkedSeconds((long) 450 * 60);
+        regularTimesheetEntry.setBreakSeconds(30 * 60);
 
         List<TimesheetEntry> timesheetEntryList = TestData.generateTimesheetEntries(timesheetExisting.getYear(), timesheetExisting.getMonth(), List.of(), List.of());
         // remove 3 days from week 3
@@ -364,8 +363,8 @@ class TimesheetServiceTest {
         timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
         // create regular time sheet entry, i.e, worked 7.5 hours and 30 min break
         TimesheetEntry regularTimesheetEntry = TimesheetEntry.createDefault(timesheetExisting.getId(), LocalDate.of(month.getYear(), month.getMonthValue(), 21));
-        regularTimesheetEntry.setWorkedMinutes(450);
-        regularTimesheetEntry.setBreakInMin(30);
+        regularTimesheetEntry.setWorkedSeconds((long) 450 * 60);
+        regularTimesheetEntry.setBreakSeconds(30 * 60);
 
         List<TimesheetEntry> timesheetEntryList = TestData.generateTimesheetEntries(timesheetExisting.getYear(), timesheetExisting.getMonth(), List.of(8, 16), List.of(14, 15));
 

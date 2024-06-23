@@ -11,6 +11,23 @@ import java.time.ZoneId;
 class UtilityTest {
 
     @Test
+    void fromSecondsToHours() {
+        // 7:30
+        long seconds = 7 * 60 * 60 + 30*60;
+        Assertions.assertEquals(27000, seconds);
+        Assertions.assertEquals("7.5", Utility.fromSecondsToHours(seconds));
+    }
+
+    @Test
+    void fromHoursToSeconds() {
+        String hours = "7.5";
+        long seconds = Utility.fromHoursToSeconds(hours);
+        Assertions.assertEquals(27000, seconds);
+        Assertions.assertEquals("7.5", Utility.fromSecondsToHours(seconds));
+
+    }
+
+    @Test
     void getFirstDayOfMonth() {
         LocalDate date = LocalDate.of(2023, 11, 1);
         LocalDate firstDayOfMonth = Utility.getFirstDayOfMonth(date);

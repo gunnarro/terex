@@ -59,7 +59,7 @@ public class TimesheetEntryViewHolder extends RecyclerView.ViewHolder {
             timesheetEntryLine1StatusView.setTextColor(timesheetEntryLine1StatusView.getResources().getColor(R.color.timesheet_entry_status_closed, null));
             itemView.findViewById(R.id.ic_timesheet_entry_row_delete).setVisibility(View.GONE);
         }
-        timesheetEntryLine1LabelView.setText(String.format("%s - %s", Utility.formatTime(timesheetEntry.getFromTime()), Utility.formatTime(timesheetEntry.getToTime())));
-        timesheetEntryLine1ValueView.setText(Utility.getTimeDiffInHours(timesheetEntry.getFromTime(), timesheetEntry.getToTime()));
+        timesheetEntryLine1LabelView.setText(String.format("%s - %s", Utility.formatTime(timesheetEntry.getStartTime()), Utility.formatTime(timesheetEntry.getEndTime())));
+        timesheetEntryLine1ValueView.setText(Utility.getTimeDiffInHours(timesheetEntry.getStartTime(), timesheetEntry.getEndTime()));
     }
 }

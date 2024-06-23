@@ -83,8 +83,8 @@ public class TimesheetServiceTest extends IntegrationTestSetup {
         newTimesheet.setDescription("Times used to develop android timesheet app");
         Long timesheetId = timesheetService.saveTimesheet(newTimesheet);
         TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(timesheetId, LocalDate.of(2023, 8, 27));
-        timesheetEntry.setWorkedMinutes(450);
-        timesheetEntry.setBreakInMin(30);
+        timesheetEntry.setWorkedSeconds((long) 450 * 60);
+        timesheetEntry.setBreakSeconds(30 * 60);
         InputValidationException ex = assertThrows(InputValidationException.class, () -> {
             timesheetService.saveTimesheetEntry(timesheetEntry);
             timesheetService.saveTimesheetEntry(TimesheetEntry.createDefault(timesheetEntry.getTimesheetId(), timesheetEntry.getWorkdayDate()));

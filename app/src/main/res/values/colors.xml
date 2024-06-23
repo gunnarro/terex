@@ -30,7 +30,7 @@
     <color name="color_snackbar_text_add">#7fc464</color>
     <color name="color_snackbar_text_update">#7fc464</color>
 
-    <color name="calendar_disabled_date">#034b03</color>
+    <color name="calendar_disabled_date">#3700B3</color>
     <color name="calendar_selected_date">#3700B3</color>
     <color name="calendar_today_date">#fa2a12</color>
     <color name="calendar_header">#000000</color>

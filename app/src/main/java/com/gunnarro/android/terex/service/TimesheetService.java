@@ -183,7 +183,7 @@ public class TimesheetService {
     }
 
     /**
-     * At time not possible to update a timesheet entry.
+     * At time not possible to update a timesheet entry and it will not be supported in the future either.
      */
     @Transaction
     public Long saveTimesheetEntry(@NotNull final TimesheetEntry timesheetEntry) {
@@ -207,19 +207,11 @@ public class TimesheetService {
 
             // set the timesheet work date week number here, this is only used to simplify accumulate timesheet by week by the invoice service
             timesheetEntry.setWorkdayWeek(timesheetEntry.getWorkdayDate().get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()));
-            Long id;
-            if (timesheetEntryExisting == null) {
-                timesheetEntry.setCreatedDate(LocalDateTime.now());
-                timesheetEntry.setLastModifiedDate(LocalDateTime.now());
-                id = timesheetRepository.insertTimesheetEntry(timesheetEntry);
-                Log.d("TimesheetRepository.saveTimesheetEntry", String.format("insert new timesheet entry, timesheetId=%s, timesheetEntryId=%s, workDate=%s", timesheetEntry.getTimesheetId(), id, timesheetEntry.getWorkdayDate()));
-            } else { // fixme, update not supported
-                timesheetEntry.setId(timesheetEntryExisting.getId());
-                timesheetEntry.setCreatedDate(timesheetEntryExisting.getCreatedDate());
-                timesheetRepository.updateTimesheetEntry(timesheetEntry);
-                id = timesheetEntry.getId();
-                Log.d("TimesheetRepository.saveTimesheetEntry", String.format("updated timesheet entry, timesheetId=%s, timesheetEntryId=%s, workDate=%s", timesheetEntry.getTimesheetId(), id, timesheetEntry.getWorkdayDate()));
-            }
+
+            timesheetEntry.setCreatedDate(LocalDateTime.now());
+            timesheetEntry.setLastModifiedDate(LocalDateTime.now());
+            long id = timesheetRepository.insertTimesheetEntry(timesheetEntry);
+            Log.d("TimesheetRepository.saveTimesheetEntry", String.format("insert new timesheet entry, timesheetId=%s, timesheetEntryId=%s, workDate=%s", timesheetEntry.getTimesheetId(), id, timesheetEntry.getWorkdayDate()));
             return id;
         } catch (InterruptedException | ExecutionException e) {
             // Something crashed, therefore restore interrupted state before leaving.
@@ -403,8 +395,8 @@ public class TimesheetService {
         TimesheetDto timesheetDto = getTimesheetDto(timesheetId);
 
         List<TimesheetEntryDto> timesheetEntryDtoList = getTimesheetEntryDtoListReadyForBilling(timesheetId);
-        Double sumBilledHours = timesheetEntryDtoList.stream().mapToDouble(TimesheetEntryDto::getWorkedMinutes).sum() / 60;
-        Integer numberOfWorkedDays = timesheetEntryDtoList.stream().filter(e -> e.getWorkedMinutes() != null && e.getWorkedMinutes() > 0).collect(Collectors.toList()).size();
+        Double sumBilledHours = timesheetEntryDtoList.stream().mapToDouble(TimesheetEntryDto::getWorkedSeconds).sum() / 60 * 60;
+        Integer numberOfWorkedDays = timesheetEntryDtoList.stream().filter(e -> e.getWorkedSeconds() != null && e.getWorkedSeconds() > 0).collect(Collectors.toList()).size();
         MustacheFactory mf = new DefaultMustacheFactory();
         Mustache mustache = mf.compile(new StringReader(clientTimesheetMustacheTemplate), "");
         Map<String, Object> context = new HashMap<>();
@@ -438,8 +430,8 @@ public class TimesheetService {
         timesheetSummary.setToDate(Utility.getLastDayOfWeek(timesheetEntryList.get(0).getWorkdayDate(), week));
         timesheetEntryList.forEach(t -> {
             // only sum regular work days
-            timesheetSummary.setTotalBilledAmount(t.isRegularWorkDay() ? timesheetSummary.getTotalBilledAmount() + (hourlyRate * ((double) t.getWorkedMinutes() / 60)) : timesheetSummary.getTotalBilledAmount());
-            timesheetSummary.setTotalWorkedHours(t.isRegularWorkDay() ? timesheetSummary.getTotalWorkedHours() + (double) t.getWorkedMinutes() / 60 : timesheetSummary.getTotalWorkedHours());
+            timesheetSummary.setTotalBilledAmount(t.isRegularWorkDay() ? timesheetSummary.getTotalBilledAmount() + (hourlyRate * ((double) t.getWorkedSeconds() / 3600)) : timesheetSummary.getTotalBilledAmount());
+            timesheetSummary.setTotalWorkedHours(t.isRegularWorkDay() ? timesheetSummary.getTotalWorkedHours() + (double) t.getWorkedSeconds() / 3600: timesheetSummary.getTotalWorkedHours());
             timesheetSummary.setTotalWorkedDays(t.isRegularWorkDay() ? timesheetSummary.getTotalWorkedDays() + 1 : timesheetSummary.getTotalWorkedDays());
             timesheetSummary.setTotalSickLeaveDays(t.isSickDay() ? timesheetSummary.getTotalSickLeaveDays() + 1 : timesheetSummary.getTotalSickLeaveDays());
             timesheetSummary.setTotalVacationDays(t.isVacationDay() ? timesheetSummary.getTotalVacationDays() + 1 : timesheetSummary.getTotalVacationDays());
@@ -460,8 +452,8 @@ public class TimesheetService {
             }
             if (!isInList) {
                 TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(timesheetId, date);
-                timesheetEntry.setWorkedMinutes(0);
-                timesheetEntry.setBreakInMin(0);
+                timesheetEntry.setWorkedSeconds(0L);
+                timesheetEntry.setBreakSeconds(0);
                 timesheetEntry.setStatus(TimesheetEntry.TimesheetEntryStatusEnum.CLOSED.name());
                 timesheetEntryList.add(timesheetEntry);
             }
@@ -479,8 +471,8 @@ public class TimesheetService {
         timesheetSummary.setToDate(Utility.getLastDayOfMonth(timesheetEntryList.get(0).getWorkdayDate()));
         timesheetSummary.setTotalWorkedDays(timesheetEntryList.size());
         timesheetEntryList.forEach(t -> {
-            timesheetSummary.setTotalBilledAmount(timesheetSummary.getTotalBilledAmount() + (1250 * ((double) t.getWorkedMinutes() / 60))); // FIXME
-            timesheetSummary.setTotalWorkedHours(timesheetSummary.getTotalWorkedHours() + (double) t.getWorkedMinutes() / 60);
+            timesheetSummary.setTotalBilledAmount(timesheetSummary.getTotalBilledAmount() + (1250 * ((double) t.getWorkedSeconds() / 60 * 60))); // FIXME
+            timesheetSummary.setTotalWorkedHours(timesheetSummary.getTotalWorkedHours() + (double) t.getWorkedSeconds() / 60 * 60);
         });
         return timesheetSummary;
     }

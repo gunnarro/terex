@@ -20,12 +20,12 @@ class TimesheetEntryTest {
         assertEquals(22, timesheetEntry.getTimesheetId());
         assertEquals("2024-05-01", timesheetEntry.getWorkdayDate().toString());
         assertEquals("7.5", timesheetEntry.getWorkedHours());
-        assertEquals(450, timesheetEntry.getWorkedMinutes());
-        assertEquals(30, timesheetEntry.getBreakInMin());
+        assertEquals(27000, timesheetEntry.getWorkedSeconds());
+        assertEquals(1800, timesheetEntry.getBreakSeconds());
         assertEquals("REGULAR", timesheetEntry.getType());
         assertEquals("OPEN", timesheetEntry.getStatus());
-        assertEquals("08:00", timesheetEntry.getFromTime().toString());
-        assertEquals("15:30", timesheetEntry.getToTime().toString());
+        assertEquals("08:00", timesheetEntry.getStartTime().toString());
+        assertEquals("15:30", timesheetEntry.getEndTime().toString());
         assertEquals(18, timesheetEntry.getWorkdayWeek());
         assertNull(timesheetEntry.getCreatedDate());
         assertNull(timesheetEntry.getLastModifiedDate());
@@ -39,7 +39,7 @@ class TimesheetEntryTest {
         timesheetEntry1.setLastModifiedDate(LocalDateTime.now());
         timesheetEntry1.setWorkdayDate(LocalDate.now());
         timesheetEntry1.setStatus(TimesheetEntry.TimesheetEntryStatusEnum.OPEN.name());
-        timesheetEntry1.setBreakInMin(30);
+        timesheetEntry1.setBreakSeconds(30*60);
         timesheetEntry1.setWorkdayDate(LocalDate.of(2023, 9, 9));
 
         TimesheetEntry clone = TimesheetEntry.clone(timesheetEntry1);

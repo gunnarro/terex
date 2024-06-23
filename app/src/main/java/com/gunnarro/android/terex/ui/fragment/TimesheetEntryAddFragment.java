@@ -30,7 +30,6 @@ import org.jetbrains.annotations.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 
 import javax.inject.Inject;
 
@@ -67,10 +66,6 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
                     LocalDate.now().getMonthValue(),
                     LocalDate.now().getDayOfMonth());
 
-            // FIXME Set dates
-//datePickerDialog.getDatePicker().setMaxDate(maxTime);
-//datePickerDialog.getDatePicker().setMinDate(minTime);
-
             workdayDatePicker.setTitle(getResources().getString(R.string.title_select_workday_date));
             workdayDatePicker.getDatePicker().setMinDate(Utility.getFirstDayOfMonth(LocalDate.now()).toEpochDay());
             workdayDatePicker.getDatePicker().setMaxDate(Utility.getLastDayOfMonth(LocalDate.now()).toEpochDay());
@@ -102,6 +97,7 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
             fromTimePicker.show();
         });
 
+        /*
         // to time time picker
         EditText toTime = view.findViewById(R.id.timesheet_entry_to_time);
         // turn off keyboard popup when clicked
@@ -117,6 +113,7 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
             toTimePicker.setTitle(getResources().getString(R.string.title_select_to_time));
             toTimePicker.show();
         });
+         */
 
         // disable save button as default
         view.findViewById(R.id.timesheet_entry_save_btn).setEnabled(true);
@@ -138,7 +135,6 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
             //result.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_KEY, TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_DELETE);
             //getParentFragmentManager().setFragmentResult(TimesheetEntryListFragment.TIMESHEET_ENTRY_REQUEST_KEY, result);
             //Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new delete item intent");
-
             returnToTimesheetEntryList(getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY));
         });
 
@@ -157,11 +153,14 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
         if (timesheetEntryJson != null && !timesheetEntryJson.isEmpty()) {
             try {
                 TimesheetEntry timesheetEntry = Utility.gsonMapper().fromJson(timesheetEntryJson, TimesheetEntry.class);
+                if (timesheetEntry.getTimesheetId() == null) {
+                    throw new TerexApplicationException("Missing timesheet id!", "50500", null);
+                }
                 // set workday date always to current date if not set
                 if (timesheetEntry.getWorkdayDate() == null) {
                     timesheetEntry.setWorkdayDate(LocalDate.now());
                 }
-                Log.d(Utility.buildTag(getClass(), "onFragmentResult"), String.format("timesheet: %s", timesheetEntry));
+                Log.d(Utility.buildTag(getClass(), "readTimesheetEntryFromBundle"), String.format("timesheetEntry: %s", timesheetEntry));
                 return timesheetEntry;
             } catch (Exception e) {
                 Log.e("", e.toString());
@@ -181,10 +180,6 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
 
     private void updateTimesheetEntryAddView(View view, @NotNull TimesheetEntry timesheetEntry) {
         Log.d("update timesheet add view", timesheetEntry.toString());
-        if (timesheetEntry.getTimesheetId() == null) {
-            throw new TerexApplicationException("timesheetId is null!", "timesheetId is null!", null);
-        }
-
         TextView timesheetId = view.findViewById(R.id.timesheet_entry_timesheet_id);
         timesheetId.setText(String.valueOf(timesheetEntry.getTimesheetId()));
 
@@ -219,16 +214,19 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
         workdayDayView.setText(String.format("%s", timesheetEntry.getWorkdayDate().getDayOfMonth()));
 
         EditText fromTimeView = view.findViewById(R.id.timesheet_entry_from_time);
-        fromTimeView.setText(Utility.formatTime(timesheetEntry.getFromTime()));
+        fromTimeView.setText(Utility.formatTime(timesheetEntry.getStartTime()));
 
-        EditText toTimeView = view.findViewById(R.id.timesheet_entry_to_time);
-        toTimeView.setText(Utility.formatTime(timesheetEntry.getToTime()));
+        //EditText toTimeView = view.findViewById(R.id.timesheet_entry_to_time);
+        //toTimeView.setText(Utility.formatTime(timesheetEntry.getEndTime()));
+
+        EditText workedHoursView = view.findViewById(R.id.timesheet_entry_worked_hours);
+        workedHoursView.setText(Utility.fromSecondsToHours(timesheetEntry.getWorkedSeconds()));
 
         EditText breakView = view.findViewById(R.id.timesheet_entry_break);
-        breakView.setText(String.format("%s", timesheetEntry.getBreakInMin()));
+        breakView.setText(String.format("%s", timesheetEntry.getBreakSeconds() / 60));
 
         EditText commentView = view.findViewById(R.id.timesheet_entry_comment);
-        commentView.setText(timesheetEntry.getComment());
+        commentView.setText(timesheetEntry.getComments());
 
         // hide fields if this is a new
         if (timesheetEntry.getId() == null) {
@@ -324,18 +322,21 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
         timesheetEntry.setWorkdayDate(LocalDate.of(Integer.parseInt(workdayYearView.getText().toString()), Integer.parseInt(workdayMonthView.getText().toString()), Integer.parseInt(workdayDayView.getText().toString())));
 
         TextView fromTimeView = requireView().findViewById(R.id.timesheet_entry_from_time);
-        timesheetEntry.setFromTime(Utility.toLocalTime(fromTimeView.getText().toString()));
+        timesheetEntry.setStartTime(Utility.toLocalTime(fromTimeView.getText().toString()));
 
-        TextView toTimeView = requireView().findViewById(R.id.timesheet_entry_to_time);
-        timesheetEntry.setToTime(Utility.toLocalTime(toTimeView.getText().toString()));
+        //TextView toTimeView = requireView().findViewById(R.id.timesheet_entry_to_time);
+        //timesheetEntry.setEndTime(Utility.toLocalTime(toTimeView.getText().toString()));
+
+        TextView workedHoursView = requireView().findViewById(R.id.timesheet_entry_worked_hours);
+        timesheetEntry.setWorkedSeconds(Utility.fromHoursToSeconds(workedHoursView.getText().toString()));
 
         TextView breakView = requireView().findViewById(R.id.timesheet_entry_break);
-        timesheetEntry.setBreakInMin(Integer.parseInt(breakView.getText().toString()));
+        timesheetEntry.setBreakSeconds(Integer.parseInt(breakView.getText().toString()) * 60);
 
         TextView commentView = requireView().findViewById(R.id.timesheet_entry_comment);
-        timesheetEntry.setComment(commentView.getText().toString());
+        timesheetEntry.setComments(commentView.getText().toString());
         // determine and set worked minutes
-        timesheetEntry.setWorkedMinutes(Long.valueOf(ChronoUnit.MINUTES.between(timesheetEntry.getFromTime(), timesheetEntry.getToTime())).intValue());
+        //timesheetEntry.setWorkedMinutes(Long.valueOf(ChronoUnit.MINUTES.between(timesheetEntry.getStartTime(), timesheetEntry.getEndTime())).intValue());
         return timesheetEntry;
     }
 
@@ -345,9 +346,11 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
             timesheetService.saveTimesheetEntry(timesheetEntry);
             showSnackbar(String.format("Added new timesheet entry! %s", timesheetEntry.getWorkdayDate()), R.color.color_snackbar_text_add);
         } catch (TerexApplicationException | InputValidationException ex) {
-            showInfoDialog("Error", String.format("%s", ex.getMessage()));
+            ex.printStackTrace();
+            showInfoDialog("Validation error", String.format("%s", ex.getMessage()));
         } catch (Exception e) {
-            showInfoDialog("Error", String.format("%s", e.getCause()));
+            e.printStackTrace();
+            showInfoDialog("Application error", String.format("%s", e.getCause()));
         }
     }
 }
