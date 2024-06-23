@@ -44,13 +44,13 @@ public class TimesheetSummaryFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requireActivity().setTitle(R.string.title_timesheet_summary);
         timesheetService = new TimesheetService();
         projectService = new ProjectService();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        requireActivity().setTitle(R.string.title_timesheet_summary);
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_timesheet_summary, container, false);
         setHasOptionsMenu(true);

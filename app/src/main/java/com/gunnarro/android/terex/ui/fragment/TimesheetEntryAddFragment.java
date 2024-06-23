@@ -49,11 +49,6 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requireActivity().setTitle(R.string.title_register_work);

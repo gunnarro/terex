@@ -43,11 +43,6 @@ public class ProjectNewFragment extends BaseFragment implements View.OnClickList
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         requireActivity().setTitle(R.string.title_project_new);
         // Inflate the layout for this fragment

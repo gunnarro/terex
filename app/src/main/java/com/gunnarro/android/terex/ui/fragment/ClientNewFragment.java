@@ -42,11 +42,6 @@ public class ClientNewFragment extends BaseFragment implements View.OnClickListe
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         requireActivity().setTitle(R.string.title_client_new);
         // do not show the action bar
