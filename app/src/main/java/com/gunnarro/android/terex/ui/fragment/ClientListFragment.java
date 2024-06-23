@@ -40,7 +40,6 @@ public class ClientListFragment extends BaseFragment implements ListOnItemClickL
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requireActivity().setTitle(R.string.title_clients);
         // Get a new or existing ViewModel from the ViewModelProvider.
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
 
@@ -56,6 +55,7 @@ public class ClientListFragment extends BaseFragment implements ListOnItemClickL
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        requireActivity().setTitle(R.string.title_clients);
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_recycler_client_list, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.client_list_recyclerview);

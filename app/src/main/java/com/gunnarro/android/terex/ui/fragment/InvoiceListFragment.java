@@ -32,7 +32,6 @@ public class InvoiceListFragment extends BaseFragment implements ListOnItemClick
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requireActivity().setTitle(R.string.title_invoices);
         // Get a new or existing ViewModel from the ViewModelProvider.
         invoiceViewModel = new ViewModelProvider(this).get(InvoiceViewModel.class);
 
@@ -48,6 +47,7 @@ public class InvoiceListFragment extends BaseFragment implements ListOnItemClick
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        requireActivity().setTitle(R.string.title_invoices);
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_recycler_invoice_list, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.invoice_list_recyclerview);

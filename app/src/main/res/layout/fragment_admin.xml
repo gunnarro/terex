@@ -122,11 +122,22 @@
             app:iconTint="@color/color_btn_bg_cancel" />
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_integration"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
+            android:layout_below="@+id/btn_user_account"
+            android:text="@string/lbl_integrations"
+            app:iconTint="@color/color_btn_bg_cancel" />
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_settings"
             style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/btn_user_account"
+            android:layout_below="@id/btn_integration"
             android:layout_marginEnd="10dp"
             android:layout_weight="1"
             android:text="@string/title_settings"

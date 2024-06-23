@@ -52,6 +52,20 @@ import okhttp3.Response;
  * https://sgregister.dibk.no/api
  * curl https://sgregister.dibk.no/api/enterprises/123456789.json \
  * -H 'Accept: application/vnd.sgpub.v1'
+ * <p>
+ * https://api.skatteetaten.no/api/formuesgrunnlageiendomsskatt/v1/
+ * <p>
+ * sentral godkjenning
+ * https://sgregister.dibk.no/api
+ * curl https://sgregister.dibk.no/api/enterprises/123456789.json \
+ * -H 'Accept: application/vnd.sgpub.v1'
+ * <p>
+ * https://api.skatteetaten.no/api/formuesgrunnlageiendomsskatt/v1/
+ * <p>
+ * sentral godkjenning
+ * https://sgregister.dibk.no/api
+ * curl https://sgregister.dibk.no/api/enterprises/123456789.json \
+ * -H 'Accept: application/vnd.sgpub.v1'
  */
 /**
  * https://api.skatteetaten.no/api/formuesgrunnlageiendomsskatt/v1/
@@ -71,7 +85,7 @@ public class BregService {
     private static final String SERVICE_NAME = "BREG";
     public static final ExecutorService serviceExecutor = Executors.newFixedThreadPool(2);
     private final OkHttpClient okHttpClient;
-    private final IntegrationDto integrationDto;// = "https://data.brreg.no/enhetsregisteret/api/enheter/";
+    private final IntegrationDto integrationDto;
 
     /**
      * for unit testing
@@ -79,6 +93,9 @@ public class BregService {
     @Inject
     public BregService(IntegrationService integrationService) {
         integrationDto = integrationService.getIntegrationBySystem(SERVICE_NAME);
+        if (integrationDto == null) {
+            throw new TerexApplicationException("Check integration config! BREG configuration not found!", "50500", null);
+        }
         //  int cacheSize = 10 * 1024 * 1024;
         //  File cacheDirectory = new File("src/test/resources/cache");
         //  Cache cache = new Cache(cacheDirectory, cacheSize);

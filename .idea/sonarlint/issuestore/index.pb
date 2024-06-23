@@ -394,3 +394,11 @@ Lapp/src/main/java/com/gunnarro/android/terex/service/IntegrationService.java,4
 Kapp/src/main/java/com/gunnarro/android/terex/domain/dto/IntegrationDto.java,f/2/f22750c3d01458672ec0c01206cb8b9f2eec8a9c
 ‡
 Wapp/src/androidTest/java/com/gunnarro/android/terex/service/IntegrationServiceTest.java,1/1/114ef6cb6d013fac44961cee2918e239af1211b9
+…
+Uapp/src/main/java/com/gunnarro/android/terex/ui/fragment/IntegrationListFragment.java,6/c/6c8e5d5d9ca4b4ecb2d0e2f356e2458ee2399059
+ƒ
+Sapp/src/main/java/com/gunnarro/android/terex/ui/adapter/IntegrationListAdapter.java,e/9/e9d8185df9fd0719d621d73fd9fa18f6fe4a3d80
+~
+Napp/src/main/java/com/gunnarro/android/terex/ui/view/IntegrationViewModel.java,a/0/a06d116c960c943356a9cd3541c289ba870ba38b
+
+Oapp/src/main/java/com/gunnarro/android/terex/ui/view/IntegrationViewHolder.java,6/c/6c53ee7cfef26180afff5fc58a90c7353a12c60d

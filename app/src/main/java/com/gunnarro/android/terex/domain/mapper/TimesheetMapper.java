@@ -410,6 +410,9 @@ public class TimesheetMapper {
         integrationDto.setSchemaUrl(integration.getSchemaUrl());
         integrationDto.setAuthenticationType(integration.getAuthenticationType());
         integrationDto.setAccessToken(integration.getAccessToken());
+        integrationDto.setReadTimeoutMs(integration.getReadTimeoutMs());
+        integrationDto.setConnectionTimeoutMs(integration.getConnectionTimeoutMs());
+        integrationDto.setHttpHeaderContentType(integration.getHttpHeaderContentType());
         return integrationDto;
     }
 
@@ -428,6 +431,9 @@ public class TimesheetMapper {
         integration.setSchemaUrl(integrationDto.getSchemaUrl());
         integration.setAuthenticationType(integrationDto.getAuthenticationType());
         integration.setAccessToken(integrationDto.getAccessToken());
+        integration.setReadTimeoutMs(integrationDto.getReadTimeoutMs());
+        integration.setConnectionTimeoutMs(integrationDto.getConnectionTimeoutMs());
+        integration.setHttpHeaderContentType(integrationDto.getHttpHeaderContentType());
         return integration;
     }
 }

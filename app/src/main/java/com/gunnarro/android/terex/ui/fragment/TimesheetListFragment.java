@@ -80,10 +80,10 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        requireActivity().setTitle(R.string.title_timesheets);
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_recycler_timesheet_list, container, false);
         setHasOptionsMenu(true);
-        requireActivity().setTitle(R.string.title_timesheets);
         RecyclerView recyclerView = view.findViewById(R.id.timesheet_list_recyclerview);
         final TimesheetListAdapter timesheetListAdapter = new TimesheetListAdapter(this, new TimesheetListAdapter.TimesheetDtoDiff());
         recyclerView.setAdapter(timesheetListAdapter);

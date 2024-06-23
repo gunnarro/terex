@@ -42,7 +42,6 @@ public class TimesheetEntryListFragment extends BaseFragment implements ListOnIt
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setHasOptionsMenu(false);
-        requireActivity().setTitle(R.string.title_timesheet_entries);
         // save the timesheet id, needed for view and delete timesheet entry actions.
         timesheetId = getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY);
         isTimesheetReadOnly = getArguments().getBoolean(TimesheetListFragment.TIMESHEET_READ_ONLY_KEY);
@@ -63,6 +62,7 @@ public class TimesheetEntryListFragment extends BaseFragment implements ListOnIt
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        requireActivity().setTitle(R.string.title_timesheet_entries);
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_recycler_timesheet_entry_list, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.timesheet_entry_list_recyclerview);

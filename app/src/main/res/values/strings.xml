@@ -15,6 +15,7 @@
     <string name="title_timesheet_new">Ny timeliste</string>
     <string name="title_invoice_attachment">Faktura vedlegg</string>
     <string name="title_settings">Instillinger</string>
+    <string name="title_integrations">Integrations</string>
 
     <!-- labels -->
     <string name="lbl_description">Beskrivelse</string>
@@ -189,4 +190,6 @@
     <string name="btn_add_sick">Sick</string>
     <string name="lbl_vacation">Vacation</string>
     <string name="lbl_sick">Sick</string>
+    <string name="lbl_integrations">Integrations</string>
+    <string name="btn_import">Import</string>
 </resources>

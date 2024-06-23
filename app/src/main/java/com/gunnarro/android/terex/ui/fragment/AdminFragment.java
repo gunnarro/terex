@@ -56,7 +56,6 @@ public class AdminFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requireActivity().setTitle(R.string.title_admin);
         setHasOptionsMenu(true);
         userAccountService = new UserAccountService();
         timesheetService = new TimesheetService();
@@ -67,6 +66,7 @@ public class AdminFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        requireActivity().setTitle(R.string.title_admin);
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_admin, container, false);
 
@@ -84,6 +84,10 @@ public class AdminFragment extends BaseFragment {
 
         view.findViewById(R.id.btn_user_account).setOnClickListener(v -> {
             navController.navigate(R.id.nav_from_admin_to_user_account);
+        });
+
+        view.findViewById(R.id.btn_integration).setOnClickListener(v -> {
+            navController.navigate(R.id.nav_from_admin_to_integration_list);
         });
 
         view.findViewById(R.id.btn_settings).setOnClickListener(v -> {

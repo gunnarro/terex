@@ -74,12 +74,16 @@ public class MainActivity extends AppCompatActivity {
         //appBarConfiguration = new AppBarConfiguration.Builder(R.id.main, R.id.profile).build();
         // In oder to add navigation support as default to the action bar, must also override onSupportNavigateUp() method.
         NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration);
-  //      NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        //      NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
         // end new navigation
-      // setSupportActionBar(toolbar);
+        // setSupportActionBar(toolbar);
         // Finally, check and grant or deny permissions
         checkPermissions();
+    }
+
+    private void importTimesheet() {
+
     }
 
     /**
@@ -97,8 +101,13 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main_menu, menu);
+        menu.findItem(R.id.app_bar_import_btn).setOnMenuItemClickListener(item -> {
+            Log.d("appbar", "clicked at " + item.getItemId());
+            return true;
+        });
         return true;
     }
+
     private void checkPermissions() {
         Log.i(Utility.buildTag(getClass(), "checkPermissions"), "Start check permissions...");
         // check and ask user for permission if not granted

@@ -20,7 +20,6 @@ import com.gunnarro.android.terex.domain.entity.UserAccount;
 import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.integration.breg.BregService;
-import com.gunnarro.android.terex.service.IntegrationService;
 import com.gunnarro.android.terex.service.UserAccountService;
 import com.gunnarro.android.terex.utility.Utility;
 
@@ -44,13 +43,13 @@ public class UserAccountNewFragment extends BaseFragment implements View.OnClick
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requireActivity().setTitle(R.string.title_user_account);
         userAccountService = new UserAccountService();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requireActivity().setTitle(R.string.title_user_account);
         // do not show the action bar
         setHasOptionsMenu(true);
         // Inflate the layout for this fragment

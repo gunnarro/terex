@@ -47,7 +47,6 @@ public class InvoiceNewFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requireActivity().setTitle(R.string.title_invoice);
         this.invoiceService = new InvoiceService();
         this.timesheetService = new TimesheetService();
         this.clientService = new ClientService();
@@ -57,6 +56,7 @@ public class InvoiceNewFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        requireActivity().setTitle(R.string.title_invoice);
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_invoice_new, container, false);
         // only completed time sheets can be used a attachment to a invoice.

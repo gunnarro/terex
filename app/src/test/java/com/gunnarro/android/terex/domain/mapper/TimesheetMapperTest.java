@@ -371,6 +371,9 @@ class TimesheetMapperTest {
         integration.setSchemaUrl("https://breg.no/swagger");
         integration.setAuthenticationType("PASSWORD");
         integration.setAccessToken(null);
+        integration.setReadTimeoutMs(4500L);
+        integration.setConnectionTimeoutMs(6500L);
+        integration.setHttpHeaderContentType("application/json");
 
         IntegrationDto integrationDto = TimesheetMapper.toIntegrationDto(integration);
         assertEquals(integration.getId(), integrationDto.getId());
@@ -382,6 +385,9 @@ class TimesheetMapperTest {
         assertEquals(integration.getSchemaUrl(), integrationDto.getSchemaUrl());
         assertEquals(integration.getAuthenticationType(), integrationDto.getAuthenticationType());
         assertEquals(integration.getAccessToken(), integrationDto.getAccessToken());
+        assertEquals(integration.getReadTimeoutMs(), integrationDto.getReadTimeoutMs());
+        assertEquals(integration.getConnectionTimeoutMs(), integrationDto.getConnectionTimeoutMs());
+        assertEquals(integration.getHttpHeaderContentType(), integrationDto.getHttpHeaderContentType());
     }
 
     @Test
@@ -396,6 +402,9 @@ class TimesheetMapperTest {
         integrationDto.setSchemaUrl("https://breg.no/swagger");
         integrationDto.setAuthenticationType("PASSWORD");
         integrationDto.setAccessToken(null);
+        integrationDto.setReadTimeoutMs(4500L);
+        integrationDto.setConnectionTimeoutMs(6500L);
+        integrationDto.setHttpHeaderContentType("application/json");
 
         Integration integration = TimesheetMapper.fromIntegrationDto(integrationDto);
         assertEquals(integrationDto.getId(), integration.getId());
@@ -407,6 +416,9 @@ class TimesheetMapperTest {
         assertEquals(integrationDto.getSchemaUrl(), integration.getSchemaUrl());
         assertEquals(integrationDto.getAuthenticationType(), integration.getAuthenticationType());
         assertEquals(integrationDto.getAccessToken(), integration.getAccessToken());
+        assertEquals(integrationDto.getReadTimeoutMs(), integration.getReadTimeoutMs());
+        assertEquals(integrationDto.getConnectionTimeoutMs(), integration.getConnectionTimeoutMs());
+        assertEquals(integrationDto.getHttpHeaderContentType(), integration.getHttpHeaderContentType());
     }
 
 

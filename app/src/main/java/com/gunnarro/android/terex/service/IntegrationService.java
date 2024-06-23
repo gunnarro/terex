@@ -3,6 +3,8 @@ package com.gunnarro.android.terex.service;
 
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
+
 import com.gunnarro.android.terex.domain.dto.IntegrationDto;
 import com.gunnarro.android.terex.domain.entity.Integration;
 import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
@@ -42,6 +44,10 @@ public class IntegrationService {
 
     public IntegrationDto getIntegration(Long integrationId) {
         return TimesheetMapper.toIntegrationDto(integrationRepository.getIntegration(integrationId));
+    }
+
+    public LiveData<List<Integration>> getIntegrationsLiveData() {
+        return integrationRepository.getIntegrationsLiveData();
     }
 
     public List<IntegrationDto> getIntegrations() {

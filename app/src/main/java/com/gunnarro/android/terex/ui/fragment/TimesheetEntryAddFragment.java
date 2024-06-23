@@ -51,7 +51,6 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requireActivity().setTitle(R.string.title_project_new);
     }
 
     @Override
