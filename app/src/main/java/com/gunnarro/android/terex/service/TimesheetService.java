@@ -298,7 +298,7 @@ public class TimesheetService {
             throw new TerexApplicationException(String.format("Application error, timesheet not ready for billing, no entries found! timesheetId=%s, status=%s", timesheetId, timesheet.getStatus()), "50023", null);
         }
 
-        List<TimesheetSummary> timesheetSummaryByWeek = createTimesheetSummary(timesheetId, TimesheetSummary.TimesheetSummaryPeriodEnum.WEEK.name(), hourlyRate);
+        List<TimesheetSummary> timesheetSummaryByWeek = createTimesheetSummary(timesheetId, TimesheetSummary.TimesheetSummaryPeriodEnum.WEEK, hourlyRate);
         timesheetSummaryByWeek.forEach(this::saveTimesheetSummary);
         // close the timesheet after invoice have been generated, is not possible to do any form of changes on the time list.
         timesheet.setStatus(Timesheet.TimesheetStatusEnum.BILLED.name());
@@ -309,18 +309,17 @@ public class TimesheetService {
         return TimesheetMapper.toTimesheetSummaryDtoList(timesheetSummaryByWeek);
     }
 
-    private List<TimesheetSummary> createTimesheetSummary(Long timesheetId, String summedByPeriod, Integer hourlyRate) {
+    private List<TimesheetSummary> createTimesheetSummary(Long timesheetId, TimesheetSummary.TimesheetSummaryPeriodEnum summedByPeriod, Integer hourlyRate) {
         List<TimesheetEntry> timesheetEntryList = getTimesheetEntryList(timesheetId);
         Log.d("createTimesheetSummary", String.format("timesheet entries: %s", timesheetEntryList));
         // create a map based on summery type
         Map<Integer, List<TimesheetEntry>> timesheetWeekMap = switch (summedByPeriod) {
-            case "WEEK" ->
+            case WEEK ->
                     timesheetEntryList.stream().collect(Collectors.groupingBy(TimesheetEntry::getWorkdayWeek));
-            case "MONTH" ->
+            case MONTH ->
                     timesheetEntryList.stream().collect(Collectors.groupingBy(TimesheetEntry::getWorkdayMonth));
-            case "YEAR" ->
+            case YEAR ->
                     timesheetEntryList.stream().collect(Collectors.groupingBy(TimesheetEntry::getWorkdayYear));
-            default -> Map.of();
         };
 
         timesheetWeekMap.forEach((p, list) -> list.forEach(i -> System.out.println(p + ", " + list.size() + " - " + i.getWorkdayDate() + ", " + i.getType() + ", " + i.getWorkedHours())));
@@ -364,7 +363,7 @@ public class TimesheetService {
      */
     public String createTimesheetSummaryHtml(@NotNull Long timesheetId, @NotNull Integer hourlyRate, @NotNull String timesheetSummaryMustacheTemplate) {
         TimesheetDto timesheet = getTimesheetDto(timesheetId);
-        List<TimesheetSummary> timesheetSummaryList = createTimesheetSummary(timesheetId, TimesheetSummary.TimesheetSummaryPeriodEnum.WEEK.name(), hourlyRate);
+        List<TimesheetSummary> timesheetSummaryList = createTimesheetSummary(timesheetId, TimesheetSummary.TimesheetSummaryPeriodEnum.WEEK, hourlyRate);
         double totalBilledAmount = timesheetSummaryList.stream().mapToDouble(TimesheetSummary::getTotalBilledAmount).sum();
         double totalBilledHours = timesheetSummaryList.stream().mapToDouble(TimesheetSummary::getTotalWorkedHours).sum();
         double vat = 25;

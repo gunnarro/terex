@@ -274,6 +274,7 @@ class TimesheetServiceTest {
     @Test
     void createTimesheetSummaryForMount() {
         LocalDate month = LocalDate.of(2023, 11, 1);
+
         assertEquals("NOVEMBER", month.getMonth().name());
         assertEquals(11, month.getMonth().getValue());
 

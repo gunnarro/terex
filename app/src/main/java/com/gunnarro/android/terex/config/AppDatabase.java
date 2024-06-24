@@ -52,7 +52,6 @@ import java.util.concurrent.Executors;
         Invoice.class,
         TimesheetSummary.class,
         Project.class,
-    //    ProjectHistory.class,
         ContactInfo.class,
         Address.class,
         Person.class,
@@ -63,7 +62,7 @@ import java.util.concurrent.Executors;
 }, version = AppDatabase.DB_SCHEMA_VERSION, views = {TimesheetView.class}, exportSchema = true)
 public abstract class AppDatabase extends RoomDatabase {
     // Increase the version with one if the database schema has changed.
-    public static final int DB_SCHEMA_VERSION = 2;
+    public static final int DB_SCHEMA_VERSION = 1;
     // marking the instance as volatile to ensure atomic access to the variable
     // The Java volatile keyword guarantees visibility of changes to variables across threads
     private static AppDatabase INSTANCE;
