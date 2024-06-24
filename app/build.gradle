@@ -88,8 +88,6 @@ android {
             excludes += ['META-INF/LICENSE-LGPL-3.txt', 'META-INF/LICENSE-GPL-3.txt', 'META-INF/LICENSE-W3C-TEST', 'META-INF/LICENSE-LGPL-2.1.txt', 'META-INF/LICENSE-GPL-2.txt']
         }
     }
-
-
 }
 
 dependencies {
@@ -102,67 +100,33 @@ dependencies {
     implementation "android.arch.navigation:navigation-fragment:$android_arch_navigation"
     implementation "android.arch.navigation:navigation-ui:$android_arch_navigation"
     // androidx
-    //noinspection GradleDependency
     implementation "androidx.appcompat:appcompat:$androidx_appcompat"
-    //noinspection GradleDependency
     implementation "androidx.core:core-ktx:$androidx_core_ktx"
     implementation "androidx.constraintlayout:constraintlayout:$androidx_constraint_layout"
     implementation "androidx.lifecycle:lifecycle-extensions:$androidx_lifecycle_extensions"
     implementation "androidx.legacy:legacy-support-v4:$androidx_legacy_support_v4"
-    //noinspection GradleDependency
     implementation "androidx.drawerlayout:drawerlayout:$androidx_drawerlayout"
-
-    //noinspection GradleDependency
     implementation "androidx.recyclerview:recyclerview:$androidx_recyclerview"
     implementation "androidx.preference:preference:$androidx_preference"
-    //noinspection GradleDependency
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$androidx_lifecycle_livedata_ktx"
-    //noinspection GradleDependency
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$androidx_lifecycle_viewmodel_ktx"
-    //noinspection GradleDependency
     implementation "androidx.annotation:annotation:$androidx_annotation"
-    //noinspection GradleDependency
     implementation "androidx.navigation:navigation-fragment:$androidx_navigation_fragment"
-    //noinspection GradleDependency
     implementation "androidx.navigation:navigation-ui:$androidx_navigation_ui"
     // For REST services
     implementation "com.squareup.okhttp3:okhttp:$okhttp3_okhttp"
     implementation "com.google.code.gson:gson:$google_gson"
-
     implementation "com.squareup.retrofit2:retrofit:$retrofit2_retrofit"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit2_retrofit"
-
     // google
-    //noinspection GradleDependency
     implementation "com.google.android.material:material:$google_android_material"
-    //noinspection GradleDependency
     implementation "com.google.dagger:hilt-android:$google_dagger_hilt_android"
-    //noinspection GradleDependency
-    //  implementation "com.fasterxml.jackson.core:jackson-databind:$jackson_databind"
-    //noinspection GradleDependency
-    //  implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jackson_datatype_jsr310"
-    // for password hashing
-    //implementation "de.mkammerer:argon2-jvm:$mkammerer_argon2_jvm"
-    //implementation "org.jasypt:jasypt:$jasypt"
-
-    // for rx eventbus
-//    implementation "io.reactivex.rxjava2:rxjava:$reactifsauvex_rxjava2_rxjava"
-//    implementation "io.reactivex.rxjava2:rxandroid:$reactivex_rxjava2_rxandroid"
-
     // calendar
     implementation "com.applandeo:material-calendar-view:$material_calendar_view"
-
     // lombok
     compileOnly "org.projectlombok:lombok:$projectlombok_lombok"
     annotationProcessor "org.projectlombok:lombok:$projectlombok_lombok"
-
-    // html to pdf
-    // https://mvnrepository.com/artifact/com.itextpdf/kernel
-    // implementation("com.itextpdf:kernel:$itextpdf_kernel")
-    // implementation("com.itextpdf:html2pdf:$itextpdf_html2pdf")
-
     // Room components
-    //noinspection GradleDependency
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
     // encrypt/decrypt database
@@ -174,34 +138,19 @@ dependencies {
     implementation "androidx.security:security-app-authenticator:$androidx_security_app_authenticator"
     // for fingerprint login
     implementation "androidx.biometric:biometric:$rootProject.biometric_version"
-    // for pdf
-    //implementation "org.jsoup:jsoup:$jsoup"
-    //implementation "org.xhtmlrenderer:flying-saucer-pdf-openpdf:$xhtmlrenderer_flying_saucer"
-    //implementation "org.xhtmlrenderer:flying-saucer-core:$xhtmlrenderer_flying_saucer"
-    //implementation "com.openhtmltopdf:openhtmltopdf-core:1.0.10"
-    //implementation "com.openhtmltopdf:openhtmltopdf-pdfbox:1.0.10"
-
     // html template engine
     implementation "com.github.spullara.mustache.java:compiler:$spullara_mustache_java"
-
     // for reading files
     implementation("commons-io:commons-io:2.16.1")
-
     // for unit tests
     testImplementation "org.junit.vintage:junit-vintage-engine:$junit_vintage_engine"
     testImplementation "org.junit.jupiter:junit-jupiter:$junit_jupiter"
-    //noinspection GradleDependency
     testImplementation "org.mockito:mockito-inline:$mockito_inline"
     testImplementation "org.mockito:mockito-junit-jupiter:$mockito_junit_jupiter"
     // for android instrumentation tests
-    //noinspection GradleDependency
     androidTestImplementation "androidx.test.ext:junit:$androidx_junit"
-    //noinspection GradleDependency
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidx_espresso_core"
-    //noinspection GradleDependency
     androidTestImplementation "androidx.room:room-testing:$room_version"
-
-    //noinspection GradleDependency
     debugImplementation "androidx.fragment:fragment-testing:$androidx_fragment_testing"
 }
 

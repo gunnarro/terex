@@ -81,9 +81,9 @@ public abstract class AppDatabase extends RoomDatabase {
                     // use this during development
                    // .fallbackToDestructiveMigration()
                     .allowMainThreadQueries()
-                   // .createFromAsset("database/init_data.sql") // FIXME is not executed
-                    .addMigrations(getMigration(context, DB_SCHEMA_VERSION - 1, DB_SCHEMA_VERSION))
-                    .addCallback(roomCallback)
+                    .createFromAsset("database/terex_init_data.db")
+                    //.addMigrations(getMigration(context, DB_SCHEMA_VERSION - 1, DB_SCHEMA_VERSION))
+                   // .addCallback(roomCallback)
                     .build();
         }
     }
