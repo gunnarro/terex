@@ -55,10 +55,10 @@ public class ProjectRepository {
         return projectDao.getProjectsLiveData(clientId, status);
     }
 
-    public List<Project> getProjects(Long clientId, String status) {
+    public List<Project> getProjects(Long clientId) {
         try {
             CompletionService<List<Project>> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
-            service.submit(() -> projectDao.getProjects(clientId, status));
+            service.submit(() -> projectDao.getProjects(clientId));
             Future<List<Project>> future = service.take();
             return future != null ? future.get() : null;
         } catch (InterruptedException | ExecutionException e) {

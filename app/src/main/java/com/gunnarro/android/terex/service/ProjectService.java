@@ -3,13 +3,13 @@ package com.gunnarro.android.terex.service;
 
 import android.util.Log;
 
-import androidx.lifecycle.LiveData;
+import androidx.room.Transaction;
 
-import com.gunnarro.android.terex.domain.dto.ClientDto;
 import com.gunnarro.android.terex.domain.dto.ProjectDto;
 import com.gunnarro.android.terex.domain.entity.Project;
 import com.gunnarro.android.terex.domain.entity.ProjectWithTimesheet;
 import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
+import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.repository.ProjectRepository;
 
@@ -41,8 +41,11 @@ public class ProjectService {
 
     public ProjectDto getProject(Long projectId) {
         ProjectDto projectDto = TimesheetMapper.toProjectDto(projectRepository.getProject(projectId));
-        projectDto.getClientDto().setName(projectRepository.getClientName(projectDto.getId()));
-        return projectDto;
+        if (projectDto != null) {
+            projectDto.getClientDto().setName(projectRepository.getClientName(projectDto.getId()));
+            return projectDto;
+        }
+        return null;
     }
 
     public Integer getProjectHourlyRate(Long timesheetId) {
@@ -58,12 +61,8 @@ public class ProjectService {
         }
     }
 
-    public LiveData<List<Project>> getProjectsLiveData(Long clientId, ProjectRepository.ProjectStatusEnum status) {
-        return projectRepository.getProjectsLiveData(clientId, status.name());
-    }
-
-    public List<ProjectDto> getProjects(Long clientId, ProjectRepository.ProjectStatusEnum status) {
-        return TimesheetMapper.toProjectDtoList(projectRepository.getProjects(clientId, status.name()));
+    public List<ProjectDto> getProjects(Long clientId) {
+        return TimesheetMapper.toProjectDtoList(projectRepository.getProjects(clientId));
     }
 
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures
@@ -72,7 +71,7 @@ public class ProjectService {
         Project project = TimesheetMapper.fromProjectDto(projectDto);
         try {
             Project projectExisting = projectRepository.find(project.getClientId(), project.getName());
-            Log.d("ProjectRepository.saveProject", String.format("%s", projectExisting));
+            Log.d("ProjectRepository.saveProject", String.format("projectExisting: %s", projectExisting));
             Long id;
             if (projectExisting == null) {
                 project.setCreatedDate(LocalDateTime.now());
@@ -93,5 +92,17 @@ public class ProjectService {
             Thread.currentThread().interrupt();
             throw new TerexApplicationException("Error saving project! " + e.getMessage(), "50050", e.getCause());
         }
+    }
+
+    @Transaction
+    public void deleteProject(Long projectId) {
+        Project project = projectRepository.getProject(projectId);
+        if (project == null) {
+            throw new InputValidationException(String.format("Project not found! timesheetEntryId=%s", projectId), "40044", null);
+        }
+        if (project.isActive()) {
+            throw new InputValidationException("Project is active, not allowed to be delete.", "40045", null);
+        }
+        projectRepository.delete(project);
     }
 }

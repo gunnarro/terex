@@ -5,9 +5,9 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
-import com.gunnarro.android.terex.domain.entity.Project;
-import com.gunnarro.android.terex.repository.ProjectRepository;
+import com.gunnarro.android.terex.domain.dto.ProjectDto;
 import com.gunnarro.android.terex.service.ProjectService;
 
 import java.util.List;
@@ -19,13 +19,25 @@ public class ProjectViewModel extends AndroidViewModel {
 
     private final ProjectService projectService;
 
-    public ProjectViewModel(@NonNull Application application) {
+    private final MutableLiveData<List<ProjectDto>> projectListLiveData;
+
+    public ProjectViewModel(@NonNull Application application, Long clientId) {
         super(application);
         projectService = new ProjectService();
+        projectListLiveData = new MutableLiveData<>();
+        projectListLiveData.setValue(projectService.getProjects(clientId));
     }
 
-    public LiveData<List<Project>> getProjectsLiveData(Long clientId, ProjectRepository.ProjectStatusEnum status) {
-        return projectService.getProjectsLiveData(clientId, status);
+    public LiveData<List<ProjectDto>> getProjectsLiveData(Long clientId) {
+        projectListLiveData.setValue(projectService.getProjects(clientId));
+        return projectListLiveData;
     }
 
+    public void saveProject(ProjectDto projectDto) {
+        projectService.saveProject(projectDto);
+    }
+
+    public void deleteProject(Long projectId) {
+        projectService.deleteProject(projectId);
+    }
 }

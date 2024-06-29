@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 public class Project extends BaseEntity {
 
     public enum ProjectStatusEnum {
-        ACTIVE, COMPLETED, TERMINATED
+        ACTIVE, CLOSED
     }
 
     /**
@@ -83,6 +83,10 @@ public class Project extends BaseEntity {
 
     public void setHourlyRate(Integer hourlyRate) {
         this.hourlyRate = hourlyRate;
+    }
+
+    public boolean isActive() {
+        return ProjectStatusEnum.ACTIVE.name().equals(status);
     }
 
     @Override

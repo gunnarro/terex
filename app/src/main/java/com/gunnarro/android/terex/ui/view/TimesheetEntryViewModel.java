@@ -30,13 +30,6 @@ public class TimesheetEntryViewModel extends AndroidViewModel {
         timesheetEntryListLiveData.setValue(timesheetService.getTimesheetEntryList(timesheetId));
     }
 
-    @Deprecated
-    public LiveData<List<TimesheetEntry>> getTimesheetEntryLiveData_old(Long timesheetId) {
-        LiveData<List<TimesheetEntry>> listLiveData = timesheetService.getTimesheetEntryListLiveData(timesheetId);
-        Log.d("getTimesheetEntryLiveData", String.format("timesheetId=%s, timesheetEntries=%s", timesheetId, listLiveData.getValue()));
-        return listLiveData;
-    }
-
     public LiveData<List<TimesheetEntry>> getTimesheetEntryLiveData(Long timesheetId) {
         Log.d("getTimesheetEntryLiveData", String.format("timesheetId=%s, entries=%s", timesheetId, timesheetEntryListLiveData.getValue().size()));
         //timesheetEntryListLiveData.setValue(timesheetService.getTimesheetEntryList(timesheetId));

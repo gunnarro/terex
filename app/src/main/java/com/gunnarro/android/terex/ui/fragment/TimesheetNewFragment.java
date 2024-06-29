@@ -289,22 +289,17 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
 
         // set status button group
         // billed button is always disabled, billed status is set by the create invoice process. The billed status can not be set manually.
-        view.findViewById(R.id.timesheet_new_status_btn_billed).setClickable(false);
         view.findViewById(R.id.timesheet_new_status_btn_new).setClickable(false);
+        view.findViewById(R.id.timesheet_new_status_btn_active).setClickable(true);
+        view.findViewById(R.id.timesheet_new_status_btn_completed).setEnabled(true);
         view.findViewById(R.id.timesheet_new_status_btn_billed).setEnabled(false);
-        view.findViewById(R.id.timesheet_new_status_btn_new).setEnabled(false);
-        if (timesheet.isNew()) {
-            ((MaterialButton) view.findViewById(R.id.timesheet_new_status_btn_new)).setChecked(true);
-        } else if (timesheet.isActive()) {
-            ((MaterialButton) view.findViewById(R.id.timesheet_new_status_btn_active)).setChecked(true);
-        } else if (timesheet.isCompleted()) {
-            ((MaterialButton) view.findViewById(R.id.timesheet_new_status_btn_completed)).setChecked(true);
-        } else if (timesheet.isBilled()) {
-            ((MaterialButton) view.findViewById(R.id.timesheet_new_status_btn_billed)).setChecked(true);
-        }
+        ((MaterialButton) view.findViewById(R.id.timesheet_new_status_btn_new)).setChecked(timesheet.isNew());
+        ((MaterialButton) view.findViewById(R.id.timesheet_new_status_btn_active)).setChecked(timesheet.isActive());
+        ((MaterialButton) view.findViewById(R.id.timesheet_new_status_btn_completed)).setChecked(timesheet.isCompleted());
+        ((MaterialButton) view.findViewById(R.id.timesheet_new_status_btn_billed)).setChecked(timesheet.isBilled());
 
-        AutoCompleteTextView statusSpinner = view.findViewById(R.id.timesheet_new_status_spinner);
-        statusSpinner.setText(timesheet.getStatus());
+       // AutoCompleteTextView statusSpinner = view.findViewById(R.id.timesheet_new_status_spinner);
+       // statusSpinner.setText(timesheet.getStatus());
 
         AutoCompleteTextView yearSpinner = view.findViewById(R.id.timesheet_new_year_spinner);
         yearSpinner.setText(String.format("%s", timesheet.getYear()));
@@ -347,7 +342,7 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
             view.findViewById(R.id.timesheet_new_client_spinner_layout).setEnabled(false);
             projectSpinner.setEnabled(false);
             view.findViewById(R.id.timesheet_new_project_spinner_layout).setEnabled(false);
-            statusSpinner.setEnabled(true);
+            //statusSpinner.setEnabled(true);
             view.findViewById(R.id.timesheet_new_status_btn_group_layout).setEnabled(true);
             yearSpinner.setEnabled(false);
             monthSpinner.setEnabled(false);
@@ -360,7 +355,7 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
             view.findViewById(R.id.timesheet_new_last_modified_date_layout).setVisibility(View.VISIBLE);
             view.findViewById(R.id.timesheet_new_client_spinner_layout).setEnabled(false);
             view.findViewById(R.id.timesheet_new_project_spinner_layout).setEnabled(false);
-            view.findViewById(R.id.timesheet_new_status_spinner_layout).setEnabled(false);
+           // view.findViewById(R.id.timesheet_new_status_spinner_layout).setEnabled(false);
             view.findViewById(R.id.timesheet_new_status_btn_group_layout).setEnabled(false);
             //view.findViewById(R.id.timesheet_new_status_group_layout).setEnabled(false);
             view.findViewById(R.id.timesheet_new_year_spinner_layout).setEnabled(false);
@@ -372,7 +367,7 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
             lastModifiedDateView.setEnabled(false);
             projectSpinner.setEnabled(false);
             clientSpinner.setEnabled(false);
-            statusSpinner.setEnabled(false);
+            //statusSpinner.setEnabled(false);
             yearSpinner.setEnabled(false);
             monthSpinner.setEnabled(false);
             fromTimeView.setEnabled(false);
@@ -483,11 +478,12 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
             projectSpinner.setError(getString(R.string.lbl_required));
             hasValidationError = false;
         }
+        /*
         AutoCompleteTextView statusSpinner = requireView().findViewById(R.id.timesheet_new_status_spinner);
         if (!hasText(statusSpinner.getText())) {
             statusSpinner.setError(getString(R.string.lbl_required));
             hasValidationError = false;
-        }
+        }*/
         AutoCompleteTextView yearSpinner = requireView().findViewById(R.id.timesheet_new_year_spinner);
         if (!hasText(yearSpinner.getText())) {
             yearSpinner.setError(getString(R.string.lbl_required));

@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gunnarro.android.terex.R;
+import com.gunnarro.android.terex.domain.dto.ProjectDto;
 import com.gunnarro.android.terex.domain.entity.Project;
 
 public class ProjectViewHolder extends RecyclerView.ViewHolder {
@@ -27,8 +28,8 @@ public class ProjectViewHolder extends RecyclerView.ViewHolder {
         return new ProjectViewHolder(view);
     }
 
-    public void bindListLine(Project project) {
-        lineHeaderView.setText(String.format("%s %s", project.getName(), project.getStatus()));
+    public void bindListLine(ProjectDto projectDto) {
+        lineHeaderView.setText(String.format("%s %s", projectDto.getName(), projectDto.getStatus()));
      /*   line1StatusView.setText(project.getStatus());
         if (project.getStatus().equals("ACTIVE")) {
             line1StatusView.setTextColor(line1StatusView.getResources().getColor(R.color.invoice_status_open, null));
@@ -36,6 +37,6 @@ public class ProjectViewHolder extends RecyclerView.ViewHolder {
             line1StatusView.setTextColor(line1StatusView.getResources().getColor(R.color.invoice_status_completed, null));
     }*/
         line1LabelView.setText("Hourly rate");
-        line1ValueView.setText(String.format("%s", project.getHourlyRate().toString()));
+        line1ValueView.setText(String.format("%s", projectDto.getHourlyRate().toString()));
     }
 }

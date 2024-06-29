@@ -193,4 +193,6 @@
     <string name="lbl_integrations">Integrations</string>
     <string name="btn_import">Import</string>
     <string name="lbl_send_email">Send email</string>
+    <string name="project_status_active">Active</string>
+    <string name="project_status_closed">Closed</string>
 </resources>

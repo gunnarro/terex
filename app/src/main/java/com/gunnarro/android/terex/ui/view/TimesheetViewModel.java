@@ -47,10 +47,6 @@ public class TimesheetViewModel extends AndroidViewModel {
         return timesheetService.getTimesheet(timesheetId);
     }
 
-    public TimesheetDto getTimesheetDto(Long timesheetId) {
-        return timesheetService.getTimesheetDto(timesheetId);
-    }
-
     public void deleteTimesheet(Timesheet timesheet) {
         timesheetService.deleteTimesheet(timesheet.getId());
     }

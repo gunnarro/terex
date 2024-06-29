@@ -129,23 +129,32 @@
                     android:text="" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/project_status_spinner_layout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="match_parent"
+            <!-- project status button group -->
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/project_new_status_btn_group_layout"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="@string/lbl_status">
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:enabled="true"
+                app:singleSelection="true">
 
-                <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                    android:id="@+id/project_status_spinner"
-                    android:layout_width="match_parent"
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/project_new_status_btn_active"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:autofillHints="false"
-                    android:clickable="true"
-                    android:importantForAutofill="no"
-                    android:inputType="none"
-                    tools:ignore="KeyboardInaccessibleWidget" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:text="@string/project_status_active" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/project_new_status_btn_closed"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/project_status_closed" />
+
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
         </LinearLayout>
 
         <LinearLayout

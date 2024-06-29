@@ -1,16 +1,30 @@
 package com.gunnarro.android.terex.domain.dto;
 
+import com.gunnarro.android.terex.domain.entity.Project;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
 public class ProjectDto {
     private Long id;
+    private LocalDateTime createdDate;
+    private LocalDateTime lastModifiedDate;
     private String name;
     private String description;
     private String status;
     private Integer hourlyRate;
     private ClientDto clientDto;
     private List<TimesheetDto> timesheetDto;
+
+    public ProjectDto() {
+        this.status = Project.ProjectStatusEnum.ACTIVE.name();
+    }
+
+    public ProjectDto(Long clientId) {
+        this();
+        this.clientDto = new ClientDto(clientId);
+    }
 
     public Long getId() {
         return id;
@@ -20,6 +34,21 @@ public class ProjectDto {
         this.id = id;
     }
 
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public LocalDateTime getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
 
     public String getName() {
         return name;
@@ -80,5 +109,13 @@ public class ProjectDto {
     @Override
     public int hashCode() {
         return Objects.hash(name);
+    }
+
+    public boolean isActive() {
+        return this.status.equals(Project.ProjectStatusEnum.ACTIVE.name());
+    }
+
+    public boolean isClosed() {
+        return this.status.equals(Project.ProjectStatusEnum.CLOSED.name());
     }
 }

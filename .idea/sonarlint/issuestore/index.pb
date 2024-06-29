@@ -337,10 +337,6 @@ Aapp/src/androidTest/java/com/gunnarro/android/terex/LoadTest.java,2/5/25748922
 w
 Gapp/src/androidTest/java/com/gunnarro/android/terex/FunctionalTest.java,e/a/ea28b10383c9a920f07b580cec158194186ad54a
 p
-@app/schemas/com.gunnarro.android.terex.config.AppDatabase/2.json,0/d/0db56a918722e7f1b136b35f1ece4218affeb99a
-p
-@app/schemas/com.gunnarro.android.terex.config.AppDatabase/3.json,8/4/84732d018378afa01c331b24256e10e37589efc6
-p
 @app/schemas/com.gunnarro.android.terex.config.AppDatabase/1.json,e/9/e92146ea07fe92b113b89075e340e150a3d28d5d
 ~
 Napp/src/main/java/com/gunnarro/android/terex/domain/entity/ProjectHistory.java,9/f/9f093fa1b13899c9183c2f76081d26aabd652d5d
@@ -361,10 +357,6 @@ Mapp/src/androidTest/java/com/gunnarro/android/terex/IntegrationTestSetup.java,
 {
 Kapp/src/main/java/com/gunnarro/android/terex/integration/jira/TempoApi.java,c/e/ced72a591d47b22b2fa08d3cdf6b5e56410a34a8
 
-Oapp/src/main/java/com/gunnarro/android/terex/integration/jira/tempo-schema.json,4/e/4e3f20a2b337da82d4efa40126fecd92da5fa6de
-{
-Kapp/src/test/java/com/gunnarro/android/terex/integration/jira/TempoApi.java,7/e/7e8bcdad101c33ccc47e2faa446d76c79d66c09e
-
 Oapp/src/test/java/com/gunnarro/android/terex/integration/jira/TempoApiTest.java,9/c/9cf3b9dcba666e18a169d4d7db7df8b64f1473b9
 É
 Sapp/src/main/java/com/gunnarro/android/terex/integration/jira/model/Attributes.java,d/0/d0a6b930ee33880beacee416a899d72a9e5f1c15
@@ -376,8 +368,6 @@ Napp/src/main/java/com/gunnarro/android/terex/integration/jira/model/Issue.java
 Qapp/src/main/java/com/gunnarro/android/terex/integration/jira/model/Metadata.java,5/a/5af90dec3d52c7e5db3b1d0c4b6a41bf644988d7
 
 Oapp/src/main/java/com/gunnarro/android/terex/integration/jira/model/Result.java,1/0/100c51a9b4f02010a999a642f60fd709f9f94414
-}
-Mapp/src/main/java/com/gunnarro/android/terex/integration/jira/model/Root.java,6/4/64b8d95aaa098bfabf27ba23a05221701c67067f
 ~
 Napp/src/main/java/com/gunnarro/android/terex/integration/jira/model/Value.java,e/7/e7dea3f52077259c9430d1e8f0fdd2d9f0681cf2
 Å

@@ -73,7 +73,7 @@ class ClientServiceTest {
         projectDto.setStatus("ACTIVE");
 
         when(clientRepositoryMock.getClient(client.getId())).thenReturn(client);
-        when(projectServiceMock.getProjects(client.getId(), ProjectRepository.ProjectStatusEnum.ACTIVE)).thenReturn(List.of(projectDto));
+        when(projectServiceMock.getProjects(client.getId())).thenReturn(List.of(projectDto));
         when(personServiceMock.getPerson(client.getContactPersonId())).thenReturn(personDto);
 
         ClientDto clientDto = clientService.getClient(client.getId());

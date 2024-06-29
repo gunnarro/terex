@@ -88,7 +88,7 @@ public class ClientService {
             PersonDto contactPersonDto = personService.getPerson(client.getContactPersonId());
             clientDto.setContactPersonDto(contactPersonDto);
             // add projects
-            List<ProjectDto> projectDtos = projectService.getProjects(client.getId(), ProjectRepository.ProjectStatusEnum.ACTIVE);
+            List<ProjectDto> projectDtos = projectService.getProjects(client.getId());
             clientDto.setProjectList(projectDtos);
             return clientDto;
         }

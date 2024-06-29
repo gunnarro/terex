@@ -10,15 +10,15 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
 import com.gunnarro.android.terex.R;
-import com.gunnarro.android.terex.domain.entity.Project;
+import com.gunnarro.android.terex.domain.dto.ProjectDto;
 import com.gunnarro.android.terex.ui.fragment.ProjectListFragment;
 import com.gunnarro.android.terex.ui.listener.ListOnItemClickListener;
 import com.gunnarro.android.terex.ui.view.ProjectViewHolder;
 
-public class ProjectListAdapter extends ListAdapter<Project, ProjectViewHolder> implements AdapterView.OnItemClickListener {
+public class ProjectListAdapter extends ListAdapter<ProjectDto, ProjectViewHolder> implements AdapterView.OnItemClickListener {
     private final ListOnItemClickListener listOnItemClickListener;
 
-    public ProjectListAdapter(@NonNull ListOnItemClickListener listOnItemClickListener, @NonNull DiffUtil.ItemCallback<Project> diffCallback) {
+    public ProjectListAdapter(@NonNull ListOnItemClickListener listOnItemClickListener, @NonNull DiffUtil.ItemCallback<ProjectDto> diffCallback) {
         super(diffCallback);
         this.setHasStableIds(true);
         this.listOnItemClickListener = listOnItemClickListener;
@@ -47,15 +47,15 @@ public class ProjectListAdapter extends ListAdapter<Project, ProjectViewHolder> 
         notifyItemRangeRemoved(position, 1);
     }
 
-    public static class ProjectDiff extends DiffUtil.ItemCallback<Project> {
+    public static class ProjectDtoDiff extends DiffUtil.ItemCallback<ProjectDto> {
 
         @Override
-        public boolean areItemsTheSame(@NonNull Project oldItem, @NonNull Project newItem) {
+        public boolean areItemsTheSame(@NonNull ProjectDto oldItem, @NonNull ProjectDto newItem) {
             return oldItem == newItem;
         }
 
         @Override
-        public boolean areContentsTheSame(@NonNull Project oldItem, @NonNull Project newItem) {
+        public boolean areContentsTheSame(@NonNull ProjectDto oldItem, @NonNull ProjectDto newItem) {
             return oldItem.equals(newItem);
         }
     }
