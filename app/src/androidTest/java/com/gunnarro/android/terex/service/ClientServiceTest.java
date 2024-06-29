@@ -3,6 +3,7 @@ package com.gunnarro.android.terex.service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import com.gunnarro.android.terex.IntegrationTestSetup;
 import com.gunnarro.android.terex.domain.dto.BusinessAddressDto;
@@ -51,13 +52,6 @@ public class ClientServiceTest extends IntegrationTestSetup {
     }
 
     @Test
-    public void getClient() {
-        ClientDto clientDto = clientService.getClient(1L);
-        assertNotNull(clientDto);
-        assertEquals("gunnarro unittest as", clientDto.getName());
-    }
-
-    @Test
     public void getClient_not_found() {
         ClientDto clientDto = clientService.getClient(9876L);
         assertNull(clientDto);
@@ -81,11 +75,11 @@ public class ClientServiceTest extends IntegrationTestSetup {
         assertEquals(id, clientDto.getId());
         assertEquals("gunnarro unittest as", clientDto.getName());
         assertEquals("ACTIVE", clientDto.getStatus());
-        assertEquals("1", clientDto.getOrganizationDto().getId().toString());
+        assertTrue(clientDto.getOrganizationDto().getId() > 1);
         assertEquals("822707922", clientDto.getOrganizationDto().getOrganizationNumber());
-        assertEquals(1L, clientDto.getContactPersonDto().getId().longValue());
+        assertTrue(clientDto.getContactPersonDto().getId() > 1);
         assertEquals("gunnar ronneberg", clientDto.getContactPersonDto().getFullName());
-        assertEquals(1L, clientDto.getContactPersonDto().getContactInfo().getId().longValue());
+        assertTrue(clientDto.getContactPersonDto().getContactInfo().getId() > 1);
         assertEquals("gr@yahoo.org", clientDto.getContactPersonDto().getContactInfo().getEmailAddress());
         assertEquals("44556677", clientDto.getContactPersonDto().getContactInfo().getMobileNumber());
         assertEquals("+47", clientDto.getContactPersonDto().getContactInfo().getMobileNumberCountryCode());

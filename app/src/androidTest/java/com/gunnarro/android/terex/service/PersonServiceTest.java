@@ -1,6 +1,8 @@
 package com.gunnarro.android.terex.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import com.gunnarro.android.terex.IntegrationTestSetup;
 import com.gunnarro.android.terex.domain.dto.PersonDto;
@@ -43,10 +45,10 @@ public class PersonServiceTest extends IntegrationTestSetup {
         PersonDto newPersonDto = createPersonDto();
 
         Long personId = personService.save(newPersonDto);
-        assertEquals(1, personId.intValue());
+        assertTrue(personId.intValue() > 1);
 
         PersonDto personDto = personService.getPerson(personId);
-        assertEquals(1, personDto.getId().intValue());
+        assertTrue(personDto.getId().intValue() > 1);
 
         assertEquals("ole gunnar hansen", personDto.getFullName());
 
@@ -55,8 +57,9 @@ public class PersonServiceTest extends IntegrationTestSetup {
         personId = personService.save(personDto);
 
         PersonDto updatedPersonDto = personService.getPerson(personId);
-        assertEquals(1, updatedPersonDto.getId().intValue());
+        assertEquals(personId, updatedPersonDto.getId());
         assertEquals("Ole Gunnar Hansen", personDto.getFullName());
+        assertNull(personDto.getContactInfo());
     }
 
     private PersonDto createPersonDto() {

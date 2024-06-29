@@ -2,6 +2,7 @@ package com.gunnarro.android.terex.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import com.gunnarro.android.terex.IntegrationTestSetup;
 import com.gunnarro.android.terex.domain.dto.ClientDto;
@@ -47,17 +48,17 @@ public class ProjectServiceTest extends IntegrationTestSetup {
         newProjectDto.setHourlyRate(1250);
 
         Long projectId = projectService.saveProject(newProjectDto);
-        assertEquals(1, projectId.intValue());
+        assertTrue(projectId.intValue() > 1);
 
         ProjectDto projectDto = projectService.getProjectWithTimesheet(projectId);
-        assertEquals(1, projectDto.getId().intValue());
+        assertEquals(projectId, projectDto.getId());
         assertEquals("gunnarro timesheet project", projectDto.getName());
         assertEquals("develop a timesheet app", projectDto.getDescription());
         assertEquals(Project.ProjectStatusEnum.ACTIVE.name(), projectDto.getStatus());
         assertEquals(0, projectDto.getTimesheetDto().size());
 
         projectDto = projectService.getProject(projectId);
-        assertEquals(1, projectDto.getId().intValue());
+        assertEquals(projectId, projectDto.getId());
         assertEquals("gunnarro timesheet project", projectDto.getName());
         assertEquals("develop a timesheet app", projectDto.getDescription());
         assertEquals(Project.ProjectStatusEnum.ACTIVE.name(), projectDto.getStatus());

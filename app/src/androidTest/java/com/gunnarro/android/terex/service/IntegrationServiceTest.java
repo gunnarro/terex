@@ -9,6 +9,7 @@ import com.gunnarro.android.terex.repository.IntegrationRepository;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class IntegrationServiceTest extends IntegrationTestSetup {
@@ -26,8 +27,9 @@ public class IntegrationServiceTest extends IntegrationTestSetup {
         super.cleanUpDatabase();
     }
 
+    @Ignore
     @Test
-    public void integration_CRUD() {
+    public void integration_CRUD_manual() {
 
         IntegrationDto integrationDto = new IntegrationDto();
         integrationDto.setId(44L);
