@@ -1,6 +1,7 @@
 package com.gunnarro.android.terex.ui.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.print.PrintAttributes;
 import android.print.PrintDocumentAdapter;
@@ -22,11 +23,14 @@ import android.widget.Spinner;
 import androidx.annotation.NonNull;
 
 import com.gunnarro.android.terex.R;
+import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.service.InvoiceService;
+import com.gunnarro.android.terex.ui.MainActivity;
 import com.gunnarro.android.terex.utility.Utility;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -40,7 +44,6 @@ public class InvoiceDetailsFragment extends BaseFragment {
 
     private InvoiceService invoiceService;
     private List<InvoiceService.InvoiceAttachmentTypesEnum> invoiceAttachmentTypes;
-
     private InvoiceService.InvoiceAttachmentTypesEnum selectedInvoiceAttachmentType = InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY;
     private Long invoiceId;
 
@@ -78,6 +81,8 @@ public class InvoiceDetailsFragment extends BaseFragment {
         // Handle item selection
         if (item.getItemId() == R.id.attachment_to_pdf) {
             exportAttachment(selectedInvoiceAttachmentType.name(), selectedInvoiceAttachmentType.getFileName());
+        } else if (item.getItemId() == R.id.send_email) {
+            sendInvoiceToClient("gunnar_ronneberg@yahoo.no", "Vedlegg til faktura for juni 2024", "Vedlegg til faktur for 2024/6", readFile(selectedInvoiceAttachmentType.getFileName()));
         }
         return true;
     }
@@ -89,7 +94,6 @@ public class InvoiceDetailsFragment extends BaseFragment {
         inflater.inflate(R.menu.invoice_attachment_menu, menu);
         MenuItem pdfMenuItem = menu.findItem(R.id.attachment_to_pdf);
         //  Objects.requireNonNull(m.getActionView()).setOnClickListener(v -> exportAttachment());
-
         MenuItem invoiceAttachmentMenuItem = menu.findItem(R.id.invoice_attachment_dropdown_menu);
         Spinner spinner = (Spinner) invoiceAttachmentMenuItem.getActionView();
         // Create an ArrayAdapter using the string array and a default spinner layout
@@ -156,6 +160,26 @@ public class InvoiceDetailsFragment extends BaseFragment {
                 .build();
 
         PrintJob printJob = printManager.print(invoiceAttachmentFileName, printAdapter, printAttributes);
-        Log.d("", "printJob status=" + printJob.isCompleted());
+        Log.d("exportAttachment", "printJob status=" + printJob.isCompleted());
+    }
+
+    private void sendInvoiceToClient(String toEmailAddress, String subject, String message, File pdfFile) {
+        Intent email = new Intent(Intent.ACTION_SEND);
+        email.putExtra(Intent.EXTRA_EMAIL, new String[]{toEmailAddress});
+        email.putExtra(Intent.EXTRA_SUBJECT, subject);
+        email.putExtra(Intent.EXTRA_TEXT, message);
+        // email.putExtra(Intent.EXTRA_STREAM, pdfFile);
+        // need this to prompts email client only
+        email.setType("message/rfc822");
+        startActivity(Intent.createChooser(email, "Choose Email client:"));
+    }
+
+
+    private File readFile(String fileName) {
+        try {
+            return new File(MainActivity.getInternalAppDir(), fileName);
+        } catch (Exception e) {
+            throw new TerexApplicationException(e.getMessage(), "50500", e);
+        }
     }
 }

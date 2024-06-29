@@ -192,4 +192,5 @@
     <string name="lbl_sick">Sick</string>
     <string name="lbl_integrations">Integrations</string>
     <string name="btn_import">Import</string>
+    <string name="lbl_send_email">Send email</string>
 </resources>

@@ -145,7 +145,6 @@ public class InvoiceService {
         return Arrays.asList(InvoiceAttachmentTypesEnum.values());
     }
 
-
     public long createTimesheetSummaryAttachment(Long invoiceId, String timesheetSummaryTemplate) {
         try {
             Invoice invoice = getInvoice(invoiceId);

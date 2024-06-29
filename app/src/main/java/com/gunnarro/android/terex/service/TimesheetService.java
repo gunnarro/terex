@@ -394,17 +394,17 @@ public class TimesheetService {
         TimesheetDto timesheetDto = getTimesheetDto(timesheetId);
 
         List<TimesheetEntryDto> timesheetEntryDtoList = getTimesheetEntryDtoListReadyForBilling(timesheetId);
-        Double sumBilledHours = timesheetEntryDtoList.stream().mapToDouble(TimesheetEntryDto::getWorkedSeconds).sum() / 60 * 60;
+        Double sumBilledHours = timesheetEntryDtoList.stream().mapToDouble(TimesheetEntryDto::getWorkedSeconds).sum() / 3600;
         Integer numberOfWorkedDays = timesheetEntryDtoList.stream().filter(e -> e.getWorkedSeconds() != null && e.getWorkedSeconds() > 0).collect(Collectors.toList()).size();
         MustacheFactory mf = new DefaultMustacheFactory();
         Mustache mustache = mf.compile(new StringReader(clientTimesheetMustacheTemplate), "");
         Map<String, Object> context = new HashMap<>();
         context.put("title", "Timeliste");
-        context.put("consultantName", timesheetDto.getUserAccountDto().getUserName());
+        context.put("consultantFullName", timesheetDto.getUserAccountDto().getUserName());
         context.put("consultantCompanyName", timesheetDto.getUserAccountDto().getOrganizationDto().getName());
         context.put("clientProjectName", timesheetDto.getProjectDto().getName());
-        context.put("clientName", timesheetDto.getProjectDto().getClientDto().getId());
-        context.put("clientContactPersonName", "");
+        context.put("clientName", timesheetDto.getProjectDto().getClientDto().getName());
+        context.put("clientContactPersonFullName", "");
         context.put("clientContactPersonMobile", "");
         context.put("clientContactPersonEmail", "");
         context.put("timesheetPeriod", String.format("%s", timesheetDto.getFromDate().format(DateTimeFormatter.ofPattern("MMMM yyyy"))));

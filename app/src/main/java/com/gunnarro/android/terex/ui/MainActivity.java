@@ -37,8 +37,15 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
 
+    private static String internalAppDir;
     public MainActivity() {
         // intentional empty
+        internalAppDir = getInternalAppDir();
+    }
+
+    public static String getInternalAppDir() {
+        Log.d("MainActivity", "internalAppDir: " + internalAppDir);
+        return internalAppDir;
     }
 
     @Override

@@ -39,17 +39,13 @@
         <div class="col-md">
             <address>
                 <strong>Kunde</strong><br>
-                {{invoiceReceiver.organizationDto.name}}<br>
-                {{invoiceReceiver.organizationDto.businessAddress.streetAddress}}<br>
-                {{invoiceReceiver.organizationDto.businessAddress.postalCode}} {{invoiceReceiver.organizationDto.businessAddress.city}}
+                {{clientName}}
             </address>
         </div>
         <div class="col-md">
             <address>
-                <strong>Firma</strong><br>
-                {{invoiceIssuer.organizationDto.name}}<br>
-                {{invoiceIssuer.organizationDto.businessAddress.streetAddress}}<br>
-                {{invoiceIssuer.organizationDto.businessAddress.postalCode}} {{invoiceIssuer.organizationDto.businessAddress.city}}
+                <strong>Konsulent</strong><br>
+                {{consultantFullName}}
             </address>
         </div>
     </div>
@@ -57,9 +53,11 @@
         <div class="col-md">
             <address>
                 <strong>Prosjektkode</strong><br>
-                {{timesheetProjectCode}}<br>
+                {{clientProjectName}}<br>
                 <strong>Kontaktperson</strong><br>
-                {{invoiceReceiver.contactPersonDto.fullName}}
+                {{clientContactPersonFullName}}<br>
+                {{clientContactPersonEmail}}<br>
+                {{clientContactPersonMobile}}<br>
             </address>
         </div>
     </div>
@@ -87,7 +85,7 @@
                                 <td class="text-start {{#isWeekend}}text-primary{{/isWeekend}} {{#isSickDay}}text-muted{{/isSickDay}} {{#isVacationDay}}text-muted{{/isVacationDay}}">{{workdayDateDayName}}</td>
                                 <td class="text-center">{{fromTime}} - {{toTime}}</td>
                                 <td class="text-end text-primary">{{workedHours}}</td>
-                                <td class="text-start">{{#isSickDay}}sick{{/isSickDay}} {{#isVacationDay}}vacation{{/isVacationDay}} {{comment}} {{type}}</td>
+                                <td class="text-start">{{#isSickDay}}sick{{/isSickDay}} {{#isVacationDay}}vacation{{/isVacationDay}} {{comment}}</td>
                             </tr>
                             {{/timesheetEntryDtoList}}
                             <tr>

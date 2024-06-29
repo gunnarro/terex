@@ -12,7 +12,7 @@ import java.time.LocalDate;
 class TimesheetEntryDiffTest {
 
     @Test
-    void areItemsTheSame() {
+    void itemsEqual() {
         TimesheetEntry timesheetEntry1 = new TimesheetEntry();
         timesheetEntry1.setId(1L);
         timesheetEntry1.setTimesheetId(23L);
@@ -26,7 +26,7 @@ class TimesheetEntryDiffTest {
     }
 
     @Test
-    void areItemsTheSameNotSame() {
+    void itemsNotEqual() {
         TimesheetEntry timesheetEntry1 = new TimesheetEntry();
         timesheetEntry1.setId(1L);
         timesheetEntry1.setTimesheetId(23L);
@@ -43,7 +43,7 @@ class TimesheetEntryDiffTest {
     }
 
     @Test
-    void areContentsTheSame() {
+    void contentsEqual() {
         TimesheetEntry timesheetEntry1 = new TimesheetEntry();
         timesheetEntry1.setId(1L);
         timesheetEntry1.setTimesheetId(23L);
@@ -60,7 +60,7 @@ class TimesheetEntryDiffTest {
     }
 
     @Test
-    void areContentsTheSameNotEqual() {
+    void contentsNotEqual() {
         TimesheetEntry timesheetEntry1 = new TimesheetEntry();
         timesheetEntry1.setId(1L);
         timesheetEntry1.setTimesheetId(23L);

@@ -1,6 +1,5 @@
 package com.gunnarro.android.terex.ui.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,7 +21,6 @@ import com.gunnarro.android.terex.utility.Utility;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -136,17 +134,6 @@ public class InvoiceNewFragment extends BaseFragment {
         } catch (Exception e) {
             throw new TerexApplicationException(String.format("Error creating invoice for timesheet, timesheetId=%s", timesheetId), "50023", e);
         }
-    }
-
-    private void sendInvoiceToClient(String toEmailAddress, String subject, String message, File pdfFile) {
-        Intent email = new Intent(Intent.ACTION_SEND);
-        email.putExtra(Intent.EXTRA_EMAIL, new String[]{toEmailAddress});
-        email.putExtra(Intent.EXTRA_SUBJECT, subject);
-        email.putExtra(Intent.EXTRA_TEXT, message);
-        email.putExtra(Intent.EXTRA_STREAM, pdfFile);
-        //need this to prompts email client only
-        email.setType("message/rfc822");
-        startActivity(Intent.createChooser(email, "Choose Email client:"));
     }
 
     private void returnToInvoiceList(Bundle bundle) {
