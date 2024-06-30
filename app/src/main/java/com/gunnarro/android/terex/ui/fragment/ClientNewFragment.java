@@ -213,6 +213,7 @@ public class ClientNewFragment extends BaseFragment implements View.OnClickListe
         organizationDto.setBusinessAddress(businessAddressDto);
         // name of client is set equal to organization name
         clientDto.setName(organizationDto.getName());
+        clientDto.setInvoiceEmailAddress(((TextView) requireView().findViewById(R.id.client_new_invoice_email)).getText().toString());
         clientDto.setOrganizationDto(organizationDto);
         clientDto.setContactPersonDto(contactPersonDto);
         return clientDto;

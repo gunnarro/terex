@@ -187,6 +187,7 @@ public class TimesheetMapper {
         clientDto.setId(client.getId());
         clientDto.setName(client.getName());
         clientDto.setStatus(client.getStatus());
+        clientDto.setInvoiceEmailAddress(client.getInvoiceEmailAddress());
         // map org
         OrganizationDto orgDto = new OrganizationDto();
         orgDto.setId(client.getOrganizationId());
@@ -202,6 +203,7 @@ public class TimesheetMapper {
         Client client = new Client();
         client.setId(clientDto.getId());
         client.setName(clientDto.getName());
+        client.setInvoiceEmailAddress(clientDto.getInvoiceEmailAddress());
         client.setOrganizationId(clientDto.getOrganizationDto() != null ? clientDto.getOrganizationDto().getId() : null);
         client.setStatus(clientDto.getStatus());
         client.setContactPersonId(clientDto.getContactPersonDto() != null ? clientDto.getContactPersonDto().getId() : null);
@@ -369,6 +371,8 @@ public class TimesheetMapper {
         }
         InvoiceDto invoiceDto = new InvoiceDto();
         invoiceDto.setId(invoice.getId());
+        invoiceDto.setInvoiceType(invoice.getInvoiceType());
+        invoiceDto.setTimesheetDto(new TimesheetDto(invoice.getTimesheetId()));
         invoiceDto.setStatus(invoice.getStatus());
         invoiceDto.setAmount(invoice.getAmount());
         invoiceDto.setBillingDate(invoice.getBillingDate());
@@ -383,7 +387,8 @@ public class TimesheetMapper {
         invoiceDto.setDueDate(invoice.getDueDate());
         invoiceDto.setAmount(invoice.getAmount());
         invoiceDto.setReference(invoice.getReference());
-        invoiceDto.setVat(invoice.getVat());
+        invoiceDto.setVatAmount(invoice.getVatAmount());
+        invoiceDto.setVatPercent(invoice.getVatPercent());
         invoiceDto.setBillingPeriodStartDate(invoice.getBillingPeriodStartDate());
         invoiceDto.setBillingPeriodEndDate(invoice.getBillingPeriodEndDate());
         return invoiceDto;

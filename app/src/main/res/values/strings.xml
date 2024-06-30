@@ -195,4 +195,5 @@
     <string name="lbl_send_email">Send email</string>
     <string name="project_status_active">Active</string>
     <string name="project_status_closed">Closed</string>
+    <string name="lbl_invoice_email_address">Invoice email address</string>
 </resources>

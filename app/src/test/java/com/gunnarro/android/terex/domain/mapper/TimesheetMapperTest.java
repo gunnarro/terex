@@ -10,6 +10,7 @@ import com.gunnarro.android.terex.domain.dto.BusinessAddressDto;
 import com.gunnarro.android.terex.domain.dto.ClientDto;
 import com.gunnarro.android.terex.domain.dto.ContactInfoDto;
 import com.gunnarro.android.terex.domain.dto.IntegrationDto;
+import com.gunnarro.android.terex.domain.dto.InvoiceDto;
 import com.gunnarro.android.terex.domain.dto.OrganizationDto;
 import com.gunnarro.android.terex.domain.dto.PersonDto;
 import com.gunnarro.android.terex.domain.dto.PostalAddressDto;
@@ -22,6 +23,7 @@ import com.gunnarro.android.terex.domain.entity.Address;
 import com.gunnarro.android.terex.domain.entity.Client;
 import com.gunnarro.android.terex.domain.entity.ContactInfo;
 import com.gunnarro.android.terex.domain.entity.Integration;
+import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.Organization;
 import com.gunnarro.android.terex.domain.entity.Person;
 import com.gunnarro.android.terex.domain.entity.Project;
@@ -171,6 +173,7 @@ class TimesheetMapperTest {
         assertEquals(1, clientDtos.size());
         assertEquals(33, clientDtos.get(0).getId());
         assertEquals("ACTIVE", clientDtos.get(0).getStatus());
+        assertEquals("invoice@company.org", clientDtos.get(0).getInvoiceEmailAddress());
         assertEquals("gunnarro as", clientDtos.get(0).getName());
         assertEquals(100, clientDtos.get(0).getOrganizationDto().getId());
         assertEquals(900L, clientDtos.get(0).getContactPersonDto().getId());
@@ -422,10 +425,44 @@ class TimesheetMapperTest {
     }
 
 
+    @Test
+    void toInvoiceDto() {
+        Invoice invoice = new Invoice();
+        invoice.setId(23245L);
+        invoice.setVatAmount(2300.23);
+        invoice.setVatPercent(25);
+        invoice.setAmount(12200.50);
+        invoice.setTimesheetId(1111L);
+        invoice.setInvoiceNumber(123456789);
+        invoice.setStatus(Invoice.InvoiceStatusEnum.APPROVED.name());
+        invoice.setInvoiceType(Invoice.InvoiceTypeEnum.INVOICE.name());
+        invoice.setInvoicePeriod("2024/06");
+        invoice.setBillingPeriodStartDate(LocalDate.now());
+        invoice.setBillingPeriodEndDate(LocalDate.now().plusDays(25));
+        invoice.setBillingDate(LocalDate.now());
+        invoice.setCurrency("NOK");
+
+        InvoiceDto invoiceDto = TimesheetMapper.toInvoiceDto(invoice);
+        assertEquals(invoice.getId(), invoiceDto.getId());
+        assertEquals(invoice.getTimesheetId(), invoiceDto.getTimesheetDto().getId());
+        assertEquals(invoice.getVatPercent(), invoiceDto.getVatPercent());
+        assertEquals(invoice.getVatAmount(), invoiceDto.getVatAmount());
+        assertEquals(invoice.getAmount(), invoiceDto.getAmount());
+        assertEquals(invoice.getInvoiceNumber(), invoiceDto.getInvoiceNumber());
+        assertEquals(invoice.getBillingDate(), invoiceDto.getBillingDate());
+        assertEquals(invoice.getBillingPeriodStartDate(), invoiceDto.getBillingPeriodStartDate());
+        assertEquals(invoice.getBillingPeriodEndDate(), invoiceDto.getBillingPeriodEndDate());
+        assertEquals(invoice.getCurrency(), invoiceDto.getCurrency());
+        assertEquals(invoice.getStatus(), invoiceDto.getStatus());
+        assertEquals(invoice.getInvoiceNumber(), invoiceDto.getInvoiceNumber());
+        assertEquals(invoice.getInvoiceType(), invoiceDto.getInvoiceType());
+    }
+
     private Client createClient(Long id, String name) {
         Client client = new Client();
         client.setId(id);
         client.setName(name);
+        client.setInvoiceEmailAddress("invoice@company.org");
         client.setOrganizationId(100L);
         client.setContactPersonId(900L);
         client.setStatus(Client.ClientStatusEnum.ACTIVE.name());

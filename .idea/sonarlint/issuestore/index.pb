@@ -292,8 +292,6 @@ Iapp/src/main/java/com/gunnarro/android/terex/ui/view/ClientViewModel.java,7/0/
 Napp/src/main/java/com/gunnarro/android/terex/ui/adapter/ClientListAdapter.java,c/a/ca22c27bafcc6e362d8ca5d171821196c8bf879c
 z
 Japp/src/main/java/com/gunnarro/android/terex/ui/view/ClientViewHolder.java,0/a/0a3cd1c4dad2b8506997fed4a657bce32856de7c
-N
-app/debug/output-metadata.json,6/d/6d0d047f57b3ed56db47b6d89a6ec6080e4cb494
 
 Oapp/src/main/java/com/gunnarro/android/terex/ui/adapter/ProjectListAdapter.java,6/6/668960098ba251c32e2c42ff8f6c3058d762943d
 {
@@ -392,3 +390,9 @@ Sapp/src/main/java/com/gunnarro/android/terex/ui/adapter/IntegrationListAdapter.
 Napp/src/main/java/com/gunnarro/android/terex/ui/view/IntegrationViewModel.java,a/0/a06d116c960c943356a9cd3541c289ba870ba38b
 
 Oapp/src/main/java/com/gunnarro/android/terex/ui/view/IntegrationViewHolder.java,6/c/6c53ee7cfef26180afff5fc58a90c7353a12c60d
+}
+Mapp/src/test/java/com/gunnarro/android/terex/domain/dto/TimesheetDtoTest.java,9/2/92040b7d5de15c238406173da6401d5fe51b25e5
+ƒ
+Sapp/src/androidTest/java/com/gunnarro/android/terex/service/InvoiceServiceTest.java,4/5/458c9fff49e93a29646bf4d406000899a4219999
+{
+Kapp/src/main/java/com/gunnarro/android/terex/domain/entity/InvoiceLine.java,6/7/67498a9070b50400ceb9681076fefef6d7c1e0a1

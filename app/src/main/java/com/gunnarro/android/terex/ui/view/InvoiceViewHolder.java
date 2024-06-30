@@ -22,7 +22,6 @@ public class InvoiceViewHolder extends RecyclerView.ViewHolder {
     private final TextView invoiceLine2LabelView;
     private final TextView invoiceLine2ValueView;
 
-
     private InvoiceViewHolder(View itemView) {
         super(itemView);
         invoiceLineHeaderView = itemView.findViewById(R.id.invoice_line_header);
@@ -38,10 +37,9 @@ public class InvoiceViewHolder extends RecyclerView.ViewHolder {
         return new InvoiceViewHolder(view);
     }
 
-
     public void bindListLine(InvoiceDto invoiceDto) {
         invoiceLineHeaderView.setText(String.format("%s", invoiceDto.getInvoiceRecipient().getName()));
-        invoiceLine1StatusView.setText(invoiceDto.getBillingDate().format(DateTimeFormatter.ofPattern("MMM", Locale.getDefault())));
+        invoiceLine1StatusView.setText(invoiceDto.getBillingPeriodStartDate().format(DateTimeFormatter.ofPattern("MMM", Locale.getDefault())));
 
         if (invoiceDto.getStatus().equals(InvoiceRepository.InvoiceStatusEnum.NEW.name())) {
             invoiceLine1StatusView.setTextColor(invoiceLine1StatusView.getResources().getColor(R.color.invoice_status_open, null));

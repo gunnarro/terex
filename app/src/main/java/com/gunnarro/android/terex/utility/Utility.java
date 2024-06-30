@@ -32,15 +32,13 @@ import java.util.stream.Stream;
 
 public class Utility {
 
-    @Deprecated
-    public static final Integer DEFAULT_DAILY_BREAK_IN_MINUTES = 30;
     public static final Integer DEFAULT_DAILY_BREAK_IN_SECONDS = 30 * 60;
-    @Deprecated
-    public static final Integer DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES = (8 * 60) - DEFAULT_DAILY_BREAK_IN_MINUTES;
     public static final Long DEFAULT_DAILY_WORKING_HOURS_IN_SECONDS = (long) ((8 * 60 * 60) - DEFAULT_DAILY_BREAK_IN_SECONDS);
     private static final Pattern POSITIVE_INTEGER_PATTERN = Pattern.compile("\\d+");
     private static final String DATE_TIME_PATTERN = "dd-MM-yyyy HH:mm";
+
     private static final String DATE_PATTERN = "dd-MM-yyyy";
+    public static final String MONTH_YEAR_DATE_PATTERN = "MMMM yyyy";
     private static final String TIME_PATTERN = "HH:mm";
     private static String currentUUID;
 
@@ -100,7 +98,7 @@ public class Utility {
         int hh = Integer.parseInt(HHmm[0]);
         int mm = Integer.parseInt(HHmm[1]);
 
-        return (long)LocalTime.of(hh, mm*60/10).toSecondOfDay();
+        return (long) LocalTime.of(hh, mm * 60 / 10).toSecondOfDay();
     }
 
     public static String formatDateTime(LocalDateTime localDateTime) {
@@ -136,6 +134,7 @@ public class Utility {
     }
 
     public static String formatDate(LocalDate localDate) {
+        Log.d("formatDate", "format date: " + localDate);
         if (localDate != null) {
             return localDate.format(DateTimeFormatter.ofPattern(DATE_PATTERN));
         }

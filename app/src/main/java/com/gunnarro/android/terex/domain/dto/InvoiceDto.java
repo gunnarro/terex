@@ -10,8 +10,8 @@ import java.util.Objects;
 public class InvoiceDto {
 
     private Long id;
-    @NotNull
-    private Timesheet timesheet;
+
+    private TimesheetDto timesheetDto;
     /**
      * invoice recipient : fakturamottaker
      */
@@ -29,14 +29,13 @@ public class InvoiceDto {
     private String status;
     @NotNull
     private LocalDate billingDate;
-
     private LocalDate billingPeriodStartDate;
-
     private LocalDate billingPeriodEndDate;
     @NotNull
     private LocalDate dueDate;
+    private int vatPercent;
     @NotNull
-    private double vat;
+    private double vatAmount;
     @NotNull
     private double amount;
     /**
@@ -44,6 +43,8 @@ public class InvoiceDto {
      */
     @NotNull
     private String currency;
+
+    private String invoiceType;
 
     public Long getId() {
         return id;
@@ -53,12 +54,12 @@ public class InvoiceDto {
         this.id = id;
     }
 
-    public Timesheet getTimesheet() {
-        return timesheet;
+    public TimesheetDto getTimesheetDto() {
+        return timesheetDto;
     }
 
-    public void setTimesheet(Timesheet timesheet) {
-        this.timesheet = timesheet;
+    public void setTimesheetDto(TimesheetDto timesheetDto) {
+        this.timesheetDto = timesheetDto;
     }
 
     public ClientDto getInvoiceRecipient() {
@@ -133,12 +134,20 @@ public class InvoiceDto {
         this.dueDate = dueDate;
     }
 
-    public double getVat() {
-        return vat;
+    public int getVatPercent() {
+        return vatPercent;
     }
 
-    public void setVat(double vat) {
-        this.vat = vat;
+    public void setVatPercent(int vatPercent) {
+        this.vatPercent = vatPercent;
+    }
+
+    public double getVatAmount() {
+        return vatAmount;
+    }
+
+    public void setVatAmount(double vatAmount) {
+        this.vatAmount = vatAmount;
     }
 
     public double getAmount() {
@@ -157,16 +166,24 @@ public class InvoiceDto {
         this.currency = currency;
     }
 
+    public String getInvoiceType() {
+        return invoiceType;
+    }
+
+    public void setInvoiceType(String invoiceType) {
+        this.invoiceType = invoiceType;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         InvoiceDto that = (InvoiceDto) o;
-        return Objects.equals(timesheet, that.timesheet);
+        return Objects.equals(timesheetDto, that.timesheetDto);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(timesheet);
+        return Objects.hash(timesheetDto);
     }
 }

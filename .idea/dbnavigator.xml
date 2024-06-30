@@ -36,6 +36,9 @@
     <last-used-operator value="EQUAL" />
     <filters />
   </component>
+  <component name="DBNavigator.Project.ScriptExecutionManager" clear-outputs="true">
+    <recently-used-interfaces />
+  </component>
   <component name="DBNavigator.Project.Settings">
     <connections>
       <connection id="d9f7f9fe-cae1-43c9-9088-b6ce260e0cdf" active="true" signed="true">
@@ -44,7 +47,7 @@
           <description value="" />
           <database-type value="SQLITE" />
           <config-type value="BASIC" />
-          <database-version value="3.44" />
+          <database-version value="3.45" />
           <driver-source value="BUNDLED" />
           <driver-library value="" />
           <driver value="" />
@@ -105,6 +108,7 @@
           <debugger-type value="ASK" />
         </debugger>
         <object-filters hide-empty-schemas="false" hide-pseudo-columns="false" hide-audit-columns="false">
+          <object-filters />
           <object-type-filter use-master-settings="true">
             <object-type name="SCHEMA" enabled="true" />
             <object-type name="USER" enabled="true" />
@@ -132,7 +136,6 @@
             <object-type name="CLUSTER" enabled="true" />
             <object-type name="DBLINK" enabled="true" />
           </object-type-filter>
-          <object-name-filters />
         </object-filters>
       </connection>
     </connections>
@@ -141,6 +144,7 @@
         <display-mode value="TABBED" />
         <navigation-history-size value="100" />
         <show-object-details value="false" />
+        <enable-sticky-paths value="true" />
       </general>
       <filters>
         <object-type-filter>

@@ -97,6 +97,10 @@ public class FunctionalTest extends IntegrationTestSetup {
         assertEquals(timesheetId, invoice.getTimesheetId());
         assertEquals(userAccountId, invoice.getIssuerId());
         assertEquals(clientId, invoice.getRecipientId());
+        assertEquals(25, invoice.getVatPercent());
+        assertEquals("NOK", invoice.getCurrency());
+        assertEquals(9375.0, invoice.getAmount(), 0.0);
+        assertEquals(2343.75, invoice.getVatAmount(), 0.0);
         assertEquals(InvoiceRepository.InvoiceStatusEnum.COMPLETED.name(), invoice.getStatus());
         // try to delete timesheet after billing, not allowed
         try {

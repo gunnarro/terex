@@ -48,6 +48,9 @@ public class Client extends BaseEntity {
     @ColumnInfo(name = "invoice_type")
     private String invoiceType;
 
+    @ColumnInfo(name = "invoice_email_address")
+    private String invoiceEmailAddress;
+
     public Long getOrganizationId() {
         return organizationId;
     }
@@ -86,6 +89,14 @@ public class Client extends BaseEntity {
 
     public void setInvoiceType(String invoiceType) {
         this.invoiceType = invoiceType;
+    }
+
+    public String getInvoiceEmailAddress() {
+        return invoiceEmailAddress;
+    }
+
+    public void setInvoiceEmailAddress(String invoiceEmailAddress) {
+        this.invoiceEmailAddress = invoiceEmailAddress;
     }
 
     @Override

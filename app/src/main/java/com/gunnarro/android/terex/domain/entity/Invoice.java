@@ -86,8 +86,11 @@ public class Invoice extends BaseEntity {
     @ColumnInfo(name = "due_date")
     private LocalDate dueDate;
     @NotNull
-    @ColumnInfo(name = "vat")
-    private double vat;
+    @ColumnInfo(name = "vat_percent")
+    private int vatPercent;
+    @NotNull
+    @ColumnInfo(name = "vat_amount")
+    private double vatAmount;
     @NotNull
     @ColumnInfo(name = "amount", defaultValue = "0")
     private double amount;
@@ -178,12 +181,20 @@ public class Invoice extends BaseEntity {
         this.dueDate = dueDate;
     }
 
-    public double getVat() {
-        return vat;
+    public double getVatAmount() {
+        return vatAmount;
     }
 
-    public void setVat(double vat) {
-        this.vat = vat;
+    public void setVatAmount(double vatAmount) {
+        this.vatAmount = vatAmount;
+    }
+
+    public int getVatPercent() {
+        return vatPercent;
+    }
+
+    public void setVatPercent(int vatPercent) {
+        this.vatPercent = vatPercent;
     }
 
     public double getAmount() {

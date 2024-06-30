@@ -24,6 +24,12 @@ public class TimesheetDto {
     private Integer vacationDays;
     private String description;
 
+    public TimesheetDto() {}
+
+    public TimesheetDto(Long id) {
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }

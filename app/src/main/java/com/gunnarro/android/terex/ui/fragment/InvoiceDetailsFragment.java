@@ -23,6 +23,7 @@ import android.widget.Spinner;
 import androidx.annotation.NonNull;
 
 import com.gunnarro.android.terex.R;
+import com.gunnarro.android.terex.domain.dto.InvoiceDto;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.service.InvoiceService;
 import com.gunnarro.android.terex.ui.MainActivity;
@@ -82,7 +83,11 @@ public class InvoiceDetailsFragment extends BaseFragment {
         if (item.getItemId() == R.id.attachment_to_pdf) {
             exportAttachment(selectedInvoiceAttachmentType.name(), selectedInvoiceAttachmentType.getFileName());
         } else if (item.getItemId() == R.id.send_email) {
-            sendInvoiceToClient("gunnar_ronneberg@yahoo.no", "Vedlegg til faktura for juni 2024", "Vedlegg til faktur for 2024/6", readFile(selectedInvoiceAttachmentType.getFileName()));
+            InvoiceDto invoiceDto = invoiceService.getInvoiceDto(invoiceId);
+            String billingPeriod = invoiceDto.getBillingPeriodStartDate().format(DateTimeFormatter.ofPattern(Utility.MONTH_YEAR_DATE_PATTERN));
+            String emailSubject = String.format("Fakturavedlegg %s", billingPeriod);
+            String emailMessage = String.format("Hei,\nHer kommer vedlegg til faktura for %s \n\nFaktura skal sendes per epost til:\n%s\n\nHilsen\nGunnar Rønneberg\ngunnarro as", billingPeriod, invoiceDto.getInvoiceRecipient().getInvoiceEmailAddress());
+            sendInvoiceToClient("post@regnskapsservice1.no", emailSubject, emailMessage, readFile(selectedInvoiceAttachmentType.getFileName()));
         }
         return true;
     }
@@ -168,7 +173,7 @@ public class InvoiceDetailsFragment extends BaseFragment {
         email.putExtra(Intent.EXTRA_EMAIL, new String[]{toEmailAddress});
         email.putExtra(Intent.EXTRA_SUBJECT, subject);
         email.putExtra(Intent.EXTRA_TEXT, message);
-        // email.putExtra(Intent.EXTRA_STREAM, pdfFile);
+        email.putExtra(Intent.EXTRA_STREAM, pdfFile);
         // need this to prompts email client only
         email.setType("message/rfc822");
         startActivity(Intent.createChooser(email, "Choose Email client:"));

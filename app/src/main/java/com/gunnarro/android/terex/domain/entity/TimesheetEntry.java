@@ -245,7 +245,7 @@ public class TimesheetEntry extends BaseEntity {
         timesheetEntry.setWorkdayWeek(timesheetEntry.getWorkdayDate().get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()));
         // add 7,5 hours
         timesheetEntry.setStartTime(LocalTime.now(ZoneId.systemDefault()).withHour(8).withMinute(0).withSecond(0).withSecond(0).withNano(0));
-        timesheetEntry.setEndTime(timesheetEntry.getStartTime().plusMinutes(Utility.DEFAULT_DAILY_WORKING_HOURS_IN_MINUTES));
+        timesheetEntry.setEndTime(timesheetEntry.getStartTime().plusSeconds(Utility.DEFAULT_DAILY_WORKING_HOURS_IN_SECONDS));
         timesheetEntry.setWorkedSeconds((Utility.DEFAULT_DAILY_WORKING_HOURS_IN_SECONDS));
         timesheetEntry.setBreakSeconds((Utility.DEFAULT_DAILY_BREAK_IN_SECONDS));
         return timesheetEntry;

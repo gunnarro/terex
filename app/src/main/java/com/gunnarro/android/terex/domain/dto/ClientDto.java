@@ -16,6 +16,7 @@ public class ClientDto {
     private Long id;
     private String name;
     private String status;
+    private String invoiceEmailAddress;
     private PersonDto contactPersonDto;
     private OrganizationDto organizationDto;
     private List<ProjectDto> projectList;
@@ -47,6 +48,14 @@ public class ClientDto {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getInvoiceEmailAddress() {
+        return invoiceEmailAddress;
+    }
+
+    public void setInvoiceEmailAddress(String invoiceEmailAddress) {
+        this.invoiceEmailAddress = invoiceEmailAddress;
     }
 
     public OrganizationDto getOrganizationDto() {

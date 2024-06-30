@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 
 import com.gunnarro.android.terex.TestData;
 import com.gunnarro.android.terex.domain.dto.ClientDto;
+import com.gunnarro.android.terex.domain.dto.TimesheetDto;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
 import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
@@ -22,6 +23,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
@@ -56,13 +58,18 @@ class InvoiceServiceTest {
 
     @Test
     void createInvoice() {
-        TimesheetSummary timesheetSummaryWeek1 = TestData.createTimesheetSummary(22L);
+        long timesheetId = 22L;
+        TimesheetSummary timesheetSummaryWeek1 = TestData.createTimesheetSummary(timesheetId);
 
         ClientDto clientDto = new ClientDto(null);
         clientDto.setId(234L);
 
+        TimesheetDto timesheetDto = new TimesheetDto(timesheetId);
+        timesheetDto.setFromDate(LocalDate.of(2024, 6, 1));
+        timesheetDto.setToDate(LocalDate.of(2024, 6, 30));
+
         List<TimesheetSummary> timesheetSummaries = List.of(timesheetSummaryWeek1);
-        Long timesheetId = 1L;
+        when(timesheetServiceMock.getTimesheetDto(anyLong())).thenReturn(timesheetDto);
         when(timesheetServiceMock.createTimesheetSummaryForBilling(anyLong(), anyInt())).thenReturn(TimesheetMapper.toTimesheetSummaryDtoList(timesheetSummaries));
         when(invoiceRepositoryMock.saveInvoice(any())).thenReturn(23L);
         Long invoiceId = invoiceService.createInvoice(timesheetId, 100L, 200L, 1250);

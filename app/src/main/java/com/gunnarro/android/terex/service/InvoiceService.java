@@ -6,6 +6,7 @@ import androidx.room.Transaction;
 
 import com.gunnarro.android.terex.domain.dto.ClientDto;
 import com.gunnarro.android.terex.domain.dto.InvoiceDto;
+import com.gunnarro.android.terex.domain.dto.TimesheetDto;
 import com.gunnarro.android.terex.domain.dto.TimesheetSummaryDto;
 import com.gunnarro.android.terex.domain.dto.UserAccountDto;
 import com.gunnarro.android.terex.domain.entity.Invoice;
@@ -22,7 +23,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -31,6 +31,10 @@ import kotlin.random.Random;
 
 @Singleton
 public class InvoiceService {
+
+    private static final int VAT_PERCENTAGE = 25;
+    private static final int DUE_DATE_DAYS = 30;
+    private static final String CURRENCY = "NOK";
 
     public enum InvoiceAttachmentTypesEnum {
         CLIENT_TIMESHEET("template/html/default-client-timesheet.mustache"),
@@ -115,6 +119,7 @@ public class InvoiceService {
 
     @Transaction
     public Long createInvoice(@NotNull Long invoiceIssuerId, @NotNull Long clientId, @NotNull Long timesheetId, @NotNull Integer hourlyRate) {
+        TimesheetDto timesheetDto = timesheetService.getTimesheetDto(timesheetId);
         // first accumulate timesheet entries
         List<TimesheetSummaryDto> timesheetSummaryDtoList = timesheetService.createTimesheetSummaryForBilling(timesheetId, hourlyRate);
         // there after create the invoice
@@ -124,19 +129,21 @@ public class InvoiceService {
         invoice.setRecipientId(clientId);
         invoice.setIssuerId(invoiceIssuerId);
         // ensure that a timesheet is only billed once.
-        //invoice.setReference(String.format("%s-%s", client.getName(), timesheetId));
         invoice.setStatus(InvoiceRepository.InvoiceStatusEnum.NEW.name());
         // The date when the customer is billed
         invoice.setBillingDate(LocalDate.now());
         invoice.setInvoicePeriod(Invoice.InvoicePeriodEnum.MONTH.name());
-        invoice.setBillingPeriodStartDate(null);
-        invoice.setBillingPeriodEndDate(null);
+        invoice.setBillingPeriodStartDate(timesheetDto.getFromDate());
+        invoice.setBillingPeriodEndDate(timesheetDto.getToDate());
         // due date is defaulted to 10 days after billing date
-        invoice.setDueDate(invoice.getBillingDate().plusDays(10));
+        invoice.setDueDate(invoice.getBillingDate().plusDays(DUE_DATE_DAYS));
         // do the billing part, i.e calculate the billing amount.
         double sumAmount = timesheetSummaryDtoList.stream().mapToDouble(TimesheetSummaryDto::getBilledAmount).sum();
+        double sumVat = sumAmount * ((double) VAT_PERCENTAGE / 100);
+        invoice.setVatPercent(VAT_PERCENTAGE);
         invoice.setAmount(sumAmount);
-        invoice.setCurrency("NOK");
+        invoice.setVatAmount(sumVat);
+        invoice.setCurrency(CURRENCY);
         invoice.setStatus(InvoiceRepository.InvoiceStatusEnum.COMPLETED.name());
         return invoiceRepository.saveInvoice(invoice);
     }
@@ -154,7 +161,7 @@ public class InvoiceService {
 
             String invoiceSummaryHtml = timesheetService.createTimesheetSummaryAttachmentHtml(invoice.getTimesheetId(), invoiceIssuer, invoiceReceiver, timesheetSummaryTemplate);
             Log.d("createInvoiceSummaryAttachment", invoiceSummaryHtml);
-            String invoiceAttachmentFileName = InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.name().toLowerCase(Locale.getDefault()) + "_attachment_" + invoice.getBillingDate().format(DateTimeFormatter.ofPattern("yyyy-MM"));
+            String invoiceAttachmentFileName = String.format("%s_fakturerte_timer_%s", invoiceReceiver.getName().replace(" ", "_").toLowerCase(), invoice.getBillingPeriodStartDate().format(DateTimeFormatter.ofPattern("yyyy-MM")));
 
             InvoiceAttachment timesheetSummaryAttachment = new InvoiceAttachment();
             timesheetSummaryAttachment.setInvoiceId(invoiceId);
@@ -168,7 +175,6 @@ public class InvoiceService {
         }
     }
 
-
     /**
      * The timesheet should contain an entry for all days in the month.
      * Days not worked, sick, or vacation are simple blank.
@@ -176,7 +182,9 @@ public class InvoiceService {
     public Long createClientTimesheetAttachment(Long invoiceId, Long timesheetId, String clientTimesheetTemplate) {
         try {
             String timesheetAttachmentHtml = timesheetService.createTimesheetListHtml(timesheetId, clientTimesheetTemplate);
-            String timesheetAttachmentFileName = InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.name().toLowerCase(Locale.getDefault()) + "_attachment_" + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
+            InvoiceDto invoiceDto = getInvoiceDto(invoiceId);
+            String timesheetAttachmentFileName = String.format("%s_timeliste_%s", invoiceDto.getInvoiceRecipient().getName().replace(" ", "_").toLowerCase(), invoiceDto.getBillingPeriodStartDate().format(DateTimeFormatter.ofPattern("yyyy-MM")));
+
             InvoiceAttachment clientTimesheetAttachment = new InvoiceAttachment();
             clientTimesheetAttachment.setInvoiceId(invoiceId);
             clientTimesheetAttachment.setType(InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.name());

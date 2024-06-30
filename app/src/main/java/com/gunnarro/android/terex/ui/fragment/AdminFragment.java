@@ -91,8 +91,6 @@ public class AdminFragment extends BaseFragment {
         });
 
         view.findViewById(R.id.btn_settings).setOnClickListener(v -> {
-            generateTestData();
-            showInfoDialog("INFO", "generated test data!");
         });
 
         Log.d(Utility.buildTag(getClass(), "onCreateView"), "");
@@ -108,6 +106,9 @@ public class AdminFragment extends BaseFragment {
         this.navController = Navigation.findNavController(view);
     }
 
+    // ---------------------------------------------------
+    // adds a bunch of timesheet, only for load test
+    // ---------------------------------------------------
     private void generateTestData() {
         // create a client
         ClientDto clientDto = new ClientDto(null);
@@ -180,5 +181,4 @@ public class AdminFragment extends BaseFragment {
         timesheetEntryList.sort(Comparator.comparing(TimesheetEntry::getWorkdayDate));
         return timesheetEntryList;
     }
-
 }

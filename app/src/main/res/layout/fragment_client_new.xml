@@ -204,13 +204,38 @@
                     android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
+        <!-- invoice address -->
+        <LinearLayout
+            android:id="@+id/client_new_invoice_address_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/client_new_org_address_layout"
+            android:layout_margin="10dp"
+            android:baselineAligned="false"
+            android:orientation="vertical">
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/client_new_invoice_email_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:hint="@string/lbl_invoice_email_address">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/client_new_invoice_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
         <!-- org contact person -->
         <LinearLayout
             android:id="@+id/client_new_contact_person_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/client_new_org_address_layout"
+            android:layout_below="@id/client_new_invoice_address_layout"
             android:layout_margin="10dp"
             android:baselineAligned="false"
             android:orientation="vertical">
