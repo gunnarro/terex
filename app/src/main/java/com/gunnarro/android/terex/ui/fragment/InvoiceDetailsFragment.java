@@ -33,7 +33,6 @@ import com.gunnarro.android.terex.utility.Utility;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -156,10 +155,9 @@ public class InvoiceDetailsFragment extends BaseFragment {
     }
 
     private void exportAttachment(String fileName) {
-        String invoiceAttachmentFileName = fileName + "_" + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
         PrintManager printManager = (PrintManager) getActivity().getSystemService(Context.PRINT_SERVICE);
         WebView webView = requireView().findViewById(R.id.invoice_web_view);
-        PrintDocumentAdapter printAdapter = webView.createPrintDocumentAdapter(invoiceAttachmentFileName);
+        PrintDocumentAdapter printAdapter = webView.createPrintDocumentAdapter(fileName);
 
         PrintAttributes printAttributes = new PrintAttributes.Builder()
                 .setMediaSize(PrintAttributes.MediaSize.ISO_A4)
@@ -167,7 +165,7 @@ public class InvoiceDetailsFragment extends BaseFragment {
                 .setMinMargins(PrintAttributes.Margins.NO_MARGINS)
                 .build();
 
-        PrintJob printJob = printManager.print(invoiceAttachmentFileName, printAdapter, printAttributes);
+        PrintJob printJob = printManager.print(fileName, printAdapter, printAttributes);
         Log.d("exportAttachment", "printJob status=" + printJob.isCompleted());
     }
 

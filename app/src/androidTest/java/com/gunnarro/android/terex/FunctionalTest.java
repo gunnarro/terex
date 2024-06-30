@@ -84,12 +84,14 @@ public class FunctionalTest extends IntegrationTestSetup {
         Long timesheetSummaryAttachmentId = invoiceService.createTimesheetSummaryAttachment(invoiceId, timesheetSummaryMustacheTemplate);
         assertNotNull(timesheetSummaryAttachmentId);
         InvoiceAttachment timesheetSummaryAttachment = invoiceService.getInvoiceAttachment(invoiceId, InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY, InvoiceService.InvoiceAttachmentFileTypes.HTML);
+        assertEquals("client-company-name_fakturerte_timer_2024-01", timesheetSummaryAttachment.getFileName());
         assertNotNull(timesheetSummaryAttachment.getFileContent());
         // create client timesheet pdf and timesheet summery pdf, used as attachment for the invoice
         String clientTimesheetMustacheTemplate = Utility.loadMustacheTemplate(ApplicationProvider.getApplicationContext(), InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET);
         Long invoiceAttachmentId = invoiceService.createClientTimesheetAttachment(invoiceId, timesheetId, clientTimesheetMustacheTemplate);
         assertNotNull(invoiceAttachmentId);
         InvoiceAttachment clientTimesheetAttachment = invoiceService.getInvoiceAttachment(invoiceId, InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET, InvoiceService.InvoiceAttachmentFileTypes.HTML);
+        assertEquals("client-company-name_timeliste_2024-01", clientTimesheetAttachment.getFileName());
         assertNotNull(clientTimesheetAttachment.getFileContent());
         // check invoice status
         Invoice invoice = invoiceService.getInvoice(invoiceId);
