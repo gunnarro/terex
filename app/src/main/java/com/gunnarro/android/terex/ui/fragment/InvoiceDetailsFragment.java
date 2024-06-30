@@ -24,6 +24,7 @@ import androidx.annotation.NonNull;
 
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.dto.InvoiceDto;
+import com.gunnarro.android.terex.domain.entity.InvoiceAttachment;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.service.InvoiceService;
 import com.gunnarro.android.terex.ui.MainActivity;
@@ -47,6 +48,7 @@ public class InvoiceDetailsFragment extends BaseFragment {
     private List<InvoiceService.InvoiceAttachmentTypesEnum> invoiceAttachmentTypes;
     private InvoiceService.InvoiceAttachmentTypesEnum selectedInvoiceAttachmentType = InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY;
     private Long invoiceId;
+    private InvoiceAttachment selectedInvoiceAttachment;
 
     @Inject
     public InvoiceDetailsFragment() {
@@ -81,7 +83,7 @@ public class InvoiceDetailsFragment extends BaseFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         if (item.getItemId() == R.id.attachment_to_pdf) {
-            exportAttachment(selectedInvoiceAttachmentType.name(), selectedInvoiceAttachmentType.getFileName());
+            exportAttachment(selectedInvoiceAttachment.getFileName());
         } else if (item.getItemId() == R.id.send_email) {
             InvoiceDto invoiceDto = invoiceService.getInvoiceDto(invoiceId);
             String billingPeriod = invoiceDto.getBillingPeriodStartDate().format(DateTimeFormatter.ofPattern(Utility.MONTH_YEAR_DATE_PATTERN));
@@ -139,20 +141,21 @@ public class InvoiceDetailsFragment extends BaseFragment {
         invoiceAttachmentTypes = invoiceService.getInvoiceAttachmentTypes();
         byte[] invoiceAttachmentHtml = null;
         try {
-            invoiceAttachmentHtml = invoiceService.getInvoiceAttachment(invoiceId, invoiceAttachmentType, InvoiceService.InvoiceAttachmentFileTypes.HTML).getFileContent();
+            selectedInvoiceAttachment = invoiceService.getInvoiceAttachment(invoiceId, invoiceAttachmentType, InvoiceService.InvoiceAttachmentFileTypes.HTML);
+            invoiceAttachmentHtml = selectedInvoiceAttachment.getFileContent();
         } catch (Exception e) {
             showInfoDialog("Error", String.format("Application error!%sError: %s%s Please report.", e.getMessage(), System.lineSeparator(), System.lineSeparator()));
         }
 
-        Log.d("", "html=" + new String(invoiceAttachmentHtml));
+        Log.d("loadInvoiceAttachment", "html=" + new String(invoiceAttachmentHtml));
         webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
         webView.getSettings().setJavaScriptEnabled(false);
         webView.getSettings().setLoadsImagesAutomatically(true);
-        Log.d("invoice timesheet attachment", String.format("%s", new String(invoiceAttachmentHtml)));
+        Log.d("loadInvoiceAttachment", String.format("%s", new String(invoiceAttachmentHtml)));
         webView.loadDataWithBaseURL("file:///android_asset/", new String(invoiceAttachmentHtml), "text/html", "UTF-8", null);
     }
 
-    private void exportAttachment(String invoiceAttachmentType, String fileName) {
+    private void exportAttachment(String fileName) {
         String invoiceAttachmentFileName = fileName + "_" + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
         PrintManager printManager = (PrintManager) getActivity().getSystemService(Context.PRINT_SERVICE);
         WebView webView = requireView().findViewById(R.id.invoice_web_view);
@@ -178,7 +181,6 @@ public class InvoiceDetailsFragment extends BaseFragment {
         email.setType("message/rfc822");
         startActivity(Intent.createChooser(email, "Choose Email client:"));
     }
-
 
     private File readFile(String fileName) {
         try {

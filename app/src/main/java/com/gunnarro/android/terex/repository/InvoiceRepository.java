@@ -3,7 +3,6 @@ package com.gunnarro.android.terex.repository;
 import android.util.Log;
 
 import com.gunnarro.android.terex.config.AppDatabase;
-import com.gunnarro.android.terex.domain.entity.ContactInfo;
 import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.InvoiceAttachment;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
