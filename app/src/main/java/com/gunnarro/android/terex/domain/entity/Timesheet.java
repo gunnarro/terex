@@ -17,6 +17,7 @@ import java.util.Objects;
 import lombok.Getter;
 import lombok.Setter;
 
+// TODO remove both client_id and project_id,not needed after remodelling
 /**
  * Timesheet is the top level class used to track the time a particular employee has worked during a certain period.
  * typically there is one timesheet per month.
@@ -53,9 +54,11 @@ public class Timesheet extends BaseEntity {
     @NotNull
     @ColumnInfo(name = "user_account_id")
     private Long userId;
+    @Deprecated
     @NotNull
     @ColumnInfo(name = "client_id")
     private Long clientId;
+    @Deprecated
     @NotNull
     @ColumnInfo(name = "project_id")
     private Long projectId;
