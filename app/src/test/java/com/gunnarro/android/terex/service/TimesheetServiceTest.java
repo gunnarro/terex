@@ -107,9 +107,9 @@ class TimesheetServiceTest {
         Timesheet timesheet = Timesheet.createDefault(100L, 200L, 2023, 11);
         timesheet.setId(23L);
         timesheet.setStatus(Timesheet.TimesheetStatusEnum.ACTIVE.name());
-        TimesheetEntry timesheetEntry1 = TimesheetEntry.createDefault(1L, LocalDate.now());
+        TimesheetEntry timesheetEntry1 = TimesheetEntry.createDefault(1L, 11L, LocalDate.now());
         timesheetEntry1.setWorkedSeconds((long) 450 * 60);
-        TimesheetEntry timesheetEntry2 = TimesheetEntry.createDefault(2L, LocalDate.now());
+        TimesheetEntry timesheetEntry2 = TimesheetEntry.createDefault(2L, 11L, LocalDate.now());
         timesheetEntry2.setWorkedSeconds((long) 450 * 60);
 
 //        when(timesheetRepositoryMock.getTimesheetEntryList(any())).thenReturn(List.of(timesheetEntry1, timesheetEntry2));
@@ -130,8 +130,8 @@ class TimesheetServiceTest {
         Timesheet timesheet = Timesheet.createDefault(100L, 200L, 2023, 11);
         timesheet.setId(23L);
         timesheet.setStatus(Timesheet.TimesheetStatusEnum.ACTIVE.name());
-        TimesheetEntry timesheetEntry1 = TimesheetEntry.createDefault(1L, LocalDate.now());
-        TimesheetEntry timesheetEntry2 = TimesheetEntry.createDefault(2L, LocalDate.now());
+        TimesheetEntry timesheetEntry1 = TimesheetEntry.createDefault(1L, 11L, LocalDate.now());
+        TimesheetEntry timesheetEntry2 = TimesheetEntry.createDefault(2L, 11L, LocalDate.now());
         // simulate worked hours for a month
         timesheetEntry1.setWorkedSeconds((long) 5080 * 60);
         timesheetEntry2.setWorkedSeconds((long) 5080 * 60);
@@ -180,9 +180,9 @@ class TimesheetServiceTest {
 
     @Test
     void saveTimesheetEntry_new_already_exist() throws ExecutionException, InterruptedException {
-        TimesheetEntry timesheetEntryExisting = TimesheetEntry.createDefault(23L, LocalDate.of(2023, 12, 2));
+        TimesheetEntry timesheetEntryExisting = TimesheetEntry.createDefault(23L, 11L, LocalDate.of(2023, 12, 2));
         timesheetEntryExisting.setStatus(TimesheetEntry.TimesheetEntryStatusEnum.CLOSED.name());
-        TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(null, LocalDate.now());
+        TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(null, null, LocalDate.now());
 
         when(timesheetRepositoryMock.getTimesheetEntry(timesheetEntry.getTimesheetId(), timesheetEntry.getWorkdayDate())).thenReturn(timesheetEntryExisting);
         InputValidationException ex = assertThrows(InputValidationException.class, () -> {
@@ -196,7 +196,7 @@ class TimesheetServiceTest {
     void saveTimesheetEntry_work_date_after_timesheet_to_date() throws ExecutionException, InterruptedException {
         Timesheet timesheet = Timesheet.createDefault(100L, 200L, 2023, 11);
         timesheet.setId(1L);
-        TimesheetEntry timesheetEntryAfterToDate = TimesheetEntry.createDefault(timesheet.getId(), LocalDate.of(2023, 12, 21));
+        TimesheetEntry timesheetEntryAfterToDate = TimesheetEntry.createDefault(timesheet.getId(), timesheet.getProjectId(), LocalDate.of(2023, 12, 21));
 
         when(timesheetRepositoryMock.getTimesheet(anyLong())).thenReturn(timesheet);
         when(timesheetRepositoryMock.getTimesheetEntry(timesheetEntryAfterToDate.getTimesheetId(), timesheetEntryAfterToDate.getWorkdayDate())).thenReturn(null);
@@ -210,7 +210,7 @@ class TimesheetServiceTest {
     void saveTimesheetEntry_work_date_before_timesheet_from_date() throws ExecutionException, InterruptedException {
         Timesheet timesheet = Timesheet.createDefault(100L, 200L, 2023, 11);
         timesheet.setId(1L);
-        TimesheetEntry timesheetEntryBeforeFromDate = TimesheetEntry.createDefault(timesheet.getId(), LocalDate.of(2023, 10, 2));
+        TimesheetEntry timesheetEntryBeforeFromDate = TimesheetEntry.createDefault(timesheet.getId(), timesheet.getProjectId(), LocalDate.of(2023, 10, 2));
         when(timesheetRepositoryMock.getTimesheet(anyLong())).thenReturn(timesheet);
         when(timesheetRepositoryMock.getTimesheetEntry(timesheetEntryBeforeFromDate.getTimesheetId(), timesheetEntryBeforeFromDate.getWorkdayDate())).thenReturn(null);
         InputValidationException ex = assertThrows(InputValidationException.class, () -> {
@@ -221,7 +221,7 @@ class TimesheetServiceTest {
 
     @Test
     void deleteTimesheetEntry_status_not_allowed() {
-        TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(23L, LocalDate.of(2023, 12, 2));
+        TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(23L, 11L, LocalDate.of(2023, 12, 2));
         timesheetEntry.setId(11L);
         timesheetEntry.setStatus(TimesheetEntry.TimesheetEntryStatusEnum.CLOSED.name());
 
@@ -251,7 +251,7 @@ class TimesheetServiceTest {
         Timesheet timesheetExisting = Timesheet.createDefault(100L, 200L, 2023, 11);
         timesheetExisting.setId(23L);
         timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
-        TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(timesheetExisting.getId(), LocalDate.of(2023, 12, 21));
+        TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(timesheetExisting.getId(), timesheetExisting.getProjectId(), LocalDate.of(2023, 12, 21));
         timesheetEntry.setWorkedSeconds((long) 450 * 60);
         timesheetEntry.setBreakSeconds(30 * 60);
 
@@ -284,7 +284,7 @@ class TimesheetServiceTest {
         // Set timesheet ready for billing
         timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
         // create regular time sheet entry, i.e, worked 7.5 hours and 30 min break
-        TimesheetEntry regularTimesheetEntry = TimesheetEntry.createDefault(timesheetExisting.getId(), LocalDate.of(month.getYear(), month.getMonthValue(), 21));
+        TimesheetEntry regularTimesheetEntry = TimesheetEntry.createDefault(timesheetExisting.getId(), timesheetExisting.getProjectId(), LocalDate.of(month.getYear(), month.getMonthValue(), 21));
         regularTimesheetEntry.setWorkedSeconds((long) 450 * 60);
         regularTimesheetEntry.setBreakSeconds(30 * 60);
 
@@ -320,7 +320,7 @@ class TimesheetServiceTest {
         // Set timesheet ready for billing
         timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
         // create regular time sheet entry, i.e, worked 7.5 hours and 30 min break
-        TimesheetEntry regularTimesheetEntry = TimesheetEntry.createDefault(timesheetExisting.getId(), LocalDate.of(month.getYear(), month.getMonthValue(), 21));
+        TimesheetEntry regularTimesheetEntry = TimesheetEntry.createDefault(timesheetExisting.getId(), timesheetExisting.getProjectId(), LocalDate.of(month.getYear(), month.getMonthValue(), 21));
         regularTimesheetEntry.setWorkedSeconds((long) 450 * 60);
         regularTimesheetEntry.setBreakSeconds(30 * 60);
 
@@ -363,7 +363,7 @@ class TimesheetServiceTest {
         // Set timesheet ready for billing
         timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
         // create regular time sheet entry, i.e, worked 7.5 hours and 30 min break
-        TimesheetEntry regularTimesheetEntry = TimesheetEntry.createDefault(timesheetExisting.getId(), LocalDate.of(month.getYear(), month.getMonthValue(), 21));
+        TimesheetEntry regularTimesheetEntry = TimesheetEntry.createDefault(timesheetExisting.getId(), timesheetExisting.getProjectId(), LocalDate.of(month.getYear(), month.getMonthValue(), 21));
         regularTimesheetEntry.setWorkedSeconds((long) 450 * 60);
         regularTimesheetEntry.setBreakSeconds(30 * 60);
 
@@ -431,7 +431,11 @@ class TimesheetServiceTest {
 
         String clientTimesheetMustacheTemplate = loadMustacheTemplate(applicationContextMock, InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET);
 
-        String templateHtml = timesheetService.createTimesheetListHtml(23L, clientTimesheetMustacheTemplate);
+        ClientDto clientDto = TestData.createClientDto(100L, "Software Development AS");
+        clientDto.setOrganizationDto(TestData.createOrganizationDto(234L, "Customer Ogr Name", "123456789"));
+        UserAccountDto userAccountDto = TestData.createUserAccountDto(300L, "Gunnar Besseheim");
+
+        String templateHtml = timesheetService.createTimesheetListHtml(23L, userAccountDto, clientDto, clientTimesheetMustacheTemplate);
         assertNotNull(templateHtml);
         saveToFile("src/test/" + InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET.getFileName() + ".html", templateHtml);
     }

@@ -211,9 +211,10 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
         timesheetEntry.setWorkdayDate(selectedWorkDayDate);
         if (timesheetEntry.isVacationDay() || timesheetEntry.isSickDay()) {
             // set worked time to 0.
-            timesheetEntry.setEndTime(timesheetEntry.getStartTime());
-            timesheetEntry.setWorkedSeconds(0L);
-            timesheetEntry.setBreakSeconds(0);
+            timesheetEntry.setStartTime(null);
+            timesheetEntry.setEndTime(null);
+            timesheetEntry.setWorkedSeconds(null);
+            timesheetEntry.setBreakSeconds(null);
         }
         return timesheetEntry;
     }

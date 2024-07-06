@@ -90,6 +90,7 @@ public class TimesheetMapper {
 
     public static TimesheetEntryDto toTimesheetEntryDto(TimesheetEntry timesheetEntry) {
         TimesheetEntryDto timesheetEntryDto = new TimesheetEntryDto();
+        timesheetEntryDto.setProjectId(timesheetEntry.getProjectId());
         timesheetEntryDto.setType(timesheetEntry.getType());
         timesheetEntryDto.setWorkdayDate(timesheetEntry.getWorkdayDate());
         timesheetEntryDto.setFromTime(timesheetEntry.getStartTime());
@@ -101,6 +102,7 @@ public class TimesheetMapper {
 
     public static TimesheetEntry fromTimesheetEntryDto(TimesheetEntryDto timesheetEntryDto) {
         TimesheetEntry timesheetEntry = new TimesheetEntry();
+        timesheetEntry.setProjectId(timesheetEntryDto.getProjectId());
         timesheetEntry.setType(timesheetEntryDto.getType());
         timesheetEntry.setWorkdayDate(timesheetEntryDto.getWorkdayDate());
         timesheetEntry.setStartTime(timesheetEntryDto.getFromTime());

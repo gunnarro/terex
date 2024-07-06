@@ -15,9 +15,10 @@ class TimesheetEntryTest {
 
     @Test
     void createDefault() {
-        TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(22L, LocalDate.of(2024, 5, 1));
+        TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(22L, 11L, LocalDate.of(2024, 5, 1));
         assertNull(timesheetEntry.getId());
         assertEquals(22, timesheetEntry.getTimesheetId());
+        assertEquals(11, timesheetEntry.getProjectId());
         assertEquals("2024-05-01", timesheetEntry.getWorkdayDate().toString());
         assertEquals("7.5", timesheetEntry.getWorkedHours());
         assertEquals(27000, timesheetEntry.getWorkedSeconds());
@@ -52,7 +53,7 @@ class TimesheetEntryTest {
 
     @Test
     void type() {
-        TimesheetEntry timeSheetEntry = TimesheetEntry.createDefault(23L, LocalDate.of(2023, 12, 2));
+        TimesheetEntry timeSheetEntry = TimesheetEntry.createDefault(23L, 11L, LocalDate.of(2023, 12, 2));
         assertTrue(timeSheetEntry.isRegularWorkDay());
         timeSheetEntry.setType(TimesheetEntry.TimesheetEntryTypeEnum.VACATION.name());
         assertFalse(timeSheetEntry.isRegularWorkDay());
@@ -60,7 +61,7 @@ class TimesheetEntryTest {
 
     @Test
     void status() {
-        TimesheetEntry timeSheetEntry = TimesheetEntry.createDefault(23L, LocalDate.of(2023, 12, 2));
+        TimesheetEntry timeSheetEntry = TimesheetEntry.createDefault(23L, 11L, LocalDate.of(2023, 12, 2));
         assertTrue(timeSheetEntry.isOpen());
         timeSheetEntry.setStatus(TimesheetEntry.TimesheetEntryStatusEnum.CLOSED.name());
         assertTrue(timeSheetEntry.isClosed());

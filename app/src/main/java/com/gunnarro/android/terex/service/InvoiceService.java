@@ -181,7 +181,9 @@ public class InvoiceService {
      */
     public Long createClientTimesheetAttachment(Long invoiceId, Long timesheetId, String clientTimesheetTemplate) {
         try {
-            String timesheetAttachmentHtml = timesheetService.createTimesheetListHtml(timesheetId, clientTimesheetTemplate);
+            UserAccountDto userAccountDto = userAccountService.getDefaultUserAccount();
+            ClientDto clientDto = clientService.getClientByTimesheetId(timesheetId);
+            String timesheetAttachmentHtml = timesheetService.createTimesheetListHtml(timesheetId, userAccountDto, clientDto, clientTimesheetTemplate);
             InvoiceDto invoiceDto = getInvoiceDto(invoiceId);
             String timesheetAttachmentFileName = String.format("%s_timeliste_%s", invoiceDto.getInvoiceRecipient().getName().replace(" ", "_").toLowerCase(), invoiceDto.getBillingPeriodStartDate().format(DateTimeFormatter.ofPattern("yyyy-MM")));
 

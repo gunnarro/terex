@@ -240,7 +240,7 @@ public class TimesheetService {
             // no timesheet entries found, so simply create a default entry;
             // then set work date equal to the timesheet from date.
             Timesheet timesheet = timesheetRepository.getTimesheet(timesheetId);
-            timesheetEntry = TimesheetEntry.createDefault(timesheetId, timesheet.getFromDate());
+            timesheetEntry = TimesheetEntry.createDefault(timesheet.getId(), timesheet.getProjectId(), timesheet.getFromDate());
         }
         // clear the id, so this will be taken as a new timesheet entry, the created and last modified date will the be overridden upon save.
         timesheetEntry.setId(null);
@@ -322,7 +322,8 @@ public class TimesheetService {
                     timesheetEntryList.stream().collect(Collectors.groupingBy(TimesheetEntry::getWorkdayYear));
         };
 
-        timesheetWeekMap.forEach((p, list) -> list.forEach(i -> System.out.println(p + ", " + list.size() + " - " + i.getWorkdayDate() + ", " + i.getType() + ", " + i.getWorkedHours())));
+        // debug
+        // timesheetWeekMap.forEach((p, list) -> list.forEach(i -> System.out.println(p + ", " + list.size() + " - " + i.getWorkdayDate() + ", " + i.getType() + ", " + i.getWorkedHours())));
         List<TimesheetSummary> timesheetSummaryByWeek = new ArrayList<>();
         timesheetWeekMap.forEach((period, list) -> timesheetSummaryByWeek.add(buildTimesheetSummaryForWeek(timesheetId, period, list, hourlyRate)));
         timesheetSummaryByWeek.sort(Comparator.comparing(TimesheetSummary::getWeekInYear));
@@ -390,23 +391,18 @@ public class TimesheetService {
         return writer.toString();
     }
 
-    public String createTimesheetListHtml(@NotNull Long timesheetId, @NotNull String clientTimesheetMustacheTemplate) {
+    public String createTimesheetListHtml(@NotNull Long timesheetId, @NotNull UserAccountDto userAccountDto, @NotNull ClientDto clientDto,  @NotNull String clientTimesheetMustacheTemplate) {
         TimesheetDto timesheetDto = getTimesheetDto(timesheetId);
-
         List<TimesheetEntryDto> timesheetEntryDtoList = getTimesheetEntryDtoListReadyForBilling(timesheetId);
-        Double sumBilledHours = timesheetEntryDtoList.stream().mapToDouble(TimesheetEntryDto::getWorkedSeconds).sum() / 3600;
+        Double sumBilledHours = timesheetEntryDtoList.stream().filter(e -> e.getWorkedSeconds() != null).mapToDouble(TimesheetEntryDto::getWorkedSeconds).sum() / 3600;
         Integer numberOfWorkedDays = timesheetEntryDtoList.stream().filter(e -> e.getWorkedSeconds() != null && e.getWorkedSeconds() > 0).collect(Collectors.toList()).size();
         MustacheFactory mf = new DefaultMustacheFactory();
         Mustache mustache = mf.compile(new StringReader(clientTimesheetMustacheTemplate), "");
         Map<String, Object> context = new HashMap<>();
         context.put("title", "Timeliste");
-        context.put("consultantFullName", timesheetDto.getUserAccountDto().getUserName());
-        context.put("consultantCompanyName", timesheetDto.getUserAccountDto().getOrganizationDto().getName());
-        context.put("clientProjectName", timesheetDto.getProjectDto().getName());
-        context.put("clientName", timesheetDto.getProjectDto().getClientDto().getName());
-        context.put("clientContactPersonFullName", "");
-        context.put("clientContactPersonMobile", "");
-        context.put("clientContactPersonEmail", "");
+        context.put("consultant", userAccountDto);
+        context.put("customer", clientDto);
+        context.put("customerProjectName", timesheetDto.getProjectDto().getName());
         context.put("timesheetPeriod", String.format("%s", timesheetDto.getFromDate().format(DateTimeFormatter.ofPattern("MMMM yyyy"))));
         context.put("timesheetEntryDtoList", timesheetEntryDtoList);
         context.put("numberOfWorkedDays", numberOfWorkedDays);
@@ -450,11 +446,7 @@ public class TimesheetService {
                 }
             }
             if (!isInList) {
-                TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(timesheetId, date);
-                timesheetEntry.setWorkedSeconds(0L);
-                timesheetEntry.setBreakSeconds(0);
-                timesheetEntry.setStatus(TimesheetEntry.TimesheetEntryStatusEnum.CLOSED.name());
-                timesheetEntryList.add(timesheetEntry);
+                timesheetEntryList.add(TimesheetEntry.createNotWorked(timesheetId, timesheet.getProjectId(), date, TimesheetEntry.TimesheetEntryTypeEnum.REGULAR.name()));
             }
         }
         timesheetEntryList.sort(Comparator.comparing(TimesheetEntry::getWorkdayDate));
@@ -479,6 +471,5 @@ public class TimesheetService {
     public int countTimesheetEntries() {
         return timesheetRepository.countTimesheetEntries();
     }
-
 
 }

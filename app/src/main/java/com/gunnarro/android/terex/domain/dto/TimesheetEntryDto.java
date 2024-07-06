@@ -11,19 +11,25 @@ import java.time.format.DateTimeFormatter;
 
 public class TimesheetEntryDto {
 
+    private Long projectId;
     @NonNull
     private LocalDate workdayDate;
-    @NonNull
     private LocalTime fromTime;
-    @NonNull
     private LocalTime toTime;
-    @NonNull
-    private long workedSeconds;
+    private Long workedSeconds;
     private String comments;
     @NonNull
     private String type;
 
     public TimesheetEntryDto() {
+    }
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
     }
 
     public LocalDate getWorkdayDate() {
@@ -50,12 +56,11 @@ public class TimesheetEntryDto {
         this.toTime = toTime;
     }
 
-    @NonNull
     public Long getWorkedSeconds() {
         return workedSeconds;
     }
 
-    public void setWorkedSeconds(@NonNull Long workedSeconds) {
+    public void setWorkedSeconds(Long workedSeconds) {
         this.workedSeconds = workedSeconds;
     }
 
@@ -107,5 +112,9 @@ public class TimesheetEntryDto {
 
     public boolean isSickDay() {
         return type.equals(TimesheetEntry.TimesheetEntryTypeEnum.SICK.name());
+    }
+
+    public boolean hasWorkHours() {
+        return workedSeconds != null && workedSeconds > 0;
     }
 }

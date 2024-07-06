@@ -52,14 +52,6 @@ public class ClientService {
         return clientId;
     }
 
-    public ClientDto getClientByTimesheetId(Long timesheetId) {
-        Client client = clientRepository.getClientByTimesheetId(timesheetId);
-        if (client == null) {
-            throw new TerexApplicationException(String.format("Timesheet id is not linked to a client! timesheetId=%s", timesheetId), "50045", null);
-        }
-        return getClient(client.getId());
-    }
-
     public List<ClientDto> getClients() {
         List<ClientDto> clientDtoList = new ArrayList<>();
         List<Long> clientIds = clientRepository.getAllClientIds();
@@ -76,6 +68,11 @@ public class ClientService {
         Client client = clientRepository.getClient(clientId);
         Log.d("getClient", String.format("clientId= %s - %s", clientId, client));
         return createClientDto(client);
+    }
+
+    public ClientDto getClientByTimesheetId(Long timesheetId) {
+        Long clientId = clientRepository.getClientIdByTimesheetId(timesheetId);
+        return getClient(clientId);
     }
 
     private ClientDto createClientDto(Client client) {

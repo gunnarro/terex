@@ -70,7 +70,7 @@ public class FunctionalTest extends IntegrationTestSetup {
         Long timesheetId = timesheetService.saveTimesheet(newTimesheet);
         assertNotNull(timesheetId);
         // add time entry to the timesheet
-        Long timesheetEntryId = timesheetService.saveTimesheetEntry(TimesheetEntry.createDefault(timesheetId, LocalDate.of(2024, 1, 5)));
+        Long timesheetEntryId = timesheetService.saveTimesheetEntry(TimesheetEntry.createDefault(timesheetId, 11L, LocalDate.of(2024, 1, 5)));
         assertNotNull(timesheetEntryId);
         // set timesheet ready for billing
         Timesheet timesheet = timesheetService.getTimesheet(timesheetId);

@@ -394,5 +394,3 @@ Oapp/src/main/java/com/gunnarro/android/terex/ui/view/IntegrationViewHolder.java
 Mapp/src/test/java/com/gunnarro/android/terex/domain/dto/TimesheetDtoTest.java,9/2/92040b7d5de15c238406173da6401d5fe51b25e5
 ƒ
 Sapp/src/androidTest/java/com/gunnarro/android/terex/service/InvoiceServiceTest.java,4/5/458c9fff49e93a29646bf4d406000899a4219999
-{
-Kapp/src/main/java/com/gunnarro/android/terex/domain/entity/InvoiceLine.java,6/7/67498a9070b50400ceb9681076fefef6d7c1e0a1

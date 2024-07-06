@@ -26,6 +26,6 @@ INSERT INTO organization (id, uuid, created_date, last_modified_date, organizati
 INSERT INTO client (id, uuid, created_date, last_modified_date, organization_id, contact_person_id, name, status, invoice_type, invoice_email_address) VALUES(1001, '', current_timestamp, current_timestamp, 1002, 1002, 'OMEGAPOINT NORGE AS', 'ACTIVE', 'EMAIL', '');
 
 -- update project data
-INSERT INTO project (id, uuid, created_date, last_modified_date, client_id, name, description, status, hourly_rate) VALUES(1055, '', current_timestamp, current_timestamp, 1001, 'Apotek1', 'Utviklng og forvalting av lagerstyingsløsning', 'ACTIVE', 1060);
+INSERT INTO project (id, uuid, created_date, last_modified_date, client_id, name, description, status, hourly_rate) VALUES(1055, '', current_timestamp, current_timestamp, 1001, 'Apotek1', 'Fullstack-utvikler Java', 'ACTIVE', 1060);
 
 COMMIT;

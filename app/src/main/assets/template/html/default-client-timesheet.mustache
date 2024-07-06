@@ -39,13 +39,16 @@
         <div class="col-md">
             <address>
                 <strong>Kunde</strong><br>
-                {{clientName}}
+                {{customer.organizationDto.name}}<br>
+                {{customer.organizationDto.businessAddress.streetAddress}}<br>
+                {{customer.organizationDto.businessAddress.postalCode}} {{invoiceReceiver.organizationDto.businessAddress.city}}
             </address>
         </div>
         <div class="col-md">
             <address>
                 <strong>Konsulent</strong><br>
-                {{consultantFullName}}
+                {{consultant.organizationDto.contactPerson.fullName}}<br>
+                {{consultant.organizationDto.name}}<br>
             </address>
         </div>
     </div>
@@ -53,11 +56,9 @@
         <div class="col-md">
             <address>
                 <strong>Prosjektkode</strong><br>
-                {{clientProjectName}}<br>
+                {{customerProjectName}}<br>
                 <strong>Kontaktperson</strong><br>
-                {{clientContactPersonFullName}}<br>
-                {{clientContactPersonEmail}}<br>
-                {{clientContactPersonMobile}}<br>
+                {{customer.contactPersonDto.fullName}}
             </address>
         </div>
     </div>

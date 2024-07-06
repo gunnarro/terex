@@ -82,12 +82,12 @@ public class TimesheetServiceTest extends IntegrationTestSetup {
         Timesheet newTimesheet = Timesheet.createDefault(100L, 200L, 2023, 8);
         newTimesheet.setDescription("Times used to develop android timesheet app");
         Long timesheetId = timesheetService.saveTimesheet(newTimesheet);
-        TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(timesheetId, LocalDate.of(2023, 8, 27));
+        TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(timesheetId, 11L, LocalDate.of(2023, 8, 27));
         timesheetEntry.setWorkedSeconds((long) 450 * 60);
         timesheetEntry.setBreakSeconds(30 * 60);
         InputValidationException ex = assertThrows(InputValidationException.class, () -> {
             timesheetService.saveTimesheetEntry(timesheetEntry);
-            timesheetService.saveTimesheetEntry(TimesheetEntry.createDefault(timesheetEntry.getTimesheetId(), timesheetEntry.getWorkdayDate()));
+            timesheetService.saveTimesheetEntry(TimesheetEntry.createDefault(timesheetEntry.getTimesheetId(), timesheetEntry.getProjectId(), timesheetEntry.getWorkdayDate()));
         });
         assertTrue(ex.getMessage().toString().startsWith("Workday already registered and update is not allowed!"));
     }

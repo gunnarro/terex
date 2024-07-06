@@ -58,6 +58,9 @@ public class TimesheetEntry extends BaseEntity {
     @NonNull
     @ColumnInfo(name = "timesheet_id")
     private Long timesheetId;
+
+    @ColumnInfo(name="project_id")
+    private Long projectId;
     @NonNull
     @ColumnInfo(name = "workday_week")
     private Integer workdayWeek;
@@ -82,7 +85,7 @@ public class TimesheetEntry extends BaseEntity {
     @ColumnInfo(name = "end_time")
     private LocalTime endTime;
 
-    @NotNull
+    @NonNull
     @ColumnInfo(name = "worked_seconds")
     private Long workedSeconds;
 
@@ -115,6 +118,14 @@ public class TimesheetEntry extends BaseEntity {
         this.timesheetId = timesheetId;
     }
 
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
+    }
+
     @NonNull
     public Integer getWorkdayWeek() {
         return workdayWeek;
@@ -141,26 +152,27 @@ public class TimesheetEntry extends BaseEntity {
         this.workdayDate = workdayDate;
     }
 
-    @NonNull
     public LocalTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(@NonNull LocalTime startTime) {
+    public void setStartTime(LocalTime startTime) {
         this.startTime = startTime;
     }
 
-    @NonNull
     public LocalTime getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(@NonNull LocalTime endTime) {
+    public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
     }
 
     public String getWorkedHours() {
-        return Double.toString((double) workedSeconds / (60 * 60));
+        if (workedSeconds != null) {
+            return Double.toString((double) workedSeconds / (60 * 60));
+        }
+        return null;
     }
 
     public Integer getBreakSeconds() {
@@ -236,9 +248,21 @@ public class TimesheetEntry extends BaseEntity {
         return status.equals(TimesheetEntryStatusEnum.CLOSED.name());
     }
 
-    public static TimesheetEntry createDefault(@NotNull Long timesheetId, @NotNull LocalDate workDayDate) {
+    public static TimesheetEntry createNotWorked(@NotNull Long timesheetId, Long projectId, @NotNull LocalDate workDayDate, String type) {
         TimesheetEntry timesheetEntry = new TimesheetEntry();
         timesheetEntry.setTimesheetId(timesheetId);
+        timesheetEntry.setProjectId(projectId);
+        timesheetEntry.setType(type);
+        timesheetEntry.setWorkdayDate(workDayDate);
+        timesheetEntry.setStatus(TimesheetEntryStatusEnum.CLOSED.name());
+        timesheetEntry.setWorkdayWeek(timesheetEntry.getWorkdayDate().get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()));
+        return timesheetEntry;
+    }
+
+    public static TimesheetEntry createDefault(@NotNull Long timesheetId, Long projectId, @NotNull LocalDate workDayDate) {
+        TimesheetEntry timesheetEntry = new TimesheetEntry();
+        timesheetEntry.setTimesheetId(timesheetId);
+        timesheetEntry.setProjectId(projectId);
         timesheetEntry.setStatus(TimesheetEntryStatusEnum.OPEN.name());
         timesheetEntry.setType(TimesheetEntryTypeEnum.REGULAR.name());
         timesheetEntry.setWorkdayDate(workDayDate);
@@ -288,6 +312,7 @@ public class TimesheetEntry extends BaseEntity {
         sb.append("id=").append(getId());
         sb.append(", uuid=").append(getUuid());
         sb.append(", timesheetId=").append(timesheetId);
+        sb.append(", projectId=").append(projectId);
         sb.append(", createdDate=").append(getCreatedDate());
         sb.append(", lastModifiedDate=").append(getLastModifiedDate());
         sb.append(", workdayWeek=").append(workdayWeek);

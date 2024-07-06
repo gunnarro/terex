@@ -115,11 +115,17 @@ public class TestData {
     }
 
     private static TimesheetEntry createTimesheetEntry(LocalDate day, List<Integer> sickDates, List<Integer> vacationDates) {
-        TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(new java.util.Random().nextLong(), day);
+        TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(new java.util.Random().nextLong(), 11L, day);
         if (sickDates.contains(timesheetEntry.getWorkdayDate().getDayOfMonth())) {
             timesheetEntry.setType(TimesheetEntry.TimesheetEntryTypeEnum.SICK.name());
+            timesheetEntry.setStartTime(null);
+            timesheetEntry.setEndTime(null);
+            timesheetEntry.setWorkedSeconds(null);
         } else if (vacationDates.contains(timesheetEntry.getWorkdayDate().getDayOfMonth())) {
             timesheetEntry.setType(TimesheetEntry.TimesheetEntryTypeEnum.VACATION.name());
+            timesheetEntry.setStartTime(null);
+            timesheetEntry.setEndTime(null);
+            timesheetEntry.setWorkedSeconds(null);
         }
         return timesheetEntry;
     }
@@ -208,6 +214,7 @@ public class TestData {
         clientDto.setId(id);
         clientDto.setName(orgName);
         clientDto.setStatus("ACTIVE");
+        clientDto.setContactPersonDto(createContactPerson(1234L, "contact person full name"));
         return clientDto;
     }
 

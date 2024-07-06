@@ -81,7 +81,10 @@ public class Utility {
      * Convert 7:30 to 7.5 hours format
      * Return hours on the 7.5 format.
      */
-    public static String fromSecondsToHours(long seconds) {
+    public static String fromSecondsToHours(Long seconds) {
+        if (seconds == null) {
+            return null;
+        }
         LocalTime hours = LocalTime.ofSecondOfDay(seconds);
         return String.format("%s.%s", hours.getHour(), (hours.getMinute() * 10 / 60));
     }
