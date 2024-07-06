@@ -66,7 +66,7 @@ public class FunctionalTest extends IntegrationTestSetup {
         Long projectId = projectService.saveProject(TestData.createProjectDto(null, clientId, "Terex development"));
         assertNotNull(projectId);
         // create timesheet and assign it to the project
-        Timesheet newTimesheet = Timesheet.createDefault(userAccountId, projectId, 2024, 1);
+        Timesheet newTimesheet = Timesheet.createDefault(userAccountId, clientId, projectId, 2024, 1);
         Long timesheetId = timesheetService.saveTimesheet(newTimesheet);
         assertNotNull(timesheetId);
         // add time entry to the timesheet

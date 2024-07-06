@@ -134,13 +134,13 @@ public class AdminFragment extends BaseFragment {
 
         int year = 2024;
         for (int month = 1; month < 12; month++) {
-            generateTimesheet(userId, projectId1, year, month);
-            generateTimesheet(userId, projectId2, year, month);
+            generateTimesheet(userId, projectDto1.getClientDto().getId(), projectDto1.getId(), year, month);
+            generateTimesheet(userId, projectDto2.getClientDto().getId(), projectDto2.getId(), year, month);
         }
     }
 
-    private void generateTimesheet(Long userId, Long projectId, Integer year, Integer month) {
-        Timesheet newTimesheet = Timesheet.createDefault(userId, projectId, year, month);
+    private void generateTimesheet(Long userId, Long clientId, Long projectId, Integer year, Integer month) {
+        Timesheet newTimesheet = Timesheet.createDefault(userId, clientId, projectId, year, month);
         newTimesheet.setProjectId(projectId);
         Long timesheetId = timesheetService.saveTimesheet(newTimesheet);
         List<TimesheetEntry> timesheetEntryList = createTimesheetEntriesForMonth(timesheetId, year, month);

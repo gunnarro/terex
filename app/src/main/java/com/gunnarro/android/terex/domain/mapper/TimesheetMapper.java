@@ -49,12 +49,9 @@ public class TimesheetMapper {
     public static TimesheetDto toTimesheetDto(Timesheet timesheet, Integer sumDays, Integer sumHours) {
         TimesheetDto timesheetDto = new TimesheetDto();
         timesheetDto.setId(timesheet.getId());
-        ProjectDto projectDto = new ProjectDto();
-        projectDto.setId(timesheet.getProjectId());
-        timesheetDto.setProjectDto(projectDto);
-        UserAccountDto userAccountDto = new UserAccountDto();
-        userAccountDto.setId(timesheet.getUserId());
-        timesheetDto.setUserAccountDto(userAccountDto);
+        timesheetDto.setClientDto(new ClientDto(timesheet.getClientId()));
+        timesheetDto.setProjectDto(new ProjectDto(timesheet.getClientId()));
+        timesheetDto.setUserAccountDto(new UserAccountDto(timesheet.getClientId()));
         timesheetDto.setDescription(timesheet.getDescription());
         timesheetDto.setFromDate(timesheet.getFromDate());
         timesheetDto.setToDate(timesheet.getToDate());
@@ -173,7 +170,6 @@ public class TimesheetMapper {
             return null;
         }
         ProjectDto projectDto = toProjectDto(project);
-        projectDto.setTimesheetDto(toTimesheetDtoList(timesheetList));
         return projectDto;
     }
 

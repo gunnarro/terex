@@ -15,12 +15,10 @@ public class ProjectDto {
     private String status;
     private Integer hourlyRate;
     private ClientDto clientDto;
-    private List<TimesheetDto> timesheetDto;
 
     public ProjectDto() {
         this.status = Project.ProjectStatusEnum.ACTIVE.name();
     }
-
     public ProjectDto(Long clientId) {
         this();
         this.clientDto = new ClientDto(clientId);
@@ -88,14 +86,6 @@ public class ProjectDto {
 
     public void setClientDto(ClientDto clientDto) {
         this.clientDto = clientDto;
-    }
-
-    public List<TimesheetDto> getTimesheetDto() {
-        return timesheetDto;
-    }
-
-    public void setTimesheetDto(List<TimesheetDto> timesheetDto) {
-        this.timesheetDto = timesheetDto;
     }
 
     @Override

@@ -55,13 +55,11 @@ public class ProjectServiceTest extends IntegrationTestSetup {
         assertEquals("gunnarro timesheet project", projectDto.getName());
         assertEquals("develop a timesheet app", projectDto.getDescription());
         assertEquals(Project.ProjectStatusEnum.ACTIVE.name(), projectDto.getStatus());
-        assertEquals(0, projectDto.getTimesheetDto().size());
 
         projectDto = projectService.getProject(projectId);
         assertEquals(projectId, projectDto.getId());
         assertEquals("gunnarro timesheet project", projectDto.getName());
         assertEquals("develop a timesheet app", projectDto.getDescription());
         assertEquals(Project.ProjectStatusEnum.ACTIVE.name(), projectDto.getStatus());
-        assertNull(projectDto.getTimesheetDto());
     }
 }

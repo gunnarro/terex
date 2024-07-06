@@ -22,10 +22,13 @@ INSERT INTO person (id, uuid, created_date, last_modified_date, full_name, addre
 -- update organization table data
 DELETE FROM organization WHERE id > 0;
 INSERT INTO organization (id, uuid, created_date, last_modified_date, organization_name, organization_number, bank_account_number, business_address_id, postal_address_id, contact_info_id) VALUES (1001, '', current_timestamp, current_timestamp, 'gunnarro as', '828707922', '92302698831', 1001, 1001, 1001);
+INSERT INTO organization (id, uuid, created_date, last_modified_date, organization_name, organization_number, bank_account_number, business_address_id, postal_address_id, contact_info_id) VALUES (1002, '', current_timestamp, current_timestamp, 'client company', '99999999', null, null, null, null);
 
 -- update client data
 DELETE FROM client WHERE id > 0;
 INSERT INTO client (id, uuid, created_date, last_modified_date, organization_id, name, status) VALUES(1001, '', current_timestamp, current_timestamp, 1001, 'gunnarro as', 'ACTIVE');
+INSERT INTO client (id, uuid, created_date, last_modified_date, organization_id, name, status) VALUES(1002, '', current_timestamp, current_timestamp, 1002, 'client company', 'ACTIVE');
+
 
 -- update project data
 DELETE FROM project WHERE id > 0;
@@ -33,5 +36,5 @@ INSERT INTO project (id, uuid, created_date, last_modified_date, client_id, name
 
 -- update timesheet data
 DELETE FROM timesheet WHERE id > 0;
-INSERT INTO timesheet (id, uuid, created_date, last_modified_date, user_account_id, project_id, year, month, from_date, working_days_in_month, working_hours_in_month, to_date, status, description) VALUES(1099, '', current_timestamp, current_timestamp, 1, 1055, 2024, 7, current_timestamp, 150, 20, current_timestamp, 'ACTIVE', 'test timesheet');
+INSERT INTO timesheet (id, uuid, created_date, last_modified_date, user_account_id, client_id, project_id, year, month, from_date, working_days_in_month, working_hours_in_month, to_date, status, description) VALUES(1099, '', current_timestamp, current_timestamp, 1, 1002, 1055, 2024, 7, current_timestamp, 150, 20, current_timestamp, 'ACTIVE', 'test timesheet');
 COMMIT;

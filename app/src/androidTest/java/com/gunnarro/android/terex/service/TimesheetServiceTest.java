@@ -43,7 +43,7 @@ public class TimesheetServiceTest extends IntegrationTestSetup {
 
     @Test
     public void newTimesheet() {
-        Timesheet newTimesheet = Timesheet.createDefault(100L, 200L, 2023, 11);
+        Timesheet newTimesheet = Timesheet.createDefault(100L, 10L,200L, 2023, 11);
         newTimesheet.setDescription("Times used to develop android timesheet app");
         Long timesheetId = timesheetService.saveTimesheet(newTimesheet);
         Timesheet timesheet = timesheetService.getTimesheet(timesheetId);
@@ -68,18 +68,18 @@ public class TimesheetServiceTest extends IntegrationTestSetup {
 
     @Test
     public void newTimesheet_already_exist() {
-        Timesheet newTimesheet = Timesheet.createDefault(100L, 200L, 2023, 10);
+        Timesheet newTimesheet = Timesheet.createDefault(100L, 10L,200L, 2023, 10);
         newTimesheet.setDescription("Times used to develop android timesheet app");
         InputValidationException ex = assertThrows(InputValidationException.class, () -> {
             timesheetService.saveTimesheet(newTimesheet);
-            timesheetService.saveTimesheet(Timesheet.createDefault(newTimesheet.getUserId(), newTimesheet.getProjectId(), newTimesheet.getYear(), newTimesheet.getMonth()));
+            timesheetService.saveTimesheet(Timesheet.createDefault(newTimesheet.getUserId(), newTimesheet.getClientId(), newTimesheet.getProjectId(), newTimesheet.getYear(), newTimesheet.getMonth()));
         });
         assertEquals("Timesheet already exist! Timesheet{userId=100, projectId=200, year=2023, month=10, status=ACTIVE}", ex.getMessage());
     }
 
     @Test
     public void newTimesheetEntry_already_exist() {
-        Timesheet newTimesheet = Timesheet.createDefault(100L, 200L, 2023, 8);
+        Timesheet newTimesheet = Timesheet.createDefault(100L, 10L,200L, 2023, 8);
         newTimesheet.setDescription("Times used to develop android timesheet app");
         Long timesheetId = timesheetService.saveTimesheet(newTimesheet);
         TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(timesheetId, 11L, LocalDate.of(2023, 8, 27));
@@ -94,7 +94,7 @@ public class TimesheetServiceTest extends IntegrationTestSetup {
 
     @Test
     public void getMostRecentTimesheetEntry() {
-        Timesheet newTimesheet = Timesheet.createDefault(10011L, 200L, 2023, 9);
+        Timesheet newTimesheet = Timesheet.createDefault(10011L, 10L,200L, 2023, 9);
         Long timesheetId = timesheetService.saveTimesheet(newTimesheet);
         TimesheetEntry timesheetEntry = timesheetService.getMostRecentTimeSheetEntry(timesheetId);
         assertEquals(newTimesheet.getFromDate().toString(), timesheetEntry.getWorkdayDate().toString());

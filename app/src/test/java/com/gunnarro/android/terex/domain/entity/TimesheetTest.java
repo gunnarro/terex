@@ -11,8 +11,9 @@ class TimesheetTest {
 
     @Test
     void timesheetNew() {
-        Timesheet timeSheet = Timesheet.createDefault(100L, 200L, 2023, 11);
+        Timesheet timeSheet = Timesheet.createDefault(100L, 10L, 200L, 2023, 11);
         assertEquals(100, timeSheet.getUserId());
+        assertEquals(10, timeSheet.getClientId());
         assertEquals(200, timeSheet.getProjectId());
         assertEquals(11, timeSheet.getMonth().intValue());
         assertEquals(2023, timeSheet.getYear().intValue());
@@ -25,19 +26,11 @@ class TimesheetTest {
         assertNull(timeSheet.getDescription());
         assertEquals("Timesheet{userId=100, projectId=200, year=2023, month=11, status=NEW}", timeSheet.toString());
         assertEquals(Timesheet.TimesheetStatusEnum.NEW.name(), timeSheet.getStatus());
-/*
-        assertEquals(0, timeSheet.getTotalWorkedDays().intValue());
-        assertEquals(0, timeSheet.getTotalWorkedHours().intValue());
-        assertEquals(22, timeSheet.getWorkingDaysInMonth().intValue());
-        assertEquals(165, timeSheet.getWorkingHoursInMonth().intValue());
-        assertFalse(timeSheet.getTotalWorkedHours() >= timeSheet.getWorkingHoursInMonth());
-        assertFalse(timeSheet.getTotalWorkedDays() >= timeSheet.getWorkingDaysInMonth());
-  */
     }
 
     @Test
     void status() {
-        Timesheet timeSheet = Timesheet.createDefault(100L, 200L, 2023, 11);
+        Timesheet timeSheet = Timesheet.createDefault(100L, 10L, 200L, 2023, 11);
         assertTrue(timeSheet.isNew());
         timeSheet.setStatus(Timesheet.TimesheetStatusEnum.ACTIVE.name());
         assertTrue(timeSheet.isActive());

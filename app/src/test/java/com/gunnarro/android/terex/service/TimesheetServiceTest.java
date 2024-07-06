@@ -72,12 +72,12 @@ class TimesheetServiceTest {
     void saveTimesheet_new() throws ExecutionException, InterruptedException {
         when(timesheetRepositoryMock.find(anyLong(), anyLong(), anyInt(), anyInt())).thenReturn(null);
         when(timesheetRepositoryMock.insertTimesheet(any())).thenReturn(23L);
-        assertEquals(23, timesheetService.saveTimesheet(Timesheet.createDefault(100L, 200L, 2023, 11)));
+        assertEquals(23, timesheetService.saveTimesheet(Timesheet.createDefault(100L, 10L,200L, 2023, 11)));
     }
 
     @Test
     void saveTimesheet_timesheet_new_already_exist() {
-        Timesheet timesheet = Timesheet.createDefault(100L, 200L, 2023, 11);
+        Timesheet timesheet = Timesheet.createDefault(100L, 10L,200L, 2023, 11);
         timesheet.setId(23L);
         when(timesheetRepositoryMock.find(anyLong(), anyLong(), anyInt(), anyInt())).thenReturn(timesheet);
         InputValidationException ex = assertThrows(InputValidationException.class, () -> {
@@ -89,11 +89,11 @@ class TimesheetServiceTest {
 
     @Test
     void saveTimesheet_timesheet_update_already_billed() {
-        Timesheet timesheetExisting = Timesheet.createDefault(100L, 200L, 2023, 11);
+        Timesheet timesheetExisting = Timesheet.createDefault(100L, 10L,200L, 2023, 11);
         timesheetExisting.setId(23L);
         timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.BILLED.name());
         when(timesheetRepositoryMock.find(anyLong(), anyLong(), anyInt(), anyInt())).thenReturn(timesheetExisting);
-        Timesheet timesheetUpdated = Timesheet.createDefault(100L, 200L, 2023, 11);
+        Timesheet timesheetUpdated = Timesheet.createDefault(100L, 10L,200L, 2023, 11);
         timesheetUpdated.setStatus(Timesheet.TimesheetStatusEnum.ACTIVE.name());
         InputValidationException ex = assertThrows(InputValidationException.class, () -> {
             timesheetService.saveTimesheet(timesheetUpdated);
@@ -104,7 +104,7 @@ class TimesheetServiceTest {
 
     @Test
     void updateTimesheet_worked_hours_and_days() {
-        Timesheet timesheet = Timesheet.createDefault(100L, 200L, 2023, 11);
+        Timesheet timesheet = Timesheet.createDefault(100L, 10L,200L, 2023, 11);
         timesheet.setId(23L);
         timesheet.setStatus(Timesheet.TimesheetStatusEnum.ACTIVE.name());
         TimesheetEntry timesheetEntry1 = TimesheetEntry.createDefault(1L, 11L, LocalDate.now());
@@ -127,7 +127,7 @@ class TimesheetServiceTest {
 
     @Test
     void updateTimesheetWorkedHoursAndDays_set_status_to_completed() {
-        Timesheet timesheet = Timesheet.createDefault(100L, 200L, 2023, 11);
+        Timesheet timesheet = Timesheet.createDefault(100L, 10L,200L, 2023, 11);
         timesheet.setId(23L);
         timesheet.setStatus(Timesheet.TimesheetStatusEnum.ACTIVE.name());
         TimesheetEntry timesheetEntry1 = TimesheetEntry.createDefault(1L, 11L, LocalDate.now());
@@ -151,13 +151,13 @@ class TimesheetServiceTest {
 
     @Test
     void saveTimesheet_timesheet_update_to_completed() throws ExecutionException, InterruptedException {
-        Timesheet timesheetExisting = Timesheet.createDefault(100L, 200L, 2023, 11);
+        Timesheet timesheetExisting = Timesheet.createDefault(100L, 10L,200L, 2023, 11);
         timesheetExisting.setId(23L);
         timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.ACTIVE.name());
         when(timesheetRepositoryMock.find(anyLong(), anyLong(), anyInt(), anyInt())).thenReturn(timesheetExisting);
         when(timesheetRepositoryMock.updateTimesheet(any())).thenReturn(1);
 
-        Timesheet timesheetUpdated = Timesheet.createDefault(100L, 200L, 2023, 11);
+        Timesheet timesheetUpdated = Timesheet.createDefault(100L, 10L,200L, 2023, 11);
         timesheetUpdated.setId(timesheetExisting.getId());
         timesheetUpdated.setStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
         assertNotNull(timesheetService.saveTimesheet(timesheetUpdated));
@@ -165,7 +165,7 @@ class TimesheetServiceTest {
 
     @Test
     void deleteTimesheet_status_not_allowed() {
-        Timesheet timesheetExisting = Timesheet.createDefault(100L, 200L, 2023, 11);
+        Timesheet timesheetExisting = Timesheet.createDefault(100L, 10L,200L, 2023, 11);
         timesheetExisting.setId(23L);
         timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.BILLED.name());
 
@@ -194,7 +194,7 @@ class TimesheetServiceTest {
 
     @Test
     void saveTimesheetEntry_work_date_after_timesheet_to_date() throws ExecutionException, InterruptedException {
-        Timesheet timesheet = Timesheet.createDefault(100L, 200L, 2023, 11);
+        Timesheet timesheet = Timesheet.createDefault(100L, 10L,200L, 2023, 11);
         timesheet.setId(1L);
         TimesheetEntry timesheetEntryAfterToDate = TimesheetEntry.createDefault(timesheet.getId(), timesheet.getProjectId(), LocalDate.of(2023, 12, 21));
 
@@ -208,7 +208,7 @@ class TimesheetServiceTest {
 
     @Test
     void saveTimesheetEntry_work_date_before_timesheet_from_date() throws ExecutionException, InterruptedException {
-        Timesheet timesheet = Timesheet.createDefault(100L, 200L, 2023, 11);
+        Timesheet timesheet = Timesheet.createDefault(100L, 10L,200L, 2023, 11);
         timesheet.setId(1L);
         TimesheetEntry timesheetEntryBeforeFromDate = TimesheetEntry.createDefault(timesheet.getId(), timesheet.getProjectId(), LocalDate.of(2023, 10, 2));
         when(timesheetRepositoryMock.getTimesheet(anyLong())).thenReturn(timesheet);
@@ -235,7 +235,7 @@ class TimesheetServiceTest {
 
     @Test
     void createTimesheetSummary_not_ready_for_billing() {
-        Timesheet timesheetExisting = Timesheet.createDefault(100L, 200L, 2023, 11);
+        Timesheet timesheetExisting = Timesheet.createDefault(100L, 10L,200L, 2023, 11);
         timesheetExisting.setId(23L);
         timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.ACTIVE.name());
 
@@ -248,7 +248,7 @@ class TimesheetServiceTest {
 
     @Test
     void createTimesheetSummary_no_entries() {
-        Timesheet timesheetExisting = Timesheet.createDefault(100L, 200L, 2023, 11);
+        Timesheet timesheetExisting = Timesheet.createDefault(100L, 10L,200L, 2023, 11);
         timesheetExisting.setId(23L);
         timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
         TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(timesheetExisting.getId(), timesheetExisting.getProjectId(), LocalDate.of(2023, 12, 21));
@@ -265,7 +265,7 @@ class TimesheetServiceTest {
 
     @Test
     void getMostRecentTimeSheetEntry_no_emtries() {
-        Timesheet timesheet = Timesheet.createDefault(100L, 200L, 2023, 11);
+        Timesheet timesheet = Timesheet.createDefault(100L, 10L,200L, 2023, 11);
         when(timesheetRepositoryMock.getTimesheet(timesheet.getId())).thenReturn(timesheet);
         when(timesheetRepositoryMock.getMostRecentTimeSheetEntry(timesheet.getId())).thenReturn(null);
         assertEquals("2023-11-01", timesheetService.getMostRecentTimeSheetEntry(timesheet.getId()).getWorkdayDate().toString());
@@ -278,7 +278,7 @@ class TimesheetServiceTest {
         assertEquals("NOVEMBER", month.getMonth().name());
         assertEquals(11, month.getMonth().getValue());
 
-        Timesheet timesheetExisting = Timesheet.createDefault(100L, 200L, month.getYear(), month.getMonthValue());
+        Timesheet timesheetExisting = Timesheet.createDefault(100L, 10L,200L, month.getYear(), month.getMonthValue());
         timesheetExisting.setId(23L);
         assertEquals(month.toString(), timesheetExisting.getFromDate().toString());
         // Set timesheet ready for billing
@@ -315,7 +315,7 @@ class TimesheetServiceTest {
     void createTimesheetSummaryForMountPartlyFilled() {
         LocalDate month = LocalDate.of(2023, 11, 1);
         assertEquals("NOVEMBER", month.getMonth().name());
-        Timesheet timesheetExisting = Timesheet.createDefault(100L, 200L, month.getYear(), month.getMonthValue());
+        Timesheet timesheetExisting = Timesheet.createDefault(100L, 10L,200L, month.getYear(), month.getMonthValue());
         timesheetExisting.setId(23L);
         // Set timesheet ready for billing
         timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
@@ -358,7 +358,7 @@ class TimesheetServiceTest {
     void createTimesheetSummaryForMountWithDaysOff() {
         LocalDate month = LocalDate.of(2023, 11, 1);
         assertEquals("NOVEMBER", month.getMonth().name());
-        Timesheet timesheetExisting = Timesheet.createDefault(100L, 200L, month.getYear(), month.getMonthValue());
+        Timesheet timesheetExisting = Timesheet.createDefault(100L, 10L,200L, month.getYear(), month.getMonthValue());
         timesheetExisting.setId(23L);
         // Set timesheet ready for billing
         timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
@@ -442,7 +442,7 @@ class TimesheetServiceTest {
 
     @Test
     void createTimesheetSummaryAttachmentHtml() throws IOException {
-        Timesheet timesheet = Timesheet.createDefault(100L, 200L, 2023, 11);
+        Timesheet timesheet = Timesheet.createDefault(100L, 10L,200L, 2023, 11);
         timesheet.setId(23L);
         timesheet.setProjectId(444L);
 

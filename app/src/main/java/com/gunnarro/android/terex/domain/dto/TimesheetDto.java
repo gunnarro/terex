@@ -10,6 +10,7 @@ import java.util.Objects;
 public class TimesheetDto {
     private Long id;
     private UserAccountDto userAccountDto;
+    private ClientDto clientDto;
     private ProjectDto projectDto;
     private String status;
     private LocalDate fromDate;
@@ -140,6 +141,14 @@ public class TimesheetDto {
 
     public void setUserAccountDto(UserAccountDto userAccountDto) {
         this.userAccountDto = userAccountDto;
+    }
+
+    public ClientDto getClientDto() {
+        return clientDto;
+    }
+
+    public void setClientDto(ClientDto clientDto) {
+        this.clientDto = clientDto;
     }
 
     public ProjectDto getProjectDto() {

@@ -37,8 +37,8 @@ public class LoadTest extends IntegrationTestSetup {
     public void timesheetLoadTest() {
         for (long projectId = 200; projectId < 210; projectId++) {
             for (int month = 1; month < 12; month++) {
-                createTimesheet(100L, projectId, 2023, month);
-                createTimesheet(100L, projectId, 2024, month);
+                createTimesheet(100L, 1L, projectId, 2023, month);
+                createTimesheet(100L, 1L, projectId, 2024, month);
             }
         }
         assertEquals(220, timesheetService.getTimesheetsByStatus(Timesheet.TimesheetStatusEnum.ACTIVE.name()).size());
@@ -46,8 +46,8 @@ public class LoadTest extends IntegrationTestSetup {
         assertEquals(6470, timesheetService.countTimesheetEntries());
     }
 
-    private void createTimesheet(Long userId, Long projectId, Integer year, Integer month) {
-        Timesheet newTimesheet = Timesheet.createDefault(userId, projectId, year, month);
+    private void createTimesheet(Long userId, Long clientId, Long projectId, Integer year, Integer month) {
+        Timesheet newTimesheet = Timesheet.createDefault(userId, clientId, projectId, year, month);
         Long timesheetId = timesheetService.saveTimesheet(newTimesheet);
         List<TimesheetEntry> timesheetEntryList = TestData.createTimesheetEntriesForMonth(timesheetId, year, month);
         timesheetEntryList.forEach(e -> timesheetService.saveTimesheetEntry(e));

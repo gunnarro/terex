@@ -14,6 +14,13 @@ public class UserAccountDto {
     private PersonDto personDto;
     private OrganizationDto organizationDto;
 
+    public UserAccountDto() {
+    }
+
+    public UserAccountDto(Long id) {
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }
@@ -77,6 +84,7 @@ public class UserAccountDto {
     public boolean isPrivate() {
         return userAccountType.equals(UserAccount.UserAccountTypeEnum.PRIVATE.name());
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

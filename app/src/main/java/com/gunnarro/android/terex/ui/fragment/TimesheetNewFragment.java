@@ -234,7 +234,7 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
             // this is a new timesheet, populate with default data
             Long userId = userAccountService.getDefaultUserAccountId();
             Long[] projectIds = clientDto.getProjectList().stream().map(ProjectDto::getId).toArray(Long[]::new);
-            timesheet = Timesheet.createDefault(userId, projectIds[0], LocalDate.now().getYear(), LocalDate.now().getMonthValue());
+            timesheet = Timesheet.createDefault(userId, clientDto.getId(), projectIds[0], LocalDate.now().getYear(), LocalDate.now().getMonthValue());
         }
         return timesheet;
     }

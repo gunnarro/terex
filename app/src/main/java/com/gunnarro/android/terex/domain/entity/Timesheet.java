@@ -54,6 +54,9 @@ public class Timesheet extends BaseEntity {
     @ColumnInfo(name = "user_account_id")
     private Long userId;
     @NotNull
+    @ColumnInfo(name = "client_id")
+    private Long clientId;
+    @NotNull
     @ColumnInfo(name = "project_id")
     private Long projectId;
     @NotNull
@@ -84,6 +87,14 @@ public class Timesheet extends BaseEntity {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public Long getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(Long clientId) {
+        this.clientId = clientId;
     }
 
     public Long getProjectId() {
@@ -197,10 +208,11 @@ public class Timesheet extends BaseEntity {
         return Objects.hash(userId, projectId, year, month);
     }
 
-    public static Timesheet createDefault(Long userId, Long projectId, Integer year, Integer month) {
+    public static Timesheet createDefault(Long userId, Long clientId, Long projectId, Integer year, Integer month) {
         LocalDate timesheetDate = LocalDate.of(year, month, 1);
         Timesheet timesheet = new Timesheet();
         timesheet.setUserId(userId);
+        timesheet.setClientId(clientId);
         timesheet.setProjectId(projectId);
         timesheet.setStatus(Timesheet.TimesheetStatusEnum.NEW.name());
         timesheet.setYear(timesheetDate.getYear());
