@@ -124,7 +124,7 @@ dependencies {
     // calendar
     implementation "com.applandeo:material-calendar-view:$material_calendar_view"
     // lombok
-    compileOnly "org.projectlombok:lombok:$projectlombok_lombok"
+    annotationProcessor "org.projectlombok:lombok:$projectlombok_lombok"
     annotationProcessor "org.projectlombok:lombok:$projectlombok_lombok"
     // Room components
     implementation "androidx.room:room-runtime:$room_version"
@@ -142,6 +142,8 @@ dependencies {
     implementation "com.github.spullara.mustache.java:compiler:$spullara_mustache_java"
     // for reading files
     implementation("commons-io:commons-io:2.16.1")
+    // for format currency
+    implementation "pl.allegro.finance:tradukisto:$finance_tradukisto"
     // for unit tests
     testImplementation "org.junit.vintage:junit-vintage-engine:$junit_vintage_engine"
     testImplementation "org.junit.jupiter:junit-jupiter:$junit_jupiter"
