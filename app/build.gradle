@@ -124,7 +124,7 @@ dependencies {
     // calendar
     implementation "com.applandeo:material-calendar-view:$material_calendar_view"
     // lombok
-    annotationProcessor "org.projectlombok:lombok:$projectlombok_lombok"
+    compileOnly "org.projectlombok:lombok:$projectlombok_lombok"
     annotationProcessor "org.projectlombok:lombok:$projectlombok_lombok"
     // Room components
     implementation "androidx.room:room-runtime:$room_version"
