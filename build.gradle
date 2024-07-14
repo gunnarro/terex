@@ -132,6 +132,5 @@ ext {
     security_crypto = "1.1.0-alpha06"
     okhttp3_okhttp = "4.12.0"
     retrofit2_retrofit = "2.11.0"
-    finance_tradukisto = "3.1.0"
 }
 

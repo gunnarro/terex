@@ -51,7 +51,7 @@ public class ProjectService {
     public Integer getProjectHourlyRate(Long timesheetId) {
         return projectRepository.getProjectHourlyRateByTimesheetId(timesheetId);
     }
-
+/*
     public ProjectDto getProjectWithTimesheet(Long projectId) {
         ProjectWithTimesheet project = projectRepository.getProjectWithTimesheet(projectId);
         if (project != null) {
@@ -60,7 +60,7 @@ public class ProjectService {
             return null;
         }
     }
-
+*/
     public List<ProjectDto> getProjects(Long clientId) {
         return TimesheetMapper.toProjectDtoList(projectRepository.getProjects(clientId));
     }

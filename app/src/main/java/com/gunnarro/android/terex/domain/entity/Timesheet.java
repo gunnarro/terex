@@ -31,7 +31,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @TypeConverters({LocalDateConverter.class, LocalDateTimeConverter.class})
-@Entity(tableName = "timesheet", indices = {@Index(value = {"user_account_id", "project_id", "year", "month"},
+@Entity(tableName = "timesheet", indices = {@Index(value = {"user_account_id", "client_id", "year", "month"},
         unique = true)})
 public class Timesheet extends BaseEntity {
 
@@ -54,14 +54,9 @@ public class Timesheet extends BaseEntity {
     @NotNull
     @ColumnInfo(name = "user_account_id")
     private Long userId;
-    @Deprecated
     @NotNull
     @ColumnInfo(name = "client_id")
     private Long clientId;
-    @Deprecated
-    @NotNull
-    @ColumnInfo(name = "project_id")
-    private Long projectId;
     @NotNull
     @ColumnInfo(name = "year")
     private Integer year;
@@ -98,14 +93,6 @@ public class Timesheet extends BaseEntity {
 
     public void setClientId(Long clientId) {
         this.clientId = clientId;
-    }
-
-    public Long getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
     }
 
     @NotNull
@@ -193,22 +180,8 @@ public class Timesheet extends BaseEntity {
         return status.equals(TimesheetStatusEnum.COMPLETED.name());
     }
 
-
     public boolean isBilled() {
         return status.equals(TimesheetStatusEnum.BILLED.name());
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Timesheet timesheet = (Timesheet) o;
-        return Objects.equals(userId, timesheet.userId) && Objects.equals(projectId, timesheet.projectId) && Objects.equals(year, timesheet.year) && Objects.equals(month, timesheet.month);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(userId, projectId, year, month);
     }
 
     public static Timesheet createDefault(Long userId, Long clientId, Long projectId, Integer year, Integer month) {
@@ -216,7 +189,6 @@ public class Timesheet extends BaseEntity {
         Timesheet timesheet = new Timesheet();
         timesheet.setUserId(userId);
         timesheet.setClientId(clientId);
-        timesheet.setProjectId(projectId);
         timesheet.setStatus(Timesheet.TimesheetStatusEnum.NEW.name());
         timesheet.setYear(timesheetDate.getYear());
         timesheet.setMonth(timesheetDate.getMonthValue());
@@ -228,6 +200,19 @@ public class Timesheet extends BaseEntity {
     }
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Timesheet timesheet = (Timesheet) o;
+        return Objects.equals(userId, timesheet.userId) && Objects.equals(clientId, timesheet.clientId) && Objects.equals(year, timesheet.year) && Objects.equals(month, timesheet.month);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId, clientId, year, month);
+    }
+
     /**
      * @return the unique key for a timesheet
      */
@@ -235,7 +220,7 @@ public class Timesheet extends BaseEntity {
     public String toString() {
         final StringBuilder sb = new StringBuilder("Timesheet{");
         sb.append("userId=").append(userId);
-        sb.append(", projectId=").append(projectId);
+        sb.append(", clientId=").append(clientId);
         sb.append(", year=").append(year);
         sb.append(", month=").append(month);
         sb.append(", status=").append(status);

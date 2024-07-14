@@ -7,6 +7,7 @@ import androidx.room.TypeConverters;
 
 import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
 import com.gunnarro.android.terex.domain.converter.LocalDateTimeConverter;
+import com.gunnarro.android.terex.utility.Utility;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -22,9 +23,7 @@ import java.util.Objects;
 @Entity(tableName = "timesheet_summary", indices = {@Index(value = {"timesheet_id", "year", "week_in_year"},
         unique = true)})
 public class TimesheetSummary extends BaseEntity {
-    /**
-     * The timesheet entry summary period.
-     */
+
     public enum TimesheetSummaryPeriodEnum {
         YEAR, MONTH, WEEK
     }
@@ -158,12 +157,17 @@ public class TimesheetSummary extends BaseEntity {
         this.totalWorkedHours = totalWorkedHours;
     }
 
+    public String getTotalWorkedHoursFormatted() {
+        return String.format("%,.1f", totalWorkedHours);
+    }
+
+
     public Double getTotalBilledAmount() {
         return totalBilledAmount;
     }
 
     public String getTotalBilledAmountFormatted() {
-        return String.format(Locale.getDefault(), "%.2f", totalBilledAmount);
+        return Utility.formatAmountToNOK(totalBilledAmount);
     }
 
     public void setTotalBilledAmount(Double totalBilledAmount) {

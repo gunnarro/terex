@@ -181,10 +181,6 @@ Fapp/src/main/java/com/gunnarro/android/terex/domain/entity/Client.java,c/8/c8d
 Papp/src/main/java/com/gunnarro/android/terex/domain/dto/ConsultantBrokerDto.java,4/0/40d9f3c5d2776ba87328d37eb6e2db4b98bbbc06
 }
 Mapp/src/test/java/com/gunnarro/android/terex/domain/entity/TimesheetTest.java,8/b/8b0bb41d1d99f908bb8c2b718847219968614e97
-y
-Iapp/src/main/java/com/gunnarro/android/terex/domain/dto/RegisterWork.java,b/f/bf0604b9a1c39c22f3e28cb2e6702e771c2daafa
-}
-Mapp/src/test/java/com/gunnarro/android/terex/domain/dto/RegisterWorkTest.java,e/7/e7635e8606896e4bcb23c514cdeb077794af52d1
 ‚
 Rapp/src/test/java/com/gunnarro/android/terex/domain/entity/TimesheetEntryTest.java,6/7/6738d6552ec2e7b6ff67df62356d89b0f328bdf5
 v
@@ -394,3 +390,9 @@ Oapp/src/main/java/com/gunnarro/android/terex/ui/view/IntegrationViewHolder.java
 Mapp/src/test/java/com/gunnarro/android/terex/domain/dto/TimesheetDtoTest.java,9/2/92040b7d5de15c238406173da6401d5fe51b25e5
 ƒ
 Sapp/src/androidTest/java/com/gunnarro/android/terex/service/InvoiceServiceTest.java,4/5/458c9fff49e93a29646bf4d406000899a4219999
+…
+Uapp/src/test/java/com/gunnarro/android/terex/service/TimesheetServiceBillingTest.java,9/8/980cab7b11b42005968227dc7fc9815dafa23983
+…
+Uapp/src/test/java/com/gunnarro/android/terex/service/TimesheetServiceSummaryTest.java,3/a/3a02fccdb8ab58875a36f6c12acbb42ca06a9f4c
+<
+doc/b39.html,d/9/d9d6a6ad1d36c9ce7ae210c6fd37580ae3f7b3d6

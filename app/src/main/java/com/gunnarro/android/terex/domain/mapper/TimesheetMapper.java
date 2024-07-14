@@ -68,7 +68,6 @@ public class TimesheetMapper {
     public static Timesheet fromTimesheetDto(TimesheetDto timesheetDto) {
         Timesheet timesheet = new Timesheet();
         timesheet.setId(timesheetDto.getId());
-        timesheet.setProjectId(timesheetDto.getProjectDto().getId());
         timesheet.setUserId(timesheetDto.getUserAccountDto().getId());
         timesheet.setDescription(timesheetDto.getDescription());
         timesheet.setYear(timesheetDto.getYear());

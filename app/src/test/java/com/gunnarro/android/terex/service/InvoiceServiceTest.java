@@ -70,7 +70,7 @@ class InvoiceServiceTest {
 
         List<TimesheetSummary> timesheetSummaries = List.of(timesheetSummaryWeek1);
         when(timesheetServiceMock.getTimesheetDto(anyLong())).thenReturn(timesheetDto);
-        when(timesheetServiceMock.createTimesheetSummaryForBilling(anyLong(), anyInt())).thenReturn(TimesheetMapper.toTimesheetSummaryDtoList(timesheetSummaries));
+        when(timesheetServiceMock.createTimesheetSummaryForBilling(anyLong())).thenReturn(TimesheetMapper.toTimesheetSummaryDtoList(timesheetSummaries));
         when(invoiceRepositoryMock.saveInvoice(any())).thenReturn(23L);
         Long invoiceId = invoiceService.createInvoice(timesheetId, 100L, 200L, 1250);
         assertEquals(23, invoiceId);
@@ -83,7 +83,7 @@ class InvoiceServiceTest {
     @Test
     void generateTimesheet() {
         TimesheetService timesheetService = new TimesheetService();
-        List<TimesheetEntry> timesheetEntries = TestData.generateTimesheetEntries(2023, 2, List.of(), List.of());
+        List<TimesheetEntry> timesheetEntries = TestData.generateTimesheetEntries(2023, 2, 200L, List.of(), List.of());
         assertEquals(19, timesheetEntries.size());
         assertEquals(30, timesheetEntries.get(0).getBreakSeconds());
         assertEquals("Open", timesheetEntries.get(0).getStatus());
@@ -101,7 +101,7 @@ class InvoiceServiceTest {
     @Test
     void buildInvoiceSummary() {
         TimesheetService timesheetService = new TimesheetService();
-        List<TimesheetSummary> timesheetSummaries = TestData.buildTimesheetSummaryByWeek(23L, 2023, 2, 1250);
+        List<TimesheetSummary> timesheetSummaries = TestData.buildTimesheetSummaryByWeek(23L, 200L,2023, 2, 1250);
         assertEquals(5, timesheetSummaries.size());
         assertEquals(0, timesheetSummaries.get(0).getTimesheetId());
         assertEquals(24187.5, timesheetSummaries.get(0).getTotalBilledAmount());

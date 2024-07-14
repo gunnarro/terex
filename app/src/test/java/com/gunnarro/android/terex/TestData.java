@@ -75,9 +75,9 @@ public class TestData {
         return timesheetEntryList;
     }
 
-    public static List<TimesheetSummary> buildTimesheetSummaryByWeek(Long timesheetId, Integer year, Integer month, Integer hourlyRate) {
+    public static List<TimesheetSummary> buildTimesheetSummaryByWeek(Long timesheetId, Long projectId, Integer year, Integer month, Integer hourlyRate) {
         Map<Integer, List<TimesheetEntry>> weekMap = new HashMap<>();
-        generateTimesheetEntries(year, month, List.of(), List.of()).forEach(t -> {
+        generateTimesheetEntries(year, month, projectId, List.of(), List.of()).forEach(t -> {
             int week = getWeek(t.getWorkdayDate());
             if (!weekMap.containsKey(week)) {
                 weekMap.put(week, new ArrayList<>());
@@ -110,12 +110,12 @@ public class TestData {
      * @param year  current year
      * @param month from january to december, for example Month.MARCH
      */
-    public static List<TimesheetEntry> generateTimesheetEntries(Integer year, Integer month, List<Integer> sickDates, List<Integer> vacationDates) {
-        return getWorkingDays(year, month).stream().map(e -> TestData.createTimesheetEntry(e, sickDates, vacationDates)).collect(Collectors.toList());
+    public static List<TimesheetEntry> generateTimesheetEntries(Integer year, Integer month, Long projectId, List<Integer> sickDates, List<Integer> vacationDates) {
+        return getWorkingDays(year, month).stream().map(e -> TestData.createTimesheetEntry(e, projectId, sickDates, vacationDates)).collect(Collectors.toList());
     }
 
-    private static TimesheetEntry createTimesheetEntry(LocalDate day, List<Integer> sickDates, List<Integer> vacationDates) {
-        TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(new java.util.Random().nextLong(), 11L, day);
+    private static TimesheetEntry createTimesheetEntry(LocalDate day, Long projectId, List<Integer> sickDates, List<Integer> vacationDates) {
+        TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(new java.util.Random().nextLong(), projectId, day);
         if (sickDates.contains(timesheetEntry.getWorkdayDate().getDayOfMonth())) {
             timesheetEntry.setType(TimesheetEntry.TimesheetEntryTypeEnum.SICK.name());
             timesheetEntry.setStartTime(null);

@@ -105,26 +105,6 @@
                     tools:ignore="KeyboardInaccessibleWidget" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/timesheet_new_project_spinner_layout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:hint="@string/lbl_project">
-
-                <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                    android:id="@+id/timesheet_new_project_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:autoHandwritingEnabled="false"
-                    android:autofillHints="false"
-                    android:clickable="true"
-                    android:importantForAutofill="no"
-                    android:inputType="none"
-                    tools:ignore="KeyboardInaccessibleWidget" />
-            </com.google.android.material.textfield.TextInputLayout>
-
             <!-- timesheet status button group -->
             <com.google.android.material.button.MaterialButtonToggleGroup
                 android:id="@+id/timesheet_new_status_btn_group_layout"

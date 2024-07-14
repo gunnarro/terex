@@ -121,7 +121,7 @@ public class InvoiceService {
     public Long createInvoice(@NotNull Long invoiceIssuerId, @NotNull Long clientId, @NotNull Long timesheetId, @NotNull Integer hourlyRate) {
         TimesheetDto timesheetDto = timesheetService.getTimesheetDto(timesheetId);
         // first accumulate timesheet entries
-        List<TimesheetSummaryDto> timesheetSummaryDtoList = timesheetService.createTimesheetSummaryForBilling(timesheetId, hourlyRate);
+        List<TimesheetSummaryDto> timesheetSummaryDtoList = timesheetService.createTimesheetSummaryForBilling(timesheetId);
         // there after create the invoice
         Invoice invoice = new Invoice();
         invoice.setInvoiceNumber(generateInvoiceNumber());

@@ -86,4 +86,12 @@ class UtilityTest {
         Assertions.assertEquals(22, (int) Utility.countBusinessDaysInMonth(LocalDate.of(2023, 11, 1)));
         Assertions.assertEquals(21, (int) Utility.countBusinessDaysInMonth(LocalDate.of(2023, 12, 1)));
     }
+
+    @Test
+    void formatAmountNOK() {
+        Assertions.assertEquals("206 250,00", Utility.formatAmountToNOK(206250.00));
+        Assertions.assertEquals("101,35", Utility.formatAmountToNOK(101.35));
+        Assertions.assertEquals("101,00", Utility.formatAmountToNOK(101));
+        Assertions.assertEquals("1 101,50", Utility.formatAmountToNOK(1101.5));
+    }
 }

@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -19,9 +21,12 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.textfield.TextInputEditText;
 import com.gunnarro.android.terex.R;
+import com.gunnarro.android.terex.domain.dto.ProjectDto;
+import com.gunnarro.android.terex.domain.dto.SpinnerItem;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
+import com.gunnarro.android.terex.service.ProjectService;
 import com.gunnarro.android.terex.service.TimesheetService;
 import com.gunnarro.android.terex.utility.Utility;
 
@@ -30,6 +35,8 @@ import org.jetbrains.annotations.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -40,11 +47,13 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class TimesheetEntryAddFragment extends BaseFragment implements View.OnClickListener {
 
     private final TimesheetService timesheetService;
+    private final ProjectService projectService;
 
     @Inject
     public TimesheetEntryAddFragment() {
         // Needed by dagger framework
         timesheetService = new TimesheetService();
+        projectService = new ProjectService();
     }
 
     @Override
@@ -53,6 +62,9 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
         requireActivity().setTitle(R.string.title_register_work);
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_timesheet_entry_add, container, false);
+
+        final TimesheetEntry timesheetEntry = readTimesheetEntryFromBundle();
+
         // workday date picker
         TextInputEditText workdayDay = view.findViewById(R.id.timesheet_entry_workday_day);
         // turn off keyboard popup when clicked
@@ -72,6 +84,26 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
             workdayDatePicker.show();
         });
 
+        // create client projects spinner
+        AutoCompleteTextView projectSpinner = requireView().findViewById(R.id.timesheet_entry_project_spinner);
+        List<ProjectDto> projectDtoList = timesheetService.getTimesheetDto(timesheetEntry.getTimesheetId()).getClientDto().getProjectList();
+        List<SpinnerItem> projectItems = projectDtoList.stream().map(p -> new SpinnerItem(p.getId(), p.getName())).collect(Collectors.toList());
+        ArrayAdapter<SpinnerItem> projectAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, projectItems);
+        projectSpinner.setAdapter(projectAdapter);
+        projectSpinner.setListSelection(0);
+
+        // project dropdown
+        /*
+        AutoCompleteTextView projectSpinner = requireView().findViewById(R.id.timesheet_entry_project_spinner);
+        // some trouble to get the project id, so this mey be to complicated
+        int count = projectSpinner.getAdapter().getCount();
+        for (int i = 0; i < count; i++) {
+            SpinnerItem item = (SpinnerItem) projectSpinner.getAdapter().getItem(i);
+            if (item.name().equals(projectSpinner.getText().toString())) {
+                //timesheet.setProjectId(item.id());
+            }
+        }
+        */
         // timesheet entity type
         MaterialButtonToggleGroup typeBtnGrp = view.findViewById(R.id.timesheet_entry_type_btn_group_layout);
         typeBtnGrp.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
@@ -143,7 +175,7 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
             returnToTimesheetEntryList(getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY));
         });
 
-        updateTimesheetEntryAddView(view, readTimesheetEntryFromBundle());
+        updateTimesheetEntryAddView(view, timesheetEntry);
         return view;
     }
 
@@ -195,6 +227,9 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
         EditText timesheetNameView = view.findViewById(R.id.timesheet_entry_timesheet_name);
         timesheetNameView.setText("timesheetId: " + timesheetEntry.getTimesheetId());
 
+        AutoCompleteTextView projectSpinner = view.findViewById(R.id.timesheet_entry_project_spinner);
+        projectSpinner.setText(projectSpinner.getAdapter().getItem(0).toString());
+
         MaterialButtonToggleGroup typeBtnGrp = view.findViewById(R.id.timesheet_entry_type_btn_group_layout);
         if (timesheetEntry.isRegularWorkDay()) {
             ((MaterialButton) typeBtnGrp.findViewById(R.id.timesheet_entry_type_regular)).setChecked(true);
@@ -239,6 +274,7 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
             lastModifiedDateView.setEnabled(false);
             // disable input that is not allowed to edit
             timesheetNameView.setEnabled(false);
+            projectSpinner.setEnabled(false);
             workdayYearView.setEnabled(false);
             workdayMonthView.setEnabled(false);
             view.findViewById(R.id.timesheet_entry_date_layout).setVisibility(View.GONE);
@@ -307,6 +343,16 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
         LocalDateTime lastModifiedDateTime = Utility.toLocalDateTime(lastModifiedDateView.getText().toString());
         if (lastModifiedDateTime != null) {
             timesheetEntry.setLastModifiedDate(lastModifiedDateTime);
+        }
+
+        AutoCompleteTextView projectSpinner = requireView().findViewById(R.id.timesheet_entry_project_spinner);
+        // some trouble to get the project id, so this mey be to complicated
+        int count = projectSpinner.getAdapter().getCount();
+        for (int i = 0; i < count; i++) {
+            SpinnerItem item = (SpinnerItem) projectSpinner.getAdapter().getItem(i);
+            if (item.name().equals(projectSpinner.getText().toString())) {
+                timesheetEntry.setProjectId(item.id());
+            }
         }
 
         MaterialButtonToggleGroup typeBtnGrp = requireView().findViewById(R.id.timesheet_entry_type_btn_group_layout);

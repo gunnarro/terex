@@ -28,7 +28,7 @@ public interface TimesheetDao {
     Timesheet getTimesheetById(Long id);
 
     @Query("SELECT p.name || ' ' || t.year || '/' || t.month FROM timesheet t"
-            + " JOIN project p ON t.project_id"
+            + " JOIN project p ON t.client_id"
             + " WHERE t.id = :timesheetId")
     String getTimesheetTitle(Long timesheetId);
 
@@ -39,8 +39,8 @@ public interface TimesheetDao {
     @Query("SELECT * FROM timesheet WHERE id = :timesheetId")
     TimesheetWithEntries getTimesheetWithEntries(Long timesheetId);
 
-    @Query("SELECT * FROM timesheet WHERE user_account_id = :userAccountId AND project_id = :projectId AND year = :year AND month = :month")
-    Timesheet find(Long userAccountId, Long projectId, Integer year, Integer month);
+    @Query("SELECT * FROM timesheet WHERE user_account_id = :userAccountId AND client_id = :clientId AND year = :year AND month = :month")
+    Timesheet find(Long userAccountId, Long clientId, Integer year, Integer month);
 
     @Query("SELECT * FROM timesheet where year = :year ORDER BY year, month")
         // @Query("SELECT t.*, count(e.timesheet_id) AS registeredWorkingDays , sum(e.worked_in_min) as  registeredWorkingHours FROM timesheet t"
@@ -93,11 +93,6 @@ public interface TimesheetDao {
             + " INNER JOIN timesheet_entry ON timesheet_entry.timesheet_id = timesheet.id"
             + " WHERE timesheet.id = :timesheetId AND timesheet_entry.type = 'REGULAR'")
     Integer getWorkedMinutes(Long timesheetId);
-
-    @Query("SELECT project.name FROM timesheet"
-            + " INNER JOIN project ON project.id = timesheet.project_id"
-            + " WHERE timesheet.id = :timesheetId")
-    String getProjectName(Long timesheetId);
 
     @Query("SELECT user_account.user_name FROM timesheet"
             + " INNER JOIN user_account ON user_account.id = timesheet.user_account_id"

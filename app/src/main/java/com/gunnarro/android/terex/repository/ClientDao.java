@@ -22,16 +22,14 @@ import java.util.List;
 @Dao
 public interface ClientDao {
 
-    @Query("SELECT client.id FROM client"
-            + " INNER JOIN project ON project.client_id = client.id "
-            + " INNER JOIN timesheet ON timesheet.project_id = project.id"
-            + " WHERE timesheet.id = :timesheetId")
+    @Query("SELECT client.id FROM client, timesheet"
+            + " WHERE timesheet.id = :timesheetId"
+            + " AND timesheet.client_id = client.id")
     Long getClientIdByTimesheetId(Long timesheetId);
 
-    @Query("SELECT client.* FROM client"
-            + " INNER JOIN project ON project.client_id = client.id "
-            + " INNER JOIN timesheet ON timesheet.project_id = project.id"
-            + " WHERE timesheet.id = :timesheetId")
+    @Query("SELECT client.* FROM client, timesheet"
+            + " WHERE timesheet.id = :timesheetId"
+            + " AND timesheet.client_id = client.id")
     Client getClientByTimesheetId(Long timesheetId);
 
     @Query("SELECT id FROM client ORDER BY id ASC")

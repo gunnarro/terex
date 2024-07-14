@@ -68,7 +68,7 @@ public class TimesheetSummaryFragment extends BaseFragment {
     private void buildTimesheetSummary(Long timesheetId) {
         Integer hourlyRate = projectService.getProjectHourlyRate(timesheetId);
         String timesheetSummeryMustacheTemplate = loadMustacheTemplate(requireContext(), InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY);
-        String timesheetSummaryHtml = timesheetService.createTimesheetSummaryHtml(timesheetId, hourlyRate, timesheetSummeryMustacheTemplate);
+        String timesheetSummaryHtml = timesheetService.createTimesheetSummaryHtml(timesheetId, timesheetSummeryMustacheTemplate);
         WebView webView;
         try {
             webView = requireView().findViewById(R.id.timesheet_summary_web_view);

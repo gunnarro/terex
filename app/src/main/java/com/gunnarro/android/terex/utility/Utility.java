@@ -13,8 +13,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -24,6 +26,7 @@ import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.WeekFields;
+import java.util.Currency;
 import java.util.Locale;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -267,5 +270,11 @@ public class Utility {
         } catch (IOException e) {
             throw new TerexApplicationException("error reading mustache template", "50050", e);
         }
+    }
+
+    public static String formatAmountToNOK(double amount) {
+        DecimalFormat formatter
+                = new DecimalFormat("#,##0.00");
+        return formatter.format(new BigDecimal(amount)).replace(",", " ").replace(".", ",");
     }
 }

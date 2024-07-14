@@ -68,7 +68,6 @@ class TimesheetMapperTest {
         timesheetDto.setMonth(7);
         Timesheet timesheet = TimesheetMapper.fromTimesheetDto(timesheetDto);
         assertEquals(timesheetDto.getId(), timesheet.getId());
-        assertEquals(timesheetDto.getProjectDto().getId(), timesheet.getProjectId());
         assertEquals(timesheetDto.getUserAccountDto().getId(), timesheet.getUserId());
         assertEquals(timesheetDto.getYear(), timesheet.getYear());
         assertEquals(timesheetDto.getMonth(), timesheet.getMonth());
@@ -78,7 +77,7 @@ class TimesheetMapperTest {
     @Test
     void toTimesheetEntryDto() {
         LocalDate localDate = LocalDate.of(2023, 12, 1);
-        List<TimesheetEntry> timesheetEntryList = TestData.generateTimesheetEntries(localDate.getYear(), localDate.getMonthValue(), List.of(), List.of());
+        List<TimesheetEntry> timesheetEntryList = TestData.generateTimesheetEntries(localDate.getYear(), localDate.getMonthValue(), 200L, List.of(), List.of());
 
         TimesheetEntryDto timesheetEntryDto = TimesheetMapper.toTimesheetEntryDto(timesheetEntryList.get(0));
         assertEquals("2023-12-01", timesheetEntryDto.getWorkdayDate().toString());
@@ -92,7 +91,7 @@ class TimesheetMapperTest {
     @Test
     void toTimesheetEntryDtoList() {
         LocalDate localDate = LocalDate.of(2023, 12, 1);
-        List<TimesheetEntry> timesheetEntryList = TestData.generateTimesheetEntries(localDate.getYear(), localDate.getMonthValue(), List.of(), List.of());
+        List<TimesheetEntry> timesheetEntryList = TestData.generateTimesheetEntries(localDate.getYear(), localDate.getMonthValue(), 200L, List.of(), List.of());
 
         List<TimesheetEntryDto> timesheetEntryDtoList = TimesheetMapper.toTimesheetEntryDtoList(timesheetEntryList);
         assertEquals(21, timesheetEntryDtoList.size());
@@ -101,7 +100,7 @@ class TimesheetMapperTest {
     @Test
     void toTimesheetSummaryDto() {
         LocalDate localDate = LocalDate.of(2023, 12, 1);
-        List<TimesheetSummary> timesheetSummaryList = TestData.buildTimesheetSummaryByWeek(23L, localDate.getYear(), localDate.getMonthValue(), 1250);
+        List<TimesheetSummary> timesheetSummaryList = TestData.buildTimesheetSummaryByWeek(23L, 200L, localDate.getYear(), localDate.getMonthValue(), 1250);
 
         TimesheetSummaryDto timesheetWeekSummaryDto = TimesheetMapper.toTimesheetSummaryDto(timesheetSummaryList.get(0));
         assertEquals(23, timesheetWeekSummaryDto.getTimesheetId());
@@ -119,7 +118,7 @@ class TimesheetMapperTest {
     @Test
     void toTimesheetSummaryDtoList() {
         LocalDate localDate = LocalDate.of(2023, 12, 1);
-        List<TimesheetSummary> timesheetSummaryList = TestData.buildTimesheetSummaryByWeek(23L, localDate.getYear(), localDate.getMonthValue(), 1250);
+        List<TimesheetSummary> timesheetSummaryList = TestData.buildTimesheetSummaryByWeek(23L, 200L, localDate.getYear(), localDate.getMonthValue(), 1250);
 
         List<TimesheetSummaryDto> timesheetSummaryDtoList = TimesheetMapper.toTimesheetSummaryDtoList(timesheetSummaryList);
         assertEquals(5, timesheetSummaryDtoList.size());

@@ -1,3 +1,6 @@
+Table user_account {
+  id long [primary key]
+}
 Table client {
     id long [primary key]
     organization_id long [not null, unique]
@@ -51,8 +54,8 @@ Table contact_info {
 
 Table invoice {
     id long [primary key]
-    timesheet_id integer
-    client_id integer
+    timesheet_id long
+    client_id long
     invoice_number integer
     billing_date timestamp
     invoice_status varchar
@@ -63,7 +66,7 @@ Table invoice {
 
 Table invoice_attachment {
     id long [primary key]
-    invoice_id integer
+    invoice_id long
     attachment_file_name varchar
     attachment_type varchar
     attachment_file_type varchar
@@ -72,10 +75,7 @@ Table invoice_attachment {
 
 Table timesheet {
     id long [primary key]
-    project_id integer
-    timesheet_ref varchar
-    client_name varchar
-    project_code varchar
+    user_account_id long
     year integer
     month integer
     from_date timestamp
@@ -85,10 +85,10 @@ Table timesheet {
 Table timesheet_entry {
     id long [primary key]
     timesheet_id long
+    project_id long
     workday_date timestamp
     start_time timestamp
     end_time timestamp
-    workday_week integer
 }
 
 Table timesheet_summary {
@@ -114,12 +114,12 @@ Ref: project.client_id > client.id  // many-to-one
 //Ref: consultant_project_lnk.consultant_id > consultant.id
 //Ref: consultant_project_lnk.project_id > project.id
 
-Ref: timesheet.project_id > project.id                  // many-to-one
+Ref: timesheet.user_account_id > user_account.id                  // many-to-one
 Ref: timesheet_entry.timesheet_id > timesheet.id        // many-to-one
+Ref: timesheet_entry.project_id > project.id        // many-to-one
 Ref: timesheet_summary.timesheet_id > timesheet.id      // many-to-one
 Ref: invoice.timesheet_id - timesheet.id                // one-to-one
 Ref: invoice_attachment.invoice_id > invoice.id         // many-to-one
 
 // composite foreign key example
 // Ref: ecommerce.merchant_periods.(merchant_id, country_code) > ecommerce.merchants.(id, country_code)
-

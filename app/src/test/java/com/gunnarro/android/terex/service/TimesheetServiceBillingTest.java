@@ -60,7 +60,7 @@ class TimesheetServiceBillingTest {
         Timesheet timesheet = new Timesheet();
         timesheet.setId(23L);
         timesheet.setUserId(1L);
-        timesheet.setProjectId(2L);
+        timesheet.setClientId(444L);
         timesheet.setFromDate(LocalDate.of(month.getYear(), month.getMonthValue(), 1));
         timesheet.setToDate(LocalDate.of(month.getYear(), month.getMonthValue(), 30));
         timesheet.setYear(month.getYear());
@@ -72,9 +72,9 @@ class TimesheetServiceBillingTest {
         when(assetManagerMock.open(anyString())).thenReturn(new FileInputStream(mustacheTemplateFile));
         when(applicationContextMock.getAssets()).thenReturn(assetManagerMock);
 
-        List<TimesheetEntry> timesheetEntryList = TestData.generateTimesheetEntries(timesheet.getFromDate().getYear(), timesheet.getFromDate().getMonthValue(), List.of(8, 16), List.of(14, 15));
+        List<TimesheetEntry> timesheetEntryList = TestData.generateTimesheetEntries(timesheet.getFromDate().getYear(), timesheet.getFromDate().getMonthValue(), 200L, List.of(8, 16), List.of(14, 15));
 
-        when(projectServiceMock.getProject(anyLong())).thenReturn(TestData.createProjectDto(22L, 1L, "terex development"));
+       // when(projectServiceMock.getProject(anyLong())).thenReturn(TestData.createProjectDto(22L, 1L, "terex development"));
         when(userAccountServiceMock.getUserAccount(anyLong())).thenReturn(TestData.createUserAccountDto(23L, "Petter Dass"));
         when(timesheetRepositoryMock.getTimesheet(anyLong())).thenReturn(timesheet);
         when(timesheetRepositoryMock.getTimesheetEntryList(anyLong())).thenReturn(timesheetEntryList);
@@ -94,7 +94,7 @@ class TimesheetServiceBillingTest {
     void createTimesheetSummaryAttachmentHtml() throws IOException {
         Timesheet timesheet = Timesheet.createDefault(100L, 10L,200L, 2023, 11);
         timesheet.setId(23L);
-        timesheet.setProjectId(444L);
+        timesheet.setClientId(444L);
 
         UserAccountDto invoiceIssuer = TestData.createUserAccountDto(1000L, "guro");
         invoiceIssuer.setOrganizationDto(TestData.createOrganizationDto(100L, "gunnarro as", "822 707 922"));
@@ -103,6 +103,7 @@ class TimesheetServiceBillingTest {
         invoiceReceiver.setContactPersonDto(TestData.createContactPerson(600L, "kontaktperson hos klient"));
         ProjectDto projectDto = new ProjectDto();
         projectDto.setName("terex project");
+        projectDto.setHourlyRate(1000);
         File mustacheTemplateFile = new File("src/main/assets/" + InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY.getTemplate());
 
         Context applicationContextMock = mock(Context.class);
@@ -110,10 +111,10 @@ class TimesheetServiceBillingTest {
         when(assetManagerMock.open(anyString())).thenReturn(new FileInputStream(mustacheTemplateFile));
         when(applicationContextMock.getAssets()).thenReturn(assetManagerMock);
 
-        List<TimesheetSummary> timesheetSummaryList = TestData.buildTimesheetSummaryByWeek(23L, 2023, 1, 1000);
+        List<TimesheetSummary> timesheetSummaryList = TestData.buildTimesheetSummaryByWeek(23L, 200L,2023, 1, 1000);
         when(timesheetRepositoryMock.getTimesheet(anyLong())).thenReturn(timesheet);
         when(timesheetRepositoryMock.getTimesheetSummary(anyLong())).thenReturn(timesheetSummaryList);
-        when(projectServiceMock.getProject(anyLong())).thenReturn(projectDto);
+//        when(projectServiceMock.getProject(anyLong())).thenReturn(projectDto);
 
         String timesheetSummaryMustacheTemplate = loadMustacheTemplate(applicationContextMock, InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY);
 

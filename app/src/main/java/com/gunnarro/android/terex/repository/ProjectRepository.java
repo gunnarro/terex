@@ -36,7 +36,7 @@ public class ProjectRepository {
     public ProjectRepository() {
         projectDao = AppDatabase.getDatabase().projectDao();
     }
-
+/*
     @Transaction
     public ProjectWithTimesheet getProjectWithTimesheet(Long projectId) {
         try {
@@ -50,7 +50,7 @@ public class ProjectRepository {
             throw new TerexApplicationException("Error getting project with timesheet list", e.getMessage(), e.getCause());
         }
     }
-
+*/
     public LiveData<List<Project>> getProjectsLiveData(Long clientId, String status) {
         return projectDao.getProjectsLiveData(clientId, status);
     }

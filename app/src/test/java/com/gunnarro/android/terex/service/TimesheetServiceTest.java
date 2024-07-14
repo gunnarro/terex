@@ -62,7 +62,7 @@ class TimesheetServiceTest {
             timesheetService.saveTimesheet(timesheet);
         });
 
-        Assertions.assertEquals("Timesheet already exist! Timesheet{userId=100, projectId=200, year=2023, month=11, status=NEW}", ex.getMessage());
+        Assertions.assertEquals("Timesheet already exist! Timesheet{userId=100, clientId=10, year=2023, month=11, status=NEW}", ex.getMessage());
     }
 
     @Test
@@ -77,7 +77,7 @@ class TimesheetServiceTest {
             timesheetService.saveTimesheet(timesheetUpdated);
         });
 
-        Assertions.assertEquals("Timesheet is already billed, no changes is allowed. Timesheet{userId=100, projectId=200, year=2023, month=11, status=BILLED}", ex.getMessage());
+        Assertions.assertEquals("Timesheet is already billed, no changes is allowed. Timesheet{userId=100, clientId=10, year=2023, month=11, status=BILLED}", ex.getMessage());
     }
 
     @Test
@@ -174,7 +174,7 @@ class TimesheetServiceTest {
     void saveTimesheetEntry_work_date_after_timesheet_to_date() throws ExecutionException, InterruptedException {
         Timesheet timesheet = Timesheet.createDefault(100L, 10L, 200L, 2023, 11);
         timesheet.setId(1L);
-        TimesheetEntry timesheetEntryAfterToDate = TimesheetEntry.createDefault(timesheet.getId(), timesheet.getProjectId(), LocalDate.of(2023, 12, 21));
+        TimesheetEntry timesheetEntryAfterToDate = TimesheetEntry.createDefault(timesheet.getId(), -1L, LocalDate.of(2023, 12, 21));
 
         when(timesheetRepositoryMock.getTimesheet(anyLong())).thenReturn(timesheet);
         when(timesheetRepositoryMock.getTimesheetEntry(timesheetEntryAfterToDate.getTimesheetId(), timesheetEntryAfterToDate.getWorkdayDate())).thenReturn(null);
@@ -188,7 +188,7 @@ class TimesheetServiceTest {
     void saveTimesheetEntry_work_date_before_timesheet_from_date() throws ExecutionException, InterruptedException {
         Timesheet timesheet = Timesheet.createDefault(100L, 10L, 200L, 2023, 11);
         timesheet.setId(1L);
-        TimesheetEntry timesheetEntryBeforeFromDate = TimesheetEntry.createDefault(timesheet.getId(), timesheet.getProjectId(), LocalDate.of(2023, 10, 2));
+        TimesheetEntry timesheetEntryBeforeFromDate = TimesheetEntry.createDefault(timesheet.getId(), -1L, LocalDate.of(2023, 10, 2));
         when(timesheetRepositoryMock.getTimesheet(anyLong())).thenReturn(timesheet);
         when(timesheetRepositoryMock.getTimesheetEntry(timesheetEntryBeforeFromDate.getTimesheetId(), timesheetEntryBeforeFromDate.getWorkdayDate())).thenReturn(null);
         InputValidationException ex = assertThrows(InputValidationException.class, () -> {

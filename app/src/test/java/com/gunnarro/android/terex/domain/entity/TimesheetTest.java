@@ -14,7 +14,6 @@ class TimesheetTest {
         Timesheet timeSheet = Timesheet.createDefault(100L, 10L, 200L, 2023, 11);
         assertEquals(100, timeSheet.getUserId());
         assertEquals(10, timeSheet.getClientId());
-        assertEquals(200, timeSheet.getProjectId());
         assertEquals(11, timeSheet.getMonth().intValue());
         assertEquals(2023, timeSheet.getYear().intValue());
         assertEquals("2023-11-01", timeSheet.getFromDate().toString());
@@ -24,7 +23,7 @@ class TimesheetTest {
 
 
         assertNull(timeSheet.getDescription());
-        assertEquals("Timesheet{userId=100, projectId=200, year=2023, month=11, status=NEW}", timeSheet.toString());
+        assertEquals("Timesheet{userId=100, clientId=10, year=2023, month=11, status=NEW}", timeSheet.toString());
         assertEquals(Timesheet.TimesheetStatusEnum.NEW.name(), timeSheet.getStatus());
     }
 
@@ -60,13 +59,13 @@ class TimesheetTest {
     void timesheetAreEqual() {
         Timesheet timesheet1 = new Timesheet();
         timesheet1.setUserId(100L);
-        timesheet1.setProjectId(200L);
+        timesheet1.setClientId(200L);
         timesheet1.setYear(2023);
         timesheet1.setMonth(11);
 
         Timesheet timesheet2 = new Timesheet();
         timesheet2.setUserId(100L);
-        timesheet2.setProjectId(200L);
+        timesheet2.setClientId(200L);
         timesheet2.setYear(2023);
         timesheet2.setMonth(11);
 
@@ -77,13 +76,13 @@ class TimesheetTest {
     void timesheetNotEqual() {
         Timesheet timesheet1 = new Timesheet();
         timesheet1.setUserId(100L);
-        timesheet1.setProjectId(200L);
+        timesheet1.setClientId(200L);
         timesheet1.setYear(2023);
         timesheet1.setMonth(11);
 
         Timesheet timesheet2 = new Timesheet();
         timesheet2.setUserId(100L);
-        timesheet2.setProjectId(200L);
+        timesheet2.setClientId(200L);
         timesheet2.setYear(2023);
         timesheet2.setMonth(12);
 

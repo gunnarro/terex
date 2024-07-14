@@ -94,11 +94,31 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autofillHints="false"
-                    android:enabled="true"
+                    android:enabled="false"
                     android:importantForAutofill="no"
                     android:inputType="text"
                     android:maxLength="50"
                     android:text="" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/timesheet_entry_project_spinner_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:hint="@string/lbl_project">
+
+                <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                    android:id="@+id/timesheet_entry_project_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autoHandwritingEnabled="false"
+                    android:autofillHints="false"
+                    android:clickable="true"
+                    android:importantForAutofill="no"
+                    android:inputType="none"
+                    tools:ignore="KeyboardInaccessibleWidget" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- timesheet entry type button group -->

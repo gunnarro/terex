@@ -39,7 +39,6 @@ public class TimesheetRepository {
         timesheetSummaryDao = AppDatabase.getDatabase().timesheetSummaryDao();
     }
 
-
     public LiveData<Map<Timesheet, List<TimesheetEntry>>> getTimesheetLiveData(Long timesheetId) {
         return timesheetDao.getTimesheetLiveData(timesheetId);
     }
@@ -118,10 +117,10 @@ public class TimesheetRepository {
         }
     }
 
-    public Timesheet find(Long userId, Long projectId, Integer year, Integer mount) {
+    public Timesheet find(Long userId, Long clientId, Integer year, Integer mount) {
         try {
             CompletionService<Timesheet> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
-            service.submit(() -> timesheetDao.find(userId, projectId, year, mount));
+            service.submit(() -> timesheetDao.find(userId, clientId, year, mount));
             Future<Timesheet> future = service.take();
             return future != null ? future.get() : null;
         } catch (InterruptedException | ExecutionException e) {
@@ -139,7 +138,6 @@ public class TimesheetRepository {
             return future != null ? future.get() : null;
         } catch (InterruptedException | ExecutionException e) {
             // Something crashed, therefore restore interrupted state before leaving.
-            e.printStackTrace();
             Thread.currentThread().interrupt();
             throw new TerexApplicationException("Error getting timesheet list", e.getMessage(), e.getCause());
         }
@@ -195,7 +193,6 @@ public class TimesheetRepository {
             Log.d("TimesheetRepository.getTimesheetEntryListLiveData", String.format("timesheetId=%s, data=%s", timesheetId, liveDate.getValue()));
             return liveDate;
         } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
             // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();
             throw new TerexApplicationException("Error getting timesheet entry list", e.getMessage(), e.getCause());

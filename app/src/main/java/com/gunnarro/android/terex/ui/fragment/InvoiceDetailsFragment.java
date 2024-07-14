@@ -146,11 +146,9 @@ public class InvoiceDetailsFragment extends BaseFragment {
             showInfoDialog("Error", String.format("Application error!%sError: %s%s Please report.", e.getMessage(), System.lineSeparator(), System.lineSeparator()));
         }
 
-        Log.d("loadInvoiceAttachment", "html=" + new String(invoiceAttachmentHtml));
         webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
         webView.getSettings().setJavaScriptEnabled(false);
         webView.getSettings().setLoadsImagesAutomatically(true);
-        Log.d("loadInvoiceAttachment", String.format("%s", new String(invoiceAttachmentHtml)));
         webView.loadDataWithBaseURL("file:///android_asset/", new String(invoiceAttachmentHtml), "text/html", "UTF-8", null);
     }
 

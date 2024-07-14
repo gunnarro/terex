@@ -48,7 +48,7 @@ public class TimesheetServiceTest extends IntegrationTestSetup {
         Long timesheetId = timesheetService.saveTimesheet(newTimesheet);
         Timesheet timesheet = timesheetService.getTimesheet(timesheetId);
         assertEquals(100, timesheet.getUserId().intValue());
-        assertEquals(200, timesheet.getProjectId().intValue());
+        assertEquals(200, timesheet.getClientId().intValue());
         assertEquals(2023, timesheet.getYear().intValue());
         assertEquals(11, timesheet.getMonth().intValue());
         assertEquals("2023-11-01", timesheet.getFromDate().toString());
@@ -72,7 +72,7 @@ public class TimesheetServiceTest extends IntegrationTestSetup {
         newTimesheet.setDescription("Times used to develop android timesheet app");
         InputValidationException ex = assertThrows(InputValidationException.class, () -> {
             timesheetService.saveTimesheet(newTimesheet);
-            timesheetService.saveTimesheet(Timesheet.createDefault(newTimesheet.getUserId(), newTimesheet.getClientId(), newTimesheet.getProjectId(), newTimesheet.getYear(), newTimesheet.getMonth()));
+            timesheetService.saveTimesheet(Timesheet.createDefault(newTimesheet.getUserId(), newTimesheet.getClientId(), -1L, newTimesheet.getYear(), newTimesheet.getMonth()));
         });
         assertEquals("Timesheet already exist! Timesheet{userId=100, projectId=200, year=2023, month=10, status=ACTIVE}", ex.getMessage());
     }

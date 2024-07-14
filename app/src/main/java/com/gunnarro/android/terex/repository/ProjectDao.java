@@ -19,11 +19,11 @@ public interface ProjectDao {
 
     /**
      * use transactions since this method return a aggregate object
-     */
+     *
     @Transaction
     @Query("SELECT * FROM project WHERE id = :projectId")
     ProjectWithTimesheet getProjectWithTimesheet(Long projectId);
-
+*/
     @Query("SELECT * FROM project p WHERE p.id = :projectId")
     Project getProject(long projectId);
 
@@ -48,7 +48,7 @@ public interface ProjectDao {
      * @return hourly rate
      */
     @Query("SELECT project.hourly_rate FROM project"
-            + " INNER JOIN timesheet ON timesheet.project_id = project.id"
+            + " INNER JOIN timesheet ON timesheet.client_id = project.id"
             + " WHERE timesheet.id = :timesheetId")
     Integer getProjectHourlyRate(Long timesheetId);
 

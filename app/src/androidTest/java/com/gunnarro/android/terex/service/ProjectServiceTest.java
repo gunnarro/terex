@@ -37,7 +37,7 @@ public class ProjectServiceTest extends IntegrationTestSetup {
     @Test
     public void saveProject() {
         assertNull(projectService.getProject(1L));
-        assertNull(projectService.getProjectWithTimesheet(1L));
+       // assertNull(projectService.getProjectWithTimesheet(1L));
 
         ProjectDto newProjectDto = new ProjectDto();
         newProjectDto.setClientDto(new ClientDto(200L));
@@ -49,14 +49,14 @@ public class ProjectServiceTest extends IntegrationTestSetup {
 
         Long projectId = projectService.saveProject(newProjectDto);
         assertTrue(projectId.intValue() > 1);
-
+/*
         ProjectDto projectDto = projectService.getProjectWithTimesheet(projectId);
         assertEquals(projectId, projectDto.getId());
         assertEquals("gunnarro timesheet project", projectDto.getName());
         assertEquals("develop a timesheet app", projectDto.getDescription());
         assertEquals(Project.ProjectStatusEnum.ACTIVE.name(), projectDto.getStatus());
-
-        projectDto = projectService.getProject(projectId);
+*/
+        ProjectDto projectDto = projectService.getProject(projectId);
         assertEquals(projectId, projectDto.getId());
         assertEquals("gunnarro timesheet project", projectDto.getName());
         assertEquals("develop a timesheet app", projectDto.getDescription());

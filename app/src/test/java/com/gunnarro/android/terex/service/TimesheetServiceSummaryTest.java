@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import com.gunnarro.android.terex.TestData;
+import com.gunnarro.android.terex.domain.dto.ProjectDto;
 import com.gunnarro.android.terex.domain.dto.TimesheetSummaryDto;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
@@ -47,7 +48,7 @@ class TimesheetServiceSummaryTest {
 
         when(timesheetRepositoryMock.getTimesheet(timesheetExisting.getId())).thenReturn(timesheetExisting);
 
-        TerexApplicationException ex = assertThrows(TerexApplicationException.class, () -> timesheetService.createTimesheetSummaryForBilling(timesheetExisting.getId(), 1250));
+        TerexApplicationException ex = assertThrows(TerexApplicationException.class, () -> timesheetService.createTimesheetSummaryForBilling(timesheetExisting.getId()));
 
         Assertions.assertEquals("Application error! Please Report error to app developer. Error=Application error, timesheet not fulfilled! timesheetId=23, status=ACTIVE", ex.getMessage());
     }
@@ -57,14 +58,14 @@ class TimesheetServiceSummaryTest {
         Timesheet timesheetExisting = Timesheet.createDefault(100L, 10L, 200L, 2023, 11);
         timesheetExisting.setId(23L);
         timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
-        TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(timesheetExisting.getId(), timesheetExisting.getProjectId(), LocalDate.of(2023, 12, 21));
+        TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(timesheetExisting.getId(), -1L, LocalDate.of(2023, 12, 21));
         timesheetEntry.setWorkedSeconds((long) 450 * 60);
         timesheetEntry.setBreakSeconds(30 * 60);
 
         when(timesheetRepositoryMock.getTimesheet(timesheetExisting.getId())).thenReturn(timesheetExisting);
         when(timesheetRepositoryMock.getTimesheetEntryList(timesheetEntry.getTimesheetId())).thenReturn(List.of());
 
-        TerexApplicationException ex = assertThrows(TerexApplicationException.class, () -> timesheetService.createTimesheetSummaryForBilling(timesheetExisting.getId(), 1250));
+        TerexApplicationException ex = assertThrows(TerexApplicationException.class, () -> timesheetService.createTimesheetSummaryForBilling(timesheetExisting.getId()));
 
         Assertions.assertEquals("Application error! Please Report error to app developer. Error=Application error, timesheet not ready for billing, no entries found! timesheetId=23, status=COMPLETED", ex.getMessage());
     }
@@ -82,17 +83,22 @@ class TimesheetServiceSummaryTest {
         // Set timesheet ready for billing
         timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
         // create regular time sheet entry, i.e, worked 7.5 hours and 30 min break
-        TimesheetEntry regularTimesheetEntry = TimesheetEntry.createDefault(timesheetExisting.getId(), timesheetExisting.getProjectId(), LocalDate.of(month.getYear(), month.getMonthValue(), 21));
+        TimesheetEntry regularTimesheetEntry = TimesheetEntry.createDefault(timesheetExisting.getId(), -1L, LocalDate.of(month.getYear(), month.getMonthValue(), 21));
         regularTimesheetEntry.setWorkedSeconds((long) 450 * 60);
         regularTimesheetEntry.setBreakSeconds(30 * 60);
 
-        List<TimesheetEntry> timesheetEntryList = TestData.generateTimesheetEntries(timesheetExisting.getYear(), timesheetExisting.getMonth(), List.of(), List.of());
+        ProjectDto projectDto = new ProjectDto();
+        projectDto.setId(200L);
+        projectDto.setHourlyRate(1250);
+
+        when(projectServiceMock.getProject(projectDto.getId())).thenReturn(projectDto);
+        List<TimesheetEntry> timesheetEntryList = TestData.generateTimesheetEntries(timesheetExisting.getYear(), timesheetExisting.getMonth(), 200L, List.of(), List.of());
         when(timesheetRepositoryMock.getTimesheet(timesheetExisting.getId())).thenReturn(timesheetExisting);
         when(timesheetRepositoryMock.getTimesheetEntryList(regularTimesheetEntry.getTimesheetId())).thenReturn(timesheetEntryList);
 
         // check generated month
         assertEquals(22, timesheetEntryList.size());
-        List<TimesheetSummaryDto> timesheetSummaryDtoList = timesheetService.createTimesheetSummaryForBilling(timesheetExisting.getId(), 1250);
+        List<TimesheetSummaryDto> timesheetSummaryDtoList = timesheetService.createTimesheetSummaryForBilling(timesheetExisting.getId());
         // number of week in the month
         assertEquals(5, timesheetSummaryDtoList.size());
         // check date
@@ -118,11 +124,11 @@ class TimesheetServiceSummaryTest {
         // Set timesheet ready for billing
         timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
         // create regular time sheet entry, i.e, worked 7.5 hours and 30 min break
-        TimesheetEntry regularTimesheetEntry = TimesheetEntry.createDefault(timesheetExisting.getId(), timesheetExisting.getProjectId(), LocalDate.of(month.getYear(), month.getMonthValue(), 21));
+        TimesheetEntry regularTimesheetEntry = TimesheetEntry.createDefault(timesheetExisting.getId(), -1L, LocalDate.of(month.getYear(), month.getMonthValue(), 21));
         regularTimesheetEntry.setWorkedSeconds((long) 450 * 60);
         regularTimesheetEntry.setBreakSeconds(30 * 60);
 
-        List<TimesheetEntry> timesheetEntryList = TestData.generateTimesheetEntries(timesheetExisting.getYear(), timesheetExisting.getMonth(), List.of(), List.of());
+        List<TimesheetEntry> timesheetEntryList = TestData.generateTimesheetEntries(timesheetExisting.getYear(), timesheetExisting.getMonth(), 200L, List.of(), List.of());
         // remove 3 days from week 3
         Predicate<TimesheetEntry> workday8 = item -> item.getWorkdayDate().isEqual(LocalDate.of(month.getYear(), month.getMonthValue(), 8));
         Predicate<TimesheetEntry> workday14 = item -> item.getWorkdayDate().isEqual(LocalDate.of(month.getYear(), month.getMonthValue(), 14));
@@ -130,12 +136,17 @@ class TimesheetServiceSummaryTest {
         Predicate<TimesheetEntry> workday16 = item -> item.getWorkdayDate().isEqual(LocalDate.of(month.getYear(), month.getMonthValue(), 16));
         timesheetEntryList.removeIf(workday8.or(workday14).or(workday15).or(workday16));
 
+        ProjectDto projectDto = new ProjectDto();
+        projectDto.setId(200L);
+        projectDto.setHourlyRate(1250);
+
+        when(projectServiceMock.getProject(projectDto.getId())).thenReturn(projectDto);
         when(timesheetRepositoryMock.getTimesheet(timesheetExisting.getId())).thenReturn(timesheetExisting);
         when(timesheetRepositoryMock.getTimesheetEntryList(regularTimesheetEntry.getTimesheetId())).thenReturn(timesheetEntryList);
         // check generated month
         assertEquals(18, timesheetEntryList.size());
 
-        List<TimesheetSummaryDto> timesheetSummaryDtoList = timesheetService.createTimesheetSummaryForBilling(timesheetExisting.getId(), 1250);
+        List<TimesheetSummaryDto> timesheetSummaryDtoList = timesheetService.createTimesheetSummaryForBilling(timesheetExisting.getId());
         // number of week in the month
         assertEquals(5, timesheetSummaryDtoList.size());
         // check date
@@ -161,18 +172,23 @@ class TimesheetServiceSummaryTest {
         // Set timesheet ready for billing
         timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
         // create regular time sheet entry, i.e, worked 7.5 hours and 30 min break
-        TimesheetEntry regularTimesheetEntry = TimesheetEntry.createDefault(timesheetExisting.getId(), timesheetExisting.getProjectId(), LocalDate.of(month.getYear(), month.getMonthValue(), 21));
+        TimesheetEntry regularTimesheetEntry = TimesheetEntry.createDefault(timesheetExisting.getId(),-1L, LocalDate.of(month.getYear(), month.getMonthValue(), 21));
         regularTimesheetEntry.setWorkedSeconds((long) 450 * 60);
         regularTimesheetEntry.setBreakSeconds(30 * 60);
 
-        List<TimesheetEntry> timesheetEntryList = TestData.generateTimesheetEntries(timesheetExisting.getYear(), timesheetExisting.getMonth(), List.of(8, 16), List.of(14, 15));
+        List<TimesheetEntry> timesheetEntryList = TestData.generateTimesheetEntries(timesheetExisting.getYear(), timesheetExisting.getMonth(), 200L, List.of(8, 16), List.of(14, 15));
 
+        ProjectDto projectDto = new ProjectDto();
+        projectDto.setId(200L);
+        projectDto.setHourlyRate(1250);
+
+        when(projectServiceMock.getProject(projectDto.getId())).thenReturn(projectDto);
         when(timesheetRepositoryMock.getTimesheet(timesheetExisting.getId())).thenReturn(timesheetExisting);
         when(timesheetRepositoryMock.getTimesheetEntryList(regularTimesheetEntry.getTimesheetId())).thenReturn(timesheetEntryList);
 
         // check generated month
         assertEquals(22, timesheetEntryList.size());
-        List<TimesheetSummaryDto> timesheetSummaryDtoList = timesheetService.createTimesheetSummaryForBilling(timesheetExisting.getId(), 1250);
+        List<TimesheetSummaryDto> timesheetSummaryDtoList = timesheetService.createTimesheetSummaryForBilling(timesheetExisting.getId());
         // number of week in the month
         assertEquals(5, timesheetSummaryDtoList.size());
         // check date

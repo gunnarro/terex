@@ -9,6 +9,7 @@ import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.gunnarro.android.terex.domain.dto.ClientDto;
+import com.gunnarro.android.terex.domain.dto.ProjectDto;
 import com.gunnarro.android.terex.domain.dto.TimesheetDto;
 import com.gunnarro.android.terex.domain.dto.TimesheetEntryDto;
 import com.gunnarro.android.terex.domain.dto.TimesheetSummaryDto;
@@ -46,6 +47,8 @@ import javax.inject.Singleton;
 @Singleton
 public class TimesheetService {
 
+    // shoud not be here, move to config part, when ready
+    private static final int VAT_PERCENT = 25;
     private final TimesheetRepository timesheetRepository;
     private final UserAccountService userAccountService;
     private final ProjectService projectService;
@@ -77,7 +80,6 @@ public class TimesheetService {
         if (timesheet != null) {
             TimesheetDto timesheetDto = TimesheetMapper.toTimesheetDto(timesheet, null, null);
             timesheetDto.setUserAccountDto(userAccountService.getUserAccount(timesheet.getUserId()));
-            timesheetDto.setProjectDto(projectService.getProject(timesheet.getProjectId()));
             timesheetDto.setRegisteredWorkedDays(timesheetRepository.getTotalWorkedDays(timesheetId));
             timesheetDto.setRegisteredWorkedHours(timesheetRepository.getTotalWorkedHours(timesheetId));
             timesheetDto.setVacationDays(timesheetRepository.getTotalVacationDays(timesheetId));
@@ -130,7 +132,7 @@ public class TimesheetService {
 
     public Long saveTimesheet(Timesheet timesheet) {
         Log.d("TimesheetRepository.saveTimesheet", String.format("%s", timesheet));
-        Timesheet timesheetExisting = timesheetRepository.find(timesheet.getUserId(), timesheet.getProjectId(), timesheet.getYear(), timesheet.getMonth());
+        Timesheet timesheetExisting = timesheetRepository.find(timesheet.getUserId(), timesheet.getClientId(), timesheet.getYear(), timesheet.getMonth());
         if (timesheetExisting != null && timesheet.isNew()) {
             throw new InputValidationException(String.format("Timesheet already exist! %s", timesheetExisting), "40040", null);
         }
@@ -240,7 +242,7 @@ public class TimesheetService {
             // no timesheet entries found, so simply create a default entry;
             // then set work date equal to the timesheet from date.
             Timesheet timesheet = timesheetRepository.getTimesheet(timesheetId);
-            timesheetEntry = TimesheetEntry.createDefault(timesheet.getId(), timesheet.getProjectId(), timesheet.getFromDate());
+            timesheetEntry = TimesheetEntry.createDefault(timesheet.getId(), -1L, timesheet.getFromDate());
         }
         // clear the id, so this will be taken as a new timesheet entry, the created and last modified date will the be overridden upon save.
         timesheetEntry.setId(null);
@@ -286,7 +288,7 @@ public class TimesheetService {
     /**
      * Used as invoice attachment
      */
-    public List<TimesheetSummaryDto> createTimesheetSummaryForBilling(@NotNull Long timesheetId, @NotNull Integer hourlyRate) {
+    public List<TimesheetSummaryDto> createTimesheetSummaryForBilling(@NotNull Long timesheetId) {
         // check timesheet status
         Timesheet timesheet = getTimesheet(timesheetId);
         if (!timesheet.isCompleted()) {
@@ -298,7 +300,7 @@ public class TimesheetService {
             throw new TerexApplicationException(String.format("Application error, timesheet not ready for billing, no entries found! timesheetId=%s, status=%s", timesheetId, timesheet.getStatus()), "50023", null);
         }
 
-        List<TimesheetSummary> timesheetSummaryByWeek = createTimesheetSummary(timesheetId, TimesheetSummary.TimesheetSummaryPeriodEnum.WEEK, hourlyRate);
+        List<TimesheetSummary> timesheetSummaryByWeek = createTimesheetSummary(timesheetId, TimesheetSummary.TimesheetSummaryPeriodEnum.WEEK);
         timesheetSummaryByWeek.forEach(this::saveTimesheetSummary);
         // close the timesheet after invoice have been generated, is not possible to do any form of changes on the time list.
         timesheet.setStatus(Timesheet.TimesheetStatusEnum.BILLED.name());
@@ -309,7 +311,7 @@ public class TimesheetService {
         return TimesheetMapper.toTimesheetSummaryDtoList(timesheetSummaryByWeek);
     }
 
-    private List<TimesheetSummary> createTimesheetSummary(Long timesheetId, TimesheetSummary.TimesheetSummaryPeriodEnum summedByPeriod, Integer hourlyRate) {
+    private List<TimesheetSummary> createTimesheetSummary(Long timesheetId, TimesheetSummary.TimesheetSummaryPeriodEnum summedByPeriod) {
         List<TimesheetEntry> timesheetEntryList = getTimesheetEntryList(timesheetId);
         Log.d("createTimesheetSummary", String.format("timesheet entries: %s", timesheetEntryList));
         // create a map based on summery type
@@ -325,7 +327,7 @@ public class TimesheetService {
         // debug
         // timesheetWeekMap.forEach((p, list) -> list.forEach(i -> System.out.println(p + ", " + list.size() + " - " + i.getWorkdayDate() + ", " + i.getType() + ", " + i.getWorkedHours())));
         List<TimesheetSummary> timesheetSummaryByWeek = new ArrayList<>();
-        timesheetWeekMap.forEach((period, list) -> timesheetSummaryByWeek.add(buildTimesheetSummaryForWeek(timesheetId, period, list, hourlyRate)));
+        timesheetWeekMap.forEach((period, list) -> timesheetSummaryByWeek.add(buildTimesheetSummaryForWeek(timesheetId, period, list)));
         timesheetSummaryByWeek.sort(Comparator.comparing(TimesheetSummary::getWeekInYear));
         return timesheetSummaryByWeek;
     }
@@ -335,7 +337,7 @@ public class TimesheetService {
         List<TimesheetSummary> timesheetSummaryList = getTimesheetSummary(timesheetId);
         double totalBilledAmount = timesheetSummaryList.stream().mapToDouble(TimesheetSummary::getTotalBilledAmount).sum();
         double totalBilledHours = timesheetSummaryList.stream().mapToDouble(TimesheetSummary::getTotalWorkedHours).sum();
-        double totalVat = totalBilledAmount * 0.25;
+        double totalVat = totalBilledAmount * VAT_PERCENT/100;
         double totalBilledAmountWithVat = totalBilledAmount + totalVat;
 
         MustacheFactory mf = new DefaultMustacheFactory();
@@ -346,13 +348,13 @@ public class TimesheetService {
         context.put("timesheetPeriod", String.format("%s/%s", timesheet.getMonth(), timesheet.getYear()));
         context.put("invoiceIssuer", userAccountDto);
         context.put("invoiceReceiver", clientDto);
-        context.put("timesheetProjectCode", projectService.getProject(timesheet.getProjectId()).getName());
+        context.put("timesheetProjectCode", "this can not be placed here anymore");//fixme should use assignment code
         context.put("timesheetSummaryList", timesheetSummaryList);
-        context.put("totalBilledHours", Double.toString(totalBilledHours));
-        context.put("totalBilledAmount", Double.toString(totalBilledAmount));
-        context.put("vatInPercent", "25%");
-        context.put("totalVat", Double.toString(totalVat));
-        context.put("totalBilledAmountWithVat", Double.toString(totalBilledAmountWithVat));
+        context.put("totalBilledHours", String.format(Locale.getDefault(), "%,.1f", totalBilledHours));
+        context.put("totalBilledAmount", Utility.formatAmountToNOK(totalBilledAmount));
+        context.put("vatInPercent", String.format(Locale.getDefault(), "%s%s", VAT_PERCENT, "%"));
+        context.put("totalVat", Utility.formatAmountToNOK(totalVat));
+        context.put("totalBilledAmountWithVat", Utility.formatAmountToNOK(totalBilledAmountWithVat));
         context.put("generatedDate", LocalDate.now().format(DateTimeFormatter.ISO_DATE));
         StringWriter writer = new StringWriter();
         mustache.execute(writer, context);
@@ -362,13 +364,12 @@ public class TimesheetService {
     /**
      * Not in use yet, used bt TimesheetSummaryFragment
      */
-    public String createTimesheetSummaryHtml(@NotNull Long timesheetId, @NotNull Integer hourlyRate, @NotNull String timesheetSummaryMustacheTemplate) {
+    public String createTimesheetSummaryHtml(@NotNull Long timesheetId, @NotNull String timesheetSummaryMustacheTemplate) {
         TimesheetDto timesheet = getTimesheetDto(timesheetId);
-        List<TimesheetSummary> timesheetSummaryList = createTimesheetSummary(timesheetId, TimesheetSummary.TimesheetSummaryPeriodEnum.WEEK, hourlyRate);
+        List<TimesheetSummary> timesheetSummaryList = createTimesheetSummary(timesheetId, TimesheetSummary.TimesheetSummaryPeriodEnum.WEEK);
         double totalBilledAmount = timesheetSummaryList.stream().mapToDouble(TimesheetSummary::getTotalBilledAmount).sum();
         double totalBilledHours = timesheetSummaryList.stream().mapToDouble(TimesheetSummary::getTotalWorkedHours).sum();
-        double vat = 25;
-        double totalVat = totalBilledAmount * (vat / 100);
+        double totalVat = totalBilledAmount * ((double) VAT_PERCENT / 100);
         double totalBilledAmountWithVat = totalBilledAmount + totalVat;
         MustacheFactory mf = new DefaultMustacheFactory();
         Mustache mustache = mf.compile(new StringReader(timesheetSummaryMustacheTemplate), "");
@@ -382,7 +383,7 @@ public class TimesheetService {
         context.put("timesheetSummaryList", TimesheetMapper.toTimesheetSummaryDtoList(timesheetSummaryList));
         context.put("totalBilledHours", String.format(Locale.getDefault(), "%.1f", totalBilledHours));
         context.put("totalBilledAmount", String.format(Locale.getDefault(), "%.2f", totalBilledAmount));
-        context.put("vatInPercent", String.format(Locale.getDefault(), "%.0f", vat));
+        context.put("vatInPercent", String.format(Locale.getDefault(), "%s", VAT_PERCENT));
         context.put("totalVat", String.format(Locale.getDefault(), "%.2f", totalVat));
         context.put("totalBilledAmountWithVat", String.format(Locale.getDefault(), "%.2f", totalBilledAmountWithVat));
         context.put("generatedDate", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss:SSS")));
@@ -391,6 +392,9 @@ public class TimesheetService {
         return writer.toString();
     }
 
+    /**
+     * Creates a timesheet overview in html, which show all days in the month.
+     */
     public String createTimesheetListHtml(@NotNull Long timesheetId, @NotNull UserAccountDto userAccountDto, @NotNull ClientDto clientDto,  @NotNull String clientTimesheetMustacheTemplate) {
         TimesheetDto timesheetDto = getTimesheetDto(timesheetId);
         List<TimesheetEntryDto> timesheetEntryDtoList = getTimesheetEntryDtoListReadyForBilling(timesheetId);
@@ -413,7 +417,7 @@ public class TimesheetService {
         return writer.toString();
     }
 
-    private TimesheetSummary buildTimesheetSummaryForWeek(@NotNull Long timesheetId, @NotNull Integer week, @NotNull List<TimesheetEntry> timesheetEntryList, Integer hourlyRate) {
+    private TimesheetSummary buildTimesheetSummaryForWeek(@NotNull Long timesheetId, @NotNull Integer week, @NotNull List<TimesheetEntry> timesheetEntryList) {
         TimesheetSummary timesheetSummary = new TimesheetSummary();
         timesheetSummary.setCreatedDate(LocalDateTime.now());
         timesheetSummary.setLastModifiedDate(LocalDateTime.now());
@@ -424,8 +428,9 @@ public class TimesheetService {
         timesheetSummary.setFromDate(Utility.getFirstDayOfWeek(timesheetEntryList.get(0).getWorkdayDate(), week));
         timesheetSummary.setToDate(Utility.getLastDayOfWeek(timesheetEntryList.get(0).getWorkdayDate(), week));
         timesheetEntryList.forEach(t -> {
+            ProjectDto projectDto = projectService.getProject(t.getProjectId());
             // only sum regular work days
-            timesheetSummary.setTotalBilledAmount(t.isRegularWorkDay() ? timesheetSummary.getTotalBilledAmount() + (hourlyRate * ((double) t.getWorkedSeconds() / 3600)) : timesheetSummary.getTotalBilledAmount());
+            timesheetSummary.setTotalBilledAmount(t.isRegularWorkDay() ? timesheetSummary.getTotalBilledAmount() + (projectDto.getHourlyRate() * ((double) t.getWorkedSeconds() / 3600)) : timesheetSummary.getTotalBilledAmount());
             timesheetSummary.setTotalWorkedHours(t.isRegularWorkDay() ? timesheetSummary.getTotalWorkedHours() + (double) t.getWorkedSeconds() / 3600: timesheetSummary.getTotalWorkedHours());
             timesheetSummary.setTotalWorkedDays(t.isRegularWorkDay() ? timesheetSummary.getTotalWorkedDays() + 1 : timesheetSummary.getTotalWorkedDays());
             timesheetSummary.setTotalSickLeaveDays(t.isSickDay() ? timesheetSummary.getTotalSickLeaveDays() + 1 : timesheetSummary.getTotalSickLeaveDays());
@@ -446,7 +451,7 @@ public class TimesheetService {
                 }
             }
             if (!isInList) {
-                timesheetEntryList.add(TimesheetEntry.createNotWorked(timesheetId, timesheet.getProjectId(), date, TimesheetEntry.TimesheetEntryTypeEnum.REGULAR.name()));
+                timesheetEntryList.add(TimesheetEntry.createNotWorked(timesheetId, -1L, date, TimesheetEntry.TimesheetEntryTypeEnum.REGULAR.name()));
             }
         }
         timesheetEntryList.sort(Comparator.comparing(TimesheetEntry::getWorkdayDate));
