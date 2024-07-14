@@ -42,7 +42,7 @@ class TimesheetServiceSummaryTest {
 
     @Test
     void createTimesheetSummary_not_ready_for_billing() {
-        Timesheet timesheetExisting = Timesheet.createDefault(100L, 10L, 200L, 2023, 11);
+        Timesheet timesheetExisting = Timesheet.createDefault(100L, 10L, 2023, 11);
         timesheetExisting.setId(23L);
         timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.ACTIVE.name());
 
@@ -55,7 +55,7 @@ class TimesheetServiceSummaryTest {
 
     @Test
     void createTimesheetSummary_no_entries() {
-        Timesheet timesheetExisting = Timesheet.createDefault(100L, 10L, 200L, 2023, 11);
+        Timesheet timesheetExisting = Timesheet.createDefault(100L, 10L, 2023, 11);
         timesheetExisting.setId(23L);
         timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
         TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(timesheetExisting.getId(), -1L, LocalDate.of(2023, 12, 21));
@@ -77,7 +77,7 @@ class TimesheetServiceSummaryTest {
         assertEquals("NOVEMBER", month.getMonth().name());
         assertEquals(11, month.getMonth().getValue());
 
-        Timesheet timesheetExisting = Timesheet.createDefault(100L, 10L, 200L, month.getYear(), month.getMonthValue());
+        Timesheet timesheetExisting = Timesheet.createDefault(100L, 10L, month.getYear(), month.getMonthValue());
         timesheetExisting.setId(23L);
         assertEquals(month.toString(), timesheetExisting.getFromDate().toString());
         // Set timesheet ready for billing
@@ -119,7 +119,7 @@ class TimesheetServiceSummaryTest {
     void createTimesheetSummaryForMountPartlyFilled() {
         LocalDate month = LocalDate.of(2023, 11, 1);
         assertEquals("NOVEMBER", month.getMonth().name());
-        Timesheet timesheetExisting = Timesheet.createDefault(100L, 10L, 200L, month.getYear(), month.getMonthValue());
+        Timesheet timesheetExisting = Timesheet.createDefault(100L, 10L, month.getYear(), month.getMonthValue());
         timesheetExisting.setId(23L);
         // Set timesheet ready for billing
         timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
@@ -167,7 +167,7 @@ class TimesheetServiceSummaryTest {
     void createTimesheetSummaryForMountWithDaysOff() {
         LocalDate month = LocalDate.of(2023, 11, 1);
         assertEquals("NOVEMBER", month.getMonth().name());
-        Timesheet timesheetExisting = Timesheet.createDefault(100L, 10L, 200L, month.getYear(), month.getMonthValue());
+        Timesheet timesheetExisting = Timesheet.createDefault(100L, 10L, month.getYear(), month.getMonthValue());
         timesheetExisting.setId(23L);
         // Set timesheet ready for billing
         timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());

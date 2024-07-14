@@ -78,14 +78,14 @@ public class TestData {
         return clientDto;
     }
 
-    public static ProjectDto createProjectDto(Long id, Long clientId, String projectName) {
+    public static ProjectDto createProjectDto(Long id, Long clientId, String projectName, Integer hourlyRate) {
         ProjectDto newProjectDto = new ProjectDto();
         newProjectDto.setClientDto(new ClientDto(clientId));
         newProjectDto.setName(projectName);
         newProjectDto.setId(id);
         newProjectDto.setDescription("some project description");
         newProjectDto.setStatus(Project.ProjectStatusEnum.ACTIVE.name());
-        newProjectDto.setHourlyRate(1250);
+        newProjectDto.setHourlyRate(hourlyRate);
         return newProjectDto;
     }
 

@@ -42,7 +42,7 @@ class TimesheetMapperTest {
 
     @Test
     void toTimesheetDto() {
-        Timesheet timesheet = Timesheet.createDefault(100L, 10L, 200L, 2024, 5);
+        Timesheet timesheet = Timesheet.createDefault(100L, 10L, 2024, 5);
         TimesheetDto timesheetDto = TimesheetMapper.toTimesheetDto(timesheet);
         assertEquals(timesheet.getId(), timesheetDto.getId());
         assertEquals(timesheet.getClientId(), timesheetDto.getClientDto().getId());

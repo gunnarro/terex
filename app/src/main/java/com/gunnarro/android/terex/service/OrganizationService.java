@@ -1,6 +1,8 @@
 package com.gunnarro.android.terex.service;
 
 
+import android.util.Log;
+
 import com.gunnarro.android.terex.domain.dto.OrganizationDto;
 import com.gunnarro.android.terex.domain.dto.PersonDto;
 import com.gunnarro.android.terex.domain.entity.Address;
@@ -10,8 +12,6 @@ import com.gunnarro.android.terex.repository.AddressRepository;
 import com.gunnarro.android.terex.repository.OrganizationRepository;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -54,10 +54,6 @@ public class OrganizationService {
         return organizationDto;
     }
 
-    public List<OrganizationDto> getOrganizations() {
-        return TimesheetMapper.toOrganizationDtoList(organizationRepository.getOrganizations());
-    }
-
     public Long save(@NotNull final OrganizationDto organizationDto) {
         Organization organization = TimesheetMapper.fromOrganizationDto(organizationDto);
         if (organizationDto.getBusinessAddress() != null) {
@@ -69,8 +65,7 @@ public class OrganizationService {
             Long contactInfoId = contactInfoService.save(organizationDto.getContactPerson().getContactInfo());
             organization.setContactInfoId(contactInfoId);
         }
+        Log.d("organizationService", "save: " + organization);
         return organizationRepository.save(organization);
     }
-
-
 }

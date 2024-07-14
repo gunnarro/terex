@@ -184,7 +184,7 @@ public class Timesheet extends BaseEntity {
         return status.equals(TimesheetStatusEnum.BILLED.name());
     }
 
-    public static Timesheet createDefault(Long userId, Long clientId, Long projectId, Integer year, Integer month) {
+    public static Timesheet createDefault(Long userId, Long clientId, Integer year, Integer month) {
         LocalDate timesheetDate = LocalDate.of(year, month, 1);
         Timesheet timesheet = new Timesheet();
         timesheet.setUserId(userId);

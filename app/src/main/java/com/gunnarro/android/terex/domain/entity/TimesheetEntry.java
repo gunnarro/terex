@@ -61,6 +61,7 @@ public class TimesheetEntry extends BaseEntity {
 
     @ColumnInfo(name="project_id")
     private Long projectId;
+
     @NonNull
     @ColumnInfo(name = "workday_week")
     private Integer workdayWeek;
@@ -77,7 +78,6 @@ public class TimesheetEntry extends BaseEntity {
     @ColumnInfo(name = "type", defaultValue = "REGULAR")
     private String type = TimesheetEntryTypeEnum.REGULAR.name();
 
-    @NonNull
     @ColumnInfo(name = "start_time")
     private LocalTime startTime;
 
@@ -254,6 +254,7 @@ public class TimesheetEntry extends BaseEntity {
         timesheetEntry.setProjectId(projectId);
         timesheetEntry.setType(type);
         timesheetEntry.setWorkdayDate(workDayDate);
+        timesheetEntry.setWorkedSeconds(0L);
         timesheetEntry.setStatus(TimesheetEntryStatusEnum.CLOSED.name());
         timesheetEntry.setWorkdayWeek(timesheetEntry.getWorkdayDate().get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()));
         return timesheetEntry;
@@ -273,23 +274,6 @@ public class TimesheetEntry extends BaseEntity {
         timesheetEntry.setWorkedSeconds((Utility.DEFAULT_DAILY_WORKING_HOURS_IN_SECONDS));
         timesheetEntry.setBreakSeconds((Utility.DEFAULT_DAILY_BREAK_IN_SECONDS));
         return timesheetEntry;
-    }
-
-    public static TimesheetEntry clone(TimesheetEntry timesheetEntry) {
-        if (timesheetEntry == null) {
-            return null;
-        }
-        TimesheetEntry clone = new TimesheetEntry();
-        clone.setTimesheetId(timesheetEntry.getTimesheetId());
-        clone.setStatus(timesheetEntry.getStatus());
-        clone.setType(timesheetEntry.getType());
-        clone.setWorkdayWeek(timesheetEntry.getWorkdayWeek());
-        clone.setStartTime(timesheetEntry.getStartTime());
-        clone.setEndTime(timesheetEntry.getEndTime());
-        clone.setWorkedSeconds(timesheetEntry.getWorkedSeconds());
-        clone.setBreakSeconds(timesheetEntry.getBreakSeconds());
-        clone.setComments(timesheetEntry.getComments());
-        return clone;
     }
 
     @Override

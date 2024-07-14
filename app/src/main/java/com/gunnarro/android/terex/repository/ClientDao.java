@@ -23,13 +23,13 @@ import java.util.List;
 public interface ClientDao {
 
     @Query("SELECT client.id FROM client, timesheet"
-            + " WHERE timesheet.id = :timesheetId"
-            + " AND timesheet.client_id = client.id")
+            + " WHERE client.id = timesheet.client_id"
+            + " AND timesheet.id = :timesheetId")
     Long getClientIdByTimesheetId(Long timesheetId);
 
     @Query("SELECT client.* FROM client, timesheet"
-            + " WHERE timesheet.id = :timesheetId"
-            + " AND timesheet.client_id = client.id")
+            + " WHERE client.id = timesheet.client_id"
+            + " AND timesheet.id = :timesheetId")
     Client getClientByTimesheetId(Long timesheetId);
 
     @Query("SELECT id FROM client ORDER BY id ASC")

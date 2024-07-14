@@ -1,5 +1,6 @@
 package com.gunnarro.android.terex.domain.entity;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Index;
@@ -7,6 +8,8 @@ import androidx.room.TypeConverters;
 
 import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
 import com.gunnarro.android.terex.domain.converter.LocalDateTimeConverter;
+
+import java.util.StringJoiner;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -111,5 +114,16 @@ public class Organization extends BaseEntity {
 
     public void setBankAccountNumber(String bankAccountNumber) {
         this.bankAccountNumber = bankAccountNumber;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", Organization.class.getSimpleName() + "[", "]")
+                .add("id='" + getId() + "'")
+                .add("name='" + name + "'")
+                .add("organizationNumber='" + organizationNumber + "'")
+                .add("organizationIndustryType='" + organizationIndustryType + "'")
+                .toString();
     }
 }

@@ -140,7 +140,7 @@ public class AdminFragment extends BaseFragment {
     }
 
     private void generateTimesheet(Long userId, Long clientId, Long projectId, Integer year, Integer month) {
-        Timesheet newTimesheet = Timesheet.createDefault(userId, clientId, projectId, year, month);
+        Timesheet newTimesheet = Timesheet.createDefault(userId, clientId, year, month);
         Long timesheetId = timesheetService.saveTimesheet(newTimesheet);
         List<TimesheetEntry> timesheetEntryList = createTimesheetEntriesForMonth(timesheetId, year, month);
         timesheetEntryList.forEach(e -> timesheetService.saveTimesheetEntry(e));

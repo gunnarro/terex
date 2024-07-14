@@ -62,7 +62,7 @@ import java.util.concurrent.Executors;
 }, version = AppDatabase.DB_SCHEMA_VERSION, views = {TimesheetView.class}, exportSchema = true)
 public abstract class AppDatabase extends RoomDatabase {
     // Increase the version with one if the database schema has changed.
-    public static final int DB_SCHEMA_VERSION = 4;
+    public static final int DB_SCHEMA_VERSION = 1;
     // marking the instance as volatile to ensure atomic access to the variable
     // The Java volatile keyword guarantees visibility of changes to variables across threads
     private static AppDatabase INSTANCE;
@@ -81,8 +81,8 @@ public abstract class AppDatabase extends RoomDatabase {
                     // use this during development
                    // .fallbackToDestructiveMigration()
                     .allowMainThreadQueries()
-                    .createFromAsset("database/terex_init_data.db")
-                    .addMigrations(getMigration(context, DB_SCHEMA_VERSION - 1, DB_SCHEMA_VERSION))
+                   // .createFromAsset("database/terex_init_data.db")
+                   // .addMigrations(getMigration(context, DB_SCHEMA_VERSION - 1, DB_SCHEMA_VERSION))
                    // .addCallback(roomCallback)
                     .build();
         }

@@ -68,8 +68,8 @@ public class InvoiceService {
      * For unit test onlu
      */
     public InvoiceService(InvoiceRepository invoiceRepository, TimesheetService timesheetService, ClientService clientService, UserAccountService userAccountService) {
-        this.timesheetService = timesheetService;
         this.invoiceRepository = invoiceRepository;
+        this.timesheetService = timesheetService;
         this.clientService = clientService;
         this.userAccountService = userAccountService;
     }
@@ -96,8 +96,10 @@ public class InvoiceService {
     public InvoiceDto getInvoiceDto(Long invoiceId) {
         Invoice invoice = invoiceRepository.getInvoice(invoiceId);
         InvoiceDto invoiceDto = TimesheetMapper.toInvoiceDto(invoice);
-        invoiceDto.setInvoiceIssuer(userAccountService.getUserAccount(invoice.getIssuerId()));
-        invoiceDto.setInvoiceRecipient(clientService.getClient(invoice.getRecipientId()));
+        if (invoiceDto != null) {
+            invoiceDto.setInvoiceIssuer(userAccountService.getUserAccount(invoice.getIssuerId()));
+            invoiceDto.setInvoiceRecipient(clientService.getClient(invoice.getRecipientId()));
+        }
         return invoiceDto;
     }
 

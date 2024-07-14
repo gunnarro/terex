@@ -33,25 +33,6 @@ class TimesheetEntryTest {
     }
 
     @Test
-    void cloneTimesheetEntry() {
-        TimesheetEntry timesheetEntry1 = new TimesheetEntry();
-        timesheetEntry1.setId(23L);
-        timesheetEntry1.setCreatedDate(LocalDateTime.now());
-        timesheetEntry1.setLastModifiedDate(LocalDateTime.now());
-        timesheetEntry1.setWorkdayDate(LocalDate.now());
-        timesheetEntry1.setStatus(TimesheetEntry.TimesheetEntryStatusEnum.OPEN.name());
-        timesheetEntry1.setBreakSeconds(30*60);
-        timesheetEntry1.setWorkdayDate(LocalDate.of(2023, 9, 9));
-
-        TimesheetEntry clone = TimesheetEntry.clone(timesheetEntry1);
-
-        assertNull(clone.getId());
-        assertNull(clone.getCreatedDate());
-        assertNull(clone.getLastModifiedDate());
-        assertNull(clone.getWorkdayDate());
-    }
-
-    @Test
     void type() {
         TimesheetEntry timeSheetEntry = TimesheetEntry.createDefault(23L, 11L, LocalDate.of(2023, 12, 2));
         assertTrue(timeSheetEntry.isRegularWorkDay());

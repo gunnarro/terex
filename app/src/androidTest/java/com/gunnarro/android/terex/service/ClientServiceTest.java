@@ -12,7 +12,6 @@ import com.gunnarro.android.terex.domain.dto.ContactInfoDto;
 import com.gunnarro.android.terex.domain.dto.OrganizationDto;
 import com.gunnarro.android.terex.domain.dto.PersonDto;
 import com.gunnarro.android.terex.domain.entity.Client;
-import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.repository.ClientRepository;
 
 import org.junit.After;
@@ -37,18 +36,9 @@ public class ClientServiceTest extends IntegrationTestSetup {
         super.cleanUpDatabase();
     }
 
-    @Test(expected = TerexApplicationException.class)
-    public void getClientByTimesheetId_not_found() {
-        clientService.getClientByTimesheetId(100L);
-    }
-
     @Test
-    public void getClientByTimesheetId_error() {
-        try {
-            clientService.getClientByTimesheetId(99L);
-        } catch (TerexApplicationException e) {
-            assertEquals("Application error! Please Report error to app developer. Error=Timesheet id is not linked to a client! timesheetId=99", e.getMessage());
-        }
+    public void getClientByTimesheetId_not_found() {
+        assertNull(clientService.getClientByTimesheetId(100L));
     }
 
     @Test
@@ -75,11 +65,11 @@ public class ClientServiceTest extends IntegrationTestSetup {
         assertEquals(id, clientDto.getId());
         assertEquals("gunnarro unittest as", clientDto.getName());
         assertEquals("ACTIVE", clientDto.getStatus());
-        assertTrue(clientDto.getOrganizationDto().getId() > 1);
+        assertTrue(clientDto.getOrganizationDto().getId() > 0);
         assertEquals("822707922", clientDto.getOrganizationDto().getOrganizationNumber());
-        assertTrue(clientDto.getContactPersonDto().getId() > 1);
+        assertTrue(clientDto.getContactPersonDto().getId() > 0);
         assertEquals("gunnar ronneberg", clientDto.getContactPersonDto().getFullName());
-        assertTrue(clientDto.getContactPersonDto().getContactInfo().getId() > 1);
+        assertTrue(clientDto.getContactPersonDto().getContactInfo().getId() > 0);
         assertEquals("gr@yahoo.org", clientDto.getContactPersonDto().getContactInfo().getEmailAddress());
         assertEquals("44556677", clientDto.getContactPersonDto().getContactInfo().getMobileNumber());
         assertEquals("+47", clientDto.getContactPersonDto().getContactInfo().getMobileNumberCountryCode());

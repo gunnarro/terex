@@ -92,7 +92,7 @@ class TimesheetServiceBillingTest {
 
     @Test
     void createTimesheetSummaryAttachmentHtml() throws IOException {
-        Timesheet timesheet = Timesheet.createDefault(100L, 10L,200L, 2023, 11);
+        Timesheet timesheet = Timesheet.createDefault(100L, 10L, 2023, 11);
         timesheet.setId(23L);
         timesheet.setClientId(444L);
 

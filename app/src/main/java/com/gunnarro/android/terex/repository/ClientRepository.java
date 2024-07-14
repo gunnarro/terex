@@ -38,7 +38,7 @@ public class ClientRepository {
         } catch (InterruptedException | ExecutionException e) {
             // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();
-            throw new TerexApplicationException("error getting client id for timesheet id!", "50050", e);
+            throw new TerexApplicationException("error getting client id for timesheet id! timesheetId=" + timesheetId, "50050", e);
         }
     }
 

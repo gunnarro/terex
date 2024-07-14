@@ -36,5 +36,5 @@ INSERT INTO project (id, uuid, created_date, last_modified_date, client_id, name
 
 -- update timesheet data
 DELETE FROM timesheet WHERE id > 0;
-INSERT INTO timesheet (id, uuid, created_date, last_modified_date, user_account_id, client_id, project_id, year, month, from_date, working_days_in_month, working_hours_in_month, to_date, status, description) VALUES(1099, '', current_timestamp, current_timestamp, 1, 1002, 1055, 2024, 7, current_timestamp, 150, 20, current_timestamp, 'ACTIVE', 'test timesheet');
+INSERT INTO timesheet (id, uuid, created_date, last_modified_date, user_account_id, client_id, year, month, from_date, working_days_in_month, working_hours_in_month, to_date, status, description) VALUES(1099, '', current_timestamp, current_timestamp, 1, 1002, 2024, 7, current_timestamp, 150, 20, current_timestamp, 'ACTIVE', 'test timesheet');
 COMMIT;

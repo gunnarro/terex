@@ -48,7 +48,7 @@ public class ProjectServiceTest extends IntegrationTestSetup {
         newProjectDto.setHourlyRate(1250);
 
         Long projectId = projectService.saveProject(newProjectDto);
-        assertTrue(projectId.intValue() > 1);
+        assertTrue(projectId.intValue() > 0);
 /*
         ProjectDto projectDto = projectService.getProjectWithTimesheet(projectId);
         assertEquals(projectId, projectDto.getId());

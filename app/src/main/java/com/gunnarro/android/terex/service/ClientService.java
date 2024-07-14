@@ -66,7 +66,7 @@ public class ClientService {
 
     public ClientDto getClient(Long clientId) {
         Client client = clientRepository.getClient(clientId);
-        Log.d("getClient", String.format("clientId= %s - %s", clientId, client));
+        Log.d("getClient", String.format("clientId=%s, client=%s", clientId, client));
         return createClientDto(client);
     }
 

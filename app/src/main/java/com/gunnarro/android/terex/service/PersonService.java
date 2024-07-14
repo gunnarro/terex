@@ -50,7 +50,6 @@ public class PersonService {
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures
     // that you're not doing any long running operations on the main thread, blocking the UI.
     public Long save(@NotNull final PersonDto personDto) {
-
         if (personDto.hasContactInformation()) {
             Long contactInformationId =  contactInfoService.save(personDto.getContactInfo());
             personDto.getContactInfo().setId(contactInformationId);

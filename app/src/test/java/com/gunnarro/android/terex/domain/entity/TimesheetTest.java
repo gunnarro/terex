@@ -11,7 +11,7 @@ class TimesheetTest {
 
     @Test
     void timesheetNew() {
-        Timesheet timeSheet = Timesheet.createDefault(100L, 10L, 200L, 2023, 11);
+        Timesheet timeSheet = Timesheet.createDefault(100L, 10L,2023, 11);
         assertEquals(100, timeSheet.getUserId());
         assertEquals(10, timeSheet.getClientId());
         assertEquals(11, timeSheet.getMonth().intValue());
@@ -29,7 +29,7 @@ class TimesheetTest {
 
     @Test
     void status() {
-        Timesheet timeSheet = Timesheet.createDefault(100L, 10L, 200L, 2023, 11);
+        Timesheet timeSheet = Timesheet.createDefault(100L, 10L, 2023, 11);
         assertTrue(timeSheet.isNew());
         timeSheet.setStatus(Timesheet.TimesheetStatusEnum.ACTIVE.name());
         assertTrue(timeSheet.isActive());

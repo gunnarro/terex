@@ -3,11 +3,10 @@ package com.gunnarro.android.terex.service;
 import static org.junit.Assert.assertNull;
 
 import com.gunnarro.android.terex.IntegrationTestSetup;
-import com.gunnarro.android.terex.repository.ClientRepository;
-import com.gunnarro.android.terex.repository.InvoiceRepository;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 
 public class InvoiceServiceTest extends IntegrationTestSetup {
 
@@ -24,6 +23,7 @@ public class InvoiceServiceTest extends IntegrationTestSetup {
         super.cleanUpDatabase();
     }
 
+    @Test
     public void getInvoice_not_found() {
        assertNull(invoiceService.getInvoiceDto(2334L));
     }

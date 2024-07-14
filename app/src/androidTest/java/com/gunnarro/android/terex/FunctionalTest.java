@@ -2,6 +2,7 @@ package com.gunnarro.android.terex;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import androidx.test.core.app.ApplicationProvider;
@@ -61,24 +62,40 @@ public class FunctionalTest extends IntegrationTestSetup {
         ClientDto clientDto = TestData.createClientDto(null, "client-company-name");
         clientDto.setOrganizationDto(TestData.createOrganizationDto(null, "gunnarro as", "828777999"));
         Long clientId = clientService.saveClient(clientDto);
-        assertNotNull(clientId);
+        assertTrue(clientId > 0);
+
         // create project and assign it to the client
-        Long projectId = projectService.saveProject(TestData.createProjectDto(null, clientId, "Terex development"));
-        assertNotNull(projectId);
+        // test with 2 projects, assigned to different timesheet entries
+        Long devProjectId = projectService.saveProject(TestData.createProjectDto(null, clientId, "Terex development", 1060));
+        assertTrue(devProjectId > 0);
+        Long testProjectId = projectService.saveProject(TestData.createProjectDto(null, clientId, "Terex testing", 1240));
+        assertTrue(testProjectId > 0);
+
         // create timesheet and assign it to the project
-        Timesheet newTimesheet = Timesheet.createDefault(userAccountId, clientId, projectId, 2024, 1);
+        Timesheet newTimesheet = Timesheet.createDefault(userAccountId, clientId, 2024, 1);
         Long timesheetId = timesheetService.saveTimesheet(newTimesheet);
-        assertNotNull(timesheetId);
+        assertTrue(timesheetId > 0);
+
         // add time entry to the timesheet
-        Long timesheetEntryId = timesheetService.saveTimesheetEntry(TimesheetEntry.createDefault(timesheetId, 11L, LocalDate.of(2024, 1, 5)));
-        assertNotNull(timesheetEntryId);
+        Long devTimesheetEntryId = timesheetService.saveTimesheetEntry(TimesheetEntry.createDefault(timesheetId, devProjectId, LocalDate.of(2024, 1, 5)));
+        assertTrue(devTimesheetEntryId > 0);
+        Long testTimesheetEntryId = timesheetService.saveTimesheetEntry(TimesheetEntry.createDefault(timesheetId, testProjectId, LocalDate.of(2024, 1, 6)));
+        assertTrue(testTimesheetEntryId > 0);
+        // sick and vacation should not be included in the invoice summary
+        Long sickTimesheetEntryId = timesheetService.saveTimesheetEntry(TimesheetEntry.createNotWorked(timesheetId, testProjectId, LocalDate.of(2024, 1, 7), TimesheetEntry.TimesheetEntryTypeEnum.SICK.name()));
+        assertTrue(sickTimesheetEntryId > 0);
+        Long vacationTimesheetEntryId = timesheetService.saveTimesheetEntry(TimesheetEntry.createNotWorked(timesheetId, testProjectId, LocalDate.of(2024, 1, 8), TimesheetEntry.TimesheetEntryTypeEnum.VACATION.name()));
+        assertTrue(vacationTimesheetEntryId > 0);
+
         // set timesheet ready for billing
         Timesheet timesheet = timesheetService.getTimesheet(timesheetId);
         timesheet.setStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
         assertNotNull(timesheetService.saveTimesheet(timesheet));
+
         // create invoice based on the timesheet
         Long invoiceId = invoiceService.createInvoice(userAccountId, clientId, timesheetId, projectService.getProjectHourlyRate(timesheetId));
-        assertNotNull(invoiceId);
+        assertTrue(invoiceId > 0);
+
         // create timesheet summary attachment
         String timesheetSummaryMustacheTemplate = Utility.loadMustacheTemplate(ApplicationProvider.getApplicationContext(), InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY);
         Long timesheetSummaryAttachmentId = invoiceService.createTimesheetSummaryAttachment(invoiceId, timesheetSummaryMustacheTemplate);
@@ -86,13 +103,15 @@ public class FunctionalTest extends IntegrationTestSetup {
         InvoiceAttachment timesheetSummaryAttachment = invoiceService.getInvoiceAttachment(invoiceId, InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY, InvoiceService.InvoiceAttachmentFileTypes.HTML);
         assertEquals("client-company-name_fakturerte_timer_2024-01", timesheetSummaryAttachment.getFileName());
         assertNotNull(timesheetSummaryAttachment.getFileContent());
+
         // create client timesheet pdf and timesheet summery pdf, used as attachment for the invoice
         String clientTimesheetMustacheTemplate = Utility.loadMustacheTemplate(ApplicationProvider.getApplicationContext(), InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET);
         Long invoiceAttachmentId = invoiceService.createClientTimesheetAttachment(invoiceId, timesheetId, clientTimesheetMustacheTemplate);
-        assertNotNull(invoiceAttachmentId);
+        assertTrue(invoiceAttachmentId > 0);
         InvoiceAttachment clientTimesheetAttachment = invoiceService.getInvoiceAttachment(invoiceId, InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET, InvoiceService.InvoiceAttachmentFileTypes.HTML);
         assertEquals("client-company-name_timeliste_2024-01", clientTimesheetAttachment.getFileName());
         assertNotNull(clientTimesheetAttachment.getFileContent());
+
         // check invoice status
         Invoice invoice = invoiceService.getInvoice(invoiceId);
         assertEquals(invoiceId, invoice.getId());
@@ -101,9 +120,10 @@ public class FunctionalTest extends IntegrationTestSetup {
         assertEquals(clientId, invoice.getRecipientId());
         assertEquals(25, invoice.getVatPercent());
         assertEquals("NOK", invoice.getCurrency());
-        assertEquals(9375.0, invoice.getAmount(), 0.0);
-        assertEquals(2343.75, invoice.getVatAmount(), 0.0);
+        assertEquals(17250.0, invoice.getAmount(), 0.0);
+        assertEquals(4312.5, invoice.getVatAmount(), 0.0);
         assertEquals(InvoiceRepository.InvoiceStatusEnum.COMPLETED.name(), invoice.getStatus());
+
         // try to delete timesheet after billing, not allowed
         try {
             timesheetService.deleteTimesheet(timesheetId);

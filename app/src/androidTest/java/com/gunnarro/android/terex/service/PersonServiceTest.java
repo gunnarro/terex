@@ -45,10 +45,10 @@ public class PersonServiceTest extends IntegrationTestSetup {
         PersonDto newPersonDto = createPersonDto();
 
         Long personId = personService.save(newPersonDto);
-        assertTrue(personId.intValue() > 1);
+        assertTrue(personId.intValue() > 0);
 
         PersonDto personDto = personService.getPerson(personId);
-        assertTrue(personDto.getId().intValue() > 1);
+        assertTrue(personDto.getId().intValue() > 0);
 
         assertEquals("ole gunnar hansen", personDto.getFullName());
 
