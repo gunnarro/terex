@@ -87,7 +87,7 @@
                                     <th class="text-center">År</th>
                                     <th class="text-center">Måned</th>
                                     <th class="text-center">Uke</th>
-                                    <th class="text-center">Fra / til dato</th>
+                                    <th class="text-center w-25">Fra / til dato</th>
                                     <th class="text-center">Timer</th>
                                     <th class="text-center">Beløp</th>
                                 </tr>
@@ -98,18 +98,19 @@
                                         <td class="text-center">{{year}}</td>
                                         <td class="text-center">{{monthInYear}}</td>
                                         <td class="text-center">{{weekInYear}}</td>
-                                        <td class="text-center w-25">{{fromDateDDMM}} - {{toDateDDMM}}</td>
+                                        <td class="text-center">{{fromDateDDMM}} - {{toDateDDMM}}</td>
                                         <td class="text-end">{{totalWorkedHoursFormatted}}</td>
                                         <td class="text-end">{{totalBilledAmountFormatted}}</td>
                                     </tr>
                                 {{/timesheetSummaryList}}
-                                <tr class=line-top">
-                                    <td class="line-top"></td>
-                                    <td class="line-top"></td>
-                                    <td class="line-top"></td>
-                                    <td class="line-top text-start"><strong>Sum</strong></td>
-                                    <td class="line-top text-end">{{totalBilledHours}}</td>
-                                    <td class="line-top text-end">{{totalBilledAmount}}</td>
+                                <tr class="line-bottom"><td colspan="6"></td></tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="text-start"><strong>Sum</strong></td>
+                                    <td class="text-end">{{totalBilledHours}}</td>
+                                    <td class="text-end">{{totalBilledAmount}}</td>
                                 </tr>
                                 <tr>
                                     <td></td>

@@ -8,6 +8,7 @@ import com.gunnarro.android.terex.utility.Utility;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 public class TimesheetEntryDto {
 
@@ -95,7 +96,7 @@ public class TimesheetEntryDto {
     }
 
     public String getWorkdayDateDayName() {
-        return workdayDate.format(DateTimeFormatter.ofPattern("EEEE"));
+        return workdayDate.format(DateTimeFormatter.ofPattern("EEEE", new Locale("no","NO")));
     }
 
     public boolean isWeekend() {
@@ -104,6 +105,10 @@ public class TimesheetEntryDto {
 
     public boolean isRegularWorkDay() {
         return type.equals(TimesheetEntry.TimesheetEntryTypeEnum.REGULAR.name());
+    }
+
+    public boolean isRegularWorkDayWithHours() {
+        return type.equals(TimesheetEntry.TimesheetEntryTypeEnum.REGULAR.name()) && workedSeconds > 0;
     }
 
     public boolean isVacationDay() {
