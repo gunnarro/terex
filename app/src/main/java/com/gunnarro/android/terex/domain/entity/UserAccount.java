@@ -46,7 +46,7 @@ public class UserAccount extends BaseEntity {
     private Long personId;
 
     @ColumnInfo(name = "is_default_user")
-    private Integer defaultUser;
+    private int defaultUser;
 
     public String getUserName() {
         return userName;
@@ -72,15 +72,15 @@ public class UserAccount extends BaseEntity {
         this.userAccountType = userAccountType;
     }
 
-    public Integer getDefaultUser() {
+    public int getDefaultUser() {
         return defaultUser;
     }
 
     public boolean isDefaultUser() {
-        return defaultUser != null && defaultUser == 1;
+        return defaultUser == 1;
     }
 
-    public void setDefaultUser(Integer defaultUser) {
+    public void setDefaultUser(int defaultUser) {
         this.defaultUser = defaultUser;
     }
 

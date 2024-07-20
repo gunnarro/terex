@@ -184,7 +184,7 @@ public class UserAccountNewFragment extends BaseFragment implements View.OnClick
             ((MaterialButton) view.findViewById(R.id.user_account_new_account_type_business)).setChecked(true);
         }
 
-        if (userAccountDto.isBusiness()) {
+        if (userAccountDto.isBusiness() && userAccountDto.getOrganizationDto() != null) {
             ((TextView) view.findViewById(R.id.user_account_new_org_number)).setText(userAccountDto.getOrganizationDto().getOrganizationNumber());
             ((TextView) view.findViewById(R.id.user_account_new_org_name)).setText(userAccountDto.getOrganizationDto().getName());
 

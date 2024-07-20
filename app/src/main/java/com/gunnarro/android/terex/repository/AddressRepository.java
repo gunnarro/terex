@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.gunnarro.android.terex.config.AppDatabase;
 import com.gunnarro.android.terex.domain.entity.Address;
-import com.gunnarro.android.terex.domain.entity.Integration;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 
 import org.jetbrains.annotations.NotNull;
@@ -76,36 +75,5 @@ public class AddressRepository {
             addressDao.delete(address);
             Log.d("AddressRepository.delete", "deleted, addressId=" + address.getId());
         });
-    }
-
-    public Long save(@NotNull final Address address) {
-        try {
-            Address addressExisting;
-            if (address.getId() == null) {
-                addressExisting = find(address.getStreetAddress());
-            } else {
-                addressExisting = getAddress(address.getId());
-            }
-            Log.d("saveAddress", String.format("streetAddress=%s, isExisting=%s", address.getStreetAddress(), addressExisting != null));
-            Long addressId;
-            if (addressExisting == null) {
-                address.setCreatedDate(LocalDateTime.now());
-                address.setLastModifiedDate(LocalDateTime.now());
-                addressId = insert(address);
-                Log.d("saveAddress", String.format("inserted new address: %s - %s", addressId, address.getStreetAddress()));
-            } else {
-                address.setId(addressExisting.getId());
-                address.setCreatedDate(addressExisting.getCreatedDate());
-                address.setLastModifiedDate(LocalDateTime.now());
-                update(address);
-                addressId = address.getId();
-                Log.d("saveAddress", String.format("updated address: %s - %s", addressId, address.getStreetAddress()));
-            }
-            return addressId;
-        } catch (Exception e) {
-            // Something crashed, therefore restore interrupted state before leaving.
-            Thread.currentThread().interrupt();
-            throw new TerexApplicationException("Error saving address! " + e.getMessage(), "50050", e.getCause());
-        }
     }
 }

@@ -17,7 +17,7 @@
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="d9f7f9fe-cae1-43c9-9088-b6ce260e0cdf">
-      <console name="Connection" type="STANDARD" schema="main" session="Main"><![CDATA[select * from client;]]></console>
+      <console name="Connection" type="STANDARD" schema="main" session="Main"><![CDATA[INSERT INTO integration (id, uuid, created_date, last_modified_date, system, base_url, schema_url, authentication_type, user_name, password, access_token, service_type, read_timeout_ms, connection_timeout_ms, http_headers_content_type) VALUES (1, '', current_timestamp, current_timestamp, 'BREG', 'https://data.brreg.no/enhetsregisteret/api/enheter/', null, 'NONE', null, null, null, 'REST', 5000, 5000, 'application/vnd.brreg.enhetsregisteret.enhet.v2+json;charset=UTF-8');]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseEditorStateManager">

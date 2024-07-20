@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.gunnarro.android.terex.TestData;
@@ -48,9 +50,13 @@ class TimesheetServiceTest {
 
     @Test
     void saveTimesheet_new() throws ExecutionException, InterruptedException {
+        Timesheet timesheet = Timesheet.createDefault(100L, 10L, 2023, 11);
         when(timesheetRepositoryMock.find(anyLong(), anyLong(), anyInt(), anyInt())).thenReturn(null);
         when(timesheetRepositoryMock.insertTimesheet(any())).thenReturn(23L);
-        assertEquals(23, timesheetService.saveTimesheet(Timesheet.createDefault(100L, 10L, 2023, 11)));
+        assertEquals(23, timesheetService.saveTimesheet(timesheet));
+
+        verify(timesheetRepositoryMock, times(1)).find(timesheet.getUserId(), timesheet.getClientId(), timesheet.getYear(), timesheet.getMonth());
+        verify(timesheetRepositoryMock, times(1)).insertTimesheet(any());
     }
 
     @Test

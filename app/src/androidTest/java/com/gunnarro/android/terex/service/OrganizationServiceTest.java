@@ -9,7 +9,6 @@ import com.gunnarro.android.terex.domain.dto.BusinessAddressDto;
 import com.gunnarro.android.terex.domain.dto.ContactInfoDto;
 import com.gunnarro.android.terex.domain.dto.OrganizationDto;
 import com.gunnarro.android.terex.domain.dto.PersonDto;
-import com.gunnarro.android.terex.repository.AddressRepository;
 import com.gunnarro.android.terex.repository.OrganizationRepository;
 
 import org.junit.After;
@@ -23,7 +22,7 @@ public class OrganizationServiceTest extends IntegrationTestSetup {
     @Before
     public void setup() {
         super.setupDatabase();
-        organizationService = new OrganizationService(new OrganizationRepository(), new AddressRepository(), new ContactInfoService(), new PersonService());
+        organizationService = new OrganizationService(new OrganizationRepository(), new AddressService(), new ContactInfoService(), new PersonService());
     }
 
     @After

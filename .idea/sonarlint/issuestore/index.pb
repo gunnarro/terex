@@ -396,3 +396,9 @@ Uapp/src/test/java/com/gunnarro/android/terex/service/TimesheetServiceBillingTes
 Uapp/src/test/java/com/gunnarro/android/terex/service/TimesheetServiceSummaryTest.java,3/a/3a02fccdb8ab58875a36f6c12acbb42ca06a9f4c
 <
 doc/b39.html,d/9/d9d6a6ad1d36c9ce7ae210c6fd37580ae3f7b3d6
+z
+Japp/src/main/java/com/gunnarro/android/terex/domain/entity/Assignment.java,2/c/2cdb5078fd436d263921d4d37ed701f979460d35
+x
+Happ/src/main/java/com/gunnarro/android/terex/service/AddressService.java,8/e/8e4c450bba59da0001c26d1f9718a10ee2176ff7
+|
+Lapp/src/test/java/com/gunnarro/android/terex/service/AddressServiceTest.java,1/8/18639d7fe16814862b4a74b3c80fe7f0a861a8ce

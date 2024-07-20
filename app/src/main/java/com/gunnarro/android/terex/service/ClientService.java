@@ -11,7 +11,6 @@ import com.gunnarro.android.terex.domain.entity.Client;
 import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.repository.ClientRepository;
-import com.gunnarro.android.terex.repository.ProjectRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -108,7 +107,7 @@ public class ClientService {
             return save(clientDto);
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e("Error", String.format("%s", e.getCause()));
+            Log.e("saveClient", String.format("Error: %s", e.getCause()));
             throw new TerexApplicationException("Error saving client!" + e.getMessage(), "50050", e.getCause());
         }
     }

@@ -14,11 +14,11 @@ class TimesheetEntryDtoTest {
     void isWeekend() {
         TimesheetEntryDto timesheetEntryDto = new TimesheetEntryDto();
         timesheetEntryDto.setWorkdayDate(LocalDate.of(2024, 6, 8));
-        assertEquals("Saturday", timesheetEntryDto.getWorkdayDateDayName());
+        assertEquals("lørdag", timesheetEntryDto.getWorkdayDateDayName());
         assertTrue(timesheetEntryDto.isWeekend());
 
         timesheetEntryDto.setWorkdayDate(LocalDate.of(2024, 6, 9));
-        assertEquals("Sunday", timesheetEntryDto.getWorkdayDateDayName());
+        assertEquals("søndag", timesheetEntryDto.getWorkdayDateDayName());
         assertTrue(timesheetEntryDto.isWeekend());
     }
 

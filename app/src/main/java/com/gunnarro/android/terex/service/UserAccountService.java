@@ -38,7 +38,7 @@ public class UserAccountService {
     }
 
     public Long getActiveUserAccountId() {
-       return getUserAccount(1L).getId();
+        return getUserAccount(1L).getId();
     }
 
     public Long getDefaultUserAccountId() {
@@ -81,8 +81,9 @@ public class UserAccountService {
             // finally save client
             return save(userAccountDto);
         } catch (Exception e) {
-            Log.e("Error", String.format("%s", e.getCause()));
-            throw new TerexApplicationException("Error saving client!" + e.getMessage(), "50050", e.getCause());
+            e.printStackTrace();
+            Log.e("saveUserAccount", String.format("Error: %s", e.getCause()));
+            throw new TerexApplicationException("Error saving user account!" + e.getMessage(), "50050", e.getCause());
         }
     }
 

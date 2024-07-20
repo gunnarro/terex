@@ -7,7 +7,6 @@ import androidx.room.Transaction;
 
 import com.gunnarro.android.terex.domain.dto.ProjectDto;
 import com.gunnarro.android.terex.domain.entity.Project;
-import com.gunnarro.android.terex.domain.entity.ProjectWithTimesheet;
 import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
 import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;

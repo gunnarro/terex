@@ -61,6 +61,8 @@ public class UserAccountServiceTest extends IntegrationTestSetup {
         userAccountDto.setUserAccountType(UserAccount.UserAccountTypeEnum.BUSINESS.name());
         OrganizationDto organizationDto = new OrganizationDto();
         organizationDto.setId(11L);
+        organizationDto.setName("gunnarro it test");
+        organizationDto.setOrganizationNumber("11223344");
         userAccountDto.setOrganizationDto(organizationDto);
         return userAccountDto;
     }

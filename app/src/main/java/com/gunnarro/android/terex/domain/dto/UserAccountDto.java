@@ -10,7 +10,7 @@ public class UserAccountDto {
     private String userName;
     private String password;
     private String userAccountType;
-    private Boolean defaultUser;
+    private boolean defaultUser;
     private PersonDto personDto;
     private OrganizationDto organizationDto;
 
@@ -53,11 +53,11 @@ public class UserAccountDto {
         this.userAccountType = userAccountType;
     }
 
-    public Boolean isDefaultUser() {
+    public boolean isDefaultUser() {
         return defaultUser;
     }
 
-    public void setDefaultUser(Boolean defaultUser) {
+    public void setDefaultUser(boolean defaultUser) {
         this.defaultUser = defaultUser;
     }
 

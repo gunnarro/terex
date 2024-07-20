@@ -254,4 +254,14 @@ public class TestData {
         return timesheetSummaryWeek1;
     }
 
+    public static BusinessAddressDto createBusinessAddressDto(Long id) {
+        BusinessAddressDto businessAddressDto = new BusinessAddressDto();
+        businessAddressDto.setId(id);
+        businessAddressDto.setCity("oslo");
+        businessAddressDto.setPostalCode("0880");
+        businessAddressDto.setStreetAddress("persgate 34");
+        businessAddressDto.setCountry("Norge");
+        businessAddressDto.setCountryCode("no");
+        return businessAddressDto;
+    }
 }

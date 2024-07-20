@@ -3,18 +3,19 @@ package com.gunnarro.android.terex.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.gunnarro.android.terex.TestData;
 import com.gunnarro.android.terex.domain.dto.OrganizationDto;
 import com.gunnarro.android.terex.domain.entity.Organization;
 import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
-import com.gunnarro.android.terex.repository.AddressRepository;
 import com.gunnarro.android.terex.repository.OrganizationRepository;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -22,7 +23,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.concurrent.ExecutionException;
 
-@Disabled
 @ExtendWith(MockitoExtension.class)
 class OrganizationServiceTest {
 
@@ -31,7 +31,7 @@ class OrganizationServiceTest {
     @Mock
     private OrganizationRepository organizationRepositoryMock;
     @Mock
-    private AddressRepository addressRepositoryMock;
+    private AddressService addressServiceMock;
 
     @Mock
     private ContactInfoService contactInfoServiceMock;
@@ -41,7 +41,7 @@ class OrganizationServiceTest {
 
     @BeforeEach
     public void setup() {
-        organizationService = new OrganizationService(organizationRepositoryMock, addressRepositoryMock, contactInfoServiceMock, personServiceMock);
+        organizationService = new OrganizationService(organizationRepositoryMock, addressServiceMock, contactInfoServiceMock, personServiceMock);
     }
 
 
@@ -54,16 +54,23 @@ class OrganizationServiceTest {
 
         Long organizationId = organizationService.save(organizationDto);
         assertEquals(1L, organizationId);
+
+        verify(organizationRepositoryMock, times(1)).find(organizationDto.getName());
+        verify(organizationRepositoryMock, times(1)).insert(any());
     }
 
     @Test
-    void saveOrganization_update() {
+    void saveOrganization_update() throws ExecutionException, InterruptedException {
         OrganizationDto organizationDto = TestData.createOrganizationDto(100L, "gunnarro as", "822 707 922");
         Organization existingOrganization = TimesheetMapper.fromOrganizationDto(organizationDto);
-        when(organizationRepositoryMock.find(anyString())).thenReturn(existingOrganization);
+        when(organizationRepositoryMock.getOrganization(anyLong())).thenReturn(existingOrganization);
+        when(organizationRepositoryMock.update(any())).thenReturn(1);
 
         Long organizationId = organizationService.save(organizationDto);
         assertEquals(100L, organizationId);
+
+        verify(organizationRepositoryMock, times(1)).getOrganization(organizationDto.getId());
+        verify(organizationRepositoryMock, times(1)).update(any());
     }
 
 }

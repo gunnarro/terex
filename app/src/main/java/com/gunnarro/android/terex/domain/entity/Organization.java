@@ -9,6 +9,8 @@ import androidx.room.TypeConverters;
 import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
 import com.gunnarro.android.terex.domain.converter.LocalDateTimeConverter;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.StringJoiner;
 
 import lombok.Getter;
@@ -36,9 +38,11 @@ public class Organization extends BaseEntity {
     @ColumnInfo(name = "contact_info_id")
     private Long contactInfoId;
 
+    @NotNull
     @ColumnInfo(name = "organization_name")
     private String name;
 
+    @NotNull
     @ColumnInfo(name = "organization_number")
     private String organizationNumber;
 

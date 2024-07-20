@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.gunnarro.android.terex.TestData;
@@ -109,6 +111,9 @@ class ClientServiceTest {
         Long clientId = clientService.saveClient(clientDto);
 
         assertEquals(1000L, clientId);
+
+        verify(clientRepositoryMock, times(1)).find(clientDto.getName());
+        verify(clientRepositoryMock, times(1)).insert(any());
     }
 
     @Test
@@ -126,6 +131,9 @@ class ClientServiceTest {
         Long clientId = clientService.saveClient(clientDto);
 
         assertEquals(100L, clientId);
+
+        verify(clientRepositoryMock, times(1)).getClient(clientDto.getId());
+        verify(clientRepositoryMock, times(1)).update(any());
     }
 
 

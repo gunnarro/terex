@@ -21,7 +21,7 @@ import javax.inject.Singleton;
 public class PersonService {
 
     private final PersonRepository personRepository;
-    private ContactInfoService contactInfoService;
+    private final ContactInfoService contactInfoService;
 
     /**
      * For unit test only

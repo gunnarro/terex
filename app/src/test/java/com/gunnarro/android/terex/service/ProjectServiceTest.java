@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.gunnarro.android.terex.domain.dto.ClientDto;
@@ -48,6 +50,9 @@ class ProjectServiceTest {
 
         Long projectId = projectService.saveProject(projectDto);
         assertEquals(1L, projectId);
+
+        verify(projectRepositoryMock, times(1)).find(projectDto.getClientDto().getId(), projectDto.getName());
+        verify(projectRepositoryMock, times(1)).insert(any());
     }
 
     @Test
@@ -66,5 +71,8 @@ class ProjectServiceTest {
 
         Long projectId = projectService.saveProject(projectDto);
         assertEquals(23L, projectId);
+
+        verify(projectRepositoryMock, times(1)).find(projectDto.getClientDto().getId(), projectDto.getName());
+        verify(projectRepositoryMock, times(1)).update(any());
     }
 }

@@ -8,6 +8,7 @@ import static org.junit.Assert.fail;
 import androidx.test.core.app.ApplicationProvider;
 
 import com.gunnarro.android.terex.domain.dto.ClientDto;
+import com.gunnarro.android.terex.domain.dto.UserAccountDto;
 import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.InvoiceAttachment;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
@@ -56,7 +57,9 @@ public class FunctionalTest extends IntegrationTestSetup {
     @Test
     public void timesheetBusinessFlowTest() {
         // create user account
-        Long userAccountId = userAccountService.saveUserAccount(TestData.createUserAccountDto(null, "guro-unit-test"));
+        UserAccountDto userAccountDto = TestData.createUserAccountDto(null, "guro-unit-test");
+        userAccountDto.setOrganizationDto(TestData.createOrganizationDto(null, "gunnarro test", "23232323"));
+        Long userAccountId = userAccountService.saveUserAccount(userAccountDto);
         assertNotNull(userAccountId);
         // create client
         ClientDto clientDto = TestData.createClientDto(null, "client-company-name");

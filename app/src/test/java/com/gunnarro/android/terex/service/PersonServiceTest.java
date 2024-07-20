@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.gunnarro.android.terex.domain.dto.AddressDto;
@@ -74,10 +76,13 @@ class PersonServiceTest {
         Long clientId = personService.save(personDto);
 
         assertEquals(1000L, clientId);
+
+        verify(personRepositoryMock, times(1)).find(anyString());
+        verify(personRepositoryMock, times(1)).insert(any());
     }
 
     @Test
-    void savePerson_update() {
+    void savePerson_update() throws ExecutionException, InterruptedException {
         PersonDto personDto = createPersonDto();
         personDto.setId(101L);
 
@@ -85,6 +90,9 @@ class PersonServiceTest {
 
         Long personId = personService.save(personDto);
         assertEquals(101L, personId);
+
+        verify(personRepositoryMock, times(1)).getPerson(101L);
+        verify(personRepositoryMock, times(1)).update(any());
     }
 
     private PersonDto createPersonDto() {

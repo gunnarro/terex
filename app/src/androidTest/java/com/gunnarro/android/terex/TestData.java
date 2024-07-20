@@ -64,9 +64,6 @@ public class TestData {
         userAccountDto.setUserName(userName);
         userAccountDto.setPassword("nope");
         userAccountDto.setUserAccountType(UserAccount.UserAccountTypeEnum.BUSINESS.name());
-        OrganizationDto organizationDto = new OrganizationDto();
-        organizationDto.setId(11L);
-        userAccountDto.setOrganizationDto(organizationDto);
         return userAccountDto;
     }
 
@@ -89,9 +86,9 @@ public class TestData {
         return newProjectDto;
     }
 
-    public static OrganizationDto createOrganizationDto(String id, String organizationName, String organizationNumber) {
+    public static OrganizationDto createOrganizationDto(Long id, String organizationName, String organizationNumber) {
         OrganizationDto organizationDto = new OrganizationDto();
-        organizationDto.setId(null);
+        organizationDto.setId(id);
         organizationDto.setName(organizationName);
         organizationDto.setOrganizationNumber(organizationNumber);
         organizationDto.setBankAccountNumber("23232323");

@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.gunnarro.android.terex.domain.dto.ContactInfoDto;
@@ -42,10 +44,13 @@ class ContactInfoServiceTest {
         Long clientId = contactInfoService.save(contactInfoDto);
 
         assertEquals(1000L, clientId);
+
+        verify(contactInfoRepositoryMock, times(1)).find(contactInfoDto.getMobileNumber(), contactInfoDto.getEmailAddress());
+        verify(contactInfoRepositoryMock, times(1)).insert(any());
     }
 
     @Test
-    void saveContactInfo_update() {
+    void saveContactInfo_update() throws ExecutionException, InterruptedException {
         ContactInfoDto contactInfoDto = createContactInfoDto();
         contactInfoDto.setId(101L);
 
@@ -53,6 +58,9 @@ class ContactInfoServiceTest {
 
         Long personId = contactInfoService.save(contactInfoDto);
         assertEquals(101L, personId);
+
+        verify(contactInfoRepositoryMock, times(1)).getContactInfo(contactInfoDto.getId());
+        verify(contactInfoRepositoryMock, times(1)).update(any());
     }
 
     private ContactInfoDto createContactInfoDto() {
