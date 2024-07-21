@@ -1,5 +1,6 @@
 package com.gunnarro.android.terex.domain.entity;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Index;
@@ -78,6 +79,7 @@ public class Timesheet extends BaseEntity {
     @ColumnInfo(name = "working_hours_in_month", defaultValue = "0")
     private Integer workingHoursInMonth = 0;
 
+    @NonNull
     public Long getUserId() {
         return userId;
     }
@@ -86,6 +88,7 @@ public class Timesheet extends BaseEntity {
         this.userId = userId;
     }
 
+    @NonNull
     public Long getClientId() {
         return clientId;
     }
@@ -215,6 +218,7 @@ public class Timesheet extends BaseEntity {
     /**
      * @return the unique key for a timesheet
      */
+    @NonNull
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Timesheet{");

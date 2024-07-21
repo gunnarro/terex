@@ -1,6 +1,8 @@
 package com.gunnarro.android.terex.domain.dto;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
@@ -22,7 +24,7 @@ class TimesheetDtoTest {
         timesheetDtoMay2.setUserAccountDto(userAccountDto);
         timesheetDtoMay2.setYear(2024);
         timesheetDtoMay2.setMonth(5);
-        assertTrue(timesheetDtoMay.equals(timesheetDtoMay2));
+        assertEquals(timesheetDtoMay, timesheetDtoMay2);
     }
 
     @Test
@@ -40,7 +42,7 @@ class TimesheetDtoTest {
         timesheetDtoJune.setUserAccountDto(userAccountDto);
         timesheetDtoJune.setYear(2024);
         timesheetDtoJune.setMonth(6);
-        assertFalse(timesheetDtoMay.equals(timesheetDtoJune));
+        assertNotEquals(timesheetDtoMay, timesheetDtoJune);
     }
 
 

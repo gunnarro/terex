@@ -167,8 +167,7 @@ public class TimesheetMapper {
         if (project == null) {
             return null;
         }
-        ProjectDto projectDto = toProjectDto(project);
-        return projectDto;
+        return toProjectDto(project);
     }
 
     public static List<ClientDto> toClientDtoList(List<Client> clientList) {
@@ -204,10 +203,6 @@ public class TimesheetMapper {
         client.setStatus(clientDto.getStatus());
         client.setContactPersonId(clientDto.getContactPersonDto() != null ? clientDto.getContactPersonDto().getId() : null);
         return client;
-    }
-
-    public static List<OrganizationDto> toOrganizationDtoList(List<Organization> organizations) {
-        return List.of();
     }
 
     public static Organization fromOrganizationDto(OrganizationDto organizationDto) {

@@ -186,6 +186,7 @@ public class TimesheetDto {
     }
 
 
+    @NonNull
     @Override
     public String toString() {
         return new StringJoiner(", ", TimesheetDto.class.getSimpleName() + "[", "]")

@@ -71,10 +71,6 @@ public class TimesheetService {
     // timesheet
     // ----------------------------------------
 
-    public LiveData<Map<Timesheet, List<TimesheetEntry>>> getTimesheetLiveData(Long timesheetId) {
-        return timesheetRepository.getTimesheetLiveData(timesheetId);
-    }
-
     public TimesheetDto getTimesheetDto(Long timesheetId) {
         Timesheet timesheet = timesheetRepository.getTimesheet(timesheetId);
         if (timesheet != null) {
@@ -107,14 +103,6 @@ public class TimesheetService {
         return timesheetRepository.getTimesheet(timesheetId);
     }
 
-    public LiveData<List<Timesheet>> getTimesheetListLiveData(Integer year) {
-        return timesheetRepository.getTimesheetByYear(year);
-    }
-
-    public List<TimesheetDto> getTimesheetList(Integer year) {
-        return TimesheetMapper.toTimesheetDtoList(timesheetRepository.getTimesheetList(year));
-    }
-
     public List<TimesheetDto> getTimesheetDtoList(Integer year) {
         List<TimesheetDto> timesheetDtoList = new ArrayList<>();
         List<Long> timesheetIdList = timesheetRepository.getTimesheetIds(year);
@@ -143,7 +131,7 @@ public class TimesheetService {
         }
         try {
             Log.d("TimesheetRepository.saveTimesheet", String.format("existingTimesheet: %s", timesheetExisting));
-            Long id = null;
+            Long id;
             if (timesheetExisting == null) {
                 // this is a new timesheet
                 timesheet.setCreatedDate(LocalDateTime.now());
@@ -247,14 +235,6 @@ public class TimesheetService {
         // clear the id, so this will be taken as a new timesheet entry, the created and last modified date will the be overridden upon save.
         timesheetEntry.setId(null);
         return timesheetEntry;
-    }
-
-    public TimesheetWithEntries getTimesheetWithEntries(Long timesheetId) {
-        return timesheetRepository.getTimesheetWithEntries(timesheetId);
-    }
-
-    public LiveData<List<TimesheetEntry>> getTimesheetEntryListLiveData(Long timesheetId) {
-        return timesheetRepository.getTimesheetEntryListLiveData(timesheetId);
     }
 
     public List<TimesheetEntry> getTimesheetEntryList(Long timesheetId) {

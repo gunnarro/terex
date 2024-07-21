@@ -1,34 +1,21 @@
 package com.gunnarro.android.terex.repository;
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-import androidx.room.Transaction;
 import androidx.room.Update;
 
 import com.gunnarro.android.terex.domain.entity.Project;
-import com.gunnarro.android.terex.domain.entity.ProjectWithTimesheet;
 
 import java.util.List;
 
 @Dao
 public interface ProjectDao {
 
-    /**
-     * use transactions since this method return a aggregate object
-     *
-    @Transaction
-    @Query("SELECT * FROM project WHERE id = :projectId")
-    ProjectWithTimesheet getProjectWithTimesheet(Long projectId);
-*/
     @Query("SELECT * FROM project p WHERE p.id = :projectId")
     Project getProject(long projectId);
-
-    @Query("select * from project p where p.client_id = :clientId and p.status = :status  order by name")
-    LiveData<List<Project>> getProjectsLiveData(Long clientId, String status);
 
     @Query("select * from project p where p.client_id = :clientId and p.status IN(:statuses) order by name")
     List<Project> getProjects(Long clientId, List<String> statuses);
@@ -56,7 +43,7 @@ public interface ProjectDao {
      * @param project project to be inserted. Abort if conflict, i.e. silently drop the insert
      * @return the id of the inserted invoice row
      */
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Insert
     long insert(Project project);
 
     /**

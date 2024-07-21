@@ -106,7 +106,6 @@ public class ClientService {
             // finally save client
             return save(clientDto);
         } catch (Exception e) {
-            e.printStackTrace();
             Log.e("saveClient", String.format("Error: %s", e.getCause()));
             throw new TerexApplicationException("Error saving client!" + e.getMessage(), "50050", e.getCause());
         }
@@ -134,7 +133,6 @@ public class ClientService {
             } else {
                 client.setCreatedDate(clientExisting.getCreatedDate());
                 client.setStatus(clientDto.getStatus());
-                //client.setOrganizationId(clientExisting.getOrganizationId());
                 clientRepository.update(client);
                 id = clientExisting.getId();
                 Log.d("saveClient", String.format("updated client, id= %s - %s", id, client));
@@ -142,7 +140,6 @@ public class ClientService {
             return id;
         } catch (Exception e) {
             // Something crashed, therefore restore interrupted state before leaving.
-            e.printStackTrace();
             Thread.currentThread().interrupt();
             throw new TerexApplicationException("Error saving client!" + e.getMessage(), "50050", e.getCause());
         }

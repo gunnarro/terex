@@ -46,8 +46,6 @@ class TimesheetMapperTest {
         TimesheetDto timesheetDto = TimesheetMapper.toTimesheetDto(timesheet);
         assertEquals(timesheet.getId(), timesheetDto.getId());
         assertEquals(timesheet.getClientId(), timesheetDto.getClientDto().getId());
-        // fixme assertEquals(timesheet.getProjectId(), timesheetDto.getProjectDto().getId());
-        // fixme assertEquals(timesheet.getUserId(), timesheetDto.getUserAccountDto().getId());
         assertEquals(timesheet.getYear(), timesheetDto.getYear());
         assertEquals(timesheet.getMonth(), timesheetDto.getMonth());
         assertEquals(timesheet.getStatus(), timesheetDto.getStatus());

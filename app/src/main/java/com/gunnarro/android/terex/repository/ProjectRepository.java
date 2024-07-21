@@ -3,11 +3,9 @@ package com.gunnarro.android.terex.repository;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
-import androidx.room.Transaction;
 
 import com.gunnarro.android.terex.config.AppDatabase;
 import com.gunnarro.android.terex.domain.entity.Project;
-import com.gunnarro.android.terex.domain.entity.ProjectWithTimesheet;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 
 import java.util.Arrays;
@@ -30,31 +28,13 @@ public class ProjectRepository {
      * CANCELLED: the invoice have been cancelled.
      */
     public enum ProjectStatusEnum {
-        ACTIVE, FINISHED;
+        ACTIVE, FINISHED
     }
 
     private final ProjectDao projectDao;
 
     public ProjectRepository() {
         projectDao = AppDatabase.getDatabase().projectDao();
-    }
-/*
-    @Transaction
-    public ProjectWithTimesheet getProjectWithTimesheet(Long projectId) {
-        try {
-            CompletionService<ProjectWithTimesheet> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
-            service.submit(() -> projectDao.getProjectWithTimesheet(projectId));
-            Future<ProjectWithTimesheet> future = service.take();
-            return future != null ? future.get() : null;
-        } catch (InterruptedException | ExecutionException e) {
-            // Something crashed, therefore restore interrupted state before leaving.
-            Thread.currentThread().interrupt();
-            throw new TerexApplicationException("Error getting project with timesheet list", e.getMessage(), e.getCause());
-        }
-    }
-*/
-    public LiveData<List<Project>> getProjectsLiveData(Long clientId, String status) {
-        return projectDao.getProjectsLiveData(clientId, status);
     }
 
     public List<Project> getProjects(Long clientId, ProjectStatusEnum projectStatus) {
