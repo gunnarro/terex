@@ -1,9 +1,6 @@
 package com.gunnarro.android.terex;
 
 import android.content.Context;
-import android.util.Log;
-
-import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 
