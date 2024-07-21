@@ -84,7 +84,7 @@ public class Timesheet extends BaseEntity {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(@NonNull Long userId) {
         this.userId = userId;
     }
 
@@ -93,7 +93,7 @@ public class Timesheet extends BaseEntity {
         return clientId;
     }
 
-    public void setClientId(Long clientId) {
+    public void setClientId(@NonNull Long clientId) {
         this.clientId = clientId;
     }
 

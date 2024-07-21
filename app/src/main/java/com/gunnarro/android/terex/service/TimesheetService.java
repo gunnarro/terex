@@ -2,7 +2,6 @@ package com.gunnarro.android.terex.service;
 
 import android.util.Log;
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Transaction;
 
 import com.github.mustachejava.DefaultMustacheFactory;
@@ -17,7 +16,6 @@ import com.gunnarro.android.terex.domain.dto.UserAccountDto;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
-import com.gunnarro.android.terex.domain.entity.TimesheetWithEntries;
 import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
 import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
@@ -379,7 +377,7 @@ public class TimesheetService {
         TimesheetDto timesheetDto = getTimesheetDto(timesheetId);
         List<TimesheetEntryDto> timesheetEntryDtoList = getTimesheetEntryDtoListReadyForBilling(timesheetId);
         Double sumBilledHours = timesheetEntryDtoList.stream().filter(e -> e.getWorkedSeconds() != null).mapToDouble(TimesheetEntryDto::getWorkedSeconds).sum() / 3600;
-        Integer numberOfWorkedDays = timesheetEntryDtoList.stream().filter(e -> e.getWorkedSeconds() != null && e.getWorkedSeconds() > 0).collect(Collectors.toList()).size();
+        long numberOfWorkedDays = timesheetEntryDtoList.stream().filter(e -> e.getWorkedSeconds() != null && e.getWorkedSeconds() > 0).count();
         MustacheFactory mf = new DefaultMustacheFactory();
         Mustache mustache = mf.compile(new StringReader(clientTimesheetMustacheTemplate), "");
         Map<String, Object> context = new HashMap<>();
@@ -389,7 +387,7 @@ public class TimesheetService {
         context.put("customerProjectName", String.format("%s %s", clientDto.getProjectList().get(0).getName(), clientDto.getProjectList().get(0).getDescription()));
         context.put("timesheetPeriod", String.format("%s", timesheetDto.getFromDate().format(DateTimeFormatter.ofPattern("MMMM yyyy"))));
         context.put("timesheetEntryDtoList", timesheetEntryDtoList);
-        context.put("numberOfWorkedDays", numberOfWorkedDays);
+        context.put("numberOfWorkedDays", (int) numberOfWorkedDays);
         context.put("sunBilledHours", String.format(Locale.getDefault(), "%.1f", sumBilledHours));
         context.put("generatedDate", LocalDate.now().format(DateTimeFormatter.ISO_DATE));
         StringWriter writer = new StringWriter();

@@ -2,8 +2,6 @@ package com.gunnarro.android.terex.repository;
 
 import android.util.Log;
 
-import androidx.lifecycle.LiveData;
-
 import com.gunnarro.android.terex.config.AppDatabase;
 import com.gunnarro.android.terex.domain.entity.Project;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
