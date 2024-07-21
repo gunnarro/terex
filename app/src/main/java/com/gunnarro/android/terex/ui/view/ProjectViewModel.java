@@ -25,11 +25,11 @@ public class ProjectViewModel extends AndroidViewModel {
         super(application);
         projectService = new ProjectService();
         projectListLiveData = new MutableLiveData<>();
-        projectListLiveData.setValue(projectService.getProjects(clientId));
+        projectListLiveData.setValue(projectService.getProjects(clientId, null));
     }
 
     public LiveData<List<ProjectDto>> getProjectsLiveData(Long clientId) {
-        projectListLiveData.setValue(projectService.getProjects(clientId));
+        projectListLiveData.setValue(projectService.getProjects(clientId, null));
         return projectListLiveData;
     }
 

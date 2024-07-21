@@ -47,12 +47,12 @@ public class TimesheetViewHolder extends RecyclerView.ViewHolder {
         if (timesheetDto == null) {
             return;
         }
-        String title = timesheetDto.getProjectDto().getClientDto().getName();
+        String title = timesheetDto.getClientDto().getName();
         if (title != null && title.length() > TITLE_MAX_LENGTH) {
             title = title.substring(0, TITLE_MAX_LENGTH) + "...";
         }
         timesheetLineHeaderView1.setText(title);
-        timesheetLineHeaderView2.setText(timesheetDto.getProjectDto().getName());
+        timesheetLineHeaderView2.setText(timesheetDto.getClientDto().getProjectList().toString());
         timesheetLine1StatusView.setText(timesheetDto.getFromDate().format(DateTimeFormatter.ofPattern("MMM", Locale.getDefault())));
 
         if (timesheetDto.isNew()) {

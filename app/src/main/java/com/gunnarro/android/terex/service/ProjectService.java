@@ -60,8 +60,8 @@ public class ProjectService {
         }
     }
 */
-    public List<ProjectDto> getProjects(Long clientId) {
-        return TimesheetMapper.toProjectDtoList(projectRepository.getProjects(clientId));
+    public List<ProjectDto> getProjects(Long clientId, ProjectRepository.ProjectStatusEnum projectStatus) {
+        return TimesheetMapper.toProjectDtoList(projectRepository.getProjects(clientId, projectStatus));
     }
 
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures

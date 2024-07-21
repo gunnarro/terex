@@ -83,6 +83,7 @@ class TimesheetServiceBillingTest {
 
         ClientDto clientDto = TestData.createClientDto(100L, "Software Development AS");
         clientDto.setOrganizationDto(TestData.createOrganizationDto(234L, "Customer Ogr Name", "123456789"));
+        clientDto.setProjectList(List.of(TestData.createProjectDto(300L, clientDto.getId(), "apotek1")));
         UserAccountDto userAccountDto = TestData.createUserAccountDto(300L, "Gunnar Besseheim");
 
         String templateHtml = timesheetService.createTimesheetListHtml(23L, userAccountDto, clientDto, clientTimesheetMustacheTemplate);
@@ -99,6 +100,7 @@ class TimesheetServiceBillingTest {
         UserAccountDto invoiceIssuer = TestData.createUserAccountDto(1000L, "guro");
         invoiceIssuer.setOrganizationDto(TestData.createOrganizationDto(100L, "gunnarro as", "822 707 922"));
         ClientDto invoiceReceiver = TestData.createClientDto(300L, "client organization name");
+        invoiceReceiver.setProjectList(List.of(TestData.createProjectDto(300L, invoiceReceiver.getId(), "apotek1")));
         invoiceReceiver.setOrganizationDto(TestData.createOrganizationDto(1001L, "client organization name", "988 232 999"));
         invoiceReceiver.setContactPersonDto(TestData.createContactPerson(600L, "kontaktperson hos klient"));
         ProjectDto projectDto = new ProjectDto();

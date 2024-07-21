@@ -83,8 +83,8 @@ public class ClientService {
             // add contact person info
             PersonDto contactPersonDto = personService.getPerson(client.getContactPersonId());
             clientDto.setContactPersonDto(contactPersonDto);
-            // add projects
-            List<ProjectDto> projectDtos = projectService.getProjects(client.getId());
+            // add projects, get all projects
+            List<ProjectDto> projectDtos = projectService.getProjects(client.getId(), null);
             clientDto.setProjectList(projectDtos);
             return clientDto;
         }

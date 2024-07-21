@@ -234,6 +234,7 @@ public class TestData {
         ProjectDto projectDto = new ProjectDto();
         projectDto.setId(id);
         projectDto.setName(name);
+        projectDto.setDescription("project description");
         projectDto.setClientDto(new ClientDto(clientId));
         projectDto.setHourlyRate(1000);
         return projectDto;

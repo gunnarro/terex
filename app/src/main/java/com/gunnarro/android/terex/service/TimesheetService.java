@@ -348,7 +348,7 @@ public class TimesheetService {
         context.put("timesheetPeriod", String.format("%s/%s", timesheet.getMonth(), timesheet.getYear()));
         context.put("invoiceIssuer", userAccountDto);
         context.put("invoiceReceiver", clientDto);
-        context.put("timesheetProjectCode", "this can not be placed here anymore");//fixme should use assignment code
+        context.put("timesheetProjectCode", String.format("%s %s", clientDto.getProjectList().get(0).getName(), clientDto.getProjectList().get(0).getDescription()));
         context.put("timesheetSummaryList", timesheetSummaryList);
         context.put("totalBilledHours", String.format(Locale.getDefault(), "%,.1f", totalBilledHours));
         context.put("totalBilledAmount", Utility.formatAmountToNOK(totalBilledAmount));
@@ -406,7 +406,7 @@ public class TimesheetService {
         context.put("title", "Timeliste");
         context.put("consultant", userAccountDto);
         context.put("customer", clientDto);
-        context.put("customerProjectName", timesheetDto.getProjectDto().getName());
+        context.put("customerProjectName", String.format("%s %s", clientDto.getProjectList().get(0).getName(), clientDto.getProjectList().get(0).getDescription()));
         context.put("timesheetPeriod", String.format("%s", timesheetDto.getFromDate().format(DateTimeFormatter.ofPattern("MMMM yyyy"))));
         context.put("timesheetEntryDtoList", timesheetEntryDtoList);
         context.put("numberOfWorkedDays", numberOfWorkedDays);

@@ -17,13 +17,12 @@ import java.util.Objects;
 import lombok.Getter;
 import lombok.Setter;
 
-// TODO remove both client_id and project_id,not needed after remodelling
 /**
  * Timesheet is the top level class used to track the time a particular employee has worked during a certain period.
  * typically there is one timesheet per month.
  * A timesheet contains time sheet entries.
  * <p>
- * A timesheet is unique based on client name, project code, year and mount.
+ * A timesheet is unique based on user account id, client id, year and mont.
  * This model is basically based upon one timesheet per month.
  * <p>
  * When status is set equal to BILLED, the is is no possible to change the timesheet or any assigned timesheet entry.

@@ -16,7 +16,6 @@ import com.gunnarro.android.terex.domain.dto.ProjectDto;
 import com.gunnarro.android.terex.domain.entity.Client;
 import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
 import com.gunnarro.android.terex.repository.ClientRepository;
-import com.gunnarro.android.terex.repository.ProjectRepository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -75,7 +74,7 @@ class ClientServiceTest {
         projectDto.setStatus("ACTIVE");
 
         when(clientRepositoryMock.getClient(client.getId())).thenReturn(client);
-        when(projectServiceMock.getProjects(client.getId())).thenReturn(List.of(projectDto));
+        when(projectServiceMock.getProjects(client.getId(), null)).thenReturn(List.of(projectDto));
         when(personServiceMock.getPerson(client.getContactPersonId())).thenReturn(personDto);
 
         ClientDto clientDto = clientService.getClient(client.getId());

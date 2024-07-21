@@ -6,12 +6,12 @@ import com.gunnarro.android.terex.domain.entity.Timesheet;
 
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.StringJoiner;
 
 public class TimesheetDto {
     private Long id;
     private UserAccountDto userAccountDto;
     private ClientDto clientDto;
-    private ProjectDto projectDto;
     private String status;
     private LocalDate fromDate;
     private LocalDate toDate;
@@ -151,14 +151,6 @@ public class TimesheetDto {
         this.clientDto = clientDto;
     }
 
-    public ProjectDto getProjectDto() {
-        return projectDto;
-    }
-
-    public void setProjectDto(ProjectDto projectDto) {
-        this.projectDto = projectDto;
-    }
-
     public boolean isNew() {
         return status.equals(Timesheet.TimesheetStatusEnum.NEW.name());
     }
@@ -179,29 +171,32 @@ public class TimesheetDto {
         return status.equals(Timesheet.TimesheetStatusEnum.BILLED.name());
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TimesheetDto that = (TimesheetDto) o;
-        return Objects.equals(userAccountDto, that.userAccountDto) && Objects.equals(projectDto, that.projectDto) && Objects.equals(year, that.year) && Objects.equals(month, that.month);
+        return Objects.equals(userAccountDto, that.userAccountDto) && Objects.equals(clientDto, that.clientDto) && Objects.equals(year, that.year) && Objects.equals(month, that.month);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userAccountDto, projectDto, year, month);
+        return Objects.hash(userAccountDto, clientDto, year, month);
     }
 
 
-    @NonNull
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("TimesheetDto{");
-        sb.append("id=").append(id);
-        sb.append(", status='").append(status).append('\'');
-        sb.append(", year=").append(year);
-        sb.append(", month=").append(month);
-        sb.append('}');
-        return sb.toString();
+        return new StringJoiner(", ", TimesheetDto.class.getSimpleName() + "[", "]")
+                .add("workingHoursInMonth=" + workingHoursInMonth)
+                .add("registeredWorkedDays=" + registeredWorkedDays)
+                .add("id=" + id)
+                .add("year=" + year)
+                .add("month=" + month)
+                .add("status='" + status + "'")
+                .add("clientDto=" + clientDto)
+                .add("userAccountDto=" + userAccountDto)
+                .toString();
     }
 }

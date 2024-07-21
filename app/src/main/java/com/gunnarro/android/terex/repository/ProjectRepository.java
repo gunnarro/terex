@@ -10,11 +10,13 @@ import com.gunnarro.android.terex.domain.entity.Project;
 import com.gunnarro.android.terex.domain.entity.ProjectWithTimesheet;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 import javax.inject.Singleton;
 
@@ -55,10 +57,16 @@ public class ProjectRepository {
         return projectDao.getProjectsLiveData(clientId, status);
     }
 
-    public List<Project> getProjects(Long clientId) {
+    public List<Project> getProjects(Long clientId, ProjectStatusEnum projectStatus) {
+        List<String> projectStatuses;
+        if (projectStatus != null) {
+            projectStatuses = List.of(projectStatus.name());
+        } else {
+            projectStatuses =  Arrays.stream(ProjectStatusEnum.values()).map(Enum::name).collect(Collectors.toList());
+        }
         try {
             CompletionService<List<Project>> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
-            service.submit(() -> projectDao.getProjects(clientId));
+            service.submit(() -> projectDao.getProjects(clientId, projectStatuses));
             Future<List<Project>> future = service.take();
             return future != null ? future.get() : null;
         } catch (InterruptedException | ExecutionException e) {

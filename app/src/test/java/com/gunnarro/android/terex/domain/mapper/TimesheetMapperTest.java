@@ -59,7 +59,6 @@ class TimesheetMapperTest {
         timesheetDto.setId(22L);
         ProjectDto projectDto = new ProjectDto();
         projectDto.setId(666L);
-        timesheetDto.setProjectDto(projectDto);
         UserAccountDto userAccountDto = new UserAccountDto();
         userAccountDto.setId(11L);
         timesheetDto.setUserAccountDto(userAccountDto);

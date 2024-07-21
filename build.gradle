@@ -120,7 +120,7 @@ ext {
     itextpdf_kernel = '8.0.2'
     itextpdf_html2pdf = "5.0.2"
     fasterxml_jackson = "2.14.3"
-    projectlombok_lombok = '1.18.32'
+    projectlombok_lombok = '1.18.34'
     kotlin_kotlin_bom = '2.0.0'
     reactivex_rxjava2_rxjava = '2.2.21'
     reactivex_rxjava2_rxandroid = "2.1.1"

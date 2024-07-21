@@ -50,7 +50,6 @@ public class TimesheetMapper {
         TimesheetDto timesheetDto = new TimesheetDto();
         timesheetDto.setId(timesheet.getId());
         timesheetDto.setClientDto(new ClientDto(timesheet.getClientId()));
-        timesheetDto.setProjectDto(new ProjectDto(timesheet.getClientId()));
         timesheetDto.setUserAccountDto(new UserAccountDto(timesheet.getClientId()));
         timesheetDto.setDescription(timesheet.getDescription());
         timesheetDto.setFromDate(timesheet.getFromDate());
