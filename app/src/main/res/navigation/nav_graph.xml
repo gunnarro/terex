@@ -285,7 +285,17 @@
             app:destination="@id/admin_fragment" />
         <action
             android:id="@+id/nav_from_integration_list_to_integration_details"
-            app:destination="@id/admin_fragment" />
+            app:destination="@id/integration_details_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/integration_details_fragment"
+        android:name="com.gunnarro.android.terex.ui.fragment.IntegrationDetailsFragment"
+        android:label="@string/title_integration_details"
+        tools:layout="@layout/fragment_integration_details">
+        <action
+            android:id="@+id/nav_from_integration_details_to_integration_list"
+            app:destination="@id/integration_list_fragment" />
     </fragment>
 
 

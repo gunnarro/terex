@@ -16,6 +16,11 @@ class UtilityTest {
         long seconds = 7 * 60 * 60 + 30*60;
         Assertions.assertEquals(27000, seconds);
         Assertions.assertEquals("7.5", Utility.fromSecondsToHours(seconds));
+        // 7:00
+        seconds = 7 * 60 * 60;
+        Assertions.assertEquals("7.0", Utility.fromSecondsToHours(seconds));
+
+        Assertions.assertEquals("0.0", Utility.fromSecondsToHours(0L));
     }
 
     @Test
@@ -25,6 +30,11 @@ class UtilityTest {
         Assertions.assertEquals(27000, seconds);
         Assertions.assertEquals("7.5", Utility.fromSecondsToHours(seconds));
 
+        Assertions.assertEquals(25200, Utility.fromHoursToSeconds("7"));
+        Assertions.assertEquals(25200, Utility.fromHoursToSeconds("7.0"));
+        Assertions.assertEquals(25200, Utility.fromHoursToSeconds("7.00"));
+        Assertions.assertEquals(25200, Utility.fromHoursToSeconds("07.00"));
+        Assertions.assertEquals(0, Utility.fromHoursToSeconds("0.0"));
     }
 
     @Test

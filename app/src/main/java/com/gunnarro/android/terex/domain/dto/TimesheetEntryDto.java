@@ -6,23 +6,65 @@ import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.utility.Utility;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 public class TimesheetEntryDto {
 
+    private Long id;
+    private LocalDateTime createdDate;
+    private LocalDateTime lastModifiedDate;
+    private Long timesheetId;
     private Long projectId;
     @NonNull
     private LocalDate workdayDate;
-    private LocalTime fromTime;
-    private LocalTime toTime;
+    private LocalTime startTime;
+    private LocalTime endTime;
     private Long workedSeconds;
+    private Integer breakSeconds;
     private String comments;
     @NonNull
     private String type;
+    private String status;
+    private ProjectDto projectDto;
 
     public TimesheetEntryDto() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public LocalDateTime getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
+    public Long getTimesheetId() {
+        return timesheetId;
+    }
+
+    public void setTimesheetId(Long timesheetId) {
+        this.timesheetId = timesheetId;
     }
 
     public Long getProjectId() {
@@ -41,20 +83,20 @@ public class TimesheetEntryDto {
         this.workdayDate = workdayDate;
     }
 
-    public LocalTime getFromTime() {
-        return fromTime;
+    public LocalTime getStartTime() {
+        return startTime;
     }
 
-    public void setFromTime(LocalTime fromTime) {
-        this.fromTime = fromTime;
+    public void setStartTime(LocalTime startTime) {
+        this.startTime = startTime;
     }
 
-    public LocalTime getToTime() {
-        return toTime;
+    public LocalTime getEndTime() {
+        return endTime;
     }
 
-    public void setToTime(LocalTime toTime) {
-        this.toTime = toTime;
+    public void setEndTime(LocalTime endTime) {
+        this.endTime = endTime;
     }
 
     public Long getWorkedSeconds() {
@@ -63,6 +105,14 @@ public class TimesheetEntryDto {
 
     public void setWorkedSeconds(Long workedSeconds) {
         this.workedSeconds = workedSeconds;
+    }
+
+    public Integer getBreakSeconds() {
+        return breakSeconds;
+    }
+
+    public void setBreakSeconds(Integer breakSeconds) {
+        this.breakSeconds = breakSeconds;
     }
 
     public String getComments() {
@@ -79,6 +129,22 @@ public class TimesheetEntryDto {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public ProjectDto getProjectDto() {
+        return projectDto;
+    }
+
+    public void setProjectDto(ProjectDto projectDto) {
+        this.projectDto = projectDto;
     }
 
     // helper methods
@@ -121,5 +187,40 @@ public class TimesheetEntryDto {
 
     public boolean hasWorkHours() {
         return workedSeconds != null && workedSeconds > 0;
+    }
+
+    public boolean isOpen() {
+        return status.equals(TimesheetEntry.TimesheetEntryStatusEnum.OPEN.name());
+    }
+
+    public boolean isClosed() {
+        return status.equals(TimesheetEntry.TimesheetEntryStatusEnum.CLOSED.name());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TimesheetEntryDto that = (TimesheetEntryDto) o;
+        return Objects.equals(timesheetId, that.timesheetId) && Objects.equals(projectId, that.projectId) && Objects.equals(workdayDate, that.workdayDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(timesheetId, projectId, workdayDate);
+    }
+
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", TimesheetEntryDto.class.getSimpleName() + "[", "]")
+                .add("id=" + id)
+                .add("timesheetId=" + timesheetId)
+                .add("projectId=" + projectId)
+                .add("workdayDate=" + workdayDate)
+                .add("workedSeconds=" + workedSeconds)
+                .add("type='" + type + "'")
+                .add("status='" + status + "'")
+                .toString();
     }
 }

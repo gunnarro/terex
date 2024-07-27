@@ -1,6 +1,6 @@
 PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
 
--- no db changes
+ALTER TABLE integration ADD COLUMN status TEXT NOT NULL DEFAULT 'DEACTIVATED';
 
 COMMIT;

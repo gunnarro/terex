@@ -63,23 +63,23 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_timesheet_new, container, false);
 
-        ClientDto clientDto = clientService.getActiveClient();
-        if (clientDto == null) {
+        List<ClientDto> clientDtoList = clientService.getClients();
+        if (clientDtoList == null) {
             // no clients found, display info dialog and return timesheet list
             return view;
         }
-
-        if (clientDto.getProjectList() == null || clientDto.getProjectList().isEmpty()) {
+/*
+        if (clientDtoList.getProjectList() == null || clientDto.getProjectList().isEmpty()) {
             // client have no projects, display info dialog and return timesheet list
             return view;
         }
-
-        String[] clients = new String[]{clientDto.getName()};
+*/
+//        String[] clients = new String[]{clientDto.getName()};
 
         // check if this is an existing or a new timesheet
         Long timesheetId = getArguments() != null ? getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY) : null;
         // get existing or create a new timesheet with default data
-        Timesheet timesheet = getTimesheet(timesheetId, clientDto);
+        Timesheet timesheet = getTimesheet(timesheetId, clientDtoList.get(0)); //TDOO must add support for more than one client
 
         // status button group - some styling problem - buttons are disabled as default
         MaterialButtonToggleGroup statusBtnGrp = view.findViewById(R.id.timesheet_new_status_btn_group_layout);
@@ -89,11 +89,17 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
                 }
         );
 
-        // create timesheet clients spinner
         final AutoCompleteTextView clientSpinner = view.findViewById(R.id.timesheet_new_client_spinner);
-        ArrayAdapter<String> clientAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, clients);
+        List<SpinnerItem> clientItems = clientDtoList.stream().map(p -> new SpinnerItem(p.getId(), p.getName())).collect(Collectors.toList());
+        ArrayAdapter<SpinnerItem> clientAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, clientItems);
         clientSpinner.setAdapter(clientAdapter);
         clientSpinner.setListSelection(0);
+
+        // create timesheet clients spinner
+       // final AutoCompleteTextView clientSpinner = view.findViewById(R.id.timesheet_new_client_spinner);
+       // ArrayAdapter<String> clientAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, clients);
+       // clientAdapter.setAdapter(clientAdapter);
+        //clientSpinner.setListSelection(0);
         clientSpinner.setInputMethodMode(ListPopupWindow.INPUT_METHOD_NOT_NEEDED);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             clientSpinner.setAutoHandwritingEnabled(false);
@@ -214,7 +220,7 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
     }
 
     /**
-     *  get existing or create a new timesheet with default data
+     * get existing or create a new timesheet with default data
      */
     private Timesheet getTimesheet(Long timesheetId, ClientDto clientDto) {
         Timesheet timesheet;
@@ -291,8 +297,8 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
         ((MaterialButton) view.findViewById(R.id.timesheet_new_status_btn_completed)).setChecked(timesheet.isCompleted());
         ((MaterialButton) view.findViewById(R.id.timesheet_new_status_btn_billed)).setChecked(timesheet.isBilled());
 
-       // AutoCompleteTextView statusSpinner = view.findViewById(R.id.timesheet_new_status_spinner);
-       // statusSpinner.setText(timesheet.getStatus());
+        // AutoCompleteTextView statusSpinner = view.findViewById(R.id.timesheet_new_status_spinner);
+        // statusSpinner.setText(timesheet.getStatus());
 
         AutoCompleteTextView yearSpinner = view.findViewById(R.id.timesheet_new_year_spinner);
         yearSpinner.setText(String.format("%s", timesheet.getYear()));
@@ -345,7 +351,7 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
             view.findViewById(R.id.timesheet_new_created_date_layout).setVisibility(View.VISIBLE);
             view.findViewById(R.id.timesheet_new_last_modified_date_layout).setVisibility(View.VISIBLE);
             view.findViewById(R.id.timesheet_new_client_spinner_layout).setEnabled(false);
-           // view.findViewById(R.id.timesheet_new_status_spinner_layout).setEnabled(false);
+            // view.findViewById(R.id.timesheet_new_status_spinner_layout).setEnabled(false);
             view.findViewById(R.id.timesheet_new_status_btn_group_layout).setEnabled(false);
             //view.findViewById(R.id.timesheet_new_status_group_layout).setEnabled(false);
             view.findViewById(R.id.timesheet_new_year_spinner_layout).setEnabled(false);
@@ -408,9 +414,15 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
             timesheet.setLastModifiedDate(lastModifiedDateTime);
         }
 
-        //fixme
         AutoCompleteTextView clientSpinner = requireView().findViewById(R.id.timesheet_new_client_spinner);
-        //  timesheet.setClientName(clientSpinner.getText().toString());
+        // some trouble to get the project id, so this mey be to complicated
+        int count = clientSpinner.getAdapter().getCount();
+        for (int i = 0; i < count; i++) {
+            SpinnerItem item = (SpinnerItem) clientSpinner.getAdapter().getItem(i);
+            if (item.name().equals(clientSpinner.getText().toString())) {
+                timesheet.setClientId(item.id());
+            }
+        }
 
         //MaterialButtonToggleGroup statusBtnGrp = requireView().findViewById(R.id.timesheet_new_status_group_layout);
         //MaterialButton selectedStatusBtn = statusBtnGrp.findViewById(statusBtnGrp.getCheckedButtonId());

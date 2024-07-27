@@ -1,13 +1,17 @@
 package com.gunnarro.android.terex.domain.dto;
 
-import androidx.annotation.NonNull;
-import androidx.room.ColumnInfo;
+import com.gunnarro.android.terex.domain.entity.Integration;
+
+import java.time.LocalDateTime;
 
 public class IntegrationDto {
 
+    private LocalDateTime createdDate;
+    private LocalDateTime lastModifiedDate;
     private Long id;
+    private String status;
     private String system;
-    private String serviceType;
+    private String integrationType;
     private String baseUrl;
     private String schemaUrl;
     private String authenticationType;
@@ -26,6 +30,30 @@ public class IntegrationDto {
         this.id = id;
     }
 
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public LocalDateTime getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public String getSystem() {
         return system;
     }
@@ -34,12 +62,12 @@ public class IntegrationDto {
         this.system = system;
     }
 
-    public String getServiceType() {
-        return serviceType;
+    public String getIntegrationType() {
+        return integrationType;
     }
 
-    public void setServiceType(String serviceType) {
-        this.serviceType = serviceType;
+    public void setIntegrationType(String integrationType) {
+        this.integrationType = integrationType;
     }
 
     public String getBaseUrl() {
@@ -112,5 +140,13 @@ public class IntegrationDto {
 
     public void setHttpHeaderContentType(String httpHeaderContentType) {
         this.httpHeaderContentType = httpHeaderContentType;
+    }
+
+    public boolean isActive() {
+        return Integration.IntegrationStatusEnum.valueOf(status).equals(Integration.IntegrationStatusEnum.ACTIVE);
+    }
+
+    public boolean isDeActivated() {
+        return Integration.IntegrationStatusEnum.valueOf(status).equals(Integration.IntegrationStatusEnum.DEACTIVATED);
     }
 }

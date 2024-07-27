@@ -10,6 +10,7 @@ import com.gunnarro.android.terex.IntegrationTestSetup;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.exception.InputValidationException;
+import com.gunnarro.android.terex.integration.jira.TempoApi;
 import com.gunnarro.android.terex.repository.TimesheetRepository;
 
 import org.junit.After;
@@ -25,7 +26,7 @@ public class TimesheetServiceTest extends IntegrationTestSetup {
     @Before
     public void setup() {
         super.setupDatabase();
-        timesheetService = new TimesheetService(new TimesheetRepository(), new UserAccountService(), new ProjectService());
+        timesheetService = new TimesheetService(new TimesheetRepository(), new UserAccountService(), new ProjectService(), new ClientService(), new TempoApi());
     }
 
     @After

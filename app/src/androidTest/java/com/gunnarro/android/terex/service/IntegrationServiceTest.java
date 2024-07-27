@@ -35,7 +35,7 @@ public class IntegrationServiceTest extends IntegrationTestSetup {
         integrationDto.setId(44L);
         integrationDto.setSystem("BREG");
         integrationDto.setBaseUrl("https://breg.no");
-        integrationDto.setServiceType("REST");
+        integrationDto.setIntegrationType("REST");
         integrationDto.setUserName("guro");
         integrationDto.setPassword("change-me");
         integrationDto.setSchemaUrl("https://breg.no/swagger");
@@ -52,7 +52,7 @@ public class IntegrationServiceTest extends IntegrationTestSetup {
         IntegrationDto newIntegrationDto = integrationService.getIntegration(id);
         assertEquals("BREG", newIntegrationDto.getSystem());
         assertEquals("https://breg.no", newIntegrationDto.getBaseUrl());
-        assertEquals("REST", newIntegrationDto.getServiceType());
+        assertEquals("REST", newIntegrationDto.getIntegrationType());
         assertEquals("guro", newIntegrationDto.getUserName());
         assertEquals("change-me", newIntegrationDto.getPassword());
         assertEquals("https://breg.no/swagger", newIntegrationDto.getSchemaUrl());

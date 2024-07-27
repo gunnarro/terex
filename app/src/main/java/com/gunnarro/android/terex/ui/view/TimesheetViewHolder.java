@@ -52,7 +52,7 @@ public class TimesheetViewHolder extends RecyclerView.ViewHolder {
             title = title.substring(0, TITLE_MAX_LENGTH) + "...";
         }
         timesheetLineHeaderView1.setText(title);
-        timesheetLineHeaderView2.setText(timesheetDto.getClientDto().getProjectList().toString());
+        timesheetLineHeaderView2.setText("");
         timesheetLine1StatusView.setText(timesheetDto.getFromDate().format(DateTimeFormatter.ofPattern("MMM", Locale.getDefault())));
 
         if (timesheetDto.isNew()) {

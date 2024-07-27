@@ -63,7 +63,7 @@
                 android:layout_marginStart="4dp"
                 android:layout_span="1"
                 android:gravity="start"
-                android:text=""
+                android:text="header"
                 android:textStyle="bold" />
         </TableRow>
 
@@ -75,14 +75,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:gravity="start"
-                android:text="" />
+                android:text="line_1" />
 
             <TextView
                 android:id="@+id/timesheet_line_1_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:text="" />
+                android:text="line_1_value" />
         </TableRow>
 
         <TableRow>
@@ -93,14 +93,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:gravity="start"
-                android:text="" />
+                android:text="line_2" />
 
             <TextView
                 android:id="@+id/timesheet_line_2_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:text="" />
+                android:text="line_2_value" />
         </TableRow>
 
         <TableRow>
@@ -111,14 +111,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:gravity="start"
-                android:text="" />
+                android:text="line_3" />
 
             <TextView
                 android:id="@+id/timesheet_line_3_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:text="" />
+                android:text="lin_3_value" />
         </TableRow>
     </TableLayout>
 </RelativeLayout>

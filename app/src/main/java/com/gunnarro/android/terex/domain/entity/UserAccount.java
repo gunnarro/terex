@@ -25,6 +25,10 @@ public class UserAccount extends BaseEntity {
         BUSINESS, PRIVATE
     }
 
+    public enum UserAccountStatusEnum {
+        ACTIVE, DEACTIVATED
+    }
+
     @NonNull
     @ColumnInfo(name = "user_name")
     private String userName;
@@ -38,6 +42,10 @@ public class UserAccount extends BaseEntity {
     @NonNull
     @ColumnInfo(name = "account_type")
     private String userAccountType;
+
+    @NonNull
+    @ColumnInfo(name = "status")
+    private String status;
 
     @ColumnInfo(name = "organization_id")
     private Long organizationId;
@@ -70,6 +78,14 @@ public class UserAccount extends BaseEntity {
 
     public void setUserAccountType(String userAccountType) {
         this.userAccountType = userAccountType;
+    }
+
+    public @NonNull String getStatus() {
+        return status;
+    }
+
+    public void setStatus(@NonNull String status) {
+        this.status = status;
     }
 
     public int getDefaultUser() {

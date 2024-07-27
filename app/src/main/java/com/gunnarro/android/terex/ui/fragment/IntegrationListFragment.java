@@ -30,8 +30,11 @@ public class IntegrationListFragment extends BaseFragment implements ListOnItemC
     public static final String INTEGRATION_ACTION_KEY = "integration_action";
     public static final String INTEGRATION_ACTION_VIEW = "integration_view";
     public static final String INTEGRATION_ACTION_EDIT = "integration_edit";
+    public static final String INTEGRATION_ACTION_DELETE = "integration_delete";
     public static final String INTEGRATION_ACTION_SAVE = "integration_save";
     public static final String INTEGRATION_JSON_KEY = "integration_json";
+    public static final String INTEGRATION_READ_ONLY_KEY = "integration_read_only";
+
     private IntegrationViewModel integrationViewModel;
 
     @Override
@@ -86,7 +89,6 @@ public class IntegrationListFragment extends BaseFragment implements ListOnItemC
                 // redirect to timesheet entry list fragment
                 Bundle bundle = new Bundle();
                 bundle.putLong(INTEGRATION_ID_KEY, integration.getId());
-
             } else if (INTEGRATION_ACTION_EDIT.equals(action)) {
                 Bundle bundle = new Bundle();
                 bundle.putString(INTEGRATION_JSON_KEY, integrationJson);

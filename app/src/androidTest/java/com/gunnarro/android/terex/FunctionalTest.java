@@ -13,6 +13,7 @@ import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.InvoiceAttachment;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
+import com.gunnarro.android.terex.integration.jira.TempoApi;
 import com.gunnarro.android.terex.repository.InvoiceRepository;
 import com.gunnarro.android.terex.repository.TimesheetRepository;
 import com.gunnarro.android.terex.service.ClientService;
@@ -41,7 +42,7 @@ public class FunctionalTest extends IntegrationTestSetup {
         super.setupDatabase();
         userAccountService = new UserAccountService();
         projectService = new ProjectService();
-        timesheetService = new TimesheetService(new TimesheetRepository(), new UserAccountService(), new ProjectService());
+        timesheetService = new TimesheetService(new TimesheetRepository(), new UserAccountService(), new ProjectService(), new ClientService(), new TempoApi());
         clientService = new ClientService();
         invoiceService = new InvoiceService();
     }

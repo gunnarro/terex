@@ -16,7 +16,6 @@ import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -26,7 +25,6 @@ import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.WeekFields;
-import java.util.Currency;
 import java.util.Locale;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -96,15 +94,26 @@ public class Utility {
      * The hours format is hh.m, i.e 7.5.
      */
     public static Long fromHoursToSeconds(String hours) {
-        String[] HHmm = hours.split("\\.");
-        if (HHmm.length != 2) {
+        String tmpHours = hours;
+        if (!hours.contains(".")) {
+            // missing minutes, pad with .0
+            tmpHours = hours + ".0";
+        }
+        String[] hhmm = tmpHours.split("\\.");
+        if (hhmm.length != 2) {
             return null;
         }
 
-        int hh = Integer.parseInt(HHmm[0]);
-        int mm = Integer.parseInt(HHmm[1]);
+        // may be non integers, if so, log error and return null
+        try {
+            int hh = Integer.parseInt(hhmm[0]);
+            int mm = Integer.parseInt(hhmm[1]);
 
-        return (long) LocalTime.of(hh, mm * 60 / 10).toSecondOfDay();
+            return (long) LocalTime.of(hh, mm * 60 / 10).toSecondOfDay();
+        } catch (Exception e) {
+            Log.e("", e.getMessage());
+            return null;
+        }
     }
 
     public static String formatDateTime(LocalDateTime localDateTime) {
@@ -275,6 +284,6 @@ public class Utility {
     public static String formatAmountToNOK(double amount) {
         DecimalFormat formatter
                 = new DecimalFormat("#,##0.00");
-        return formatter.format(new BigDecimal(amount)).replace(",", " ").replace(".", ",");
+        return formatter.format(BigDecimal.valueOf(amount)).replace(",", " ").replace(".", ",");
     }
 }

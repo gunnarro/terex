@@ -53,13 +53,21 @@ public class TimesheetEntry extends BaseEntity {
     }
 
     /**
+     * Status can only be OPEN and CLOSED. When CLOSED is not possible to change or delete the entry.
+     * The status is automatically set equal to CLOSED when a timesheet have been completed and billed.
+     */
+    @NonNull
+    @ColumnInfo(name = "status", defaultValue = "OPEN")
+    private String status;
+
+    /**
      * Hold a unique reference to the timesheet that is entry is assigned to.
      */
     @NonNull
     @ColumnInfo(name = "timesheet_id")
     private Long timesheetId;
 
-    @ColumnInfo(name="project_id")
+    @ColumnInfo(name = "project_id")
     private Long projectId;
 
     @NonNull
@@ -91,14 +99,6 @@ public class TimesheetEntry extends BaseEntity {
 
     @ColumnInfo(name = "break_seconds")
     private Integer breakSeconds;
-
-    /**
-     * Status can only be OPEN and CLOSED. When CLOSED is not possible to change or delete the entry.
-     * The status is automatically set equal to CLOSED when a timesheet have been completed and billed.
-     */
-    @NonNull
-    @ColumnInfo(name = "status", defaultValue = "OPEN")
-    private String status;
 
     @ColumnInfo(name = "comments")
     private String comments;
@@ -161,11 +161,10 @@ public class TimesheetEntry extends BaseEntity {
     }
 
     public LocalTime getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(LocalTime endTime) {
-        this.endTime = endTime;
+        if (startTime != null && workedSeconds != null) {
+            return startTime.plusSeconds(workedSeconds);
+        }
+        return null;
     }
 
     public String getWorkedHours() {
@@ -260,7 +259,7 @@ public class TimesheetEntry extends BaseEntity {
         return timesheetEntry;
     }
 
-    public static TimesheetEntry createDefault(@NotNull Long timesheetId, Long projectId, @NotNull LocalDate workDayDate) {
+    public static TimesheetEntry create(@NotNull Long timesheetId, Long projectId, @NotNull LocalDate workDayDate, LocalTime startTime, Long workedSeconds, String comments) {
         TimesheetEntry timesheetEntry = new TimesheetEntry();
         timesheetEntry.setTimesheetId(timesheetId);
         timesheetEntry.setProjectId(projectId);
@@ -269,11 +268,15 @@ public class TimesheetEntry extends BaseEntity {
         timesheetEntry.setWorkdayDate(workDayDate);
         timesheetEntry.setWorkdayWeek(timesheetEntry.getWorkdayDate().get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()));
         // add 7,5 hours
-        timesheetEntry.setStartTime(LocalTime.now(ZoneId.systemDefault()).withHour(8).withMinute(0).withSecond(0).withSecond(0).withNano(0));
-        timesheetEntry.setEndTime(timesheetEntry.getStartTime().plusSeconds(Utility.DEFAULT_DAILY_WORKING_HOURS_IN_SECONDS));
+        timesheetEntry.setStartTime(startTime);
         timesheetEntry.setWorkedSeconds((Utility.DEFAULT_DAILY_WORKING_HOURS_IN_SECONDS));
         timesheetEntry.setBreakSeconds((Utility.DEFAULT_DAILY_BREAK_IN_SECONDS));
+        timesheetEntry.setComments(comments);
         return timesheetEntry;
+    }
+
+    public static TimesheetEntry createDefault(@NotNull Long timesheetId, Long projectId, @NotNull LocalDate workDayDate) {
+        return create(timesheetId, projectId, workDayDate, LocalTime.now(ZoneId.systemDefault()).withHour(8).withMinute(0).withSecond(0).withSecond(0).withNano(0), Utility.DEFAULT_DAILY_WORKING_HOURS_IN_SECONDS, null);
     }
 
     @Override

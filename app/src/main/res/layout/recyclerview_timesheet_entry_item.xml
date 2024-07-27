@@ -14,8 +14,7 @@
         android:id="@+id/timesheet_entry_line_1_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="12dp"
+        android:layout_marginTop="24dp"
         android:fontFamily="sans-serif-medium"
         android:gravity="center"
         android:maxLines="3"
@@ -40,7 +39,7 @@
                 android:layout_marginStart="4dp"
                 android:layout_span="1"
                 android:gravity="start"
-                android:text=""
+                android:text="Apotek1"
                 android:textStyle="bold" />
 
             <ImageView
@@ -72,5 +71,23 @@
                 android:gravity="end"
                 android:text="" />
         </TableRow>
+        <TableRow>
+
+            <TextView
+                android:id="@+id/timesheet_entry_line_2_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:gravity="start"
+                android:text="" />
+
+            <TextView
+                android:id="@+id/timesheet_entry_line_2_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:text="" />
+        </TableRow>
+
     </TableLayout>
 </RelativeLayout>

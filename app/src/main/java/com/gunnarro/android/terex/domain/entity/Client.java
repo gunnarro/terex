@@ -42,6 +42,7 @@ public class Client extends BaseEntity {
     @ColumnInfo(name = "name")
     private String name;
 
+    @NonNull
     @ColumnInfo(name = "status")
     private String status;
 

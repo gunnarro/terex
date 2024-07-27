@@ -65,6 +65,7 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
         try {
             timesheetViewModel = new TimesheetViewModel(requireActivity().getApplication(), selectedYear);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new TerexApplicationException("Error creating fragment!", "50051", e);
         }
         // register listener for add, update and delete timesheet events

@@ -48,10 +48,12 @@ class TimesheetServiceBillingTest {
     private UserAccountService userAccountServiceMock;
     @Mock
     private ProjectService projectServiceMock;
+    @Mock
+    private ClientService clientServiceMock;
 
     @BeforeEach
     public void setup() {
-        timesheetService = new TimesheetService(timesheetRepositoryMock, userAccountServiceMock, projectServiceMock);
+        timesheetService = new TimesheetService(timesheetRepositoryMock, userAccountServiceMock, projectServiceMock, clientServiceMock,null);
     }
 
     @Test

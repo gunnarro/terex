@@ -79,10 +79,10 @@ public abstract class AppDatabase extends RoomDatabase {
                             context.getApplicationContext(),
                             AppDatabase.class, "terex_database")
                     // use this during development
-                   // .fallbackToDestructiveMigration()
+                    .fallbackToDestructiveMigration()
                     .allowMainThreadQueries()
                    // .createFromAsset("database/terex_init_data.db")
-                  //  .addMigrations(getMigration(context, DB_SCHEMA_VERSION - 1, DB_SCHEMA_VERSION))
+                   //.addMigrations(getMigration(context, DB_SCHEMA_VERSION - 1, DB_SCHEMA_VERSION))
                    // .addCallback(roomCallback)
                     .build();
         }

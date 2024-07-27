@@ -4,7 +4,9 @@ import static org.junit.Assert.assertEquals;
 
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
+import com.gunnarro.android.terex.integration.jira.TempoApi;
 import com.gunnarro.android.terex.repository.TimesheetRepository;
+import com.gunnarro.android.terex.service.ClientService;
 import com.gunnarro.android.terex.service.ProjectService;
 import com.gunnarro.android.terex.service.TimesheetService;
 import com.gunnarro.android.terex.service.UserAccountService;
@@ -25,7 +27,7 @@ public class LoadTest extends IntegrationTestSetup {
     @Before
     public void setup() {
         super.setupDatabase();
-        timesheetService = new TimesheetService(new TimesheetRepository(), new UserAccountService(), new ProjectService());
+        timesheetService = new TimesheetService(new TimesheetRepository(), new UserAccountService(), new ProjectService(), new ClientService(), new TempoApi());
     }
 
     @After

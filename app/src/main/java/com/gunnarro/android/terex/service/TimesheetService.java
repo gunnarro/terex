@@ -19,11 +19,14 @@ import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
 import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
 import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
+import com.gunnarro.android.terex.integration.jira.TempoApi;
+import com.gunnarro.android.terex.integration.jira.TempoDomainMapper;
 import com.gunnarro.android.terex.repository.TimesheetRepository;
 import com.gunnarro.android.terex.utility.Utility;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.time.LocalDate;
@@ -49,20 +52,39 @@ public class TimesheetService {
     private static final int VAT_PERCENT = 25;
     private final TimesheetRepository timesheetRepository;
     private final UserAccountService userAccountService;
+    private final ClientService clientService;
     private final ProjectService projectService;
+    private final TempoApi tempoApi;
 
     /**
      * for unit test only
      */
-    public TimesheetService(TimesheetRepository timesheetRepository, UserAccountService userAccountService, ProjectService projectService) {
+    public TimesheetService(TimesheetRepository timesheetRepository, UserAccountService userAccountService, ProjectService projectService, ClientService clientService, TempoApi tempoApi) {
         this.timesheetRepository = timesheetRepository;
         this.userAccountService = userAccountService;
         this.projectService = projectService;
+        this.clientService = clientService;
+        this.tempoApi = tempoApi;
     }
 
     @Inject
     public TimesheetService() {
-        this(new TimesheetRepository(), new UserAccountService(), new ProjectService());
+        this(new TimesheetRepository(), new UserAccountService(), new ProjectService(), new ClientService(), new TempoApi());
+    }
+
+    // ----------------------------------------
+    // import timesheet from external system
+    // ----------------------------------------
+
+    public void importTempoTimesheetCvs(Timesheet timesheet, Long projectId) throws IOException {
+        List<TimesheetEntry> timesheetEntryList = TempoDomainMapper.fromTempoTimesheetCvs(tempoApi.getTimesheetExportCvs());
+        // timesheet must/should be empty
+
+        timesheetEntryList.forEach(e -> {
+            e.setTimesheetId(timesheet.getId());
+            e.setProjectId(projectId);
+            saveTimesheetEntry(e);
+        });
     }
 
     // ----------------------------------------
@@ -74,6 +96,7 @@ public class TimesheetService {
         if (timesheet != null) {
             TimesheetDto timesheetDto = TimesheetMapper.toTimesheetDto(timesheet, null, null);
             timesheetDto.setUserAccountDto(userAccountService.getUserAccount(timesheet.getUserId()));
+            timesheetDto.setClientDto(clientService.getClient(timesheet.getClientId()));
             timesheetDto.setRegisteredWorkedDays(timesheetRepository.getTotalWorkedDays(timesheetId));
             timesheetDto.setRegisteredWorkedHours(timesheetRepository.getTotalWorkedHours(timesheetId));
             timesheetDto.setVacationDays(timesheetRepository.getTotalVacationDays(timesheetId));
@@ -156,9 +179,10 @@ public class TimesheetService {
             }
             return id;
         } catch (Exception e) {
+            e.printStackTrace();
             // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();
-            throw new TerexApplicationException("Error saving timesheet!", e.getMessage(), e.getCause());
+            throw new TerexApplicationException("Error saving timesheet!" + e.getMessage(), "50500", e.getCause());
         }
     }
 
@@ -168,6 +192,20 @@ public class TimesheetService {
 
     public TimesheetEntry getTimesheetEntry(Long timesheetEntryId) {
         return timesheetRepository.getTimesheetEntry(timesheetEntryId);
+    }
+
+    public List<TimesheetEntryDto> getTimesheetEntryListDto(Long timesheetId) {
+        List<TimesheetEntryDto> timesheetEntryDtoList = new ArrayList<>();
+        timesheetRepository.getTimesheetEntryList(timesheetId);
+        List<Long> timesheetEntryIdList = timesheetRepository.getTimesheetEntryIds(timesheetId);
+        timesheetEntryIdList.forEach(id -> timesheetEntryDtoList.add(getTimesheetEntryDto(id)));
+        return timesheetEntryDtoList;
+    }
+
+    public TimesheetEntryDto getTimesheetEntryDto(Long timesheetEntryId) {
+        TimesheetEntryDto timesheetEntryDto = TimesheetMapper.toTimesheetEntryDto(timesheetRepository.getTimesheetEntry(timesheetEntryId));
+        timesheetEntryDto.setProjectDto(projectService.getProject(timesheetEntryDto.getProjectId()));
+        return timesheetEntryDto;
     }
 
     /**
@@ -220,6 +258,10 @@ public class TimesheetService {
         timesheetRepository.deleteTimesheetEntry(deleteTimesheetEntry);
     }
 
+    public TimesheetEntryDto getMostRecentTimeSheetEntryDto(Long timesheetId) {
+        return TimesheetMapper.toTimesheetEntryDto(getMostRecentTimeSheetEntry(timesheetId));
+    }
+
     @NotNull
     public TimesheetEntry getMostRecentTimeSheetEntry(Long timesheetId) {
         TimesheetEntry timesheetEntry = timesheetRepository.getMostRecentTimeSheetEntry(timesheetId);
@@ -238,6 +280,8 @@ public class TimesheetService {
     public List<TimesheetEntry> getTimesheetEntryList(Long timesheetId) {
         return timesheetRepository.getTimesheetEntryList(timesheetId);
     }
+
+
 
     /**
      * This service return timesheet entries where holidays and free days are added, if missing.
@@ -315,7 +359,7 @@ public class TimesheetService {
         List<TimesheetSummary> timesheetSummaryList = getTimesheetSummary(timesheetId);
         double totalBilledAmount = timesheetSummaryList.stream().mapToDouble(TimesheetSummary::getTotalBilledAmount).sum();
         double totalBilledHours = timesheetSummaryList.stream().mapToDouble(TimesheetSummary::getTotalWorkedHours).sum();
-        double totalVat = totalBilledAmount * VAT_PERCENT/100;
+        double totalVat = totalBilledAmount * VAT_PERCENT / 100;
         double totalBilledAmountWithVat = totalBilledAmount + totalVat;
 
         MustacheFactory mf = new DefaultMustacheFactory();
@@ -373,7 +417,7 @@ public class TimesheetService {
     /**
      * Creates a timesheet overview in html, which show all days in the month.
      */
-    public String createTimesheetListHtml(@NotNull Long timesheetId, @NotNull UserAccountDto userAccountDto, @NotNull ClientDto clientDto,  @NotNull String clientTimesheetMustacheTemplate) {
+    public String createTimesheetListHtml(@NotNull Long timesheetId, @NotNull UserAccountDto userAccountDto, @NotNull ClientDto clientDto, @NotNull String clientTimesheetMustacheTemplate) {
         TimesheetDto timesheetDto = getTimesheetDto(timesheetId);
         List<TimesheetEntryDto> timesheetEntryDtoList = getTimesheetEntryDtoListReadyForBilling(timesheetId);
         Double sumBilledHours = timesheetEntryDtoList.stream().filter(e -> e.getWorkedSeconds() != null).mapToDouble(TimesheetEntryDto::getWorkedSeconds).sum() / 3600;
@@ -409,7 +453,7 @@ public class TimesheetService {
             ProjectDto projectDto = projectService.getProject(t.getProjectId());
             // only sum regular work days
             timesheetSummary.setTotalBilledAmount(t.isRegularWorkDay() ? timesheetSummary.getTotalBilledAmount() + (projectDto.getHourlyRate() * ((double) t.getWorkedSeconds() / 3600)) : timesheetSummary.getTotalBilledAmount());
-            timesheetSummary.setTotalWorkedHours(t.isRegularWorkDay() ? timesheetSummary.getTotalWorkedHours() + (double) t.getWorkedSeconds() / 3600: timesheetSummary.getTotalWorkedHours());
+            timesheetSummary.setTotalWorkedHours(t.isRegularWorkDay() ? timesheetSummary.getTotalWorkedHours() + (double) t.getWorkedSeconds() / 3600 : timesheetSummary.getTotalWorkedHours());
             timesheetSummary.setTotalWorkedDays(t.isRegularWorkDay() ? timesheetSummary.getTotalWorkedDays() + 1 : timesheetSummary.getTotalWorkedDays());
             timesheetSummary.setTotalSickLeaveDays(t.isSickDay() ? timesheetSummary.getTotalSickLeaveDays() + 1 : timesheetSummary.getTotalSickLeaveDays());
             timesheetSummary.setTotalVacationDays(t.isVacationDay() ? timesheetSummary.getTotalVacationDays() + 1 : timesheetSummary.getTotalVacationDays());
@@ -455,4 +499,11 @@ public class TimesheetService {
         return timesheetRepository.countTimesheetEntries();
     }
 
+    public void deleteTimesheetEntryDto(TimesheetEntryDto timesheetEntryDto) {
+        deleteTimesheetEntry(TimesheetMapper.fromTimesheetEntryDto(timesheetEntryDto));
+    }
+
+    public void saveTimesheetEntryDto(TimesheetEntryDto timesheetEntryDto) {
+        saveTimesheetEntry(TimesheetMapper.fromTimesheetEntryDto(timesheetEntryDto));
+    }
 }

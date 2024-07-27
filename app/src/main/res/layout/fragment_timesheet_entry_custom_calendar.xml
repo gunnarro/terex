@@ -33,6 +33,55 @@
             app:todayLabelColor="@color/calendar_today_date"
             app:type="many_days_picker" />
 
+        <!-- project  and worked time -->
+        <LinearLayout
+            android:id="@+id/timesheet_entry_work_time_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/timesheet_calendar_project_spinner_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:hint="@string/lbl_project">
+
+                <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                    android:id="@+id/timesheet_calendar_project_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autoHandwritingEnabled="false"
+                    android:clickable="true"
+                    android:importantForAutofill="no"
+                    android:inputType="none"
+                    tools:ignore="KeyboardInaccessibleWidget" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/timesheet_calendar_worked_hours_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:maxEms="12"
+                android:minEms="12"
+                android:hint="@string/lbl_worked_hours">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/timesheet_calendar_worked_hours"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:maxLength="4"
+                    android:text="hh.m" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
         <LinearLayout
             android:id="@+id/tbl_timesheet_register_buttons"
             android:layout_width="match_parent"

@@ -8,7 +8,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
+import com.gunnarro.android.terex.domain.dto.TimesheetEntryDto;
 import com.gunnarro.android.terex.service.TimesheetService;
 
 import java.util.List;
@@ -21,35 +21,35 @@ public class TimesheetEntryViewModel extends AndroidViewModel {
 
     private final TimesheetService timesheetService;
 
-    private final MutableLiveData<List<TimesheetEntry>> timesheetEntryListLiveData;
+    private final MutableLiveData<List<TimesheetEntryDto>> timesheetEntryListLiveData;
 
     public TimesheetEntryViewModel(@NonNull Application application, @NonNull Long timesheetId) {
         super(application);
         timesheetEntryListLiveData = new MutableLiveData<>();
         timesheetService = new TimesheetService();
-        timesheetEntryListLiveData.setValue(timesheetService.getTimesheetEntryList(timesheetId));
+        timesheetEntryListLiveData.setValue(timesheetService.getTimesheetEntryListDto(timesheetId));
     }
 
-    public LiveData<List<TimesheetEntry>> getTimesheetEntryLiveData(Long timesheetId) {
+    public LiveData<List<TimesheetEntryDto>> getTimesheetEntryLiveData(Long timesheetId) {
         Log.d("getTimesheetEntryLiveData", String.format("timesheetId=%s, entries=%s", timesheetId, timesheetEntryListLiveData.getValue().size()));
         //timesheetEntryListLiveData.setValue(timesheetService.getTimesheetEntryList(timesheetId));
         return timesheetEntryListLiveData;
     }
 
-    public TimesheetEntry getMostRecentTimesheetEntry(Long timesheetId) {
-        return timesheetService.getMostRecentTimeSheetEntry(timesheetId);
+    public TimesheetEntryDto getMostRecentTimesheetEntryDto(Long timesheetId) {
+        return timesheetService.getMostRecentTimeSheetEntryDto(timesheetId);
     }
 
-    public void saveTimesheetEntry(TimesheetEntry timesheetEntry) {
-        timesheetService.saveTimesheetEntry(timesheetEntry);
+    public void saveTimesheetEntryDto(TimesheetEntryDto timesheetEntryDto) {
+        timesheetService.saveTimesheetEntryDto(timesheetEntryDto);
     }
 
-    public void deleteTimesheetEntry(TimesheetEntry timesheetEntry) {
-        timesheetService.deleteTimesheetEntry(timesheetEntry);
+    public void deleteTimesheetEntryDto(TimesheetEntryDto timesheetEntryDto) {
+        timesheetService.deleteTimesheetEntryDto(timesheetEntryDto);
     }
 
-    public TimesheetEntry getTimesheetEntry(Long timesheetEntryId) {
-        return timesheetService.getTimesheetEntry(timesheetEntryId);
+    public TimesheetEntryDto getTimesheetEntryDto(Long timesheetEntryId) {
+        return timesheetService.getTimesheetEntryDto(timesheetEntryId);
     }
 
     public String getTimesheetTitle(Long timesheetId) {

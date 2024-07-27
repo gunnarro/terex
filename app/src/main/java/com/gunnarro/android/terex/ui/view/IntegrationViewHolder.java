@@ -28,13 +28,12 @@ public class IntegrationViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bindListLine(Integration integration) {
-        lineHeaderView.setText(integration.getSystem());
-     /*   line1StatusView.setText(project.getStatus());
-        if (project.getStatus().equals("ACTIVE")) {
-            line1StatusView.setTextColor(line1StatusView.getResources().getColor(R.color.invoice_status_open, null));
-        } else
-            line1StatusView.setTextColor(line1StatusView.getResources().getColor(R.color.invoice_status_completed, null));
-    }*/
+        lineHeaderView.setText(integration.getSystem() + " - " + integration.getStatus());
+        if (!integration.isActive()) {
+            lineHeaderView.setEnabled(false);
+            line1LabelView.setEnabled(false);
+            line1ValueView.setEnabled(false);
+        }
         line1LabelView.setText(integration.getBaseUrl());
         line1ValueView.setText(integration.getAuthenticationType());
     }

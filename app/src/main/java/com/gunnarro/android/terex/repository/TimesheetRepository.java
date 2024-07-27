@@ -113,7 +113,7 @@ public class TimesheetRepository {
         } catch (InterruptedException | ExecutionException e) {
             // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();
-            throw new TerexApplicationException("Error getting timesheet!", e.getMessage(), e.getCause());
+            throw new TerexApplicationException("Error getting timesheet! " + e.getMessage(), "50500", e.getCause());
         }
     }
 
@@ -338,5 +338,9 @@ public class TimesheetRepository {
 
     public String getTimesheetTitle(Long timesheetId) {
         return timesheetDao.getTimesheetTitle(timesheetId);
+    }
+
+    public List<Long> getTimesheetEntryIds(Long timesheetId) {
+        return timesheetDao.getTimesheetEntryIds(timesheetId);
     }
 }

@@ -79,8 +79,8 @@ class TimesheetMapperTest {
         TimesheetEntryDto timesheetEntryDto = TimesheetMapper.toTimesheetEntryDto(timesheetEntryList.get(0));
         assertEquals("2023-12-01", timesheetEntryDto.getWorkdayDate().toString());
         assertEquals("REGULAR", timesheetEntryDto.getType());
-        assertEquals("08:00", timesheetEntryDto.getFromTime().toString());
-        assertEquals("15:30", timesheetEntryDto.getToTime().toString());
+        assertEquals("08:00", timesheetEntryDto.getStartTime().toString());
+        assertEquals("15:30", timesheetEntryDto.getEndTime().toString());
         assertEquals("7.5", timesheetEntryDto.getWorkedHours());
         assertNull(timesheetEntryDto.getComments());
     }
@@ -317,6 +317,7 @@ class TimesheetMapperTest {
     void fromUserAccountDto() {
         UserAccountDto userAccountDto = new UserAccountDto();
         userAccountDto.setId(66L);
+        userAccountDto.setStatus(UserAccount.UserAccountStatusEnum.ACTIVE.name());
         userAccountDto.setUserAccountType(UserAccount.UserAccountTypeEnum.BUSINESS.name());
         userAccountDto.setDefaultUser(true);
         userAccountDto.setUserName("guro");
@@ -329,6 +330,7 @@ class TimesheetMapperTest {
         UserAccount userAccount = TimesheetMapper.fromUserAccountDto(userAccountDto);
 
         assertEquals(userAccountDto.getId(), userAccount.getId());
+        assertEquals(userAccountDto.getStatus(), userAccount.getStatus());
         assertEquals(userAccountDto.getUserAccountType(), userAccount.getUserAccountType());
         assertEquals(userAccountDto.isDefaultUser(), userAccount.isDefaultUser());
         assertEquals(userAccountDto.getUserName(), userAccount.getUserName());
@@ -341,6 +343,7 @@ class TimesheetMapperTest {
     void toUserAccountDto() {
         UserAccount userAccount = new UserAccount();
         userAccount.setId(12L);
+        userAccount.setStatus(UserAccount.UserAccountStatusEnum.ACTIVE.name());
         userAccount.setUserAccountType(UserAccount.UserAccountTypeEnum.BUSINESS.name());
         userAccount.setDefaultUser(1);
         userAccount.setUserName("guro");
@@ -350,6 +353,7 @@ class TimesheetMapperTest {
 
         UserAccountDto userAccountDto = TimesheetMapper.toUserAccountDto(userAccount);
         assertEquals(userAccount.getId(), userAccountDto.getId());
+        assertEquals(userAccount.getStatus(), userAccountDto.getStatus());
         assertEquals(userAccount.getUserAccountType(), userAccountDto.getUserAccountType());
         assertEquals(userAccount.isDefaultUser(), userAccountDto.isDefaultUser());
         assertEquals(userAccount.getUserName(), userAccountDto.getUserName());
@@ -362,9 +366,10 @@ class TimesheetMapperTest {
     void toIntegrationDto() {
         Integration integration = new Integration();
         integration.setId(44L);
+        integration.setStatus(Integration.IntegrationStatusEnum.ACTIVE.name());
         integration.setSystem("BREG");
         integration.setBaseUrl("https://breg.no");
-        integration.setServiceType("REST");
+        integration.setIntegrationType(Integration.IntegrationTypeEnum.REST.name());
         integration.setUserName("guro");
         integration.setPassword("change-me");
         integration.setSchemaUrl("https://breg.no/swagger");
@@ -376,9 +381,10 @@ class TimesheetMapperTest {
 
         IntegrationDto integrationDto = TimesheetMapper.toIntegrationDto(integration);
         assertEquals(integration.getId(), integrationDto.getId());
+        assertEquals(integration.getStatus(), integrationDto.getStatus());
         assertEquals(integration.getSystem(), integrationDto.getSystem());
         assertEquals(integration.getBaseUrl(), integrationDto.getBaseUrl());
-        assertEquals(integration.getServiceType(), integrationDto.getServiceType());
+        assertEquals(integration.getIntegrationType(), integrationDto.getIntegrationType());
         assertEquals(integration.getUserName(), integrationDto.getUserName());
         assertEquals(integration.getPassword(), integrationDto.getPassword());
         assertEquals(integration.getSchemaUrl(), integrationDto.getSchemaUrl());
@@ -393,9 +399,10 @@ class TimesheetMapperTest {
     void fromIntegrationDto() {
         IntegrationDto integrationDto = new IntegrationDto();
         integrationDto.setId(44L);
+        integrationDto.setStatus(Integration.IntegrationStatusEnum.ACTIVE.name());
         integrationDto.setSystem("BREG");
         integrationDto.setBaseUrl("https://breg.no");
-        integrationDto.setServiceType("REST");
+        integrationDto.setIntegrationType(Integration.IntegrationTypeEnum.REST.name());
         integrationDto.setUserName("guro");
         integrationDto.setPassword("change-me");
         integrationDto.setSchemaUrl("https://breg.no/swagger");
@@ -407,9 +414,11 @@ class TimesheetMapperTest {
 
         Integration integration = TimesheetMapper.fromIntegrationDto(integrationDto);
         assertEquals(integrationDto.getId(), integration.getId());
+        assertEquals(integrationDto.getStatus(), integration.getStatus());
+        assertTrue(integration.isActive());
         assertEquals(integrationDto.getSystem(), integration.getSystem());
         assertEquals(integrationDto.getBaseUrl(), integration.getBaseUrl());
-        assertEquals(integrationDto.getServiceType(), integration.getServiceType());
+        assertEquals(integrationDto.getIntegrationType(), integration.getIntegrationType());
         assertEquals(integrationDto.getUserName(), integration.getUserName());
         assertEquals(integrationDto.getPassword(), integration.getPassword());
         assertEquals(integrationDto.getSchemaUrl(), integration.getSchemaUrl());

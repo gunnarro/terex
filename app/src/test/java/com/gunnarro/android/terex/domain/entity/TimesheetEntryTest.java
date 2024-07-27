@@ -6,12 +6,34 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.gunnarro.android.terex.utility.Utility;
+
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 class TimesheetEntryTest {
+
+    @Test
+    void create() {
+        TimesheetEntry timesheetEntry = TimesheetEntry.create(22L, 11L, LocalDate.of(2024, 5, 1), LocalTime.of(8, 0), Utility.fromHoursToSeconds("7.5"), "jira-1220");
+        assertNull(timesheetEntry.getId());
+        assertEquals(22, timesheetEntry.getTimesheetId());
+        assertEquals(11, timesheetEntry.getProjectId());
+        assertEquals("2024-05-01", timesheetEntry.getWorkdayDate().toString());
+        assertEquals("7.5", timesheetEntry.getWorkedHours());
+        assertEquals(27000, timesheetEntry.getWorkedSeconds());
+        assertEquals(1800, timesheetEntry.getBreakSeconds());
+        assertEquals("REGULAR", timesheetEntry.getType());
+        assertEquals("OPEN", timesheetEntry.getStatus());
+        assertEquals("08:00", timesheetEntry.getStartTime().toString());
+        assertEquals("15:30", timesheetEntry.getEndTime().toString());
+        assertEquals(18, timesheetEntry.getWorkdayWeek());
+        assertNull(timesheetEntry.getCreatedDate());
+        assertNull(timesheetEntry.getLastModifiedDate());
+        assertEquals("jira-1220", timesheetEntry.getComments());
+    }
 
     @Test
     void createDefault() {
@@ -30,6 +52,28 @@ class TimesheetEntryTest {
         assertEquals(18, timesheetEntry.getWorkdayWeek());
         assertNull(timesheetEntry.getCreatedDate());
         assertNull(timesheetEntry.getLastModifiedDate());
+        assertNull(timesheetEntry.getComments());
+    }
+
+
+    @Test
+    void createNotWorked() {
+        TimesheetEntry timesheetEntry = TimesheetEntry.createNotWorked(22L, 11L, LocalDate.of(2024, 5, 1), TimesheetEntry.TimesheetEntryTypeEnum.SICK.name());
+        assertNull(timesheetEntry.getId());
+        assertEquals(22, timesheetEntry.getTimesheetId());
+        assertEquals(11, timesheetEntry.getProjectId());
+        assertEquals("2024-05-01", timesheetEntry.getWorkdayDate().toString());
+        assertEquals("0.0", timesheetEntry.getWorkedHours());
+        assertEquals(0, timesheetEntry.getWorkedSeconds());
+        assertNull(timesheetEntry.getBreakSeconds());
+        assertEquals("SICK", timesheetEntry.getType());
+        assertEquals("CLOSED", timesheetEntry.getStatus());
+        assertNull(timesheetEntry.getStartTime());
+        assertNull(timesheetEntry.getEndTime());
+        assertEquals(18, timesheetEntry.getWorkdayWeek());
+        assertNull(timesheetEntry.getCreatedDate());
+        assertNull(timesheetEntry.getLastModifiedDate());
+        assertNull(timesheetEntry.getComments());
     }
 
     @Test

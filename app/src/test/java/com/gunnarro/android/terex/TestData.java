@@ -64,7 +64,7 @@ public class TestData {
                 timesheetEntry1.setType(TimesheetEntry.TimesheetEntryTypeEnum.REGULAR.name());
                 timesheetEntry1.setWorkdayDate(date);
                 timesheetEntry1.setStartTime(LocalTime.of(7, 0, 0));
-                timesheetEntry1.setEndTime(LocalTime.of(3, 0, 0));
+           //     timesheetEntry1.setEndTime(LocalTime.of(3, 0, 0));
                 timesheetEntry1.setBreakSeconds(30 * 60);
                 timesheetEntry1.setWorkedSeconds((long) 420 * 60);
                 timesheetEntry1.setWorkdayWeek(date.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()));
@@ -119,12 +119,12 @@ public class TestData {
         if (sickDates.contains(timesheetEntry.getWorkdayDate().getDayOfMonth())) {
             timesheetEntry.setType(TimesheetEntry.TimesheetEntryTypeEnum.SICK.name());
             timesheetEntry.setStartTime(null);
-            timesheetEntry.setEndTime(null);
+          //  timesheetEntry.setEndTime(null);
             timesheetEntry.setWorkedSeconds(null);
         } else if (vacationDates.contains(timesheetEntry.getWorkdayDate().getDayOfMonth())) {
             timesheetEntry.setType(TimesheetEntry.TimesheetEntryTypeEnum.VACATION.name());
             timesheetEntry.setStartTime(null);
-            timesheetEntry.setEndTime(null);
+            //timesheetEntry.setEndTime(null);
             timesheetEntry.setWorkedSeconds(null);
         }
         return timesheetEntry;
@@ -190,6 +190,7 @@ public class TestData {
     public static UserAccount createUserAccount(Long id) {
         UserAccount userAccount = new UserAccount();
         userAccount.setId(id);
+        userAccount.setStatus(UserAccount.UserAccountStatusEnum.ACTIVE.name());
         userAccount.setUserName("guro");
         userAccount.setPassword("nope");
         userAccount.setDefaultUser(1);

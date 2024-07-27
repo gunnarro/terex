@@ -27,8 +27,8 @@ public interface TimesheetDao {
     @Query("SELECT * FROM timesheet WHERE id = :id")
     Timesheet getTimesheetById(Long id);
 
-    @Query("SELECT p.name || ' ' || t.year || '/' || t.month FROM timesheet t"
-            + " JOIN project p ON t.client_id"
+    @Query("SELECT c.name || ' ' || t.year || '/' || t.month FROM timesheet t"
+            + " JOIN client c ON t.client_id"
             + " WHERE t.id = :timesheetId")
     String getTimesheetTitle(Long timesheetId);
 
@@ -118,4 +118,7 @@ public interface TimesheetDao {
      */
     @Delete
     void delete(Timesheet timesheet);
+
+    @Query("SELECT id FROM timesheet_entry where timesheet_id = :timesheetId ORDER BY id asc")
+    List<Long> getTimesheetEntryIds(Long timesheetId);
 }

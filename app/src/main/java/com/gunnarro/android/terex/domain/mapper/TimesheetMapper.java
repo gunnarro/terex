@@ -85,24 +85,36 @@ public class TimesheetMapper {
 
     public static TimesheetEntryDto toTimesheetEntryDto(TimesheetEntry timesheetEntry) {
         TimesheetEntryDto timesheetEntryDto = new TimesheetEntryDto();
+        timesheetEntryDto.setId(timesheetEntry.getId());
+        timesheetEntryDto.setCreatedDate(timesheetEntry.getCreatedDate());
+        timesheetEntryDto.setLastModifiedDate(timesheetEntry.getLastModifiedDate());
+        timesheetEntryDto.setTimesheetId(timesheetEntry.getTimesheetId());
         timesheetEntryDto.setProjectId(timesheetEntry.getProjectId());
         timesheetEntryDto.setType(timesheetEntry.getType());
+        timesheetEntryDto.setStatus(timesheetEntry.getStatus());
         timesheetEntryDto.setWorkdayDate(timesheetEntry.getWorkdayDate());
-        timesheetEntryDto.setFromTime(timesheetEntry.getStartTime());
-        timesheetEntryDto.setToTime(timesheetEntry.getEndTime());
+        timesheetEntryDto.setStartTime(timesheetEntry.getStartTime());
+        timesheetEntryDto.setEndTime(timesheetEntry.getEndTime());
         timesheetEntryDto.setWorkedSeconds(timesheetEntry.getWorkedSeconds());
+        timesheetEntryDto.setBreakSeconds(timesheetEntry.getBreakSeconds());
         timesheetEntryDto.setComments(timesheetEntry.getComments());
         return timesheetEntryDto;
     }
 
     public static TimesheetEntry fromTimesheetEntryDto(TimesheetEntryDto timesheetEntryDto) {
         TimesheetEntry timesheetEntry = new TimesheetEntry();
+        timesheetEntry.setId(timesheetEntryDto.getId());
+        timesheetEntry.setCreatedDate(timesheetEntryDto.getCreatedDate());
+        timesheetEntry.setLastModifiedDate(timesheetEntryDto.getLastModifiedDate());
+        timesheetEntry.setTimesheetId(timesheetEntryDto.getTimesheetId());
         timesheetEntry.setProjectId(timesheetEntryDto.getProjectId());
         timesheetEntry.setType(timesheetEntryDto.getType());
+        timesheetEntry.setStatus(timesheetEntryDto.getStatus());
         timesheetEntry.setWorkdayDate(timesheetEntryDto.getWorkdayDate());
-        timesheetEntry.setStartTime(timesheetEntryDto.getFromTime());
-        timesheetEntry.setEndTime(timesheetEntryDto.getToTime());
+        timesheetEntry.setStartTime(timesheetEntryDto.getStartTime());
+        //timesheetEntry.setEndTime(timesheetEntryDto.getEndTime());
         timesheetEntry.setWorkedSeconds(timesheetEntryDto.getWorkedSeconds());
+        timesheetEntry.setBreakSeconds(timesheetEntryDto.getBreakSeconds());
         timesheetEntry.setComments(timesheetEntryDto.getComments());
         return timesheetEntry;
     }
@@ -332,6 +344,7 @@ public class TimesheetMapper {
         }
         UserAccountDto userAccountDto = new UserAccountDto();
         userAccountDto.setId(userAccount.getId());
+        userAccountDto.setStatus(userAccount.getStatus());
         userAccountDto.setUserAccountType(userAccount.getUserAccountType());
         userAccountDto.setUserName(userAccount.getUserName());
         userAccountDto.setPassword(userAccount.getPassword());
@@ -339,6 +352,8 @@ public class TimesheetMapper {
         OrganizationDto organizationDto = new OrganizationDto();
         organizationDto.setId(userAccount.getOrganizationId());
         userAccountDto.setOrganizationDto(organizationDto);
+        userAccountDto.setCreatedDate(userAccount.getCreatedDate());
+        userAccountDto.setLastModifiedDate(userAccount.getLastModifiedDate());
         return userAccountDto;
     }
 
@@ -347,6 +362,7 @@ public class TimesheetMapper {
             return null;
         }
         UserAccount userAccount = new UserAccount();
+        userAccount.setStatus(userAccountDto.getStatus());
         userAccount.setId(userAccountDto.getId());
         userAccount.setUserAccountType(userAccountDto.getUserAccountType());
         userAccount.setUserName(userAccountDto.getUserName());
@@ -398,9 +414,10 @@ public class TimesheetMapper {
         }
         IntegrationDto integrationDto = new IntegrationDto();
         integrationDto.setId(integration.getId());
+        integrationDto.setStatus(integration.getStatus());
         integrationDto.setSystem(integration.getSystem());
         integrationDto.setBaseUrl(integration.getBaseUrl());
-        integrationDto.setServiceType(integration.getServiceType());
+        integrationDto.setIntegrationType(integration.getIntegrationType());
         integrationDto.setUserName(integration.getUserName());
         integrationDto.setPassword(integration.getPassword());
         integrationDto.setSchemaUrl(integration.getSchemaUrl());
@@ -419,9 +436,10 @@ public class TimesheetMapper {
         }
         Integration integration = new Integration();
         integration.setId(integrationDto.getId());
+        integration.setStatus(integrationDto.getStatus());
         integration.setSystem(integrationDto.getSystem());
         integration.setBaseUrl(integrationDto.getBaseUrl());
-        integration.setServiceType(integrationDto.getServiceType());
+        integration.setIntegrationType(integrationDto.getIntegrationType());
         integration.setUserName(integrationDto.getUserName());
         integration.setPassword(integrationDto.getPassword());
         integration.setSchemaUrl(integrationDto.getSchemaUrl());

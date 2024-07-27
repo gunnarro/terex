@@ -38,6 +38,7 @@ public class Project extends BaseEntity {
     @ColumnInfo(name = "description")
     private String description;
 
+    @NotNull
     @ColumnInfo(name = "status")
     private String status;
 

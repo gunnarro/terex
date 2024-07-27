@@ -17,37 +17,52 @@ import lombok.Setter;
 @Getter
 @Setter
 @TypeConverters({LocalDateConverter.class, LocalDateTimeConverter.class})
-@Entity(tableName = "integration", indices = {@Index(value = {"system"},
+@Entity(tableName = "integration", indices = {@Index(value = {"system", "integration_type"},
         unique = true)})
 public class Integration extends BaseEntity {
+
+    public enum IntegrationStatusEnum {
+        ACTIVE, DEACTIVATED
+    }
+    public enum IntegrationTypeEnum {
+        REST, WEB_SERVICE, CVS_FILE
+    }
 
     @NonNull
     @ColumnInfo(name = "system")
     private String system;
-    @ColumnInfo(name = "service_type")
-    private String serviceType;
     @NonNull
+    @ColumnInfo(name = "integration_type")
+    private String integrationType;
     @ColumnInfo(name = "base_url")
     private String baseUrl;
     @ColumnInfo(name = "schema_url")
     private String schemaUrl;
     @ColumnInfo(name = "authentication_type")
     private String authenticationType;
+    @NonNull
+    @ColumnInfo(name = "status")
+    private String status;
     @ColumnInfo(name = "user_name")
     private String userName;
     @ColumnInfo(name = "password")
     private String password;
     @ColumnInfo(name = "access_token")
     private String accessToken;
-    @NonNull
     @ColumnInfo(name = "read_timeout_ms")
     private Long readTimeoutMs;
-    @NonNull
     @ColumnInfo(name = "connection_timeout_ms")
     private Long connectionTimeoutMs;
     @ColumnInfo(name = "http_headers_content_type")
     private String httpHeaderContentType;
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     @NonNull
     public String getSystem() {
@@ -58,12 +73,13 @@ public class Integration extends BaseEntity {
         this.system = system;
     }
 
-    public String getServiceType() {
-        return serviceType;
+    @NonNull
+    public String getIntegrationType() {
+        return integrationType;
     }
 
-    public void setServiceType(String serviceType) {
-        this.serviceType = serviceType;
+    public void setIntegrationType(@NonNull String integrationType) {
+        this.integrationType = integrationType;
     }
 
     @NonNull
@@ -139,6 +155,10 @@ public class Integration extends BaseEntity {
 
     public void setHttpHeaderContentType(String httpHeaderContentType) {
         this.httpHeaderContentType = httpHeaderContentType;
+    }
+
+    public boolean isActive() {
+        return IntegrationStatusEnum.valueOf(status).equals(IntegrationStatusEnum.ACTIVE);
     }
 
     @Override

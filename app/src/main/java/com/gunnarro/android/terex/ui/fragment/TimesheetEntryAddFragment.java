@@ -23,6 +23,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.dto.ProjectDto;
 import com.gunnarro.android.terex.domain.dto.SpinnerItem;
+import com.gunnarro.android.terex.domain.dto.TimesheetEntryDto;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
@@ -63,7 +64,7 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_timesheet_entry_add, container, false);
 
-        final TimesheetEntry timesheetEntry = readTimesheetEntryFromBundle();
+        final TimesheetEntryDto timesheetEntryDto = readTimesheetEntryFromBundle();
 
         // workday date picker
         TextInputEditText workdayDay = view.findViewById(R.id.timesheet_entry_workday_day);
@@ -85,8 +86,8 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
         });
 
         // create client projects spinner
-        AutoCompleteTextView projectSpinner = requireView().findViewById(R.id.timesheet_entry_project_spinner);
-        List<ProjectDto> projectDtoList = timesheetService.getTimesheetDto(timesheetEntry.getTimesheetId()).getClientDto().getProjectList();
+        AutoCompleteTextView projectSpinner = view.findViewById(R.id.timesheet_entry_project_spinner);
+        List<ProjectDto> projectDtoList = timesheetService.getTimesheetDto(timesheetEntryDto.getTimesheetId()).getClientDto().getProjectList();
         List<SpinnerItem> projectItems = projectDtoList.stream().map(p -> new SpinnerItem(p.getId(), p.getName())).collect(Collectors.toList());
         ArrayAdapter<SpinnerItem> projectAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, projectItems);
         projectSpinner.setAdapter(projectAdapter);
@@ -175,25 +176,25 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
             returnToTimesheetEntryList(getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY));
         });
 
-        updateTimesheetEntryAddView(view, timesheetEntry);
+        updateTimesheetEntryAddView(view, timesheetEntryDto);
         return view;
     }
 
-    private TimesheetEntry readTimesheetEntryFromBundle() {
-        String timesheetEntryJson = getArguments() != null ? getArguments().getString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_KEY) : null;
-        Log.d("readTimesheetEntryFromBundle", "received timesheet entry, timesheetEntryJson=" + timesheetEntryJson);
-        if (timesheetEntryJson != null && !timesheetEntryJson.isEmpty()) {
+    private TimesheetEntryDto readTimesheetEntryFromBundle() {
+        String timesheetEntryDtoJson = getArguments() != null ? getArguments().getString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_KEY) : null;
+        Log.d("readTimesheetEntryFromBundle", "received timesheet entry, timesheetEntryJson=" + timesheetEntryDtoJson);
+        if (timesheetEntryDtoJson != null && !timesheetEntryDtoJson.isEmpty()) {
             try {
-                TimesheetEntry timesheetEntry = Utility.gsonMapper().fromJson(timesheetEntryJson, TimesheetEntry.class);
-                if (timesheetEntry.getTimesheetId() == null) {
+                TimesheetEntryDto timesheetEntryDto = Utility.gsonMapper().fromJson(timesheetEntryDtoJson, TimesheetEntryDto.class);
+                if (timesheetEntryDto.getTimesheetId() == null) {
                     throw new TerexApplicationException("Missing timesheet id!", "50500", null);
                 }
                 // set workday date always to current date if not set
-                if (timesheetEntry.getWorkdayDate() == null) {
-                    timesheetEntry.setWorkdayDate(LocalDate.now());
+                if (timesheetEntryDto.getWorkdayDate() == null) {
+                    timesheetEntryDto.setWorkdayDate(LocalDate.now());
                 }
-                Log.d(Utility.buildTag(getClass(), "readTimesheetEntryFromBundle"), String.format("timesheetEntry: %s", timesheetEntry));
-                return timesheetEntry;
+                Log.d(Utility.buildTag(getClass(), "readTimesheetEntryFromBundle"), String.format("timesheetEntry: %s", timesheetEntryDto));
+                return timesheetEntryDto;
             } catch (Exception e) {
                 Log.e("", e.toString());
                 throw new TerexApplicationException("Application Error!", "5000", e);
@@ -210,65 +211,65 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
         navigateTo(R.id.nav_from_timesheet_entry_details_to_timesheet_entry_list, bundle);
     }
 
-    private void updateTimesheetEntryAddView(View view, @NotNull TimesheetEntry timesheetEntry) {
-        Log.d("update timesheet add view", timesheetEntry.toString());
+    private void updateTimesheetEntryAddView(View view, TimesheetEntryDto timesheetEntryDto) {
+        Log.d("update timesheet add view", timesheetEntryDto.toString());
         TextView timesheetId = view.findViewById(R.id.timesheet_entry_timesheet_id);
-        timesheetId.setText(String.valueOf(timesheetEntry.getTimesheetId()));
+        timesheetId.setText(String.valueOf(timesheetEntryDto.getTimesheetId()));
 
         TextView id = view.findViewById(R.id.timesheet_entry_id);
-        id.setText(String.valueOf(timesheetEntry.getId()));
+        id.setText(String.valueOf(timesheetEntryDto.getId()));
 
         EditText createdDateView = view.findViewById(R.id.timesheet_entry_created_date);
-        createdDateView.setText(Utility.formatDateTime(timesheetEntry.getCreatedDate()));
+        createdDateView.setText(Utility.formatDateTime(timesheetEntryDto.getCreatedDate()));
 
         EditText lastModifiedDateView = view.findViewById(R.id.timesheet_entry_last_modified_date);
-        lastModifiedDateView.setText(Utility.formatDateTime(timesheetEntry.getLastModifiedDate()));
+        lastModifiedDateView.setText(Utility.formatDateTime(timesheetEntryDto.getLastModifiedDate()));
 
         EditText timesheetNameView = view.findViewById(R.id.timesheet_entry_timesheet_name);
-        timesheetNameView.setText("timesheetId: " + timesheetEntry.getTimesheetId());
+        timesheetNameView.setText("timesheetId: " + timesheetEntryDto.getTimesheetId());
 
         AutoCompleteTextView projectSpinner = view.findViewById(R.id.timesheet_entry_project_spinner);
         projectSpinner.setText(projectSpinner.getAdapter().getItem(0).toString());
 
         MaterialButtonToggleGroup typeBtnGrp = view.findViewById(R.id.timesheet_entry_type_btn_group_layout);
-        if (timesheetEntry.isRegularWorkDay()) {
+        if (timesheetEntryDto.isRegularWorkDay()) {
             ((MaterialButton) typeBtnGrp.findViewById(R.id.timesheet_entry_type_regular)).setChecked(true);
-        } else if (timesheetEntry.isVacationDay()) {
+        } else if (timesheetEntryDto.isVacationDay()) {
             ((MaterialButton) typeBtnGrp.findViewById(R.id.timesheet_entry_type_vacation)).setChecked(true);
-        } else if (timesheetEntry.isSickDay()) {
+        } else if (timesheetEntryDto.isSickDay()) {
             ((MaterialButton) typeBtnGrp.findViewById(R.id.timesheet_entry_type_sick)).setChecked(true);
         }
 
         EditText workdayYearView = view.findViewById(R.id.timesheet_entry_workday_year);
-        workdayYearView.setText(String.format("%s", timesheetEntry.getWorkdayDate().getYear()));
+        workdayYearView.setText(String.format("%s", timesheetEntryDto.getWorkdayDate().getYear()));
 
         EditText workdayMonthView = view.findViewById(R.id.timesheet_entry_workday_month);
-        workdayMonthView.setText(String.format("%s", timesheetEntry.getWorkdayDate().getMonthValue()));
+        workdayMonthView.setText(String.format("%s", timesheetEntryDto.getWorkdayDate().getMonthValue()));
 
         EditText workdayDayView = view.findViewById(R.id.timesheet_entry_workday_day);
-        workdayDayView.setText(String.format("%s", timesheetEntry.getWorkdayDate().getDayOfMonth()));
+        workdayDayView.setText(String.format("%s", timesheetEntryDto.getWorkdayDate().getDayOfMonth()));
 
         EditText fromTimeView = view.findViewById(R.id.timesheet_entry_from_time);
-        fromTimeView.setText(Utility.formatTime(timesheetEntry.getStartTime()));
+        fromTimeView.setText(Utility.formatTime(timesheetEntryDto.getStartTime()));
 
         //EditText toTimeView = view.findViewById(R.id.timesheet_entry_to_time);
-        //toTimeView.setText(Utility.formatTime(timesheetEntry.getEndTime()));
+        //toTimeView.setText(Utility.formatTime(timesheetEntryDto.getEndTime()));
 
         EditText workedHoursView = view.findViewById(R.id.timesheet_entry_worked_hours);
-        workedHoursView.setText(Utility.fromSecondsToHours(timesheetEntry.getWorkedSeconds()));
+        workedHoursView.setText(Utility.fromSecondsToHours(timesheetEntryDto.getWorkedSeconds()));
 
         EditText breakView = view.findViewById(R.id.timesheet_entry_break);
-        breakView.setText(String.format("%s", timesheetEntry.getBreakSeconds() / 60));
+        breakView.setText(String.format("%s", timesheetEntryDto.getBreakSeconds() / 60));
 
         EditText commentView = view.findViewById(R.id.timesheet_entry_comment);
-        commentView.setText(timesheetEntry.getComments());
+        commentView.setText(timesheetEntryDto.getComments());
 
         // hide fields if this is a new
-        if (timesheetEntry.getId() == null) {
+        if (timesheetEntryDto.getId() == null) {
             timesheetNameView.setEnabled(false);
             view.findViewById(R.id.timesheet_entry_date_layout).setVisibility(View.GONE);
             view.findViewById(R.id.timesheet_entry_delete_btn).setVisibility(View.GONE);
-        } else if (timesheetEntry.isClosed()) {
+        } else if (timesheetEntryDto.isClosed()) {
             // timesheet entry is locked
             createdDateView.setEnabled(false);
             lastModifiedDateView.setEnabled(false);
@@ -284,7 +285,7 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
         } else {
             // change button icon to from add new to save
             ((MaterialButton) view.findViewById(R.id.timesheet_entry_save_btn)).setText(getResources().getString(R.string.btn_save));
-            if (timesheetEntry.isClosed()) {
+            if (timesheetEntryDto.isClosed()) {
                 view.findViewById(R.id.btn_timesheet_new_delete).setVisibility(View.GONE);
                 view.findViewById(R.id.btn_timesheet_new_save).setVisibility(View.GONE);
             }
@@ -295,7 +296,7 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
             workdayYearView.setEnabled(false);
             workdayMonthView.setEnabled(false);
         }
-        Log.d(Utility.buildTag(getClass(), "updateTimesheetAddView"), String.format("updated %s ", timesheetEntry));
+        Log.d(Utility.buildTag(getClass(), "updateTimesheetAddView"), String.format("updated %s ", timesheetEntryDto));
     }
 
     @Override
@@ -324,25 +325,25 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
         }
     }
 
-    private TimesheetEntry getTimesheetEntry() {
-        TimesheetEntry timesheetEntry = new TimesheetEntry();
+    private TimesheetEntryDto getTimesheetEntry() {
+        TimesheetEntryDto timesheetEntryDto = new TimesheetEntryDto();
 
         TextView timesheetIdView = requireView().findViewById(R.id.timesheet_entry_timesheet_id);
-        timesheetEntry.setTimesheetId(Utility.isInteger(timesheetIdView.getText().toString()) ? Long.parseLong(timesheetIdView.getText().toString()) : null);
+        timesheetEntryDto.setTimesheetId(Utility.isInteger(timesheetIdView.getText().toString()) ? Long.parseLong(timesheetIdView.getText().toString()) : null);
 
         TextView idView = requireView().findViewById(R.id.timesheet_entry_id);
-        timesheetEntry.setId(Utility.isInteger(idView.getText().toString()) ? Long.parseLong(idView.getText().toString()) : null);
+        timesheetEntryDto.setId(Utility.isInteger(idView.getText().toString()) ? Long.parseLong(idView.getText().toString()) : null);
 
         EditText createdDateView = requireView().findViewById(R.id.timesheet_entry_created_date);
         LocalDateTime createdDateTime = Utility.toLocalDateTime(createdDateView.getText().toString());
         if (createdDateTime != null) {
-            timesheetEntry.setCreatedDate(createdDateTime);
+            timesheetEntryDto.setCreatedDate(createdDateTime);
         }
 
         EditText lastModifiedDateView = requireView().findViewById(R.id.timesheet_entry_last_modified_date);
         LocalDateTime lastModifiedDateTime = Utility.toLocalDateTime(lastModifiedDateView.getText().toString());
         if (lastModifiedDateTime != null) {
-            timesheetEntry.setLastModifiedDate(lastModifiedDateTime);
+            timesheetEntryDto.setLastModifiedDate(lastModifiedDateTime);
         }
 
         AutoCompleteTextView projectSpinner = requireView().findViewById(R.id.timesheet_entry_project_spinner);
@@ -351,45 +352,42 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
         for (int i = 0; i < count; i++) {
             SpinnerItem item = (SpinnerItem) projectSpinner.getAdapter().getItem(i);
             if (item.name().equals(projectSpinner.getText().toString())) {
-                timesheetEntry.setProjectId(item.id());
+                timesheetEntryDto.setProjectId(item.id());
             }
         }
 
         MaterialButtonToggleGroup typeBtnGrp = requireView().findViewById(R.id.timesheet_entry_type_btn_group_layout);
         MaterialButton checkedTypeButton = typeBtnGrp.findViewById(typeBtnGrp.getCheckedButtonId());
-        timesheetEntry.setType(TimesheetEntry.TimesheetEntryTypeEnum.valueOf(checkedTypeButton.getText().toString().toUpperCase()).name());
+        timesheetEntryDto.setType(TimesheetEntry.TimesheetEntryTypeEnum.valueOf(checkedTypeButton.getText().toString().toUpperCase()).name());
 
         // always set to OPEN, not possible to change manually.
-        timesheetEntry.setStatus(TimesheetEntry.TimesheetEntryStatusEnum.OPEN.name());
+        timesheetEntryDto.setStatus(TimesheetEntry.TimesheetEntryStatusEnum.OPEN.name());
 
         TextView workdayYearView = requireView().findViewById(R.id.timesheet_entry_workday_year);
         TextView workdayMonthView = requireView().findViewById(R.id.timesheet_entry_workday_month);
         TextView workdayDayView = requireView().findViewById(R.id.timesheet_entry_workday_day);
-        timesheetEntry.setWorkdayDate(LocalDate.of(Integer.parseInt(workdayYearView.getText().toString()), Integer.parseInt(workdayMonthView.getText().toString()), Integer.parseInt(workdayDayView.getText().toString())));
+        timesheetEntryDto.setWorkdayDate(LocalDate.of(Integer.parseInt(workdayYearView.getText().toString()), Integer.parseInt(workdayMonthView.getText().toString()), Integer.parseInt(workdayDayView.getText().toString())));
 
         TextView fromTimeView = requireView().findViewById(R.id.timesheet_entry_from_time);
-        timesheetEntry.setStartTime(Utility.toLocalTime(fromTimeView.getText().toString()));
-
-        //TextView toTimeView = requireView().findViewById(R.id.timesheet_entry_to_time);
-        //timesheetEntry.setEndTime(Utility.toLocalTime(toTimeView.getText().toString()));
+        timesheetEntryDto.setStartTime(Utility.toLocalTime(fromTimeView.getText().toString()));
 
         TextView workedHoursView = requireView().findViewById(R.id.timesheet_entry_worked_hours);
-        timesheetEntry.setWorkedSeconds(Utility.fromHoursToSeconds(workedHoursView.getText().toString()));
+        timesheetEntryDto.setWorkedSeconds(Utility.fromHoursToSeconds(workedHoursView.getText().toString()));
 
         TextView breakView = requireView().findViewById(R.id.timesheet_entry_break);
-        timesheetEntry.setBreakSeconds(Integer.parseInt(breakView.getText().toString()) * 60);
+        timesheetEntryDto.setBreakSeconds(Integer.parseInt(breakView.getText().toString()) * 60);
 
         TextView commentView = requireView().findViewById(R.id.timesheet_entry_comment);
-        timesheetEntry.setComments(commentView.getText().toString());
+        timesheetEntryDto.setComments(commentView.getText().toString());
         // determine and set worked minutes
-        //timesheetEntry.setWorkedMinutes(Long.valueOf(ChronoUnit.MINUTES.between(timesheetEntry.getStartTime(), timesheetEntry.getEndTime())).intValue());
-        return timesheetEntry;
+        //timesheetEntryDto.setWorkedMinutes(Long.valueOf(ChronoUnit.MINUTES.between(timesheetEntryDto.getStartTime(), timesheetEntryDto.getEndTime())).intValue());
+        return timesheetEntryDto;
     }
 
     private void saveTimesheetEntry() {
         try {
-            TimesheetEntry timesheetEntry = getTimesheetEntry();
-            timesheetService.saveTimesheetEntry(timesheetEntry);
+            TimesheetEntryDto timesheetEntry = getTimesheetEntry();
+            timesheetService.saveTimesheetEntryDto(timesheetEntry);
             showSnackbar(String.format("Added new timesheet entry! %s", timesheetEntry.getWorkdayDate()), R.color.color_snackbar_text_add);
         } catch (TerexApplicationException | InputValidationException ex) {
             ex.printStackTrace();

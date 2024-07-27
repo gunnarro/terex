@@ -52,6 +52,9 @@ public class Timesheet extends BaseEntity {
     }
 
     @NotNull
+    @ColumnInfo(name = "status", defaultValue = "OPEN")
+    private String status;
+    @NotNull
     @ColumnInfo(name = "user_account_id")
     private Long userId;
     @NotNull
@@ -69,9 +72,6 @@ public class Timesheet extends BaseEntity {
     @NotNull
     @ColumnInfo(name = "to_date")
     private LocalDate toDate;
-    @NotNull
-    @ColumnInfo(name = "status", defaultValue = "OPEN")
-    private String status;
     @ColumnInfo(name = "description")
     private String description;
     @ColumnInfo(name = "working_days_in_month", defaultValue = "0")

@@ -196,4 +196,15 @@
     <string name="project_status_active">Active</string>
     <string name="project_status_closed">Closed</string>
     <string name="lbl_invoice_email_address">Invoice email address</string>
+    <string name="title_integration_details">Integration details</string>
+    <string name="lbl_integration_system">System</string>
+    <string name="lbl_base_url">Base url</string>
+    <string name="lbl_authentication_type">Authentication type</string>
+    <string name="integration_status_active">Active</string>
+    <string name="integration_status_disabled">Disabled</string>
+    <string name="integration_status_deactivated">Deactivated</string>
+    <string name="lbl_integration_service_type">Service type</string>
+    <string name="integration_type_file">File</string>
+    <string name="integration_type_web_service">WebService</string>
+    <string name="integration_type_rest">REST</string>
 </resources>

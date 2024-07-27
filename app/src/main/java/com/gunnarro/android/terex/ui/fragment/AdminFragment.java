@@ -74,7 +74,7 @@ public class AdminFragment extends BaseFragment {
         if (userAccountDto != null) {
             ((TextView) view.findViewById(R.id.user_account_account_type_view)).setText(userAccountDto.getUserAccountType());
             ((TextView) view.findViewById(R.id.user_account_username_view)).setText(userAccountDto.getUserName());
-            if (userAccountDto.getOrganizationDto() != null ) {
+            if (userAccountDto.getOrganizationDto() != null) {
                 ((TextView) view.findViewById(R.id.user_account_organization_name)).setText(userAccountDto.getOrganizationDto().getName());
                 ((TextView) view.findViewById(R.id.user_account_organization_number)).setText(userAccountDto.getOrganizationDto().getOrganizationNumber());
                 ((TextView) view.findViewById(R.id.user_account_organization_bank_account)).setText(userAccountDto.getOrganizationDto().getBankAccountNumber());
@@ -82,7 +82,7 @@ public class AdminFragment extends BaseFragment {
                 ((TextView) view.findViewById(R.id.user_account_organization_city)).setText(String.format("%s %s", userAccountDto.getOrganizationDto().getBusinessAddress().getPostalCode(), userAccountDto.getOrganizationDto().getBusinessAddress().getCity()));
                 ((TextView) view.findViewById(R.id.user_account_organization_country)).setText(userAccountDto.getOrganizationDto().getBusinessAddress().getCountry());
             }
-            }
+        }
 
         view.findViewById(R.id.btn_user_account).setOnClickListener(v -> {
             navController.navigate(R.id.nav_from_admin_to_user_account);
@@ -173,8 +173,8 @@ public class AdminFragment extends BaseFragment {
                 timesheetEntry1.setWorkdayDate(date);
                 timesheetEntry1.setStartTime(LocalTime.of(7, 0));
                 timesheetEntry1.setEndTime(LocalTime.of(3, 0));
-                timesheetEntry1.setBreakSeconds(30*60);
-                timesheetEntry1.setWorkedSeconds((long)420*60);
+                timesheetEntry1.setBreakSeconds(30 * 60);
+                timesheetEntry1.setWorkedSeconds((long) 420 * 60);
                 timesheetEntry1.setWorkdayWeek(date.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()));
                 timesheetEntryList.add(timesheetEntry1);
             }

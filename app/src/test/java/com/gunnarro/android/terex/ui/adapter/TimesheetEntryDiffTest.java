@@ -3,6 +3,7 @@ package com.gunnarro.android.terex.ui.adapter;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.gunnarro.android.terex.domain.dto.TimesheetEntryDto;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 
 import org.junit.jupiter.api.Test;
@@ -13,12 +14,12 @@ class TimesheetEntryDiffTest {
 
     @Test
     void itemsEqual() {
-        TimesheetEntry timesheetEntry1 = new TimesheetEntry();
+        TimesheetEntryDto timesheetEntry1 = new TimesheetEntryDto();
         timesheetEntry1.setId(1L);
         timesheetEntry1.setTimesheetId(23L);
         timesheetEntry1.setWorkdayDate(LocalDate.of(2023, 9, 9));
 
-        TimesheetEntry timesheetEntry2 = timesheetEntry1;
+        TimesheetEntryDto timesheetEntry2 = timesheetEntry1;
 
         TimesheetEntryListAdapter.TimesheetEntryDiff diff = new TimesheetEntryListAdapter.TimesheetEntryDiff();
 
@@ -27,12 +28,12 @@ class TimesheetEntryDiffTest {
 
     @Test
     void itemsNotEqual() {
-        TimesheetEntry timesheetEntry1 = new TimesheetEntry();
+        TimesheetEntryDto timesheetEntry1 = new TimesheetEntryDto();
         timesheetEntry1.setId(1L);
         timesheetEntry1.setTimesheetId(23L);
         timesheetEntry1.setWorkdayDate(LocalDate.of(2023, 9, 9));
 
-        TimesheetEntry timesheetEntry2 = new TimesheetEntry();
+        TimesheetEntryDto timesheetEntry2 = new TimesheetEntryDto();
         timesheetEntry2.setId(2L);
         timesheetEntry2.setTimesheetId(23L);
         timesheetEntry2.setWorkdayDate(LocalDate.of(2023, 9, 9));
@@ -44,12 +45,12 @@ class TimesheetEntryDiffTest {
 
     @Test
     void contentsEqual() {
-        TimesheetEntry timesheetEntry1 = new TimesheetEntry();
+        TimesheetEntryDto timesheetEntry1 = new TimesheetEntryDto();
         timesheetEntry1.setId(1L);
         timesheetEntry1.setTimesheetId(23L);
         timesheetEntry1.setWorkdayDate(LocalDate.of(2023, 9, 9));
 
-        TimesheetEntry timesheetEntry2 = new TimesheetEntry();
+        TimesheetEntryDto timesheetEntry2 = new TimesheetEntryDto();
         timesheetEntry2.setId(2L);
         timesheetEntry2.setTimesheetId(23L);
         timesheetEntry2.setWorkdayDate(LocalDate.of(2023, 9, 9));
@@ -61,12 +62,12 @@ class TimesheetEntryDiffTest {
 
     @Test
     void contentsNotEqual() {
-        TimesheetEntry timesheetEntry1 = new TimesheetEntry();
+        TimesheetEntryDto timesheetEntry1 = new TimesheetEntryDto();
         timesheetEntry1.setId(1L);
         timesheetEntry1.setTimesheetId(23L);
         timesheetEntry1.setWorkdayDate(LocalDate.of(2023, 9, 9));
 
-        TimesheetEntry timesheetEntry2 = new TimesheetEntry();
+        TimesheetEntryDto timesheetEntry2 = new TimesheetEntryDto();
         timesheetEntry2.setId(2L);
         timesheetEntry2.setTimesheetId(23L);
         timesheetEntry2.setWorkdayDate(LocalDate.of(2023, 9, 10));

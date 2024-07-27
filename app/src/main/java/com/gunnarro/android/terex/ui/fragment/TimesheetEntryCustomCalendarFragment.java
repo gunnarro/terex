@@ -1,26 +1,37 @@
 package com.gunnarro.android.terex.ui.fragment;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
+import android.widget.ListPopupWindow;
 
 import com.applandeo.materialcalendarview.CalendarDay;
 import com.applandeo.materialcalendarview.CalendarView;
 import com.applandeo.materialcalendarview.EventDay;
 import com.applandeo.materialcalendarview.exceptions.OutOfDateRangeException;
+import com.google.android.material.textfield.TextInputEditText;
 import com.gunnarro.android.terex.R;
+import com.gunnarro.android.terex.domain.dto.ProjectDto;
+import com.gunnarro.android.terex.domain.dto.SpinnerItem;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.service.TimesheetService;
 import com.gunnarro.android.terex.utility.Utility;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -93,6 +104,21 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
             throw new TerexApplicationException("Error creating view!", "50051", e);
         }
 
+        // create client projects spinner
+        AutoCompleteTextView projectSpinner = view.findViewById(R.id.timesheet_calendar_project_spinner);
+        List<ProjectDto> projectDtoList = timesheetService.getTimesheetDto(timesheetId).getClientDto().getProjectList();
+        List<SpinnerItem> projectItems = projectDtoList.stream().map(p -> new SpinnerItem(p.getId(), p.getName())).collect(Collectors.toList());
+        ArrayAdapter<SpinnerItem> projectAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, projectItems);
+        projectSpinner.setAdapter(projectAdapter);
+        projectSpinner.setListSelection(0);
+        projectSpinner.setText(projectSpinner.getAdapter().getItem(0).toString());
+        projectSpinner.setInputMethodMode(ListPopupWindow.INPUT_METHOD_NOT_NEEDED);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            projectSpinner.setAutoHandwritingEnabled(false);
+            projectSpinner.setImportantForAutofill(View.IMPORTANT_FOR_AUTOFILL_NO);
+        }
+
+
         view.findViewById(R.id.btn_timesheet_calendar_save_regular).setEnabled(true);
         view.findViewById(R.id.btn_timesheet_calendar_save_regular).setOnClickListener(v -> {
             v.setEnabled(false);
@@ -122,6 +148,7 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
             navigateTo(R.id.nav_from_timesheet_entry_calendar_to_timesheet_entry_list, bundle);
         });
 
+        updateView(view, readTimesheetEntryFromBundle());
         Log.d(Utility.buildTag(getClass(), "onCreateView"), "");
         return view;
     }
@@ -204,15 +231,31 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
         return selectedDates;
     }
 
+    private void updateView(View view, @NotNull TimesheetEntry timesheetEntry) {
+        ((EditText) view.findViewById(R.id.timesheet_calendar_worked_hours)).setText(Utility.fromSecondsToHours(timesheetEntry.getWorkedSeconds()));
+    }
+
     private TimesheetEntry getTimesheetEntry(TimesheetEntry.TimesheetEntryTypeEnum type) {
         TimesheetEntry timesheetEntry = readTimesheetEntryFromBundle();
         // need only update the work day date because we all other data is read from the last added timesheet.
         timesheetEntry.setType(type.name());
         timesheetEntry.setWorkdayDate(selectedWorkDayDate);
+        AutoCompleteTextView projectSpinner = requireView().findViewById(R.id.timesheet_calendar_project_spinner);
+        // some trouble to get the project id, so this mey be to complicated
+        int count = projectSpinner.getAdapter().getCount();
+        for (int i = 0; i < count; i++) {
+            SpinnerItem item = (SpinnerItem) projectSpinner.getAdapter().getItem(i);
+            if (item.name().equals(projectSpinner.getText().toString())) {
+                timesheetEntry.setProjectId(item.id());
+            }
+        }
+
+        TextInputEditText workedHoursInput =  requireView().findViewById(R.id.timesheet_calendar_worked_hours);
+        timesheetEntry.setWorkedSeconds(Utility.fromHoursToSeconds(workedHoursInput.getText().toString()));
+
         if (timesheetEntry.isVacationDay() || timesheetEntry.isSickDay()) {
             // set worked time to 0.
             timesheetEntry.setStartTime(null);
-            timesheetEntry.setEndTime(null);
             timesheetEntry.setWorkedSeconds(null);
             timesheetEntry.setBreakSeconds(null);
         }
@@ -240,7 +283,7 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
         try {
             TimesheetEntry timesheetEntry = getTimesheetEntry(type);
             timesheetService.saveTimesheetEntry(timesheetEntry);
-            showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_add_msg_format), timesheetEntry.getWorkdayDate(), timesheetEntry.getType() + " " + timesheetEntry.getWorkedHours()), R.color.color_snackbar_text_add);
+            showSnackbar(String.format("Added %s %s %s %s", timesheetEntry.getProjectId(), timesheetEntry.getWorkdayDate(), timesheetEntry.getType(), timesheetEntry.getWorkedHours()), R.color.color_snackbar_text_add);
         } catch (TerexApplicationException | InputValidationException e) {
             Log.e("handleButtonSaveClick", e.getMessage());
             showInfoDialog("Error", e.getMessage());
