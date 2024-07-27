@@ -55,6 +55,7 @@ public class UserAccountServiceTest extends IntegrationTestSetup {
     private UserAccountDto createUserAccountDto(Long id) {
         UserAccountDto userAccountDto = new UserAccountDto();
         userAccountDto.setId(id);
+        userAccountDto.setStatus(UserAccount.UserAccountStatusEnum.ACTIVE.name());
         userAccountDto.setUserName("guro-integration-test");
         userAccountDto.setPassword("nope");
         userAccountDto.setDefaultUser(true);
