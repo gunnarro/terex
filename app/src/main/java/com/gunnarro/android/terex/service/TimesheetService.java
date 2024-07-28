@@ -97,10 +97,10 @@ public class TimesheetService {
             TimesheetDto timesheetDto = TimesheetMapper.toTimesheetDto(timesheet, null, null);
             timesheetDto.setUserAccountDto(userAccountService.getUserAccount(timesheet.getUserId()));
             timesheetDto.setClientDto(clientService.getClient(timesheet.getClientId()));
-            timesheetDto.setRegisteredWorkedDays(timesheetRepository.getTotalWorkedDays(timesheetId));
+            timesheetDto.setRegisteredWorkedDays(timesheetRepository.countRegisteredDays(timesheetId, TimesheetEntry.TimesheetEntryTypeEnum.REGULAR));
             timesheetDto.setRegisteredWorkedHours(timesheetRepository.getTotalWorkedHours(timesheetId));
-            timesheetDto.setVacationDays(timesheetRepository.getTotalVacationDays(timesheetId));
-            timesheetDto.setSickDays(timesheetRepository.getTotalSickDays(timesheetId));
+            timesheetDto.setVacationDays(timesheetRepository.countRegisteredDays(timesheetId, TimesheetEntry.TimesheetEntryTypeEnum.VACATION));
+            timesheetDto.setSickDays(timesheetRepository.countRegisteredDays(timesheetId, TimesheetEntry.TimesheetEntryTypeEnum.SICK));
             return timesheetDto;
         }
         return null;
@@ -124,7 +124,13 @@ public class TimesheetService {
         return timesheetRepository.getTimesheet(timesheetId);
     }
 
+    public List<Integer> getAllTimesheetYear() {
+        return timesheetRepository.getAllTimesheetYear();
+    }
+
+
     public List<TimesheetDto> getTimesheetDtoList(Integer year) {
+        Log.d("getTimesheetDtoList", "get timesheets for year=" + year);
         List<TimesheetDto> timesheetDtoList = new ArrayList<>();
         List<Long> timesheetIdList = timesheetRepository.getTimesheetIds(year);
         timesheetIdList.forEach(id -> timesheetDtoList.add(getTimesheetDto(id)));
@@ -142,9 +148,6 @@ public class TimesheetService {
     public Long saveTimesheet(Timesheet timesheet) {
         Log.d("TimesheetRepository.saveTimesheet", String.format("%s", timesheet));
         Timesheet timesheetExisting = timesheetRepository.find(timesheet.getUserId(), timesheet.getClientId(), timesheet.getYear(), timesheet.getMonth());
-        if (timesheetExisting != null && timesheet.isNew()) {
-            throw new InputValidationException(String.format("Timesheet already exist! %s", timesheetExisting), "40040", null);
-        }
         // first of all, check status
         if (timesheetExisting != null && timesheetExisting.isBilled()) {
             Log.e("", "Timesheet is already billed, no changes is allowed. timesheetId=" + timesheetExisting.getId() + " " + timesheetExisting.getStatus());

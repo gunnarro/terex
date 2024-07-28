@@ -52,7 +52,7 @@ public class UserAccountRepository {
             CompletionService<Long> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
             service.submit(userAccountDao::getDefaultUserAccountId);
             Future<Long> future = service.take();
-            return future != null ? future.get() : null;
+            return future.get() != null ? future.get() : -1;
         } catch (InterruptedException | ExecutionException e) {
             // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();

@@ -11,6 +11,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.gunnarro.android.terex.R;
+import com.gunnarro.android.terex.ui.MainActivity;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -38,6 +39,8 @@ public class HomeFragment extends Fragment {
             View windowDecorView = requireActivity().getWindow().getDecorView();
             windowDecorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         }
+        // displays the back button on toolbar
+        ((MainActivity)requireActivity()).hideUpButton();
     }
 
     @Override

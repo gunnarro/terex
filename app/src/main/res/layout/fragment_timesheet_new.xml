@@ -116,14 +116,6 @@
                 app:singleSelection="true">
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/timesheet_new_status_btn_new"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checkable="false"
-                    android:text="@string/timesheet_status_new" />
-
-                <com.google.android.material.button.MaterialButton
                     android:id="@+id/timesheet_new_status_btn_active"
                     style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="wrap_content"
@@ -145,26 +137,6 @@
                     android:checkable="false"
                     android:text="@string/timesheet_status_billed" />
             </com.google.android.material.button.MaterialButtonToggleGroup>
-            <!-- deprecated
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/timesheet_new_status_spinner_layout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:hint="@string/lbl_status">
-
-                <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                    android:id="@+id/timesheet_new_status_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:autofillHints="false"
-                    android:clickable="true"
-                    android:importantForAutofill="no"
-                    android:inputType="none"
-                    tools:ignore="KeyboardInaccessibleWidget" />
-            </com.google.android.material.textfield.TextInputLayout>
-            -->
         </LinearLayout>
 
         <LinearLayout

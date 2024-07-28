@@ -53,14 +53,9 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
     private List<Integer> timesheetYears;
     private Integer selectedYear = LocalDate.now().getYear();
 
-    private boolean isTimesheetReadOnly;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // todo get from db
-        timesheetYears = List.of(2024, 2025);
-        selectedYear = LocalDate.now().getYear();
         // Get a new or existing ViewModel from the ViewModelProvider.
         try {
             timesheetViewModel = new TimesheetViewModel(requireActivity().getApplication(), selectedYear);
@@ -84,6 +79,8 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
         requireActivity().setTitle(R.string.title_timesheets);
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_recycler_timesheet_list, container, false);
+        // tells the system that your fragment wants to receive menu-related callbacks. When a menu-related event occurs,
+        // like a click, the event-handling method is first called on the activity before being called on the fragment.
         setHasOptionsMenu(true);
         RecyclerView recyclerView = view.findViewById(R.id.timesheet_list_recyclerview);
         final TimesheetListAdapter timesheetListAdapter = new TimesheetListAdapter(this, new TimesheetListAdapter.TimesheetDtoDiff());
@@ -98,6 +95,12 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
             bundle.putString(TimesheetListFragment.TIMESHEET_ID_KEY, null);
             navigateTo(R.id.nav_from_timesheet_list_to_timesheet_details, bundle);
         });
+
+        timesheetYears = timesheetViewModel.getAllTimesheetYear();
+        if (timesheetYears.isEmpty()) {
+            timesheetYears.add(LocalDate.now().getYear());
+        }
+        selectedYear = timesheetYears.get(0);
 
         // enable swipe
         enableSwipeToLeftAndDeleteItem(recyclerView);
@@ -178,6 +181,9 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
         reloadTimesheetData(selectedYear);
     }
 
+    /**
+     * To merge fragment specific menu into the app bar's options menu, override onCreateOptionsMenu() in your fragment.
+     */
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         // keep a reference to options menu

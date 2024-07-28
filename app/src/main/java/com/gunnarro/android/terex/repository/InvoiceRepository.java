@@ -49,11 +49,29 @@ public class InvoiceRepository {
     // Room executes all queries on a separate thread.
     // Observed LiveData will notify the observer when the data has changed.
     public List<Invoice> getAllInvoices() {
-        return invoiceDao.getAll();
+        try {
+            CompletionService<List<Invoice>> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
+            service.submit(invoiceDao::getAll);
+            Future<List<Invoice>> future = service.take();
+            return future != null ? future.get() : null;
+        } catch (InterruptedException | ExecutionException e) {
+            // Something crashed, therefore restore interrupted state before leaving.
+            Thread.currentThread().interrupt();
+            throw new TerexApplicationException("Error get invoice's", e.getMessage(), e.getCause());
+        }
     }
 
     public List<Long> getAllInvoiceIds() {
-        return invoiceDao.getAllInvoiceIds();
+        try {
+            CompletionService<List<Long>> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
+            service.submit(invoiceDao::getAllInvoiceIds);
+            Future<List<Long>> future = service.take();
+            return future != null ? future.get() : null;
+        } catch (InterruptedException | ExecutionException e) {
+            // Something crashed, therefore restore interrupted state before leaving.
+            Thread.currentThread().interrupt();
+            throw new TerexApplicationException("Error get invoice id's", e.getMessage(), e.getCause());
+        }
     }
 
     public Invoice getInvoice(Long invoiceId) {

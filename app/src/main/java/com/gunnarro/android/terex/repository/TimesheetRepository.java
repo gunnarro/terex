@@ -308,39 +308,81 @@ public class TimesheetRepository {
         return 1;
     }
 
-    public String getTimesheetStatus(Long timesheetId) {
-        return timesheetDao.getTimesheetStatus(timesheetId);
-    }
-
-    public Integer getTotalWorkedDays(Long timesheetId) {
-        Integer days = timesheetDao.getWorkedDays(timesheetId);
-        return days != null ? days : 0;
-    }
-
     public Integer getTotalWorkedHours(Long timesheetId) {
-        Integer minutes = timesheetDao.getWorkedMinutes(timesheetId);
-        return minutes != null ? minutes / 60 : 0;
+        try {
+            CompletionService<Integer> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
+            service.submit(() -> timesheetDao.getWorkedMinutes(timesheetId));
+            Future<Integer> future = service.take();
+            return future.get() != null ? future.get() / 60 : 0;
+        } catch (InterruptedException | ExecutionException e) {
+            // Something crashed, therefore restore interrupted state before leaving.
+            Thread.currentThread().interrupt();
+            throw new TerexApplicationException("Error get total worked hours", e.getMessage(), e.getCause());
+        }
     }
 
-    public Integer getTotalVacationDays(Long timesheetId) {
-        Integer days = timesheetDao.getVacationDays(timesheetId);
-        return days != null ? days : 0;
-    }
-
-    public Integer getTotalSickDays(Long timesheetId) {
-        Integer days = timesheetDao.getSickDays(timesheetId);
-        return days != null ? days : 0;
+    public Integer countRegisteredDays(Long timesheetId, TimesheetEntry.TimesheetEntryTypeEnum type) {
+        try {
+            CompletionService<Integer> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
+            service.submit(() -> timesheetDao.countRegisteredDays(timesheetId, type.name()));
+            Future<Integer> future = service.take();
+            return future.get() != null ? future.get() : 0;
+        } catch (InterruptedException | ExecutionException e) {
+            // Something crashed, therefore restore interrupted state before leaving.
+            Thread.currentThread().interrupt();
+            throw new TerexApplicationException("Error count registered days of type " + type.name(), e.getMessage(), e.getCause());
+        }
     }
 
     public int countTimesheetEntries() {
-        return timesheetEntryDao.count();
+        try {
+            CompletionService<Integer> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
+            service.submit(() -> timesheetEntryDao.count());
+            Future<Integer> future = service.take();
+            return future.get() != null ? future.get() : 0;
+        } catch (InterruptedException | ExecutionException e) {
+            // Something crashed, therefore restore interrupted state before leaving.
+            Thread.currentThread().interrupt();
+            throw new TerexApplicationException("Error get timesheet title", e.getMessage(), e.getCause());
+        }
     }
 
     public String getTimesheetTitle(Long timesheetId) {
-        return timesheetDao.getTimesheetTitle(timesheetId);
+        try {
+            CompletionService<String> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
+            service.submit(() -> timesheetDao.getTimesheetTitle(timesheetId));
+            Future<String> future = service.take();
+            return future != null ? future.get() : null;
+        } catch (InterruptedException | ExecutionException e) {
+            // Something crashed, therefore restore interrupted state before leaving.
+            Thread.currentThread().interrupt();
+            throw new TerexApplicationException("Error get timesheet title", e.getMessage(), e.getCause());
+        }
     }
 
     public List<Long> getTimesheetEntryIds(Long timesheetId) {
-        return timesheetDao.getTimesheetEntryIds(timesheetId);
+        try {
+            CompletionService<List<Long>> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
+            service.submit(() -> timesheetDao.getTimesheetEntryIds(timesheetId));
+            Future<List<Long>> future = service.take();
+            return future != null ? future.get() : null;
+        } catch (InterruptedException | ExecutionException e) {
+            // Something crashed, therefore restore interrupted state before leaving.
+            Thread.currentThread().interrupt();
+            throw new TerexApplicationException("Error get all timesheet entry id's", e.getMessage(), e.getCause());
+        }
+    }
+
+    public List<Integer> getAllTimesheetYear() {
+        try {
+            CompletionService<List<Integer>> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
+            service.submit(timesheetDao::getAllTimesheetYear);
+            Future<List<Integer>> future = service.take();
+            return future != null ? future.get() : null;
+        } catch (InterruptedException | ExecutionException e) {
+            // Something crashed, therefore restore interrupted state before leaving.
+            Thread.currentThread().interrupt();
+            throw new TerexApplicationException("Error get all timesheet year's", e.getMessage(), e.getCause());
+        }
     }
 }

@@ -31,8 +31,6 @@ import com.gunnarro.android.terex.service.ProjectService;
 import com.gunnarro.android.terex.service.TimesheetService;
 import com.gunnarro.android.terex.utility.Utility;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -85,7 +83,7 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
             workdayDatePicker.show();
         });
 
-        // create client projects spinner
+        // create projects spinner
         AutoCompleteTextView projectSpinner = view.findViewById(R.id.timesheet_entry_project_spinner);
         List<ProjectDto> projectDtoList = timesheetService.getTimesheetDto(timesheetEntryDto.getTimesheetId()).getClientDto().getProjectList();
         List<SpinnerItem> projectItems = projectDtoList.stream().map(p -> new SpinnerItem(p.getId(), p.getName())).collect(Collectors.toList());
@@ -93,18 +91,6 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
         projectSpinner.setAdapter(projectAdapter);
         projectSpinner.setListSelection(0);
 
-        // project dropdown
-        /*
-        AutoCompleteTextView projectSpinner = requireView().findViewById(R.id.timesheet_entry_project_spinner);
-        // some trouble to get the project id, so this mey be to complicated
-        int count = projectSpinner.getAdapter().getCount();
-        for (int i = 0; i < count; i++) {
-            SpinnerItem item = (SpinnerItem) projectSpinner.getAdapter().getItem(i);
-            if (item.name().equals(projectSpinner.getText().toString())) {
-                //timesheet.setProjectId(item.id());
-            }
-        }
-        */
         // timesheet entity type
         MaterialButtonToggleGroup typeBtnGrp = view.findViewById(R.id.timesheet_entry_type_btn_group_layout);
         typeBtnGrp.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
@@ -130,44 +116,16 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
             fromTimePicker.show();
         });
 
-        /*
-        // to time time picker
-        EditText toTime = view.findViewById(R.id.timesheet_entry_to_time);
-        // turn off keyboard popup when clicked
-        toTime.setShowSoftInputOnFocus(false);
-        toTime.setOnClickListener(v -> {
-            TimePickerDialog toTimePicker = new TimePickerDialog(
-                    requireContext(),
-                    R.style.DialogTheme,
-                    (timePicker, selectedHour, selectedMinute) -> toTime.setText(Utility.formatToHHMM(selectedHour, selectedMinute)),
-                    LocalTime.now().getHour(),
-                    LocalTime.now().getMinute(),
-                    true);
-            toTimePicker.setTitle(getResources().getString(R.string.title_select_to_time));
-            toTimePicker.show();
-        });
-         */
-
         // disable save button as default
         view.findViewById(R.id.timesheet_entry_save_btn).setEnabled(true);
         view.findViewById(R.id.timesheet_entry_save_btn).setOnClickListener(v -> {
             view.findViewById(R.id.timesheet_entry_save_btn).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_default, view.getContext().getTheme()));
-            //Bundle result = new Bundle();
-            //result.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_KEY, getTimesheetEntryAsJson());
-            //result.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_KEY, TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_SAVE);
-            //getParentFragmentManager().setFragmentResult(TimesheetEntryListFragment.TIMESHEET_ENTRY_REQUEST_KEY, result);
-            //Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new timesheet entry intent: " + getTimesheetEntryAsJson());
             saveTimesheetEntry();
             returnToTimesheetEntryList(getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY));
         });
 
         view.findViewById(R.id.timesheet_entry_delete_btn).setOnClickListener(v -> {
             view.findViewById(R.id.timesheet_entry_delete_btn).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_default, view.getContext().getTheme()));
-            //Bundle result = new Bundle();
-            //result.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_KEY, getTimesheetEntryAsJson());
-            //result.putString(TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_KEY, TimesheetEntryListFragment.TIMESHEET_ENTRY_ACTION_DELETE);
-            //getParentFragmentManager().setFragmentResult(TimesheetEntryListFragment.TIMESHEET_ENTRY_REQUEST_KEY, result);
-            //Log.d(Utility.buildTag(getClass(), "onCreateView"), "add new delete item intent");
             returnToTimesheetEntryList(getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY));
         });
 
@@ -232,13 +190,9 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
         projectSpinner.setText(projectSpinner.getAdapter().getItem(0).toString());
 
         MaterialButtonToggleGroup typeBtnGrp = view.findViewById(R.id.timesheet_entry_type_btn_group_layout);
-        if (timesheetEntryDto.isRegularWorkDay()) {
-            ((MaterialButton) typeBtnGrp.findViewById(R.id.timesheet_entry_type_regular)).setChecked(true);
-        } else if (timesheetEntryDto.isVacationDay()) {
-            ((MaterialButton) typeBtnGrp.findViewById(R.id.timesheet_entry_type_vacation)).setChecked(true);
-        } else if (timesheetEntryDto.isSickDay()) {
-            ((MaterialButton) typeBtnGrp.findViewById(R.id.timesheet_entry_type_sick)).setChecked(true);
-        }
+        ((MaterialButton) typeBtnGrp.findViewById(R.id.timesheet_entry_type_regular)).setChecked(timesheetEntryDto.isRegularWorkDay());
+        ((MaterialButton) typeBtnGrp.findViewById(R.id.timesheet_entry_type_vacation)).setChecked(timesheetEntryDto.isVacationDay());
+        ((MaterialButton) typeBtnGrp.findViewById(R.id.timesheet_entry_type_sick)).setChecked(timesheetEntryDto.isSickDay());
 
         EditText workdayYearView = view.findViewById(R.id.timesheet_entry_workday_year);
         workdayYearView.setText(String.format("%s", timesheetEntryDto.getWorkdayDate().getYear()));
@@ -251,9 +205,6 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
 
         EditText fromTimeView = view.findViewById(R.id.timesheet_entry_from_time);
         fromTimeView.setText(Utility.formatTime(timesheetEntryDto.getStartTime()));
-
-        //EditText toTimeView = view.findViewById(R.id.timesheet_entry_to_time);
-        //toTimeView.setText(Utility.formatTime(timesheetEntryDto.getEndTime()));
 
         EditText workedHoursView = view.findViewById(R.id.timesheet_entry_worked_hours);
         workedHoursView.setText(Utility.fromSecondsToHours(timesheetEntryDto.getWorkedSeconds()));
@@ -379,8 +330,6 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
 
         TextView commentView = requireView().findViewById(R.id.timesheet_entry_comment);
         timesheetEntryDto.setComments(commentView.getText().toString());
-        // determine and set worked minutes
-        //timesheetEntryDto.setWorkedMinutes(Long.valueOf(ChronoUnit.MINUTES.between(timesheetEntryDto.getStartTime(), timesheetEntryDto.getEndTime())).intValue());
         return timesheetEntryDto;
     }
 

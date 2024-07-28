@@ -91,10 +91,6 @@ abstract class BaseFragment extends Fragment {
         }
     }
 
-    protected void navigateToHome(Bundle bundle) {
-        navController.navigate(R.id.nav_to_home, bundle);
-    }
-
     // -------------------------------------
     // common data input validation
     // -------------------------------------

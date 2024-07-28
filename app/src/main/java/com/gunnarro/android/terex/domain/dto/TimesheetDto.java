@@ -171,7 +171,7 @@ public class TimesheetDto {
     }
 
     public boolean isNew() {
-        return status.equals(Timesheet.TimesheetStatusEnum.NEW.name());
+        return this.id == null;
     }
 
     public boolean isActive() {

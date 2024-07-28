@@ -1,6 +1,7 @@
 package com.gunnarro.android.terex.domain.entity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -23,18 +24,22 @@ class TimesheetTest {
 
 
         assertNull(timeSheet.getDescription());
-        assertEquals("Timesheet{userId=100, clientId=10, year=2023, month=11, status=NEW}", timeSheet.toString());
-        assertEquals(Timesheet.TimesheetStatusEnum.NEW.name(), timeSheet.getStatus());
+        assertEquals("Timesheet{userId=100, clientId=10, year=2023, month=11, status=ACTIVE}", timeSheet.toString());
+        assertEquals(Timesheet.TimesheetStatusEnum.ACTIVE.name(), timeSheet.getStatus());
     }
 
     @Test
     void status() {
-        Timesheet timeSheet = Timesheet.createDefault(100L, 10L, 2023, 11);
+        Timesheet timeSheet = Timesheet.createDefault(200L, 10L, 2023, 11);
         assertTrue(timeSheet.isNew());
-        timeSheet.setStatus(Timesheet.TimesheetStatusEnum.ACTIVE.name());
         assertTrue(timeSheet.isActive());
+
+        timeSheet.setId(300L);
+        assertFalse(timeSheet.isNew());
+
         timeSheet.setStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
         assertTrue(timeSheet.isCompleted());
+
         timeSheet.setStatus(Timesheet.TimesheetStatusEnum.BILLED.name());
         assertTrue(timeSheet.isBilled());
     }

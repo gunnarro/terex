@@ -44,15 +44,11 @@ public class Timesheet extends BaseEntity {
      * </u>
      */
     public enum TimesheetStatusEnum {
-        NEW, ACTIVE, COMPLETED, BILLED;
-
-        public static String[] names() {
-            return new String[]{NEW.name(), ACTIVE.name(), COMPLETED.name(), BILLED.name()};
-        }
+        ACTIVE, COMPLETED, BILLED;
     }
 
     @NotNull
-    @ColumnInfo(name = "status", defaultValue = "OPEN")
+    @ColumnInfo(name = "status", defaultValue = "ACTIVE")
     private String status;
     @NotNull
     @ColumnInfo(name = "user_account_id")
@@ -78,6 +74,10 @@ public class Timesheet extends BaseEntity {
     private Integer workingDaysInMonth = 0;
     @ColumnInfo(name = "working_hours_in_month", defaultValue = "0")
     private Integer workingHoursInMonth = 0;
+
+    public Timesheet() {
+        this.status = TimesheetStatusEnum.ACTIVE.name();
+    }
 
     @NonNull
     public Long getUserId() {
@@ -167,15 +167,11 @@ public class Timesheet extends BaseEntity {
     }
 
     public boolean isNew() {
-        return status.equals(TimesheetStatusEnum.NEW.name());
+        return getId() == null;
     }
 
     public boolean isActive() {
         return status.equals(TimesheetStatusEnum.ACTIVE.name());
-    }
-
-    public boolean isClosed() {
-        return status.equals(TimesheetStatusEnum.BILLED.name());
     }
 
     public boolean isCompleted() {
@@ -191,7 +187,7 @@ public class Timesheet extends BaseEntity {
         Timesheet timesheet = new Timesheet();
         timesheet.setUserId(userId);
         timesheet.setClientId(clientId);
-        timesheet.setStatus(Timesheet.TimesheetStatusEnum.NEW.name());
+        timesheet.setStatus(Timesheet.TimesheetStatusEnum.ACTIVE.name());
         timesheet.setYear(timesheetDate.getYear());
         timesheet.setMonth(timesheetDate.getMonthValue());
         timesheet.setFromDate(Utility.getFirstDayOfMonth(timesheetDate));

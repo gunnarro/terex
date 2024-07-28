@@ -18,6 +18,7 @@ import com.gunnarro.android.terex.repository.TimesheetRepository;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -61,6 +62,7 @@ class TimesheetServiceTest {
         verify(timesheetRepositoryMock, times(1)).insertTimesheet(any());
     }
 
+    @Disabled // no need for this, timesheet is simply updated
     @Test
     void saveTimesheet_timesheet_new_already_exist() {
         Timesheet timesheet = Timesheet.createDefault(100L, 10L, 2023, 11);
@@ -70,7 +72,7 @@ class TimesheetServiceTest {
             timesheetService.saveTimesheet(timesheet);
         });
 
-        Assertions.assertEquals("Timesheet already exist! Timesheet{userId=100, clientId=10, year=2023, month=11, status=NEW}", ex.getMessage());
+        Assertions.assertEquals("Timesheet already exist! Timesheet{userId=100, clientId=10, year=2023, month=11, status=OPEN}", ex.getMessage());
     }
 
     @Test

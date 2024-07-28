@@ -15,7 +15,9 @@ import com.gunnarro.android.terex.repository.TimesheetRepository;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.rules.DisableOnDebug;
 
 import java.time.LocalDate;
 
@@ -36,7 +38,6 @@ public class TimesheetServiceTest extends IntegrationTestSetup {
 
     @Test
     public void getTimesheetsByStatus() {
-        assertEquals(0, timesheetService.getTimesheetsByStatus(Timesheet.TimesheetStatusEnum.NEW.name()).size());
         assertEquals(0, timesheetService.getTimesheetsByStatus(Timesheet.TimesheetStatusEnum.ACTIVE.name()).size());
         assertEquals(0, timesheetService.getTimesheetsByStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name()).size());
         assertEquals(0, timesheetService.getTimesheetsByStatus(Timesheet.TimesheetStatusEnum.BILLED.name()).size());
@@ -67,6 +68,7 @@ public class TimesheetServiceTest extends IntegrationTestSetup {
         assertNull(timesheetService.getTimesheetDto(23L));
     }
 
+    @Ignore // no need for this, simply update timesheet
     @Test
     public void newTimesheet_already_exist() {
         Timesheet newTimesheet = Timesheet.createDefault(100L, 200L, 2023, 10);

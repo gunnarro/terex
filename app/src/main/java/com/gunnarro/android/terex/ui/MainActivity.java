@@ -28,7 +28,7 @@ import java.util.Collections;
 import dagger.hilt.android.AndroidEntryPoint;
 
 /**
- * https://guides.codepath.com/android/Using-the-App-Toolbar
+ * <a href="https://guides.codepath.com/android/Using-the-App-Toolbar">See Using-the-App-Toolbar</a>
  */
 @AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
@@ -37,15 +37,12 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
 
-    private static String internalAppDir;
     public MainActivity() {
-        // intentional empty
-        internalAppDir = getInternalAppDir();
+        // left empty
     }
 
     public static String getInternalAppDir() {
-        Log.d("MainActivity", "internalAppDir: " + internalAppDir);
-        return internalAppDir;
+        return null;
     }
 
     @Override
@@ -72,25 +69,12 @@ public class MainActivity extends AppCompatActivity {
         appBarConfiguration = new AppBarConfiguration.Builder()
                 .setFallbackOnNavigateUpListener(super::onSupportNavigateUp)
                 .build();
-
-        // new navigation https://developer.android.com/guide/navigation/integrations/ui
-//         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_content_frame);
-//         NavController navController = navHostFragment.getNavController();
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         Toolbar toolbar = findViewById(R.id.main_toolbar);
-        //appBarConfiguration = new AppBarConfiguration.Builder(R.id.main, R.id.profile).build();
         // In oder to add navigation support as default to the action bar, must also override onSupportNavigateUp() method.
         NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration);
-        //      NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-
-        // end new navigation
-        // setSupportActionBar(toolbar);
         // Finally, check and grant or deny permissions
         checkPermissions();
-    }
-
-    private void importTimesheet() {
-
     }
 
     /**
@@ -108,8 +92,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main_menu, menu);
-        menu.findItem(R.id.app_bar_import_btn).setOnMenuItemClickListener(item -> {
-            Log.d("appbar", "clicked at " + item.getItemId());
+        menu.findItem(R.id.app_bar_home).setOnMenuItemClickListener(item -> {
+            Navigation.findNavController(this, R.id.nav_content_frame).navigate(R.id.nav_to_home);
             return true;
         });
         return true;
@@ -153,4 +137,25 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void showUpButton() {
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    public void hideUpButton() {
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        }
+    }
+
+
+    public void onBackStackChanged() {
+        // enable Up button only if there are entries on the backstack
+        if (getSupportFragmentManager().getBackStackEntryCount() < 1) {
+            hideUpButton();
+        } else {
+            showUpButton();
+        }
+    }
 }

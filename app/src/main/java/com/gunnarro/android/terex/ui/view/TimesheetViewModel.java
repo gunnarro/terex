@@ -1,7 +1,6 @@
 package com.gunnarro.android.terex.ui.view;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -34,7 +33,6 @@ public class TimesheetViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<TimesheetDto>> getTimesheetLiveData(Integer year) {
-        Log.d("getTimesheetLiveData", "selected year=" + year);
         timesheetListLiveData.setValue(timesheetService.getTimesheetDtoList(year));
         return timesheetListLiveData;
     }
@@ -49,5 +47,9 @@ public class TimesheetViewModel extends AndroidViewModel {
 
     public void deleteTimesheet(Timesheet timesheet) {
         timesheetService.deleteTimesheet(timesheet.getId());
+    }
+
+    public List<Integer> getAllTimesheetYear() {
+        return timesheetService.getAllTimesheetYear();
     }
 }

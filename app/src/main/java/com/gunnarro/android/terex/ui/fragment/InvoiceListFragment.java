@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.gunnarro.android.terex.R;
+import com.gunnarro.android.terex.ui.MainActivity;
 import com.gunnarro.android.terex.ui.adapter.InvoiceListAdapter;
 import com.gunnarro.android.terex.ui.listener.ListOnItemClickListener;
 import com.gunnarro.android.terex.ui.view.InvoiceViewModel;
@@ -34,6 +35,9 @@ public class InvoiceListFragment extends BaseFragment implements ListOnItemClick
         super.onCreate(savedInstanceState);
         // Get a new or existing ViewModel from the ViewModelProvider.
         invoiceViewModel = new ViewModelProvider(this).get(InvoiceViewModel.class);
+
+        // displays the back button on toolbar
+        ((MainActivity)requireActivity()).showUpButton();
 
         getParentFragmentManager().setFragmentResultListener(INVOICE_REQUEST_KEY, this, new FragmentResultListener() {
             @Override

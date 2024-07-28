@@ -47,14 +47,6 @@ public class TimesheetEntryViewHolder extends RecyclerView.ViewHolder {
             timesheetEntryDeleteIconView.setVisibility(View.GONE);
         }
         timesheetEntryLineHeaderView.setText(timesheetEntryDto.getProjectDto().getName());
-        if (timesheetEntryDto.isRegularWorkDay()) {
-            timesheetEntryLineHeaderView.setTextColor(timesheetEntryLine1StatusView.getResources().getColor(R.color.timesheet_entry_type_regular, null));
-        } else if (timesheetEntryDto.isVacationDay()) {
-            timesheetEntryLineHeaderView.setTextColor(timesheetEntryLine1StatusView.getResources().getColor(R.color.timesheet_entry_type_vacation, null));
-        } else if (timesheetEntryDto.isSickDay()) {
-            timesheetEntryLineHeaderView.setTextColor(timesheetEntryLine1StatusView.getResources().getColor(R.color.timesheet_entry_type_sick, null));
-        }
-
         timesheetEntryLine1StatusView.setText(timesheetEntryDto.getWorkdayDate().format(DateTimeFormatter.ofPattern("dd", Locale.getDefault())));
         // can have status OPEN or CLOSED
         if (timesheetEntryDto.isOpen()) {
@@ -64,6 +56,14 @@ public class TimesheetEntryViewHolder extends RecyclerView.ViewHolder {
             itemView.findViewById(R.id.ic_timesheet_entry_row_delete).setVisibility(View.GONE);
         }
         timesheetEntryLine1LabelView.setText(timesheetEntryDto.getType());
+        if (timesheetEntryDto.isRegularWorkDay()) {
+            timesheetEntryLine1LabelView.setTextColor(timesheetEntryLine1StatusView.getResources().getColor(R.color.timesheet_entry_type_regular, null));
+        } else if (timesheetEntryDto.isVacationDay()) {
+            timesheetEntryLine1LabelView.setTextColor(timesheetEntryLine1StatusView.getResources().getColor(R.color.timesheet_entry_type_vacation, null));
+        } else if (timesheetEntryDto.isSickDay()) {
+            timesheetEntryLine1LabelView.setTextColor(timesheetEntryLine1StatusView.getResources().getColor(R.color.timesheet_entry_type_sick, null));
+        }
+
         timesheetEntryLine1ValueView.setText("");
         timesheetEntryLine2LabelView.setText(String.format("%s - %s", Utility.formatTime(timesheetEntryDto.getStartTime()), Utility.formatTime(timesheetEntryDto.getEndTime())));
         timesheetEntryLine2ValueView.setText(timesheetEntryDto.getWorkedHours());

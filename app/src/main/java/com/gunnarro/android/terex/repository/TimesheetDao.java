@@ -32,6 +32,9 @@ public interface TimesheetDao {
             + " WHERE t.id = :timesheetId")
     String getTimesheetTitle(Long timesheetId);
 
+    @Query("SELECT year FROM timesheet")
+    List<Integer> getAllTimesheetYear();
+
     /**
      * use transactions since this method return a aggregate object
      */
@@ -74,8 +77,8 @@ public interface TimesheetDao {
     @Query("SELECT count(timesheet_entry.id) FROM timesheet"
             + " INNER JOIN timesheet_entry ON timesheet_entry.timesheet_id = timesheet.id"
             + " WHERE timesheet.id = :timesheetId"
-            + " AND timesheet_entry.type = 'SICK'")
-    Integer getSickDays(Long timesheetId);
+            + " AND timesheet_entry.type = :type")
+    Integer countRegisteredDays(Long timesheetId, String type);
 
     /**
      * @return number of registered vacation days

@@ -18,6 +18,7 @@ import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.entity.Client;
 import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
+import com.gunnarro.android.terex.ui.MainActivity;
 import com.gunnarro.android.terex.ui.adapter.ClientListAdapter;
 import com.gunnarro.android.terex.ui.listener.ListOnItemClickListener;
 import com.gunnarro.android.terex.ui.view.ClientViewModel;
@@ -40,6 +41,7 @@ public class ClientListFragment extends BaseFragment implements ListOnItemClickL
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((MainActivity)requireActivity()).hideUpButton();
         // Get a new or existing ViewModel from the ViewModelProvider.
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
 
