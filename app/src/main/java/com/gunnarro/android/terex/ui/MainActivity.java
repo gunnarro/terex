@@ -87,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, appBarConfiguration) || super.onSupportNavigateUp();
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -137,19 +136,27 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void hideActionBar() {
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+    }
+
     public void showUpButton() {
         if (getSupportActionBar() != null) {
+            getSupportActionBar().show();
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
 
     public void hideUpButton() {
         if (getSupportActionBar() != null) {
+            getSupportActionBar().show();
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         }
     }
 
-
+    // https://gist.github.com/EduardoSP6/29c5388617b863503a2b0a9bfdb1dbdd
     public void onBackStackChanged() {
         // enable Up button only if there are entries on the backstack
         if (getSupportFragmentManager().getBackStackEntryCount() < 1) {

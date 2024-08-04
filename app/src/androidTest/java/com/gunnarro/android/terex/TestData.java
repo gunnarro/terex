@@ -46,8 +46,6 @@ public class TestData {
                 timesheetEntry1.setType(TimesheetEntry.TimesheetEntryTypeEnum.REGULAR.name());
                 timesheetEntry1.setWorkdayDate(date);
                 timesheetEntry1.setStartTime(LocalTime.of(7, 0));
-              //  timesheetEntry1.setEndTime(LocalTime.of(3, 0));
-                timesheetEntry1.setBreakSeconds(30 * 60);
                 timesheetEntry1.setWorkedSeconds((long) 420 * 60);
                 timesheetEntry1.setWorkdayWeek(date.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()));
                 timesheetEntryList.add(timesheetEntry1);

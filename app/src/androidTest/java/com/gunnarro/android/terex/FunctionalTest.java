@@ -13,6 +13,7 @@ import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.InvoiceAttachment;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
+import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
 import com.gunnarro.android.terex.integration.jira.TempoApi;
 import com.gunnarro.android.terex.repository.InvoiceRepository;
 import com.gunnarro.android.terex.repository.TimesheetRepository;
@@ -28,6 +29,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class FunctionalTest extends IntegrationTestSetup {
 
@@ -115,6 +117,21 @@ public class FunctionalTest extends IntegrationTestSetup {
         InvoiceAttachment clientTimesheetAttachment = invoiceService.getInvoiceAttachment(invoiceId, InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET, InvoiceService.InvoiceAttachmentFileTypes.HTML);
         assertEquals("client-company-name_timeliste_2024-01", clientTimesheetAttachment.getFileName());
         assertNotNull(clientTimesheetAttachment.getFileContent());
+
+        // check timesheet summary
+        List<TimesheetSummary> timesheetSummaryList = timesheetService.getTimesheetSummary(timesheetId);
+        assertEquals(2, timesheetSummaryList.size());
+        assertEquals("WEEK", timesheetSummaryList.get(0).getSummedByPeriod());
+        assertEquals("17250.0", timesheetSummaryList.get(0).getTotalBilledAmount().toString());
+        assertEquals("0", timesheetSummaryList.get(0).getTotalVacationDays().toString());
+        assertEquals("0", timesheetSummaryList.get(0).getTotalSickLeaveDays().toString());
+        assertEquals("2", timesheetSummaryList.get(0).getTotalWorkedDays().toString());
+        assertEquals("15.0", timesheetSummaryList.get(0).getTotalWorkedHours().toString());
+        assertEquals("2024", timesheetSummaryList.get(0).getYear().toString());
+        assertEquals("Jan", timesheetSummaryList.get(0).getMonthInYear());
+        assertEquals("1", timesheetSummaryList.get(0).getWeekInYear().toString());
+        assertEquals("01.01", timesheetSummaryList.get(0).getFromDateDDMM());
+        assertEquals("07.01", timesheetSummaryList.get(0).getToDateDDMM());
 
         // check invoice status
         Invoice invoice = invoiceService.getInvoice(invoiceId);

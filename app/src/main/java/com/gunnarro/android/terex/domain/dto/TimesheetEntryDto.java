@@ -25,7 +25,6 @@ public class TimesheetEntryDto {
     private LocalTime startTime;
     private LocalTime endTime;
     private Long workedSeconds;
-    private Integer breakSeconds;
     private String comments;
     @NonNull
     private String type;
@@ -105,14 +104,6 @@ public class TimesheetEntryDto {
 
     public void setWorkedSeconds(Long workedSeconds) {
         this.workedSeconds = workedSeconds;
-    }
-
-    public Integer getBreakSeconds() {
-        return breakSeconds;
-    }
-
-    public void setBreakSeconds(Integer breakSeconds) {
-        this.breakSeconds = breakSeconds;
     }
 
     public String getComments() {
@@ -210,7 +201,7 @@ public class TimesheetEntryDto {
         return Objects.hash(timesheetId, projectId, workdayDate);
     }
 
-
+    @NonNull
     @Override
     public String toString() {
         return new StringJoiner(", ", TimesheetEntryDto.class.getSimpleName() + "[", "]")

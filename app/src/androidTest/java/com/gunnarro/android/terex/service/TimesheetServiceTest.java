@@ -87,7 +87,6 @@ public class TimesheetServiceTest extends IntegrationTestSetup {
         Long timesheetId = timesheetService.saveTimesheet(newTimesheet);
         TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(timesheetId, 11L, LocalDate.of(2023, 8, 27));
         timesheetEntry.setWorkedSeconds((long) 450 * 60);
-        timesheetEntry.setBreakSeconds(30 * 60);
         InputValidationException ex = assertThrows(InputValidationException.class, () -> {
             timesheetService.saveTimesheetEntry(timesheetEntry);
             timesheetService.saveTimesheetEntry(TimesheetEntry.createDefault(timesheetEntry.getTimesheetId(), timesheetEntry.getProjectId(), timesheetEntry.getWorkdayDate()));

@@ -29,8 +29,8 @@ public interface TimesheetEntryDao {
     @Query("SELECT * FROM timesheet_entry WHERE id = :timesheetEntryId")
     TimesheetEntry getTimesheetEntry(Long timesheetEntryId);
 
-    @Query("SELECT * FROM timesheet_entry WHERE timesheet_id = :timesheetId AND workday_date = :workdayDate")
-    TimesheetEntry getTimesheetEntry(Long timesheetId, LocalDate workdayDate);
+    @Query("SELECT * FROM timesheet_entry WHERE timesheet_id = :timesheetId AND project_id = :projectId AND workday_date = :workdayDate")
+    TimesheetEntry getTimesheetEntry(Long timesheetId, Long projectId, LocalDate workdayDate);
 
     @Query("SELECT * FROM timesheet_entry WHERE timesheet_id = :timesheetId AND workday_date = :workdayDate AND status = :status")
     TimesheetEntry getTimesheetEntry(Long timesheetId, LocalDate workdayDate, String status);

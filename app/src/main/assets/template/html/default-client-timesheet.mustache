@@ -85,7 +85,7 @@
                                     <td class="text-start {{#isWeekend}}text-primary{{/isWeekend}} {{#isSickDay}}text-muted{{/isSickDay}} {{#isVacationDay}}text-muted{{/isVacationDay}}">{{workdayDateDay}}</td>
                                     <td class="text-start {{#isWeekend}}text-primary{{/isWeekend}} {{#isSickDay}}text-muted{{/isSickDay}} {{#isVacationDay}}text-muted{{/isVacationDay}}">{{workdayDateDayName}}</td>
                                     <td class="text-center">{{#isRegularWorkDayWithHours}} {{fromTime}} -  {{toTime}} {{/isRegularWorkDayWithHours}}</td>
-                                    <td class="text-end text-primary">{{#isRegularWorkDayWithHours}} {{workedHours}} {{/isRegularWorkDayWithHours}}</td>
+                                    <td class="text-end">{{#isRegularWorkDayWithHours}} {{workedHours}} {{/isRegularWorkDayWithHours}}</td>
                                     <td class="text-start ps-5">{{#isSickDay}}sick{{/isSickDay}} {{#isVacationDay}}vacation{{/isVacationDay}} {{comment}}</td>
                                 </tr>
                                 {{/timesheetEntryDtoList}}
@@ -96,7 +96,7 @@
                                     <td style="border-bottom: 2px solid white;"></td>
                                     <td style="border-bottom: 2px solid white;"></td>
                                     <td class="thick-line text-start"><strong>Sum</strong></td>
-                                    <td class="thick-line text-end text-primary">{{sunBilledHours}}</td>
+                                    <td class="thick-line text-end">{{sunBilledHours}}</td>
                                     <td style="border-bottom: 2px solid white;"></td>
                                 </tr>
                             </tbody>

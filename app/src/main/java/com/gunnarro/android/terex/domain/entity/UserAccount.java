@@ -130,6 +130,7 @@ public class UserAccount extends BaseEntity {
     }
 
 
+    @androidx.annotation.NonNull
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("UserAccount{");

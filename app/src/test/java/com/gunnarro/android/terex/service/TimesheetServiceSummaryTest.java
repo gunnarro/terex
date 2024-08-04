@@ -62,7 +62,6 @@ class TimesheetServiceSummaryTest {
         timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
         TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(timesheetExisting.getId(), -1L, LocalDate.of(2023, 12, 21));
         timesheetEntry.setWorkedSeconds((long) 450 * 60);
-        timesheetEntry.setBreakSeconds(30 * 60);
 
         when(timesheetRepositoryMock.getTimesheet(timesheetExisting.getId())).thenReturn(timesheetExisting);
         when(timesheetRepositoryMock.getTimesheetEntryList(timesheetEntry.getTimesheetId())).thenReturn(List.of());
@@ -87,7 +86,6 @@ class TimesheetServiceSummaryTest {
         // create regular time sheet entry, i.e, worked 7.5 hours and 30 min break
         TimesheetEntry regularTimesheetEntry = TimesheetEntry.createDefault(timesheetExisting.getId(), -1L, LocalDate.of(month.getYear(), month.getMonthValue(), 21));
         regularTimesheetEntry.setWorkedSeconds((long) 450 * 60);
-        regularTimesheetEntry.setBreakSeconds(30 * 60);
 
         ProjectDto projectDto = new ProjectDto();
         projectDto.setId(200L);
@@ -128,7 +126,6 @@ class TimesheetServiceSummaryTest {
         // create regular time sheet entry, i.e, worked 7.5 hours and 30 min break
         TimesheetEntry regularTimesheetEntry = TimesheetEntry.createDefault(timesheetExisting.getId(), -1L, LocalDate.of(month.getYear(), month.getMonthValue(), 21));
         regularTimesheetEntry.setWorkedSeconds((long) 450 * 60);
-        regularTimesheetEntry.setBreakSeconds(30 * 60);
 
         List<TimesheetEntry> timesheetEntryList = TestData.generateTimesheetEntries(timesheetExisting.getYear(), timesheetExisting.getMonth(), 200L, List.of(), List.of());
         // remove 3 days from week 3
@@ -176,7 +173,6 @@ class TimesheetServiceSummaryTest {
         // create regular time sheet entry, i.e, worked 7.5 hours and 30 min break
         TimesheetEntry regularTimesheetEntry = TimesheetEntry.createDefault(timesheetExisting.getId(),-1L, LocalDate.of(month.getYear(), month.getMonthValue(), 21));
         regularTimesheetEntry.setWorkedSeconds((long) 450 * 60);
-        regularTimesheetEntry.setBreakSeconds(30 * 60);
 
         List<TimesheetEntry> timesheetEntryList = TestData.generateTimesheetEntries(timesheetExisting.getYear(), timesheetExisting.getMonth(), 200L, List.of(8, 16), List.of(14, 15));
 

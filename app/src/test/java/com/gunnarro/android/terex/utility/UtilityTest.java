@@ -35,6 +35,8 @@ class UtilityTest {
         Assertions.assertEquals(25200, Utility.fromHoursToSeconds("7.00"));
         Assertions.assertEquals(25200, Utility.fromHoursToSeconds("07.00"));
         Assertions.assertEquals(0, Utility.fromHoursToSeconds("0.0"));
+        Assertions.assertNull(Utility.fromHoursToSeconds(""));
+        Assertions.assertNull(Utility.fromHoursToSeconds(null));
     }
 
     @Test

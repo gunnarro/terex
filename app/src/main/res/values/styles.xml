@@ -12,11 +12,21 @@
         <item name="android:textViewStyle">@style/RobotoTextViewStyle</item>
         <item name="android:buttonStyle">@style/RobotoButtonStyle</item>
         <item name="android:switchStyle">@style/RobotoSwitchStyle</item>
+        <!-- toolbar -->
+        <item name="toolbarStyle">@style/ToolBarStyle</item>
+    </style>
+
+    <style name="ToolBarStyle" parent="Widget.Material3.Toolbar">
+        <item name="android:fontFamily">sans-serif-small</item>
+        <!-- item name="android:background">@android:color/background_light</item -->
+        <item name="android:titleTextStyle">@style/TextAppearance.App.Subtitle1</item>
     </style>
 
     <style name="TextAppearance.App.Subtitle1" parent="TextAppearance.MaterialComponents.Subtitle1">
-        <item name="fontFamily">sans-serif-medium</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="fontFamily">sans-serif-small</item>
+        <item name="android:fontFamily">sans-serif-small</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/color_snackbar_text</item>
     </style>
 
     <style name="ShapeAppearance.App.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">

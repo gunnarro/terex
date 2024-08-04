@@ -1,8 +1,11 @@
 package com.gunnarro.android.terex.domain.dto;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+
 
 import org.junit.jupiter.api.Test;
 
@@ -40,6 +43,40 @@ class TimesheetEntryDtoTest {
         assertEquals("8.0", timesheetEntryDto.getWorkedHours());
         timesheetEntryDto.setWorkedSeconds((long) 450 * 60);
         assertEquals("7.5", timesheetEntryDto.getWorkedHours());
+    }
+
+    @Test
+    void timesheetEntryAreEqual() {
+        TimesheetEntryDto timesheetEntryDto1 = new TimesheetEntryDto();
+        timesheetEntryDto1.setId(1L);
+        timesheetEntryDto1.setTimesheetId(23L);
+        timesheetEntryDto1.setProjectId(100L);
+        timesheetEntryDto1.setWorkdayDate(LocalDate.of(2023, 9, 9));
+
+        TimesheetEntryDto timesheetEntryDto2 = new TimesheetEntryDto();
+        timesheetEntryDto2.setId(2L);
+        timesheetEntryDto2.setTimesheetId(23L);
+        timesheetEntryDto2.setProjectId(100L);
+        timesheetEntryDto2.setWorkdayDate(LocalDate.of(2023, 9, 9));
+
+        assertEquals(timesheetEntryDto1, timesheetEntryDto2);
+    }
+
+    @Test
+    void timesheetEntryNotEqual() {
+        TimesheetEntryDto timesheetEntryDto1 = new TimesheetEntryDto();
+        timesheetEntryDto1.setId(1L);
+        timesheetEntryDto1.setTimesheetId(23L);
+        timesheetEntryDto1.setProjectId(100L);
+        timesheetEntryDto1.setWorkdayDate(LocalDate.of(2023, 9, 9));
+
+        TimesheetEntryDto timesheetEntryDto2 = new TimesheetEntryDto();
+        timesheetEntryDto2.setId(2L);
+        timesheetEntryDto2.setTimesheetId(23L);
+        timesheetEntryDto2.setProjectId(100L);
+        timesheetEntryDto2.setWorkdayDate(LocalDate.of(2023, 9, 10));
+
+        assertNotEquals(timesheetEntryDto1, timesheetEntryDto2);
     }
 }
 

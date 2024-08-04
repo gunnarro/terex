@@ -172,7 +172,7 @@ class TimesheetServiceTest {
         timesheetEntryExisting.setStatus(TimesheetEntry.TimesheetEntryStatusEnum.CLOSED.name());
         TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(null, null, LocalDate.now());
 
-        when(timesheetRepositoryMock.getTimesheetEntry(timesheetEntry.getTimesheetId(), timesheetEntry.getWorkdayDate())).thenReturn(timesheetEntryExisting);
+        when(timesheetRepositoryMock.getTimesheetEntry(timesheetEntry.getTimesheetId(), timesheetEntry.getProjectId(), timesheetEntry.getWorkdayDate())).thenReturn(timesheetEntryExisting);
         InputValidationException ex = assertThrows(InputValidationException.class, () -> {
             timesheetService.saveTimesheetEntry(timesheetEntry);
         });
@@ -187,7 +187,7 @@ class TimesheetServiceTest {
         TimesheetEntry timesheetEntryAfterToDate = TimesheetEntry.createDefault(timesheet.getId(), -1L, LocalDate.of(2023, 12, 21));
 
         when(timesheetRepositoryMock.getTimesheet(anyLong())).thenReturn(timesheet);
-        when(timesheetRepositoryMock.getTimesheetEntry(timesheetEntryAfterToDate.getTimesheetId(), timesheetEntryAfterToDate.getWorkdayDate())).thenReturn(null);
+        when(timesheetRepositoryMock.getTimesheetEntry(timesheetEntryAfterToDate.getTimesheetId(), timesheetEntryAfterToDate.getProjectId(), timesheetEntryAfterToDate.getWorkdayDate())).thenReturn(null);
         InputValidationException ex = assertThrows(InputValidationException.class, () -> {
             timesheetService.saveTimesheetEntry(timesheetEntryAfterToDate);
         });
@@ -200,7 +200,7 @@ class TimesheetServiceTest {
         timesheet.setId(1L);
         TimesheetEntry timesheetEntryBeforeFromDate = TimesheetEntry.createDefault(timesheet.getId(), -1L, LocalDate.of(2023, 10, 2));
         when(timesheetRepositoryMock.getTimesheet(anyLong())).thenReturn(timesheet);
-        when(timesheetRepositoryMock.getTimesheetEntry(timesheetEntryBeforeFromDate.getTimesheetId(), timesheetEntryBeforeFromDate.getWorkdayDate())).thenReturn(null);
+        when(timesheetRepositoryMock.getTimesheetEntry(timesheetEntryBeforeFromDate.getTimesheetId(), timesheetEntryBeforeFromDate.getProjectId(), timesheetEntryBeforeFromDate.getWorkdayDate())).thenReturn(null);
         InputValidationException ex = assertThrows(InputValidationException.class, () -> {
             timesheetService.saveTimesheetEntry(timesheetEntryBeforeFromDate);
         });
@@ -224,9 +224,17 @@ class TimesheetServiceTest {
     @Test
     void getMostRecentTimeSheetEntry_no_emtries() {
         Timesheet timesheet = Timesheet.createDefault(100L, 10L, 2023, 11);
+        timesheet.setId(33L);
         when(timesheetRepositoryMock.getTimesheet(timesheet.getId())).thenReturn(timesheet);
         when(timesheetRepositoryMock.getMostRecentTimeSheetEntry(timesheet.getId())).thenReturn(null);
-        assertEquals("2023-11-01", timesheetService.getMostRecentTimeSheetEntry(timesheet.getId()).getWorkdayDate().toString());
+
+        assertEquals(2023, timesheetService.getMostRecentTimeSheetEntry(timesheet.getId()).getWorkdayYear());
+        assertEquals(11, timesheetService.getMostRecentTimeSheetEntry(timesheet.getId()).getWorkdayMonth());
+        assertEquals(27000, timesheetService.getMostRecentTimeSheetEntry(timesheet.getId()).getWorkedSeconds());
+        assertEquals("08:00", timesheetService.getMostRecentTimeSheetEntry(timesheet.getId()).getStartTime().toString());
+        assertEquals("REGULAR", timesheetService.getMostRecentTimeSheetEntry(timesheet.getId()).getType());
+        assertEquals(-1, timesheetService.getMostRecentTimeSheetEntry(timesheet.getId()).getProjectId());
+        assertEquals(33, timesheetService.getMostRecentTimeSheetEntry(timesheet.getId()).getTimesheetId());
     }
 
 }

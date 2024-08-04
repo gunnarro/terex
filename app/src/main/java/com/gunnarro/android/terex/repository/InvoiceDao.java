@@ -24,7 +24,7 @@ public interface InvoiceDao {
     @Query("SELECT * FROM invoice i WHERE i.id = :invoiceId")
     Invoice getInvoice(long invoiceId);
 
-    @Query("SELECT id FROM invoice")
+    @Query("SELECT id FROM invoice ORDER BY billing_period_start_date ASC")
     List<Long> getAllInvoiceIds();
 
     /**

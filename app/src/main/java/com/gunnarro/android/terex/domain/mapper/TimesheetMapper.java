@@ -96,7 +96,6 @@ public class TimesheetMapper {
         timesheetEntryDto.setStartTime(timesheetEntry.getStartTime());
         timesheetEntryDto.setEndTime(timesheetEntry.getEndTime());
         timesheetEntryDto.setWorkedSeconds(timesheetEntry.getWorkedSeconds());
-        timesheetEntryDto.setBreakSeconds(timesheetEntry.getBreakSeconds());
         timesheetEntryDto.setComments(timesheetEntry.getComments());
         return timesheetEntryDto;
     }
@@ -112,9 +111,7 @@ public class TimesheetMapper {
         timesheetEntry.setStatus(timesheetEntryDto.getStatus());
         timesheetEntry.setWorkdayDate(timesheetEntryDto.getWorkdayDate());
         timesheetEntry.setStartTime(timesheetEntryDto.getStartTime());
-        //timesheetEntry.setEndTime(timesheetEntryDto.getEndTime());
         timesheetEntry.setWorkedSeconds(timesheetEntryDto.getWorkedSeconds());
-        timesheetEntry.setBreakSeconds(timesheetEntryDto.getBreakSeconds());
         timesheetEntry.setComments(timesheetEntryDto.getComments());
         return timesheetEntry;
     }

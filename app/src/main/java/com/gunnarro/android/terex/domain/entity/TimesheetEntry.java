@@ -37,7 +37,7 @@ import lombok.Setter;
 @TypeConverters({LocalDateConverter.class, LocalTimeConverter.class, LocalDateTimeConverter.class})
 @Entity(tableName = "timesheet_entry",
         foreignKeys = {@ForeignKey(entity = Timesheet.class, parentColumns = "id", childColumns = "timesheet_id", onDelete = BaseEntity.CASCADE)},
-        indices = {@Index(value = {"timesheet_id", "workday_date"}, unique = true)})
+        indices = {@Index(value = {"timesheet_id", "project_id", "workday_date"}, unique = true)})
 public class TimesheetEntry extends BaseEntity {
 
     public enum TimesheetEntryTypeEnum {
@@ -67,6 +67,7 @@ public class TimesheetEntry extends BaseEntity {
     @ColumnInfo(name = "timesheet_id")
     private Long timesheetId;
 
+    @NonNull
     @ColumnInfo(name = "project_id")
     private Long projectId;
 
@@ -96,9 +97,6 @@ public class TimesheetEntry extends BaseEntity {
     @NonNull
     @ColumnInfo(name = "worked_seconds")
     private Long workedSeconds;
-
-    @ColumnInfo(name = "break_seconds")
-    private Integer breakSeconds;
 
     @ColumnInfo(name = "comments")
     private String comments;
@@ -172,14 +170,6 @@ public class TimesheetEntry extends BaseEntity {
             return Double.toString((double) workedSeconds / (60 * 60));
         }
         return null;
-    }
-
-    public Integer getBreakSeconds() {
-        return breakSeconds;
-    }
-
-    public void setBreakSeconds(Integer breakSeconds) {
-        this.breakSeconds = breakSeconds;
     }
 
     public Long getWorkedSeconds() {
@@ -270,7 +260,6 @@ public class TimesheetEntry extends BaseEntity {
         // add 7,5 hours
         timesheetEntry.setStartTime(startTime);
         timesheetEntry.setWorkedSeconds((Utility.DEFAULT_DAILY_WORKING_HOURS_IN_SECONDS));
-        timesheetEntry.setBreakSeconds((Utility.DEFAULT_DAILY_BREAK_IN_SECONDS));
         timesheetEntry.setComments(comments);
         return timesheetEntry;
     }
@@ -284,12 +273,12 @@ public class TimesheetEntry extends BaseEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TimesheetEntry that = (TimesheetEntry) o;
-        return timesheetId.equals(that.timesheetId) && workdayDate.equals(that.workdayDate);
+        return Objects.equals(timesheetId, that.timesheetId) && Objects.equals(projectId, that.projectId) && Objects.equals(workdayDate, that.workdayDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(timesheetId, workdayDate);
+        return Objects.hash(timesheetId, projectId, workdayDate);
     }
 
     @NonNull
@@ -307,7 +296,6 @@ public class TimesheetEntry extends BaseEntity {
         sb.append(", startTime=").append(startTime);
         sb.append(", endTime=").append(endTime);
         sb.append(", workedSeconds=").append(workedSeconds);
-        sb.append(", breakSeconds=").append(breakSeconds);
         sb.append(", status='").append(status);
         sb.append(", type=").append(type);
         sb.append(", comment='").append(comments);

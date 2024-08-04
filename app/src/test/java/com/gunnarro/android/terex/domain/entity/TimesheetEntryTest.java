@@ -24,7 +24,6 @@ class TimesheetEntryTest {
         assertEquals("2024-05-01", timesheetEntry.getWorkdayDate().toString());
         assertEquals("7.5", timesheetEntry.getWorkedHours());
         assertEquals(27000, timesheetEntry.getWorkedSeconds());
-        assertEquals(1800, timesheetEntry.getBreakSeconds());
         assertEquals("REGULAR", timesheetEntry.getType());
         assertEquals("OPEN", timesheetEntry.getStatus());
         assertEquals("08:00", timesheetEntry.getStartTime().toString());
@@ -44,7 +43,6 @@ class TimesheetEntryTest {
         assertEquals("2024-05-01", timesheetEntry.getWorkdayDate().toString());
         assertEquals("7.5", timesheetEntry.getWorkedHours());
         assertEquals(27000, timesheetEntry.getWorkedSeconds());
-        assertEquals(1800, timesheetEntry.getBreakSeconds());
         assertEquals("REGULAR", timesheetEntry.getType());
         assertEquals("OPEN", timesheetEntry.getStatus());
         assertEquals("08:00", timesheetEntry.getStartTime().toString());
@@ -65,7 +63,6 @@ class TimesheetEntryTest {
         assertEquals("2024-05-01", timesheetEntry.getWorkdayDate().toString());
         assertEquals("0.0", timesheetEntry.getWorkedHours());
         assertEquals(0, timesheetEntry.getWorkedSeconds());
-        assertNull(timesheetEntry.getBreakSeconds());
         assertEquals("SICK", timesheetEntry.getType());
         assertEquals("CLOSED", timesheetEntry.getStatus());
         assertNull(timesheetEntry.getStartTime());
@@ -97,11 +94,13 @@ class TimesheetEntryTest {
         TimesheetEntry timesheetEntry1 = new TimesheetEntry();
         timesheetEntry1.setId(1L);
         timesheetEntry1.setTimesheetId(23L);
+        timesheetEntry1.setProjectId(100L);
         timesheetEntry1.setWorkdayDate(LocalDate.of(2023, 9, 9));
 
         TimesheetEntry timesheetEntry2 = new TimesheetEntry();
         timesheetEntry2.setId(2L);
         timesheetEntry2.setTimesheetId(23L);
+        timesheetEntry2.setProjectId(100L);
         timesheetEntry2.setWorkdayDate(LocalDate.of(2023, 9, 9));
 
         assertEquals(timesheetEntry1, timesheetEntry2);
@@ -112,11 +111,13 @@ class TimesheetEntryTest {
         TimesheetEntry timesheetEntry1 = new TimesheetEntry();
         timesheetEntry1.setId(1L);
         timesheetEntry1.setTimesheetId(23L);
+        timesheetEntry1.setProjectId(100L);
         timesheetEntry1.setWorkdayDate(LocalDate.of(2023, 9, 9));
 
         TimesheetEntry timesheetEntry2 = new TimesheetEntry();
         timesheetEntry2.setId(2L);
         timesheetEntry2.setTimesheetId(23L);
+        timesheetEntry2.setProjectId(100L);
         timesheetEntry2.setWorkdayDate(LocalDate.of(2023, 9, 10));
 
         assertNotEquals(timesheetEntry1, timesheetEntry2);

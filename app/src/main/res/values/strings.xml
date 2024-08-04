@@ -171,7 +171,7 @@
     <string name="title_clients">Clients</string>
     <string name="title_projects">Projects</string>
     <string name="title_project_new">New Project</string>
-    <string name="info_user_account_saved_msg_format" >Saved user account, username=%s</string>
+    <string name="info_user_account_saved_msg_format">Saved user account, username=%s</string>
     <string name="lbl_user_account">User account</string>
     <string name="lbl_user_account_type">User account type</string>
     <string name="title_user_account">User account</string>
@@ -207,4 +207,7 @@
     <string name="integration_type_file">File</string>
     <string name="integration_type_web_service">WebService</string>
     <string name="integration_type_rest">REST</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_accounting">Accounting</string>
 </resources>

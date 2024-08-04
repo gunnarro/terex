@@ -93,6 +93,7 @@ public class AdminFragment extends BaseFragment {
         });
 
         view.findViewById(R.id.btn_settings).setOnClickListener(v -> {
+            navController.navigate(R.id.accounting_fragment);
         });
 
         Log.d(Utility.buildTag(getClass(), "onCreateView"), "");
@@ -172,7 +173,6 @@ public class AdminFragment extends BaseFragment {
                 timesheetEntry1.setType(TimesheetEntry.TimesheetEntryTypeEnum.REGULAR.name());
                 timesheetEntry1.setWorkdayDate(date);
                 timesheetEntry1.setStartTime(LocalTime.of(7, 0));
-                timesheetEntry1.setBreakSeconds(30 * 60);
                 timesheetEntry1.setWorkedSeconds((long) 420 * 60);
                 timesheetEntry1.setWorkdayWeek(date.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()));
                 timesheetEntryList.add(timesheetEntry1);

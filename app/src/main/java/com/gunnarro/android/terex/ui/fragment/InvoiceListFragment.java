@@ -33,11 +33,10 @@ public class InvoiceListFragment extends BaseFragment implements ListOnItemClick
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Get a new or existing ViewModel from the ViewModelProvider.
-        invoiceViewModel = new ViewModelProvider(this).get(InvoiceViewModel.class);
-
         // displays the back button on toolbar
         ((MainActivity)requireActivity()).showUpButton();
+        // Get a new or existing ViewModel from the ViewModelProvider.
+        invoiceViewModel = new ViewModelProvider(this).get(InvoiceViewModel.class);
 
         getParentFragmentManager().setFragmentResultListener(INVOICE_REQUEST_KEY, this, new FragmentResultListener() {
             @Override

@@ -85,7 +85,6 @@ class InvoiceServiceTest {
         TimesheetService timesheetService = new TimesheetService();
         List<TimesheetEntry> timesheetEntries = TestData.generateTimesheetEntries(2023, 2, 200L, List.of(), List.of());
         assertEquals(19, timesheetEntries.size());
-        assertEquals(30, timesheetEntries.get(0).getBreakSeconds());
         assertEquals("Open", timesheetEntries.get(0).getStatus());
         assertEquals(450, timesheetEntries.get(0).getWorkedSeconds());
         assertEquals("2023-02-01", timesheetEntries.get(0).getWorkdayDate().toString());

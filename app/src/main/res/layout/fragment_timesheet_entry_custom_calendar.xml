@@ -29,7 +29,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:selectionBetweenMonthsEnabled="true"
             app:selectionColor="@color/calendar_selected_date"
-            app:swipeEnabled="true"
+            app:swipeEnabled="false"
             app:todayLabelColor="@color/calendar_today_date"
             app:type="many_days_picker" />
 

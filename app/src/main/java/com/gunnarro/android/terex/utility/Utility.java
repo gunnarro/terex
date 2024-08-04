@@ -94,6 +94,9 @@ public class Utility {
      * The hours format is hh.m, i.e 7.5.
      */
     public static Long fromHoursToSeconds(String hours) {
+        if (hours == null || hours.isBlank()) {
+            return null;
+        }
         String tmpHours = hours;
         if (!hours.contains(".")) {
             // missing minutes, pad with .0

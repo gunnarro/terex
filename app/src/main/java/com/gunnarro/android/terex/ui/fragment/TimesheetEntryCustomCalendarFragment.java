@@ -62,10 +62,10 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_timesheet_entry_custom_calendar, container, false);
         CalendarView calendarView = view.findViewById(R.id.view_timesheet_custom_calendar);
         Long timesheetId = getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY);
-        // calendarView.setSelectedDates(selectedDates);
-        //@Deprecated("Use setCalendarDays(List<CalendarDay>) with isEnabled = false")
-        calendarView.setDisabledDays(createSelectedCalendarDates(timesheetId));
-        //calendarView.setCalendarDays(createSelectedDates(timesheetId));
+        List<CalendarDay> registreredCalendarDayList = createSelectedDates(timesheetId);
+        calendarView.setCalendarDays(registreredCalendarDayList);
+        List<Calendar> selectedDateList = registreredCalendarDayList.stream().map(CalendarDay::getCalendar).collect(Collectors.toList());
+        calendarView.setDisabledDays(selectedDateList);
         //calendarView.setSelectedDates(createSelectedCalendarDates(timesheetId));
         //  @Deprecated("Use setCalendarDays() instead")
         //  calendarView.setEvents(createEventDays(timesheetId));
@@ -155,11 +155,11 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
 
     private TimesheetEntry readTimesheetEntryFromBundle() {
         String timesheetEntryJson = getArguments() != null ? getArguments().getString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_KEY) : null;
-        Log.d("receives timesheet", String.format("%s", timesheetEntryJson));
+        Log.d("readTimesheetEntryFromBundle", String.format("received default timesheet entry json, %s", timesheetEntryJson));
         if (timesheetEntryJson != null && !timesheetEntryJson.isEmpty()) {
             try {
                 TimesheetEntry timesheetEntry = Utility.gsonMapper().fromJson(timesheetEntryJson, TimesheetEntry.class);
-                Log.d(Utility.buildTag(getClass(), "onFragmentResult"), String.format("timesheetEntryJson: %s", timesheetEntry));
+                Log.d(Utility.buildTag(getClass(), "readTimesheetEntryFromBundle"), String.format("last added timesheetEntry: %s", timesheetEntry));
                 return timesheetEntry;
             } catch (Exception e) {
                 Log.e("", e.toString());
@@ -194,7 +194,6 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
         return calendarDays;
     }
 
-
     private List<EventDay> createEventDays(Long timesheetId) {
         List<EventDay> eventDays = new ArrayList<>();
         List<TimesheetEntry> timesheetEntryList = timesheetService.getTimesheetEntryList(timesheetId);
@@ -213,7 +212,18 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
         timesheetEntryList.forEach(t -> {
             Calendar cal = Calendar.getInstance();
             cal.set(t.getWorkdayDate().getYear(), t.getWorkdayDate().getMonth().getValue() - 1, t.getWorkdayDate().getDayOfMonth());
-            selectedDates.add(new CalendarDay(cal));
+            CalendarDay calendarDay = new CalendarDay(cal);
+            if (t.isRegularWorkDay()) {
+                calendarDay.setLabelColor(R.color.timesheet_entry_type_regular);
+                calendarDay.setImageResource(R.drawable.timesheet_entry_regular_24);
+            } else if (t.isSickDay()) {
+                calendarDay.setLabelColor(R.color.timesheet_entry_type_sick);
+                calendarDay.setImageResource(R.drawable.timesheet_entry_sick_24);
+            } else if (t.isVacationDay()) {
+                calendarDay.setLabelColor(R.color.timesheet_entry_type_vacation);
+                calendarDay.setImageResource(R.drawable.timesheet_entry_vacation_24);
+            }
+            selectedDates.add(calendarDay);
             Log.d("TimesheetCustomCalendarFragment", "ADD SELECTED DATE: " + t.getWorkdayDate());
         });
         return selectedDates;
@@ -235,7 +245,7 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
         ((EditText) view.findViewById(R.id.timesheet_calendar_worked_hours)).setText(Utility.fromSecondsToHours(timesheetEntry.getWorkedSeconds()));
     }
 
-    private TimesheetEntry getTimesheetEntry(TimesheetEntry.TimesheetEntryTypeEnum type) {
+    private TimesheetEntry readTimesheetEntryInputData(TimesheetEntry.TimesheetEntryTypeEnum type) {
         TimesheetEntry timesheetEntry = readTimesheetEntryFromBundle();
         // need only update the work day date because we all other data is read from the last added timesheet.
         timesheetEntry.setType(type.name());
@@ -250,18 +260,20 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
             }
         }
 
-        TextInputEditText workedHoursInput =  requireView().findViewById(R.id.timesheet_calendar_worked_hours);
-        timesheetEntry.setWorkedSeconds(Utility.fromHoursToSeconds(workedHoursInput.getText().toString()));
+        TextInputEditText workedHoursInput = requireView().findViewById(R.id.timesheet_calendar_worked_hours);
+        Long sec = Utility.fromHoursToSeconds(workedHoursInput.getText().toString());
+        if (sec != null) {
+            timesheetEntry.setWorkedSeconds(sec);
+        }
 
         if (timesheetEntry.isVacationDay() || timesheetEntry.isSickDay()) {
             // set worked time to 0.
             timesheetEntry.setStartTime(null);
-            timesheetEntry.setWorkedSeconds(null);
-            timesheetEntry.setBreakSeconds(null);
+            timesheetEntry.setWorkedSeconds(0L);
         }
         return timesheetEntry;
     }
-
+/*
     private void returnToTimesheetEntryList(Long timesheetId) {
         Bundle bundle = new Bundle();
         bundle.putLong(TimesheetListFragment.TIMESHEET_ID_KEY, timesheetId);
@@ -271,17 +283,24 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
                 .setReorderingAllowed(true)
                 .commit();
     }
+*/
 
     /**
      * When button save is click and new timesheet entry event is sent in order to insert it into the database
      */
     private void addTimesheetEntry(TimesheetEntry.TimesheetEntryTypeEnum type) {
-        if (selectedWorkDayDate == null) {
-            showInfoDialog("Info", "You must select a workday date!");
-            return;
-        }
         try {
-            TimesheetEntry timesheetEntry = getTimesheetEntry(type);
+            TimesheetEntry timesheetEntry = readTimesheetEntryInputData(type);
+            if (timesheetEntry.getWorkdayDate() == null) {
+                showInfoDialog("Info", "You must select a workday date!");
+                return;
+            }
+            if (timesheetEntry.getWorkedSeconds() == null) {
+                showInfoDialog("info", "Worked hours must ba an integer from 0 to 24!");
+            }
+            if (timesheetEntry.getProjectId() == null) {
+                showInfoDialog("info", "You must select a project!");
+            }
             timesheetService.saveTimesheetEntry(timesheetEntry);
             showSnackbar(String.format("Added %s %s %s %s", timesheetEntry.getProjectId(), timesheetEntry.getWorkdayDate(), timesheetEntry.getType(), timesheetEntry.getWorkedHours()), R.color.color_snackbar_text_add);
         } catch (TerexApplicationException | InputValidationException e) {

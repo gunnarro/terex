@@ -311,4 +311,11 @@
             android:id="@+id/nav_from_admin_to_integration_list"
             app:destination="@id/integration_list_fragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/accounting_fragment"
+        android:name="com.gunnarro.android.terex.ui.fragment.AccountingFragment"
+        android:label="@string/title_accounting"
+        tools:layout="@layout/fragment_accounting">
+    </fragment>
 </navigation>

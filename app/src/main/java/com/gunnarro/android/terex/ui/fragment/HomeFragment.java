@@ -39,8 +39,8 @@ public class HomeFragment extends Fragment {
             View windowDecorView = requireActivity().getWindow().getDecorView();
             windowDecorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         }
-        // displays the back button on toolbar
-        ((MainActivity)requireActivity()).hideUpButton();
+        // Do not show the action bar in home fragment
+        ((MainActivity)requireActivity()).hideActionBar();
     }
 
     @Override

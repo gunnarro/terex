@@ -58,6 +58,8 @@ public class TimesheetEntryViewHolder extends RecyclerView.ViewHolder {
         timesheetEntryLine1LabelView.setText(timesheetEntryDto.getType());
         if (timesheetEntryDto.isRegularWorkDay()) {
             timesheetEntryLine1LabelView.setTextColor(timesheetEntryLine1StatusView.getResources().getColor(R.color.timesheet_entry_type_regular, null));
+            timesheetEntryLine2LabelView.setText(String.format("%s - %s", Utility.formatTime(timesheetEntryDto.getStartTime()), Utility.formatTime(timesheetEntryDto.getEndTime())));
+            timesheetEntryLine2ValueView.setText(timesheetEntryDto.getWorkedHours());
         } else if (timesheetEntryDto.isVacationDay()) {
             timesheetEntryLine1LabelView.setTextColor(timesheetEntryLine1StatusView.getResources().getColor(R.color.timesheet_entry_type_vacation, null));
         } else if (timesheetEntryDto.isSickDay()) {
@@ -65,7 +67,5 @@ public class TimesheetEntryViewHolder extends RecyclerView.ViewHolder {
         }
 
         timesheetEntryLine1ValueView.setText("");
-        timesheetEntryLine2LabelView.setText(String.format("%s - %s", Utility.formatTime(timesheetEntryDto.getStartTime()), Utility.formatTime(timesheetEntryDto.getEndTime())));
-        timesheetEntryLine2ValueView.setText(timesheetEntryDto.getWorkedHours());
     }
 }

@@ -199,9 +199,9 @@ public class TimesheetService {
 
     public List<TimesheetEntryDto> getTimesheetEntryListDto(Long timesheetId) {
         List<TimesheetEntryDto> timesheetEntryDtoList = new ArrayList<>();
-        timesheetRepository.getTimesheetEntryList(timesheetId);
         List<Long> timesheetEntryIdList = timesheetRepository.getTimesheetEntryIds(timesheetId);
         timesheetEntryIdList.forEach(id -> timesheetEntryDtoList.add(getTimesheetEntryDto(id)));
+        timesheetEntryDtoList.sort(Comparator.comparing(TimesheetEntryDto::getWorkdayDate));
         return timesheetEntryDtoList;
     }
 
@@ -217,7 +217,7 @@ public class TimesheetService {
     @Transaction
     public Long saveTimesheetEntry(@NotNull final TimesheetEntry timesheetEntry) {
         try {
-            TimesheetEntry timesheetEntryExisting = timesheetRepository.getTimesheetEntry(timesheetEntry.getTimesheetId(), timesheetEntry.getWorkdayDate());
+            TimesheetEntry timesheetEntryExisting = timesheetRepository.getTimesheetEntry(timesheetEntry.getTimesheetId(), timesheetEntry.getProjectId(), timesheetEntry.getWorkdayDate());
             // first of all, check status
             if (timesheetEntryExisting != null && timesheetEntryExisting.isClosed()) {
                 throw new InputValidationException(String.format("timesheet entry have status closed, no changes is allowed. workday date=%s, status=%s", timesheetEntryExisting.getWorkdayDate(), timesheetEntryExisting.getStatus()), "40040", null);
@@ -243,6 +243,7 @@ public class TimesheetService {
             Log.d("TimesheetRepository.saveTimesheetEntry", String.format("insert new timesheet entry, timesheetId=%s, timesheetEntryId=%s, workDate=%s", timesheetEntry.getTimesheetId(), id, timesheetEntry.getWorkdayDate()));
             return id;
         } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
             // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();
             throw new TerexApplicationException("Error saving timesheet entry!", e.getMessage(), e.getCause());
@@ -277,6 +278,8 @@ public class TimesheetService {
         }
         // clear the id, so this will be taken as a new timesheet entry, the created and last modified date will the be overridden upon save.
         timesheetEntry.setId(null);
+        timesheetEntry.setCreatedDate(null);
+        timesheetEntry.setLastModifiedDate(null);
         return timesheetEntry;
     }
 

@@ -63,6 +63,9 @@ public interface TimesheetDao {
     @Query("SELECT status FROM timesheet WHERE id = :timesheetId")
     String getTimesheetStatus(Long timesheetId);
 
+    @Query("SELECT id FROM timesheet_entry where timesheet_id = :timesheetId ORDER BY id ASC")
+    List<Long> getTimesheetEntryIds(Long timesheetId);
+
     /**
      * @return number of registered worked days
      */
@@ -121,7 +124,4 @@ public interface TimesheetDao {
      */
     @Delete
     void delete(Timesheet timesheet);
-
-    @Query("SELECT id FROM timesheet_entry where timesheet_id = :timesheetId ORDER BY id asc")
-    List<Long> getTimesheetEntryIds(Long timesheetId);
 }

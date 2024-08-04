@@ -209,9 +209,6 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
         EditText workedHoursView = view.findViewById(R.id.timesheet_entry_worked_hours);
         workedHoursView.setText(Utility.fromSecondsToHours(timesheetEntryDto.getWorkedSeconds()));
 
-        EditText breakView = view.findViewById(R.id.timesheet_entry_break);
-        breakView.setText(String.format("%s", timesheetEntryDto.getBreakSeconds() / 60));
-
         EditText commentView = view.findViewById(R.id.timesheet_entry_comment);
         commentView.setText(timesheetEntryDto.getComments());
 
@@ -324,9 +321,6 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
 
         TextView workedHoursView = requireView().findViewById(R.id.timesheet_entry_worked_hours);
         timesheetEntryDto.setWorkedSeconds(Utility.fromHoursToSeconds(workedHoursView.getText().toString()));
-
-        TextView breakView = requireView().findViewById(R.id.timesheet_entry_break);
-        timesheetEntryDto.setBreakSeconds(Integer.parseInt(breakView.getText().toString()) * 60);
 
         TextView commentView = requireView().findViewById(R.id.timesheet_entry_comment);
         timesheetEntryDto.setComments(commentView.getText().toString());

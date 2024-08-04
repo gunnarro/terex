@@ -43,7 +43,7 @@
     <color name="timesheet_entry_status_open">#000000</color>
     <color name="timesheet_entry_status_closed">#034b03</color>
 
-    <color name="timesheet_entry_type_regular">#000000</color>
+    <color name="timesheet_entry_type_regular">#034b03</color>
     <color name="timesheet_entry_type_vacation">#0100f6</color>
     <color name="timesheet_entry_type_sick">#fa2a12</color>
 
