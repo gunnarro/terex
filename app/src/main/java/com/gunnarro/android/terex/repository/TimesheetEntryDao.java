@@ -23,7 +23,10 @@ public interface TimesheetEntryDao {
     @Query("SELECT * FROM timesheet_entry WHERE id = :id")
     TimesheetEntry getById(long id);
 
-    @Query("SELECT * FROM timesheet_entry WHERE timesheet_id = :timesheetId ORDER BY workday_date ASC LIMIT 1")
+    /**
+     * The most recent will always have the highest id
+     */
+    @Query("SELECT * FROM timesheet_entry WHERE timesheet_id = :timesheetId ORDER BY id DESC LIMIT 1")
     TimesheetEntry getMostRecent(Long timesheetId);
 
     @Query("SELECT * FROM timesheet_entry WHERE id = :timesheetEntryId")

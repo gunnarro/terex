@@ -154,6 +154,9 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
     }
 
     private TimesheetEntry readTimesheetEntryFromBundle() {
+        Long timesheetId = getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY);
+        return timesheetService.getMostRecentTimeSheetEntry(timesheetId);
+        /*
         String timesheetEntryJson = getArguments() != null ? getArguments().getString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_KEY) : null;
         Log.d("readTimesheetEntryFromBundle", String.format("received default timesheet entry json, %s", timesheetEntryJson));
         if (timesheetEntryJson != null && !timesheetEntryJson.isEmpty()) {
@@ -169,6 +172,7 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
             // no recent timesheet entry found, should not happen
             throw new TerexApplicationException("Timesheet entry not found!", "55023", null);
         }
+         */
     }
 
     private List<CalendarDay> createCalendarDays(Long timesheetId) {
@@ -273,17 +277,6 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
         }
         return timesheetEntry;
     }
-/*
-    private void returnToTimesheetEntryList(Long timesheetId) {
-        Bundle bundle = new Bundle();
-        bundle.putLong(TimesheetListFragment.TIMESHEET_ID_KEY, timesheetId);
-        requireActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.nav_content_frame, TimesheetEntryListFragment.class, bundle)
-                .setReorderingAllowed(true)
-                .commit();
-    }
-*/
 
     /**
      * When button save is click and new timesheet entry event is sent in order to insert it into the database
