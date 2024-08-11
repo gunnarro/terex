@@ -2,6 +2,7 @@ package com.gunnarro.android.terex.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -228,13 +229,19 @@ class TimesheetServiceTest {
         when(timesheetRepositoryMock.getTimesheet(timesheet.getId())).thenReturn(timesheet);
         when(timesheetRepositoryMock.getMostRecentTimeSheetEntry(timesheet.getId())).thenReturn(null);
 
-        assertEquals(2023, timesheetService.getMostRecentTimeSheetEntry(timesheet.getId()).getWorkdayYear());
-        assertEquals(11, timesheetService.getMostRecentTimeSheetEntry(timesheet.getId()).getWorkdayMonth());
-        assertEquals(27000, timesheetService.getMostRecentTimeSheetEntry(timesheet.getId()).getWorkedSeconds());
-        assertEquals("08:00", timesheetService.getMostRecentTimeSheetEntry(timesheet.getId()).getStartTime().toString());
-        assertEquals("REGULAR", timesheetService.getMostRecentTimeSheetEntry(timesheet.getId()).getType());
-        assertEquals(-1, timesheetService.getMostRecentTimeSheetEntry(timesheet.getId()).getProjectId());
-        assertEquals(33, timesheetService.getMostRecentTimeSheetEntry(timesheet.getId()).getTimesheetId());
+        TimesheetEntry mostRecentTimesheetEntry = timesheetService.getMostRecentTimeSheetEntry(timesheet.getId());
+        assertNull(mostRecentTimesheetEntry.getId());
+        assertNull(mostRecentTimesheetEntry.getWorkdayDate());
+        assertNull(mostRecentTimesheetEntry.getCreatedDate());
+        assertNull(mostRecentTimesheetEntry.getLastModifiedDate());
+        assertNull(mostRecentTimesheetEntry.getWorkdayYear());
+        assertNull(mostRecentTimesheetEntry.getWorkdayMonth());
+        assertNull(mostRecentTimesheetEntry.getWorkdayWeek());
+        assertEquals(27000, mostRecentTimesheetEntry.getWorkedSeconds());
+        assertEquals("08:00", mostRecentTimesheetEntry.getStartTime().toString());
+        assertEquals("REGULAR", mostRecentTimesheetEntry.getType());
+        assertEquals(-1, mostRecentTimesheetEntry.getProjectId());
+        assertEquals(33, mostRecentTimesheetEntry.getTimesheetId());
     }
 
 }

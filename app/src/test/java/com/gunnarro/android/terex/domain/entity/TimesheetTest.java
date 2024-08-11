@@ -3,6 +3,7 @@ package com.gunnarro.android.terex.domain.entity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -21,11 +22,10 @@ class TimesheetTest {
         assertEquals("2023-11-30", timeSheet.getToDate().toString());
         assertNull(timeSheet.getCreatedDate());
         assertNull(timeSheet.getLastModifiedDate());
-
-
-        assertNull(timeSheet.getDescription());
-        assertEquals("Timesheet{userId=100, clientId=10, year=2023, month=11, status=ACTIVE}", timeSheet.toString());
-        assertEquals(Timesheet.TimesheetStatusEnum.ACTIVE.name(), timeSheet.getStatus());
+        assertTrue(timeSheet.isNew());
+        assertTrue(timeSheet.isActive());
+        assertFalse(timeSheet.isCompleted());
+        assertFalse(timeSheet.isBilled());
     }
 
     @Test

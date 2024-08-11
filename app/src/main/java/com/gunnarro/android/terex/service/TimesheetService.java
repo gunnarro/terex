@@ -278,6 +278,7 @@ public class TimesheetService {
         // clear the id, so this will be taken as a new timesheet entry, the created and last modified date will the be overridden upon save.
         timesheetEntry.setId(null);
         timesheetEntry.setWorkdayDate(null);
+        timesheetEntry.setWorkdayWeek(null);
         timesheetEntry.setCreatedDate(null);
         timesheetEntry.setLastModifiedDate(null);
         Log.d("getMostRecentTimeSheetEntry", String.format("timesheetId=%s, most recent:%s ", timesheetId, timesheetEntry));
