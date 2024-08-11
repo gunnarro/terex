@@ -12,8 +12,8 @@ buildscript {
 }
 
 plugins {
-    id 'com.android.application' version '8.4.2' apply false
-    id 'com.android.library' version '8.4.2' apply false
+    id 'com.android.application' version '8.5.0' apply false
+    id 'com.android.library' version '8.5.0' apply false
     id 'androidx.navigation.safeargs' version '2.7.7' apply false
     id "org.sonarqube" version "4.4.1.3373"
     id 'java-library'
@@ -90,12 +90,12 @@ ext {
     androidx_preference = '1.2.1'
     androidx_lifecycle_livedata_ktx = '2.8.4'
     androidx_lifecycle_viewmodel_ktx = '2.8.4'
-    androidx_annotation = '1.8.1'
+    androidx_annotation = '1.8.2'
     androidx_navigation_fragment = '2.7.7'
     androidx_navigation_ui = '2.7.7'
     // google
     google_android_material = '1.12.0'
-    google_dagger_hilt_android = '2.51.1'
+    google_dagger_hilt_android = '2.52'
     // json
     google_gson = '2.11.0'
     // for password hashing
@@ -121,7 +121,7 @@ ext {
     itextpdf_html2pdf = "5.0.2"
     fasterxml_jackson = "2.14.3"
     projectlombok_lombok = '1.18.34'
-    kotlin_kotlin_bom = '2.0.0'
+    kotlin_kotlin_bom = '2.0.10'
     reactivex_rxjava2_rxjava = '2.2.21'
     reactivex_rxjava2_rxandroid = "2.1.1"
     material_calendar_view = '1.9.2'
