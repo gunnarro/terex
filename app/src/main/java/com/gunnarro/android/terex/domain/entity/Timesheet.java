@@ -218,7 +218,8 @@ public class Timesheet extends BaseEntity {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Timesheet{");
-        sb.append("userId=").append(userId);
+        sb.append("id=").append(getId());
+        sb.append(", userId=").append(userId);
         sb.append(", clientId=").append(clientId);
         sb.append(", year=").append(year);
         sb.append(", month=").append(month);

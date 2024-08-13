@@ -15,9 +15,7 @@ import com.gunnarro.android.terex.repository.TimesheetRepository;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.rules.DisableOnDebug;
 
 import java.time.LocalDate;
 
@@ -68,16 +66,29 @@ public class TimesheetServiceTest extends IntegrationTestSetup {
         assertNull(timesheetService.getTimesheetDto(23L));
     }
 
-    @Ignore // no need for this, simply update timesheet
     @Test
-    public void newTimesheet_already_exist() {
+    public void newTimesheet_already_exist_update() {
         Timesheet newTimesheet = Timesheet.createDefault(100L, 200L, 2023, 10);
         newTimesheet.setDescription("Times used to develop android timesheet app");
+        assertNotNull(timesheetService.saveTimesheet(newTimesheet));
+        assertNotNull(timesheetService.saveTimesheet(Timesheet.createDefault(newTimesheet.getUserId(), newTimesheet.getClientId(), newTimesheet.getYear(), newTimesheet.getMonth())));
+    }
+
+    @Test
+    public void timesheet_is_billed() {
+        Timesheet newTimesheet = Timesheet.createDefault(100L, 200L, 2023, 10);
+        newTimesheet.setDescription("Times used to develop android timesheet app");
+        Long id = timesheetService.saveTimesheet(newTimesheet);
+        assertNotNull(id);
+        Timesheet timesheet = timesheetService.getTimesheet(id);
+        timesheet.setStatus(Timesheet.TimesheetStatusEnum.BILLED.name());
+        assertEquals(id, timesheetService.saveTimesheet(timesheet));
+
+        // not allowed to change a timesheet in billed status
         InputValidationException ex = assertThrows(InputValidationException.class, () -> {
-            timesheetService.saveTimesheet(newTimesheet);
-            timesheetService.saveTimesheet(Timesheet.createDefault(newTimesheet.getUserId(), newTimesheet.getClientId(), newTimesheet.getYear(), newTimesheet.getMonth()));
+            timesheetService.saveTimesheet(timesheet);
         });
-        assertEquals("Timesheet already exist! Timesheet{userId=100, clientId=200, year=2023, month=10, status=ACTIVE}", ex.getMessage());
+        assertTrue(ex.getMessage().toString().startsWith("Timesheet is already billed, no changes is allowed."));
     }
 
     @Test
@@ -95,21 +106,41 @@ public class TimesheetServiceTest extends IntegrationTestSetup {
     }
 
     @Test
-    public void getMostRecentTimesheetEntry() {
+    public void getMostRecentTimesheetEntry_add_entry_not_in_date_range() {
         Timesheet newTimesheet = Timesheet.createDefault(10011L, 200L, 2023, 9);
         Long timesheetId = timesheetService.saveTimesheet(newTimesheet);
         TimesheetEntry timesheetEntry = timesheetService.getMostRecentTimeSheetEntry(timesheetId);
-        assertEquals(newTimesheet.getFromDate().toString(), timesheetEntry.getWorkdayDate().toString());
+        assertNull(timesheetEntry.getWorkdayDate());
+        timesheetEntry.setWorkdayDate(LocalDate.of(2024, 8, 13));
+        InputValidationException ex = assertThrows(InputValidationException.class, () -> {
+            timesheetService.saveTimesheetEntry(timesheetEntry);
+        });
+        assertTrue(ex.getMessage().toString().startsWith("timesheet entry work date not in the to and from date range of the timesheet!"));
+    }
+
+    @Test
+    public void getMostRecentTimesheetEntry_no_entries() {
+        Timesheet newTimesheet = Timesheet.createDefault(10011L, 200L, 2023, 9);
+        Long timesheetId = timesheetService.saveTimesheet(newTimesheet);
+        TimesheetEntry timesheetEntry = timesheetService.getMostRecentTimeSheetEntry(timesheetId);
+        assertNull(timesheetEntry.getWorkdayDate());
+        timesheetEntry.setWorkdayDate(LocalDate.of(2023, 9, 1));
 
         Long timesheetEntryId = timesheetService.saveTimesheetEntry(timesheetEntry);
+
         TimesheetEntry newTimesheetEntry = timesheetService.getTimesheetEntry(timesheetEntryId);
         assertEquals("2023-09-01", newTimesheetEntry.getWorkdayDate().toString());
         assertEquals(timesheetEntryId, newTimesheetEntry.getId());
         assertEquals(timesheetId, newTimesheetEntry.getTimesheetId());
 
         TimesheetEntry mostRecentTimesheetEntry = timesheetService.getMostRecentTimeSheetEntry(timesheetId);
-        assertEquals("2023-09-01", mostRecentTimesheetEntry.getWorkdayDate().toString());
+        assertEquals(null, mostRecentTimesheetEntry.getWorkdayDate());
         assertNull(mostRecentTimesheetEntry.getId());
+        assertNotNull(mostRecentTimesheetEntry.getTimesheetId());
+        assertNotNull(mostRecentTimesheetEntry.getProjectId());
+        assertNotNull(mostRecentTimesheetEntry.getStatus());
+        assertNotNull(mostRecentTimesheetEntry.getStartTime());
+        assertNotNull(mostRecentTimesheetEntry.getWorkedSeconds());
         assertEquals(timesheetId, mostRecentTimesheetEntry.getTimesheetId());
     }
 }

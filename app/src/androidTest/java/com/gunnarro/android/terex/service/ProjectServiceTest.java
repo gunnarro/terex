@@ -38,7 +38,7 @@ public class ProjectServiceTest extends IntegrationTestSetup {
 
     @Test
     public void saveProject() {
-        assertNull(projectService.getProject(1L));
+        assertNull(projectService.getProject(1000L));
 
         ProjectDto newProjectDto = new ProjectDto();
         newProjectDto.setClientDto(new ClientDto(200L));
