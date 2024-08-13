@@ -88,7 +88,7 @@ class TimesheetServiceTest {
             timesheetService.saveTimesheet(timesheetUpdated);
         });
 
-        Assertions.assertEquals("Timesheet is already billed, no changes is allowed. Timesheet{userId=100, clientId=10, year=2023, month=11, status=BILLED}", ex.getMessage());
+        Assertions.assertEquals("Timesheet is already billed, no changes is allowed. Timesheet{id=23, userId=100, clientId=10, year=2023, month=11, status=BILLED}", ex.getMessage());
     }
 
     @Test
