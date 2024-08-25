@@ -40,7 +40,6 @@ public class Integration extends BaseEntity {
     private String schemaUrl;
     @ColumnInfo(name = "authentication_type")
     private String authenticationType;
-    @NonNull
     @ColumnInfo(name = "status")
     private String status;
     @ColumnInfo(name = "user_name")

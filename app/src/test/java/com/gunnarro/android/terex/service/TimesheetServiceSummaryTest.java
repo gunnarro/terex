@@ -171,7 +171,7 @@ class TimesheetServiceSummaryTest {
         // Set timesheet ready for billing
         timesheetExisting.setStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
         // create regular time sheet entry, i.e, worked 7.5 hours and 30 min break
-        TimesheetEntry regularTimesheetEntry = TimesheetEntry.createDefault(timesheetExisting.getId(),-1L, LocalDate.of(month.getYear(), month.getMonthValue(), 21));
+        TimesheetEntry regularTimesheetEntry = TimesheetEntry.createDefault(timesheetExisting.getId(), -1L, LocalDate.of(month.getYear(), month.getMonthValue(), 21));
         regularTimesheetEntry.setWorkedSeconds((long) 450 * 60);
 
         List<TimesheetEntry> timesheetEntryList = TestData.generateTimesheetEntries(timesheetExisting.getYear(), timesheetExisting.getMonth(), 200L, List.of(8, 16), List.of(14, 15));
@@ -202,7 +202,6 @@ class TimesheetServiceSummaryTest {
         // week 5
         assertTimesheetSummaryDto(timesheetSummaryDtoList.get(4), month, 23, 48, "WEEK", 4, 0, 0, "30.0", "37500.00");
     }
-
 
     private static void assertTimesheetSummaryDto(TimesheetSummaryDto timesheetSummaryDto, LocalDate month, long timesheetId, int weekInYear, String period, int workedDays, int vacationDays, int sickDays, String workedHours, String billedAmount) {
         assertEquals(timesheetId, timesheetSummaryDto.getTimesheetId());

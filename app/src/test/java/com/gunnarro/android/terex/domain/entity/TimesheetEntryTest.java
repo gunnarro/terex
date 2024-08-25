@@ -74,10 +74,28 @@ class TimesheetEntryTest {
     }
 
     @Test
-    void type() {
+    void typeRegular() {
         TimesheetEntry timeSheetEntry = TimesheetEntry.createDefault(23L, 11L, LocalDate.of(2023, 12, 2));
         assertTrue(timeSheetEntry.isRegularWorkDay());
+        assertFalse(timeSheetEntry.isSickDay());
+        assertFalse(timeSheetEntry.isVacationDay());
+    }
+
+    @Test
+    void typeVacation() {
+        TimesheetEntry timeSheetEntry = TimesheetEntry.createDefault(23L, 11L, LocalDate.of(2023, 12, 2));
         timeSheetEntry.setType(TimesheetEntry.TimesheetEntryTypeEnum.VACATION.name());
+        assertTrue(timeSheetEntry.isVacationDay());
+        assertFalse(timeSheetEntry.isRegularWorkDay());
+        assertFalse(timeSheetEntry.isSickDay());
+    }
+
+    @Test
+    void typeSick() {
+        TimesheetEntry timeSheetEntry = TimesheetEntry.createDefault(23L, 11L, LocalDate.of(2023, 12, 2));
+        timeSheetEntry.setType(TimesheetEntry.TimesheetEntryTypeEnum.SICK.name());
+        assertTrue(timeSheetEntry.isSickDay());
+        assertFalse(timeSheetEntry.isVacationDay());
         assertFalse(timeSheetEntry.isRegularWorkDay());
     }
 

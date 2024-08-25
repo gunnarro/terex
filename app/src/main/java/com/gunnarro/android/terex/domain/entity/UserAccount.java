@@ -43,7 +43,6 @@ public class UserAccount extends BaseEntity {
     @ColumnInfo(name = "account_type")
     private String userAccountType;
 
-    @NonNull
     @ColumnInfo(name = "status")
     private String status;
 
@@ -80,7 +79,7 @@ public class UserAccount extends BaseEntity {
         this.userAccountType = userAccountType;
     }
 
-    public @NonNull String getStatus() {
+    public String getStatus() {
         return status;
     }
 

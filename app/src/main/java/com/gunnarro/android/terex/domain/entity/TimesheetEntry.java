@@ -56,8 +56,7 @@ public class TimesheetEntry extends BaseEntity {
      * Status can only be OPEN and CLOSED. When CLOSED is not possible to change or delete the entry.
      * The status is automatically set equal to CLOSED when a timesheet have been completed and billed.
      */
-    @NonNull
-    @ColumnInfo(name = "status", defaultValue = "OPEN")
+    @ColumnInfo(name = "status")
     private String status;
 
     /**
@@ -183,12 +182,11 @@ public class TimesheetEntry extends BaseEntity {
     /**
      * Valid statues: OPEN, BILLED
      */
-    @NonNull
     public String getStatus() {
         return status;
     }
 
-    public void setStatus(@NonNull String status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -218,23 +216,23 @@ public class TimesheetEntry extends BaseEntity {
     }
 
     public boolean isRegularWorkDay() {
-        return type.equals(TimesheetEntryTypeEnum.REGULAR.name());
+        return TimesheetEntryTypeEnum.REGULAR.name().equals(type);
     }
 
     public boolean isVacationDay() {
-        return type.equals(TimesheetEntryTypeEnum.VACATION.name());
+        return TimesheetEntryTypeEnum.VACATION.name().equals(type);
     }
 
     public boolean isSickDay() {
-        return type.equals(TimesheetEntryTypeEnum.SICK.name());
+        return TimesheetEntryTypeEnum.SICK.name().equals(type);
     }
 
     public boolean isOpen() {
-        return status.equals(TimesheetEntryStatusEnum.OPEN.name());
+        return TimesheetEntryStatusEnum.OPEN.name().equals(status);
     }
 
     public boolean isClosed() {
-        return status.equals(TimesheetEntryStatusEnum.CLOSED.name());
+        return TimesheetEntryStatusEnum.CLOSED.name().equals(status);
     }
 
     public static TimesheetEntry createNotWorked(@NotNull Long timesheetId, Long projectId, @NotNull LocalDate workDayDate, String type) {

@@ -148,12 +148,11 @@ public class Timesheet extends BaseEntity {
         this.toDate = toDate;
     }
 
-    @NotNull
     public String getStatus() {
         return status;
     }
 
-    public void setStatus(@NotNull String status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 

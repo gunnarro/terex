@@ -117,12 +117,10 @@ public class TestData {
         if (sickDates.contains(timesheetEntry.getWorkdayDate().getDayOfMonth())) {
             timesheetEntry.setType(TimesheetEntry.TimesheetEntryTypeEnum.SICK.name());
             timesheetEntry.setStartTime(null);
-          //  timesheetEntry.setEndTime(null);
             timesheetEntry.setWorkedSeconds(null);
         } else if (vacationDates.contains(timesheetEntry.getWorkdayDate().getDayOfMonth())) {
             timesheetEntry.setType(TimesheetEntry.TimesheetEntryTypeEnum.VACATION.name());
             timesheetEntry.setStartTime(null);
-            //timesheetEntry.setEndTime(null);
             timesheetEntry.setWorkedSeconds(null);
         }
         return timesheetEntry;

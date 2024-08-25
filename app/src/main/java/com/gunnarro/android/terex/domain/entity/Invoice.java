@@ -72,7 +72,6 @@ public class Invoice extends BaseEntity {
     private Long issuerId;
     @ColumnInfo(name = "reference")
     private String reference;
-    @NotNull
     @ColumnInfo(name = "invoice_status", defaultValue = "OPEN")
     private String status;
     @NotNull
