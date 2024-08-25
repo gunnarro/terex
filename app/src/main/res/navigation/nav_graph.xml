@@ -40,6 +40,11 @@
         <action
             android:id="@+id/nav_from_home_to_settings"
             app:destination="@id/client_list_fragment" />
+
+        <action
+            android:id="@+id/nav_from_home_to_user_account"
+            app:destination="@id/user_account_new_fragment" />
+
         <action
             android:id="@+id/nav_from_home_to_admin"
             app:destination="@id/admin_fragment" />

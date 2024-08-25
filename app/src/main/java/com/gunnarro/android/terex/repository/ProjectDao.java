@@ -14,13 +14,13 @@ import java.util.List;
 @Dao
 public interface ProjectDao {
 
-    @Query("SELECT * FROM project p WHERE p.id = :projectId")
-    Project getProject(long projectId);
+    @Query("SELECT * FROM project WHERE id = :projectId")
+    Project getProject(Long projectId);
 
-    @Query("select * from project p where p.client_id = :clientId and p.status IN(:statuses) order by name")
+    @Query("select * from project where client_id = :clientId and status IN(:statuses) order by name")
     List<Project> getProjects(Long clientId, List<String> statuses);
 
-    @Query("select * from project p where p.client_id = :clientId and p.name = :projectName order by name")
+    @Query("select * from project where client_id = :clientId and name = :projectName order by name")
     Project findProject(Long clientId, String projectName);
 
     @Query("SELECT client.name FROM project"
@@ -40,14 +40,14 @@ public interface ProjectDao {
     Integer getProjectHourlyRate(Long timesheetId);
 
     /**
-     * @param project project to be inserted. Abort if conflict, i.e. silently drop the insert
+     * @param project project to be inserted. Abort if conflict, i.e. silently drop the insert.
      * @return the id of the inserted invoice row
      */
     @Insert
     long insert(Project project);
 
     /**
-     * @param project updated project. Replace on conflict, i.e, replace old data with the new one
+     * @param project updated project. Replace on conflict, i.e, replace old data with the new one.
      * @return number of updated row(S), should only be one for this method.
      */
     @Update(onConflict = OnConflictStrategy.REPLACE)

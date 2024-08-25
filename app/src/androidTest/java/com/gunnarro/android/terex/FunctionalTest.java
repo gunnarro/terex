@@ -64,6 +64,7 @@ public class FunctionalTest extends IntegrationTestSetup {
         userAccountDto.setOrganizationDto(TestData.createOrganizationDto(null, "gunnarro test", "23232323"));
         Long userAccountId = userAccountService.saveUserAccount(userAccountDto);
         assertNotNull(userAccountId);
+
         // create client
         ClientDto clientDto = TestData.createClientDto(null, "client-company-name");
         clientDto.setOrganizationDto(TestData.createOrganizationDto(null, "gunnarro as", "828777999"));
@@ -92,6 +93,10 @@ public class FunctionalTest extends IntegrationTestSetup {
         assertTrue(sickTimesheetEntryId > 0);
         Long vacationTimesheetEntryId = timesheetService.saveTimesheetEntry(TimesheetEntry.createNotWorked(timesheetId, testProjectId, LocalDate.of(2024, 1, 8), TimesheetEntry.TimesheetEntryTypeEnum.VACATION.name()));
         assertTrue(vacationTimesheetEntryId > 0);
+
+        // check number of timesheet entries
+        assertEquals(1, timesheetService.getTimesheetDtoList(2024).size());
+        assertEquals(2, timesheetService.getTimesheetDto(1L).getClientDto().getProjectList().size());
 
         // set timesheet ready for billing
         Timesheet timesheet = timesheetService.getTimesheet(timesheetId);

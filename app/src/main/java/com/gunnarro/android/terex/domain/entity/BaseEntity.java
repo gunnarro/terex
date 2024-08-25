@@ -62,6 +62,12 @@ public abstract class BaseEntity {
         this.lastModifiedDate = lastModifiedDate;
     }
 
+    /**
+     * The entity is new if the id is equal to null
+     */
+    public boolean isNew() {
+        return id == null;
+    }
 
     @NonNull
     @Override

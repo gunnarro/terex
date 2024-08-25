@@ -59,13 +59,13 @@ import java.util.concurrent.Executors;
         InvoiceAttachment.class,
         Client.class,
         Integration.class,
-}, version = AppDatabase.DB_SCHEMA_VERSION, views = {TimesheetView.class}, exportSchema = true)
+}, version = AppDatabase.DB_SCHEMA_VERSION, views = {TimesheetView.class}, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
     // Increase the version with one if the database schema has changed.
-    public static final int DB_SCHEMA_VERSION = 6;
+    public static final int DB_SCHEMA_VERSION = 3;
     // marking the instance as volatile to ensure atomic access to the variable
     // The Java volatile keyword guarantees visibility of changes to variables across threads
-    private static AppDatabase INSTANCE;
+    private volatile static AppDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 10;
     public static final ExecutorService databaseExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
@@ -79,10 +79,10 @@ public abstract class AppDatabase extends RoomDatabase {
                             context.getApplicationContext(),
                             AppDatabase.class, "terex_database")
                     // use this during development
-                    //.fallbackToDestructiveMigration()
-                    //.allowMainThreadQueries()
-                    //.createFromAsset("database/terex_init.db")
-                    .addMigrations(getMigration(context, DB_SCHEMA_VERSION - 1, DB_SCHEMA_VERSION))
+                    .fallbackToDestructiveMigration()
+                    .allowMainThreadQueries()
+                    //.createFromAsset("database/terex_init_data_gunnarro.db")
+                    //.addMigrations(getMigration(context, DB_SCHEMA_VERSION - 1, DB_SCHEMA_VERSION))
                    // .addCallback(roomCallback)
                     .build();
         }

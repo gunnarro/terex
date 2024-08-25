@@ -90,7 +90,7 @@ class TimesheetEntryTest {
     }
 
     @Test
-    void timesheetEntryAreEqual() {
+    void areEqual() {
         TimesheetEntry timesheetEntry1 = new TimesheetEntry();
         timesheetEntry1.setId(1L);
         timesheetEntry1.setTimesheetId(23L);
@@ -107,7 +107,7 @@ class TimesheetEntryTest {
     }
 
     @Test
-    void timesheetEntryNotEqual() {
+    void areNotEqual() {
         TimesheetEntry timesheetEntry1 = new TimesheetEntry();
         timesheetEntry1.setId(1L);
         timesheetEntry1.setTimesheetId(23L);

@@ -243,10 +243,6 @@ public class Invoice extends BaseEntity {
         return status.equals(InvoiceRepository.InvoiceStatusEnum.COMPLETED.name());
     }
 
-    public boolean isNew() {
-        return status.equals(InvoiceRepository.InvoiceStatusEnum.NEW.name());
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

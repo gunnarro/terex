@@ -1,6 +1,8 @@
 package com.gunnarro.android.terex.domain.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -35,6 +37,7 @@ import com.gunnarro.android.terex.domain.entity.UserAccount;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,6 +72,7 @@ class TimesheetMapperTest {
         assertEquals(timesheetDto.getYear(), timesheet.getYear());
         assertEquals(timesheetDto.getMonth(), timesheet.getMonth());
         assertEquals(timesheetDto.getStatus(), timesheet.getStatus());
+
     }
 
     @Test
@@ -130,6 +134,8 @@ class TimesheetMapperTest {
         project.setDescription("develop a timesheet app");
         project.setStatus(Project.ProjectStatusEnum.ACTIVE.name());
         project.setHourlyRate(1200);
+        project.setCreatedDate(LocalDateTime.now());
+        project.setLastModifiedDate(LocalDateTime.now());
 
         ProjectDto projectDto = TimesheetMapper.toProjectDto(project);
 
@@ -139,6 +145,8 @@ class TimesheetMapperTest {
         assertEquals("develop a timesheet app", projectDto.getDescription());
         assertEquals(1200, projectDto.getHourlyRate());
         assertEquals(Project.ProjectStatusEnum.ACTIVE.name(), projectDto.getStatus());
+        assertNotNull(projectDto.getCreatedDate());
+        assertNotNull(projectDto.getLastModifiedDate());
     }
 
     @Test
@@ -150,6 +158,8 @@ class TimesheetMapperTest {
         projectDto.setDescription("develop a timesheet app");
         projectDto.setStatus(Project.ProjectStatusEnum.ACTIVE.name());
         projectDto.setHourlyRate(1200);
+        projectDto.setCreatedDate(LocalDateTime.now());
+        projectDto.setLastModifiedDate(LocalDateTime.now());
 
         Project project = TimesheetMapper.fromProjectDto(projectDto);
 
@@ -159,6 +169,11 @@ class TimesheetMapperTest {
         assertEquals(projectDto.getDescription(), project.getDescription());
         assertEquals(projectDto.getStatus(), project.getStatus());
         assertEquals(projectDto.getHourlyRate(), project.getHourlyRate());
+        assertNotNull(project.getCreatedDate());
+        assertNotNull(project.getLastModifiedDate());
+        assertTrue(project.isActive());
+        assertFalse(project.isClosed());
+        assertFalse(project.isNew());
     }
 
     @Test

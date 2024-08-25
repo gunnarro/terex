@@ -41,6 +41,8 @@ public class Utility {
     private static final String DATE_PATTERN = "dd-MM-yyyy";
     public static final String MONTH_YEAR_DATE_PATTERN = "MMMM yyyy";
     private static final String TIME_PATTERN = "HH:mm";
+
+    private static final String HOUR_FORMAT = "%s.%s";
     private static String currentUUID;
 
     private static final Gson gson = new GsonBuilder()
@@ -87,7 +89,7 @@ public class Utility {
             return null;
         }
         LocalTime hours = LocalTime.ofSecondOfDay(seconds);
-        return String.format("%s.%s", hours.getHour(), (hours.getMinute() * 10 / 60));
+        return String.format(HOUR_FORMAT, hours.getHour(), (hours.getMinute() * 10 / 60));
     }
 
     /**
@@ -139,8 +141,10 @@ public class Utility {
     }
 
     public static LocalDate toLocalDate(String dateStr) {
-        Log.d("Utility", "toLocalDate: " + dateStr);
-        return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern(DATE_PATTERN, Locale.getDefault()));
+        if (dateStr != null && !dateStr.trim().isEmpty()) {
+            return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern(DATE_PATTERN, Locale.getDefault()));
+        }
+        return null;
     }
 
     public static LocalTime toLocalTime(String timeStr) {
@@ -152,7 +156,6 @@ public class Utility {
     }
 
     public static String formatDate(LocalDate localDate) {
-        Log.d("formatDate", "format date: " + localDate);
         if (localDate != null) {
             return localDate.format(DateTimeFormatter.ofPattern(DATE_PATTERN));
         }
@@ -163,7 +166,7 @@ public class Utility {
         if (d1 != null && d2 != null) {
             int diffHour = d2.getHour() - d1.getHour();
             int diffMinute = d2.getMinute() - d1.getMinute();
-            return String.format("%s.%s", diffHour, new DecimalFormat("#").format((double) diffMinute / 60 * 10));
+            return String.format(HOUR_FORMAT, diffHour, new DecimalFormat("#").format((double) diffMinute / 60 * 10));
         }
         return null;
     }
@@ -173,7 +176,7 @@ public class Utility {
             return "0";
         }
         Duration diff = Duration.between(t1, t2);
-        return String.format("%s.%s", diff.toHours(), diff.toMinutes() % 60);
+        return String.format(HOUR_FORMAT, diff.toHours(), diff.toMinutes() % 60);
     }
 
     public static String formatToHHMM(int hour, int minute) {
@@ -196,7 +199,6 @@ public class Utility {
     }
 
     public static LocalDateTime toLocalDateTime(String dateTimeStr) {
-        Log.d("Utility", "toLocalDateTime: " + dateTimeStr);
         if (dateTimeStr == null || dateTimeStr.length() != DATE_TIME_PATTERN.length()) {
             return null;
         }

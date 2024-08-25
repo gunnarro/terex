@@ -51,7 +51,7 @@ public class ProjectService {
         return projectRepository.getProjectHourlyRateByTimesheetId(timesheetId);
     }
 
-    public List<ProjectDto> getProjects(Long clientId, ProjectRepository.ProjectStatusEnum projectStatus) {
+    public List<ProjectDto> getProjects(Long clientId, Project.ProjectStatusEnum projectStatus) {
         return TimesheetMapper.toProjectDtoList(projectRepository.getProjects(clientId, projectStatus));
     }
 
@@ -60,24 +60,27 @@ public class ProjectService {
     public Long saveProject(@NotNull final ProjectDto projectDto) {
         Project project = TimesheetMapper.fromProjectDto(projectDto);
         try {
-            Project projectExisting = projectRepository.find(project.getClientId(), project.getName());
-            Log.d("ProjectRepository.saveProject", String.format("projectExisting: %s", projectExisting));
+            Log.d("ProjectService.saveProject", String.format("%s", project));
             Long id;
-            if (projectExisting == null) {
+            if (project.isNew()) {
                 project.setCreatedDate(LocalDateTime.now());
                 project.setLastModifiedDate(LocalDateTime.now());
                 id = projectRepository.insert(project);
-                Log.d("", "inserted new project: " + id + " - " + project.getName());
+                Log.d("ProjectService.saveProject", "inserted new. " + project);
             } else {
-                project.setId(projectExisting.getId());
-                project.setCreatedDate(projectExisting.getCreatedDate());
+                if (projectRepository.getProject(project.getId()).isClosed()) {
+                    throw new InputValidationException(String.format("Project is closed, no changes is allowed. %s", project), "40040", null);
+                }
+                //project.setId(projectExisting.getId());
+                //project.setCreatedDate(projectExisting.getCreatedDate());
                 project.setLastModifiedDate(LocalDateTime.now());
                 projectRepository.update(project);
                 id = project.getId();
-                Log.d("", "updated project: " + id + " - " + project.getName());
+                Log.d("ProjectService.saveProject", "updated. " + project);
             }
             return id;
         } catch (Exception e) {
+            Log.w("projectService.saveProject", "Failed save project! " + e.getMessage());
             // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();
             throw new TerexApplicationException("Error saving project! " + e.getMessage(), "50050", e.getCause());

@@ -19,28 +19,18 @@ import javax.inject.Singleton;
 @Singleton
 public class ProjectRepository {
 
-    /**
-     * OPEN: not added any billing information or assigned to a timesheet
-     * CREATED: fulfilled and assigned to a timesheet. Possible to edit and delete.
-     * SENT: sent to customer, tha invoice is then closed and assigned timesheet is set to status CLOSED. Not possible to edit or delete. Can only be viewed.
-     * CANCELLED: the invoice have been cancelled.
-     */
-    public enum ProjectStatusEnum {
-        ACTIVE, FINISHED
-    }
-
     private final ProjectDao projectDao;
 
     public ProjectRepository() {
         projectDao = AppDatabase.getDatabase().projectDao();
     }
 
-    public List<Project> getProjects(Long clientId, ProjectStatusEnum projectStatus) {
+    public List<Project> getProjects(Long clientId, Project.ProjectStatusEnum projectStatus) {
         List<String> projectStatuses;
         if (projectStatus != null) {
             projectStatuses = List.of(projectStatus.name());
         } else {
-            projectStatuses =  Arrays.stream(ProjectStatusEnum.values()).map(Enum::name).collect(Collectors.toList());
+            projectStatuses = Arrays.stream(Project.ProjectStatusEnum.values()).map(Enum::name).collect(Collectors.toList());
         }
         try {
             CompletionService<List<Project>> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
@@ -82,11 +72,13 @@ public class ProjectRepository {
 
     public Project getProject(Long projectId) {
         try {
+            Log.d("getProject, projectId", projectId.toString());
             CompletionService<Project> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
             service.submit(() -> projectDao.getProject(projectId));
             Future<Project> future = service.take();
             return future != null ? future.get() : null;
         } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
             // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();
             throw new TerexApplicationException("error getting project!", "50050", e);
@@ -109,7 +101,7 @@ public class ProjectRepository {
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures
     // that you're not doing any long running operations on the main thread, blocking the UI.
     public Long insert(Project project) throws InterruptedException, ExecutionException {
-        Log.d("insertProject", "project: " + project);
+        Log.d("insertProject", project.toString());
         CompletionService<Long> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
         service.submit(() -> projectDao.insert(project));
         Future<Long> future = service.take();
@@ -117,7 +109,7 @@ public class ProjectRepository {
     }
 
     public Integer update(Project project) throws InterruptedException, ExecutionException {
-        Log.d("updateProject", "project: " + project);
+        Log.d("updateProject", project.toString());
         CompletionService<Integer> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
         service.submit(() -> projectDao.update(project));
         Future<Integer> future = service.take();

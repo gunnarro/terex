@@ -42,7 +42,7 @@ public class AccountingFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        requireActivity().setTitle(R.string.title_admin);
+        requireActivity().setTitle(R.string.title_accounting);
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_accounting, container, false);
         AccountingDto accountingDto = calculate();
@@ -55,7 +55,6 @@ public class AccountingFragment extends Fragment {
         ((TextInputEditText) view.findViewById(R.id.accounting_total_employers_company_tax)).setText(formatAmount(accountingDto.getTotalEmployersCompanyTax()));
         ((TextInputEditText) view.findViewById(R.id.accounting_result_before_taxes)).setText(formatAmount(accountingDto.getResultBeforeTaxes()));
         ((TextInputEditText) view.findViewById(R.id.accounting_employees_max_salary)).setText(formatAmount(accountingDto.getEmployeesMaxSalary()));
-        ((TextView) view.findViewById(R.id.accounting_max_salary_lbl)).setText("Max salary " + accountingDto.getEmployeesMaxSalaryPeriod());
 
         Log.d(Utility.buildTag(getClass(), "onCreateView"), "");
         return view;

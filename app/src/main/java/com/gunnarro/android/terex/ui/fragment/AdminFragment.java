@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -13,7 +12,6 @@ import androidx.navigation.Navigation;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.dto.ClientDto;
 import com.gunnarro.android.terex.domain.dto.ProjectDto;
-import com.gunnarro.android.terex.domain.dto.UserAccountDto;
 import com.gunnarro.android.terex.domain.entity.Client;
 import com.gunnarro.android.terex.domain.entity.Project;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
@@ -21,7 +19,6 @@ import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.service.ClientService;
 import com.gunnarro.android.terex.service.ProjectService;
 import com.gunnarro.android.terex.service.TimesheetService;
-import com.gunnarro.android.terex.service.UserAccountService;
 import com.gunnarro.android.terex.utility.Utility;
 
 import org.jetbrains.annotations.NotNull;
@@ -43,7 +40,6 @@ public class AdminFragment extends BaseFragment {
 
     private NavController navController;
 
-    private UserAccountService userAccountService;
     private TimesheetService timesheetService;
     private ClientService clientService;
     private ProjectService projectService;
@@ -57,7 +53,6 @@ public class AdminFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        userAccountService = new UserAccountService();
         timesheetService = new TimesheetService();
         clientService = new ClientService();
         projectService = new ProjectService();
@@ -70,30 +65,15 @@ public class AdminFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_admin, container, false);
 
-        UserAccountDto userAccountDto = userAccountService.getDefaultUserAccount();
-        if (userAccountDto != null) {
-            ((TextView) view.findViewById(R.id.user_account_account_type_view)).setText(userAccountDto.getUserAccountType());
-            ((TextView) view.findViewById(R.id.user_account_username_view)).setText(userAccountDto.getUserName());
-            if (userAccountDto.getOrganizationDto() != null) {
-                ((TextView) view.findViewById(R.id.user_account_organization_name)).setText(userAccountDto.getOrganizationDto().getName());
-                ((TextView) view.findViewById(R.id.user_account_organization_number)).setText(userAccountDto.getOrganizationDto().getOrganizationNumber());
-                ((TextView) view.findViewById(R.id.user_account_organization_bank_account)).setText(userAccountDto.getOrganizationDto().getBankAccountNumber());
-                ((TextView) view.findViewById(R.id.user_account_organization_address)).setText(userAccountDto.getOrganizationDto().getBusinessAddress().getStreetAddress());
-                ((TextView) view.findViewById(R.id.user_account_organization_city)).setText(String.format("%s %s", userAccountDto.getOrganizationDto().getBusinessAddress().getPostalCode(), userAccountDto.getOrganizationDto().getBusinessAddress().getCity()));
-                ((TextView) view.findViewById(R.id.user_account_organization_country)).setText(userAccountDto.getOrganizationDto().getBusinessAddress().getCountry());
-            }
-        }
-
-        view.findViewById(R.id.btn_user_account).setOnClickListener(v -> {
-            navController.navigate(R.id.nav_from_admin_to_user_account);
-        });
-
         view.findViewById(R.id.btn_integration).setOnClickListener(v -> {
             navController.navigate(R.id.nav_from_admin_to_integration_list);
         });
 
-        view.findViewById(R.id.btn_settings).setOnClickListener(v -> {
+        view.findViewById(R.id.btn_accounting).setOnClickListener(v -> {
             navController.navigate(R.id.accounting_fragment);
+        });
+
+        view.findViewById(R.id.btn_settings).setOnClickListener(v -> {
         });
 
         Log.d(Utility.buildTag(getClass(), "onCreateView"), "");

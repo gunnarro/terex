@@ -45,13 +45,13 @@ class ProjectServiceTest {
         projectDto.setStatus(Project.ProjectStatusEnum.ACTIVE.name());
         projectDto.setDescription("develop a timesheet android app");
 
-        when(projectRepositoryMock.find(anyLong(), anyString())).thenReturn(null);
+//        when(projectRepositoryMock.find(anyLong(), anyString())).thenReturn(null);
         when(projectRepositoryMock.insert(any())).thenReturn(1L);
 
         Long projectId = projectService.saveProject(projectDto);
         assertEquals(1L, projectId);
 
-        verify(projectRepositoryMock, times(1)).find(projectDto.getClientDto().getId(), projectDto.getName());
+  //      verify(projectRepositoryMock, times(1)).find(projectDto.getClientDto().getId(), projectDto.getName());
         verify(projectRepositoryMock, times(1)).insert(any());
     }
 
@@ -66,13 +66,14 @@ class ProjectServiceTest {
         projectDto.setHourlyRate(1250);
 
         Project existingProject = TimesheetMapper.fromProjectDto(projectDto);
-        when(projectRepositoryMock.find(anyLong(), anyString())).thenReturn(existingProject);
+        when(projectRepositoryMock.getProject(anyLong())).thenReturn(existingProject);
+        // when(projectRepositoryMock.find(anyLong(), anyString())).thenReturn(existingProject);
         when(projectRepositoryMock.update(any())).thenReturn(1);
 
         Long projectId = projectService.saveProject(projectDto);
         assertEquals(23L, projectId);
 
-        verify(projectRepositoryMock, times(1)).find(projectDto.getClientDto().getId(), projectDto.getName());
+        //verify(projectRepositoryMock, times(1)).find(projectDto.getClientDto().getId(), projectDto.getName());
         verify(projectRepositoryMock, times(1)).update(any());
     }
 }

@@ -61,7 +61,7 @@ class TimesheetTest {
 */
 
     @Test
-    void timesheetAreEqual() {
+    void areEqual() {
         Timesheet timesheet1 = new Timesheet();
         timesheet1.setUserId(100L);
         timesheet1.setClientId(200L);
@@ -78,7 +78,7 @@ class TimesheetTest {
     }
 
     @Test
-    void timesheetNotEqual() {
+    void areNotEqual() {
         Timesheet timesheet1 = new Timesheet();
         timesheet1.setUserId(100L);
         timesheet1.setClientId(200L);

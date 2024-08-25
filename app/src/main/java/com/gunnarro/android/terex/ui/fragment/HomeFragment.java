@@ -51,8 +51,8 @@ public class HomeFragment extends Fragment {
         view.findViewById(R.id.btn_invoice_list_view).setOnClickListener(v -> navController.navigate(R.id.nav_from_home_to_invoice_list));
         view.findViewById(R.id.btn_timesheet_list_view).setOnClickListener(v -> navController.navigate(R.id.nav_from_home_to_timesheet_list));
         view.findViewById(R.id.btn_clients_view).setOnClickListener(v -> navController.navigate(R.id.nav_from_home_to_client_list));
-        view.findViewById(R.id.btn_history_view).setOnClickListener(v -> {
-        });
+        view.findViewById(R.id.btn_user_account_view).setOnClickListener(v -> navController.navigate(R.id.nav_from_home_to_user_account));
+        view.findViewById(R.id.btn_history_view).setOnClickListener(v -> {});
         return view;
     }
 

@@ -76,13 +76,13 @@ public class UserAccountNewFragment extends BaseFragment implements View.OnClick
             }
             view.findViewById(R.id.user_account_new_save_btn).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
             saveUserAccount();
-            navigateTo(R.id.nav_from_user_account_to_admin, null);
+            navigateTo(R.id.nav_to_home, null);
         });
 
         view.findViewById(R.id.user_account_new_cancel_btn).setOnClickListener(v -> {
             view.findViewById(R.id.user_account_new_cancel_btn).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
             // Simply return back to home page
-            navigateTo(R.id.nav_from_user_account_to_admin, null);
+            navigateTo(R.id.nav_to_home, null);
         });
 
         updateUserAccountInputData(view, userAccountService.getDefaultUserAccount());

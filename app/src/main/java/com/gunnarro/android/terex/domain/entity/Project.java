@@ -1,5 +1,6 @@
 package com.gunnarro.android.terex.domain.entity;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Index;
@@ -10,7 +11,9 @@ import com.gunnarro.android.terex.domain.converter.LocalDateTimeConverter;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.time.LocalDate;
 import java.util.Objects;
+import java.util.StringJoiner;
 
 import lombok.NoArgsConstructor;
 
@@ -24,9 +27,6 @@ public class Project extends BaseEntity {
         ACTIVE, CLOSED
     }
 
-    /**
-     * The company that have hired the consultant
-     */
     @NotNull
     @ColumnInfo(name = "client_id")
     private Long clientId;
@@ -37,19 +37,24 @@ public class Project extends BaseEntity {
 
     @ColumnInfo(name = "description")
     private String description;
-
-    @NotNull
+    
     @ColumnInfo(name = "status")
     private String status;
 
     @ColumnInfo(name = "hourly_rate")
     private Integer hourlyRate;
 
+    @ColumnInfo(name = "start_date")
+    private LocalDate startDate;
+
+    @ColumnInfo(name = "end_date")
+    private LocalDate endDate;
+
     public Long getClientId() {
         return clientId;
     }
 
-    public void setClientId(Long clientId) {
+    public void setClientId(@NotNull Long clientId) {
         this.clientId = clientId;
     }
 
@@ -74,12 +79,28 @@ public class Project extends BaseEntity {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(@NotNull String status) {
         this.status = status;
     }
 
     public Integer getHourlyRate() {
         return hourlyRate;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
     }
 
     public void setHourlyRate(Integer hourlyRate) {
@@ -88,6 +109,10 @@ public class Project extends BaseEntity {
 
     public boolean isActive() {
         return ProjectStatusEnum.ACTIVE.name().equals(status);
+    }
+
+    public boolean isClosed() {
+        return ProjectStatusEnum.CLOSED.name().equals(status);
     }
 
     @Override
@@ -101,5 +126,19 @@ public class Project extends BaseEntity {
     @Override
     public int hashCode() {
         return Objects.hash(clientId, name);
+    }
+
+
+    @NonNull
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", Project.class.getSimpleName() + "[", "]")
+                .add("createdDate=" + getCreatedDate())
+                .add("lastModifiedDate=" + getLastModifiedDate())
+                .add("id=" + getId())
+                .add("clientId=" + clientId)
+                .add("name='" + name + "'")
+                .add("status='" + status + "'")
+                .toString();
     }
 }

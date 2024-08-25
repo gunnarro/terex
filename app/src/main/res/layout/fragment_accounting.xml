@@ -4,9 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.fragment.AccountingFragment">
-
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <TableLayout
-        android:id="@+id/accounting_info"
+        android:id="@+id/accounting_info_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
@@ -22,7 +24,6 @@
             android:background="@color/calendar_header"
             android:textColor="#ffffff"
             android:gravity="start"
-            android:textAlignment="center"
             android:text="Accounting period januar - desember 2024"
             android:textStyle="bold" />
 
@@ -222,13 +223,13 @@
         <TableRow>
 
             <TextView
-                android:id="@+id/accounting_max_salary_lbl"
+                android:id="@+id/accounting_employees_max_salary_lbl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:layout_span="1"
                 android:gravity="start"
-                android:text="Max salary"
+                android:text="Employees max salary"
                 android:textStyle="normal" />
 
             <com.google.android.material.textfield.TextInputEditText
@@ -239,9 +240,31 @@
                 android:layout_span="1"
                 android:enabled="false"
                 android:gravity="end"
-                android:text=""
+                android:text="999999"
                 android:textStyle="normal" />
         </TableRow>
     </TableLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_below="@+id/accounting_info_layout"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lines="3"
+            android:text="Første frist for betaling av arbeidsgiveravgift i kalenderåret er den 15. mars og deretter den 15. hver annen måned."
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lines="3"
+            android:text="MVA-melding annenhver måned – 6 ganger i året, hvor første frist for januar/februar er 10. april."
+            />
+    </LinearLayout>
+</RelativeLayout>
 </FrameLayout>

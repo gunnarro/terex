@@ -1,51 +1,93 @@
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/project_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
     android:background="@drawable/list_view_cell_shape"
-    android:stretchColumns="1,1"
+    android:columnCount="2"
+    android:elevation="2dp"
+    android:rowCount="1"
     tools:context="com.gunnarro.android.terex.ui.MainActivity">
+    <!-- first row, icon left aligned -->
+    <ImageView
+        android:id="@+id/project_line_1_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:maxLines="3"
+        android:src="@drawable/ic_status_closed_24"
+        android:textAlignment="center" />
 
-    <TableRow>
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_toEndOf="@id/project_line_1_status"
+        android:stretchColumns="1,1">
 
-        <TextView
-            android:id="@+id/project_line_header"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_span="1"
-            android:gravity="start"
-            android:text=""
-            android:textStyle="bold" />
+        <TableRow>
 
-        <ImageView
-            android:id="@+id/ic_project_row_view"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
-            android:layout_gravity="end"
-            android:layout_marginTop="2dp"
-            android:layout_marginEnd="7dp"
-            android:contentDescription="@string/btn_view"
-            android:elevation="1dp"
-            android:src="@drawable/ic_more_horiz_24px" />
-    </TableRow>
+            <TextView
+                android:id="@+id/project_line_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_span="1"
+                android:gravity="start"
+                android:text="Apotek1"
+                android:textStyle="bold" />
 
-    <TableRow>
+            <ImageView
+                android:id="@+id/ic_project_row_view"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_gravity="end"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="7dp"
+                android:contentDescription="@string/btn_view"
+                android:elevation="1dp"
+                android:src="@drawable/ic_more_horiz_24px" />
+        </TableRow>
 
-        <TextView
-            android:id="@+id/project_line_1_label"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:gravity="start"
-            android:text="" />
+        <TableRow>
 
-        <TextView
-            android:id="@+id/project_line_1_value"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="end"
-            android:text="" />
-    </TableRow>
-</TableLayout>
+            <TextView
+                android:id="@+id/project_line_1_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:gravity="start"
+                android:text="" />
+
+            <TextView
+                android:id="@+id/project_line_1_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:text=""
+                android:textColor="@color/client_status_active"/>
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:id="@+id/project_line_2_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:gravity="start"
+                android:text="" />
+
+            <TextView
+                android:id="@+id/project_line_2_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:text="" />
+        </TableRow>
+
+    </TableLayout>
+</RelativeLayout>

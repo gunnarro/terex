@@ -149,6 +149,10 @@ public class TimesheetMapper {
             return null;
         }
         ProjectDto projectDto = new ProjectDto();
+        projectDto.setCreatedDate(project.getCreatedDate());
+        projectDto.setLastModifiedDate(project.getLastModifiedDate());
+        projectDto.setStartDate(project.getStartDate());
+        projectDto.setEndDate(project.getEndDate());
         projectDto.setId(project.getId());
         projectDto.setClientDto(new ClientDto(project.getClientId()));
         projectDto.setName(project.getName());
@@ -164,6 +168,10 @@ public class TimesheetMapper {
         }
         Project project = new Project();
         project.setId(projectDto.getId());
+        project.setCreatedDate(projectDto.getCreatedDate());
+        project.setLastModifiedDate(projectDto.getLastModifiedDate());
+        project.setStartDate(projectDto.getStartDate());
+        project.setEndDate(projectDto.getEndDate());
         project.setClientId(projectDto.getClientDto().getId());
         project.setName(projectDto.getName());
         project.setDescription(projectDto.getDescription());

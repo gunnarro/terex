@@ -47,8 +47,7 @@ public class Timesheet extends BaseEntity {
         ACTIVE, COMPLETED, BILLED;
     }
 
-    @NotNull
-    @ColumnInfo(name = "status", defaultValue = "ACTIVE")
+    @ColumnInfo(name = "status")
     private String status;
     @NotNull
     @ColumnInfo(name = "user_account_id")
@@ -164,10 +163,6 @@ public class Timesheet extends BaseEntity {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public boolean isNew() {
-        return getId() == null;
     }
 
     public boolean isActive() {
