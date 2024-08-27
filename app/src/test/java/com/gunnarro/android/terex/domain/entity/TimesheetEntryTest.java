@@ -51,6 +51,9 @@ class TimesheetEntryTest {
         assertNull(timesheetEntry.getCreatedDate());
         assertNull(timesheetEntry.getLastModifiedDate());
         assertNull(timesheetEntry.getComments());
+        assertFalse(timesheetEntry.isVacationDay());
+        assertFalse(timesheetEntry.isSickDay());
+        assertTrue(timesheetEntry.isRegularWorkDay());
     }
 
 

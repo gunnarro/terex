@@ -78,7 +78,6 @@ public class ProjectRepository {
             Future<Project> future = service.take();
             return future != null ? future.get() : null;
         } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
             // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();
             throw new TerexApplicationException("error getting project!", "50050", e);

@@ -34,9 +34,11 @@
                     android:id="@+id/invoice_timesheet_spinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
+                    android:autoHandwritingEnabled="false"
                     android:autofillHints="false"
+                    android:clickable="true"
                     android:importantForAutofill="no"
+                    android:inputType="none"
                     tools:ignore="KeyboardInaccessibleWidget" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>

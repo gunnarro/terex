@@ -143,11 +143,11 @@ public class TimesheetRepository {
         }
     }
 
-    public LiveData<List<Timesheet>> getTimesheetByYear(final Integer year) {
+    public List<Long> getTimesheetIds(final String status) {
         try {
-            CompletionService<LiveData<List<Timesheet>>> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
-            service.submit(() -> timesheetDao.getTimesheetByYear(year));
-            Future<LiveData<List<Timesheet>>> future = service.take();
+            CompletionService<List<Long>> service = new ExecutorCompletionService<>(AppDatabase.databaseExecutor);
+            service.submit(() -> timesheetDao.getTimesheetIds(status));
+            Future<List<Long>> future = service.take();
             return future != null ? future.get() : null;
         } catch (InterruptedException | ExecutionException e) {
             // Something crashed, therefore restore interrupted state before leaving.
@@ -176,7 +176,6 @@ public class TimesheetRepository {
             Future<List<TimesheetEntry>> future = service.take();
             return future != null ? future.get() : null;
         } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
             // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();
             throw new TerexApplicationException("Error getting timesheet entry list", e.getMessage(), e.getCause());

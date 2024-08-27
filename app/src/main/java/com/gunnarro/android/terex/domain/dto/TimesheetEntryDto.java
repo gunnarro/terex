@@ -176,10 +176,6 @@ public class TimesheetEntryDto {
         return type.equals(TimesheetEntry.TimesheetEntryTypeEnum.SICK.name());
     }
 
-    public boolean hasWorkHours() {
-        return workedSeconds != null && workedSeconds > 0;
-    }
-
     public boolean isOpen() {
         return status.equals(TimesheetEntry.TimesheetEntryStatusEnum.OPEN.name());
     }

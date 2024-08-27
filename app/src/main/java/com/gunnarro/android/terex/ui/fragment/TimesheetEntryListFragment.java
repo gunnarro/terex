@@ -151,7 +151,6 @@ public class TimesheetEntryListFragment extends BaseFragment implements ListOnIt
         } catch (InputValidationException ie) {
             showInfoDialog("Info", ie.getMessage());
         } catch (Exception ex) {
-            ex.printStackTrace();
             showInfoDialog("Error", String.format("Application error!%s Error: %s%s Please report.", ex.getMessage(), System.lineSeparator(), System.lineSeparator()));
         }
     }

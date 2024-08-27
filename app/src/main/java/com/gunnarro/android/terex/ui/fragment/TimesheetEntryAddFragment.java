@@ -333,10 +333,8 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
             timesheetService.saveTimesheetEntryDto(timesheetEntry);
             showSnackbar(String.format("Added new timesheet entry! %s", timesheetEntry.getWorkdayDate()), R.color.color_snackbar_text_add);
         } catch (TerexApplicationException | InputValidationException ex) {
-            ex.printStackTrace();
             showInfoDialog("Validation error", String.format("%s", ex.getMessage()));
         } catch (Exception e) {
-            e.printStackTrace();
             showInfoDialog("Application error", String.format("%s", e.getCause()));
         }
     }

@@ -107,8 +107,11 @@ public class TimesheetService {
     }
 
     public List<TimesheetDto> getTimesheetsReadyForBilling() {
-        List<Timesheet> timesheetList = timesheetRepository.getTimesheets(Timesheet.TimesheetStatusEnum.COMPLETED.name());
-        return TimesheetMapper.toTimesheetDtoList(timesheetList);
+        List<Long> timesheetIdsList = timesheetRepository.getTimesheetIds(Timesheet.TimesheetStatusEnum.COMPLETED.name());
+        List<TimesheetDto> timesheetDtoList = new ArrayList<>();
+        timesheetIdsList.forEach(id -> timesheetDtoList.add(getTimesheetDto(id)));
+        timesheetDtoList.sort(Comparator.comparing(TimesheetDto::getFromDate));
+        return timesheetDtoList;
     }
 
     public List<Timesheet> getTimesheetsByStatus(String status) {
@@ -134,6 +137,7 @@ public class TimesheetService {
         List<TimesheetDto> timesheetDtoList = new ArrayList<>();
         List<Long> timesheetIdList = timesheetRepository.getTimesheetIds(year);
         timesheetIdList.forEach(id -> timesheetDtoList.add(getTimesheetDto(id)));
+        timesheetDtoList.sort(Comparator.comparing(TimesheetDto::getFromDate));
         return timesheetDtoList;
     }
 
@@ -182,7 +186,6 @@ public class TimesheetService {
             }
             return id;
         } catch (Exception e) {
-            e.printStackTrace();
             // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();
             throw new TerexApplicationException("Error saving timesheet!" + e.getMessage(), "50500", e.getCause());
@@ -243,7 +246,6 @@ public class TimesheetService {
             Log.d("TimesheetRepository.saveTimesheetEntry", String.format("insert new timesheet entry, timesheetId=%s, timesheetEntryId=%s, workDate=%s", timesheetEntry.getTimesheetId(), id, timesheetEntry.getWorkdayDate()));
             return id;
         } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
             // Something crashed, therefore restore interrupted state before leaving.
             Thread.currentThread().interrupt();
             throw new TerexApplicationException("Error saving timesheet entry!", e.getMessage(), e.getCause());

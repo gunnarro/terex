@@ -168,7 +168,7 @@ class TimesheetServiceTest {
     }
 
     @Test
-    void saveTimesheetEntry_new_already_exist() throws ExecutionException, InterruptedException {
+    void saveTimesheetEntry_new_already_exist() {
         TimesheetEntry timesheetEntryExisting = TimesheetEntry.createDefault(23L, 11L, LocalDate.of(2023, 12, 2));
         timesheetEntryExisting.setStatus(TimesheetEntry.TimesheetEntryStatusEnum.CLOSED.name());
         TimesheetEntry timesheetEntry = TimesheetEntry.createDefault(null, null, LocalDate.now());
@@ -182,7 +182,7 @@ class TimesheetServiceTest {
     }
 
     @Test
-    void saveTimesheetEntry_work_date_after_timesheet_to_date() throws ExecutionException, InterruptedException {
+    void saveTimesheetEntry_work_date_after_timesheet_to_date() {
         Timesheet timesheet = Timesheet.createDefault(100L, 10L, 2023, 11);
         timesheet.setId(1L);
         TimesheetEntry timesheetEntryAfterToDate = TimesheetEntry.createDefault(timesheet.getId(), -1L, LocalDate.of(2023, 12, 21));
@@ -196,7 +196,7 @@ class TimesheetServiceTest {
     }
 
     @Test
-    void saveTimesheetEntry_work_date_before_timesheet_from_date() throws ExecutionException, InterruptedException {
+    void saveTimesheetEntry_work_date_before_timesheet_from_date() {
         Timesheet timesheet = Timesheet.createDefault(100L, 10L, 2023, 11);
         timesheet.setId(1L);
         TimesheetEntry timesheetEntryBeforeFromDate = TimesheetEntry.createDefault(timesheet.getId(), -1L, LocalDate.of(2023, 10, 2));

@@ -1,11 +1,13 @@
 package com.gunnarro.android.terex.domain.dto;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
+import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 
 import org.junit.jupiter.api.Test;
 
@@ -43,6 +45,20 @@ class TimesheetEntryDtoTest {
         assertEquals("8.0", timesheetEntryDto.getWorkedHours());
         timesheetEntryDto.setWorkedSeconds((long) 450 * 60);
         assertEquals("7.5", timesheetEntryDto.getWorkedHours());
+        assertNull(timesheetEntryDto.getStartTime());
+        assertNull(timesheetEntryDto.getEndTime());
+    }
+
+    @Test
+    void isRegularWorkDayWithHours() {
+        TimesheetEntryDto timesheetEntryDto = new TimesheetEntryDto();
+        timesheetEntryDto.setWorkdayDate(LocalDate.of(2024, 6, 8));
+        timesheetEntryDto.setType(TimesheetEntry.TimesheetEntryTypeEnum.REGULAR.name());
+        timesheetEntryDto.setWorkedSeconds(3600L);
+        assertTrue(timesheetEntryDto.isRegularWorkDay());
+        assertTrue(timesheetEntryDto.isRegularWorkDayWithHours());
+        assertFalse(timesheetEntryDto.isSickDay());
+        assertFalse(timesheetEntryDto.isVacationDay());
     }
 
     @Test

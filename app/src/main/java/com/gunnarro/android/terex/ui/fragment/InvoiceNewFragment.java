@@ -10,7 +10,7 @@ import android.widget.AutoCompleteTextView;
 
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.dto.SpinnerItem;
-import com.gunnarro.android.terex.domain.entity.Timesheet;
+import com.gunnarro.android.terex.domain.dto.TimesheetDto;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.service.ClientService;
 import com.gunnarro.android.terex.service.InvoiceService;
@@ -58,12 +58,13 @@ public class InvoiceNewFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_invoice_new, container, false);
         // only completed time sheets can be used a attachment to a invoice.
-        List<Timesheet> timesheetList = timesheetService.getTimesheetsByStatus(Timesheet.TimesheetStatusEnum.COMPLETED.name());
-        List<SpinnerItem> timesheetItems = timesheetList.stream().map(t -> new SpinnerItem(t.getId(), String.format("%s-%s %s", t.getYear(), t.getMonth(), t.toString()))).collect(Collectors.toList());
-        final AutoCompleteTextView timesheetSpinner = view.findViewById(R.id.invoice_timesheet_spinner);
-        ArrayAdapter<SpinnerItem> timesheetAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, timesheetItems);
+        List<TimesheetDto> timesheetDtoList = timesheetService.getTimesheetsReadyForBilling();
+        List<SpinnerItem> timesheetItems = timesheetDtoList.stream().map(t -> new SpinnerItem(t.getId(), String.format("%s-%s %s", t.getYear(), t.getMonth(), t.getClientDto().getName()))).collect(Collectors.toList());
+
+        AutoCompleteTextView timesheetSpinner = view.findViewById(R.id.invoice_timesheet_spinner);
+        ArrayAdapter<SpinnerItem> timesheetAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, timesheetItems);
         timesheetSpinner.setAdapter(timesheetAdapter);
-        timesheetSpinner.setListSelection(1);
+        timesheetSpinner.setListSelection(10);
 
         view.findViewById(R.id.btn_invoice_new_create).setOnClickListener(v -> {
             try {

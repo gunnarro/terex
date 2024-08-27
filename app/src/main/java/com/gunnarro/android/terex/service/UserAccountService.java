@@ -81,7 +81,6 @@ public class UserAccountService {
             // finally save client
             return save(userAccountDto);
         } catch (Exception e) {
-            e.printStackTrace();
             Log.e("saveUserAccount", String.format("Error: %s", e.getCause()));
             throw new TerexApplicationException("Error saving user account!" + e.getMessage(), "50050", e.getCause());
         }
