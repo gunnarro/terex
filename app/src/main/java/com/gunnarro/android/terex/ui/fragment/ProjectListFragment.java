@@ -17,7 +17,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.dto.ClientDto;
 import com.gunnarro.android.terex.domain.dto.ProjectDto;
-import com.gunnarro.android.terex.domain.dto.TimesheetDto;
 import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.ui.adapter.ProjectListAdapter;
@@ -77,7 +76,6 @@ public class ProjectListFragment extends BaseFragment implements ListOnItemClick
             // client id must be provided, if not, return
             throw new TerexApplicationException("Missing client id!", "50023", null);
         }
-
 
         projectViewModel.getProjectsLiveData(clientId).observe(requireActivity(), adapter::submitList);
 

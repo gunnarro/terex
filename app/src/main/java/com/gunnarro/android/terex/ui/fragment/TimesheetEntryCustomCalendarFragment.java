@@ -28,6 +28,7 @@ import com.gunnarro.android.terex.utility.Utility;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -107,7 +108,7 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
         // create client projects spinner
         AutoCompleteTextView projectSpinner = view.findViewById(R.id.timesheet_calendar_project_spinner);
         List<ProjectDto> projectDtoList = timesheetService.getTimesheetDto(timesheetId).getClientDto().getProjectList();
-        List<SpinnerItem> projectItems = projectDtoList.stream().map(p -> new SpinnerItem(p.getId(), p.getName())).collect(Collectors.toList());
+        List<SpinnerItem> projectItems = projectDtoList.stream().filter(ProjectDto::isActive).map(p -> new SpinnerItem(p.getId(), p.getName())).collect(Collectors.toList());
         ArrayAdapter<SpinnerItem> projectAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, projectItems);
         projectSpinner.setAdapter(projectAdapter);
         projectSpinner.setListSelection(0);
@@ -268,6 +269,11 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
         Long sec = Utility.fromHoursToSeconds(workedHoursInput.getText().toString());
         if (sec != null) {
             timesheetEntry.setWorkedSeconds(sec);
+        }
+
+        // when user flip between sick, vacation and regular, the start time may have been set equal to null
+        if (timesheetEntry.isRegularWorkDay() && timesheetEntry.getStartTime() == null) {
+            timesheetEntry.setStartTime(LocalTime.of(8, 0));
         }
 
         if (timesheetEntry.isVacationDay() || timesheetEntry.isSickDay()) {

@@ -24,6 +24,7 @@ import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.dto.ProjectDto;
 import com.gunnarro.android.terex.domain.dto.SpinnerItem;
 import com.gunnarro.android.terex.domain.dto.TimesheetEntryDto;
+import com.gunnarro.android.terex.domain.entity.Project;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
@@ -86,7 +87,7 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
         // create projects spinner
         AutoCompleteTextView projectSpinner = view.findViewById(R.id.timesheet_entry_project_spinner);
         List<ProjectDto> projectDtoList = timesheetService.getTimesheetDto(timesheetEntryDto.getTimesheetId()).getClientDto().getProjectList();
-        List<SpinnerItem> projectItems = projectDtoList.stream().map(p -> new SpinnerItem(p.getId(), p.getName())).collect(Collectors.toList());
+        List<SpinnerItem> projectItems = projectDtoList.stream().filter(ProjectDto::isActive).map(p -> new SpinnerItem(p.getId(), p.getName())).collect(Collectors.toList());
         ArrayAdapter<SpinnerItem> projectAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, projectItems);
         projectSpinner.setAdapter(projectAdapter);
         projectSpinner.setListSelection(0);

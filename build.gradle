@@ -109,10 +109,10 @@ ext {
     // For App Authentication APIs
     androidx_security_app_authenticator = '1.0.0-beta01'
     // for unit tests
-    junit_vintage_engine = '5.10.3'
-    junit_jupiter = '5.10.3'
+    junit_vintage_engine = '5.11.0'
+    junit_jupiter = '5.11.0'
     mockito_inline = '5.2.0'
-    mockito_junit_jupiter = '5.12.0'
+    mockito_junit_jupiter = '5.13.0'
     // for android instrumentation tests
     androidx_junit = '1.2.1'
     androidx_espresso_core = '3.6.1'
@@ -121,7 +121,7 @@ ext {
     itextpdf_html2pdf = "5.0.2"
     fasterxml_jackson = "2.14.3"
     projectlombok_lombok = '1.18.34'
-    kotlin_kotlin_bom = '2.0.10'
+    kotlin_kotlin_bom = '2.0.20'
     reactivex_rxjava2_rxjava = '2.2.21'
     reactivex_rxjava2_rxandroid = "2.1.1"
     material_calendar_view = '1.9.2'

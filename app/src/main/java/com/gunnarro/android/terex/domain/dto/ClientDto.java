@@ -2,6 +2,7 @@ package com.gunnarro.android.terex.domain.dto;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.StringJoiner;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -90,6 +91,10 @@ public class ClientDto {
         return contactPersonDto != null;
     }
 
+    public boolean isActive() {
+        return true;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -101,5 +106,16 @@ public class ClientDto {
     @Override
     public int hashCode() {
         return Objects.hash(name);
+    }
+
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", ClientDto.class.getSimpleName() + "[", "]")
+                .add("id=" + id)
+                .add("name='" + name + "'")
+                .add("status='" + status + "'")
+                .add("invoiceEmailAddress='" + invoiceEmailAddress + "'")
+                .toString();
     }
 }

@@ -48,6 +48,7 @@ public class ClientNewFragment extends BaseFragment implements View.OnClickListe
         setHasOptionsMenu(true);
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_client_new, container, false);
+        final ClientDto clientDto = readClientFromBundle();
 
         view.findViewById(R.id.client_new_search_org_number_btn).setOnClickListener(v -> {
             lookupOrgNumber();
@@ -70,7 +71,20 @@ public class ClientNewFragment extends BaseFragment implements View.OnClickListe
             // Simply return back to home page
             navigateTo(R.id.nav_from_client_new_to_client_list, null);
         });
+
+        updateClientNewView(view, clientDto);
         return view;
+    }
+
+    private ClientDto readClientFromBundle() {
+        Long clientId = getArguments().getLong(ClientListFragment.CLIENT_ID_KEY);
+        boolean isClientReadOnly = getArguments().getBoolean(ClientListFragment.CLIENT_READ_ONLY_KEY);
+        ClientDto clientDto = clientService.getClient(clientId);
+        if (clientDto == null) {
+            // this was a client new request, return a empty client object
+            clientDto = new ClientDto(null);
+        }
+        return clientDto;
     }
 
     /**
@@ -105,6 +119,24 @@ public class ClientNewFragment extends BaseFragment implements View.OnClickListe
         }
     }
 
+    private void updateClientNewView(View view, @NotNull ClientDto clientDto) {
+        if (clientDto.getId() == null) {
+            // this was a new
+            return;
+        }
+        // hide the organization lookup input field
+        view.findViewById(R.id.lookup_org_layout).setVisibility(View.GONE);
+        Log.d("update client view", clientDto.toString());
+        // set hidden id's
+        ((TextView) view.findViewById(R.id.client_new_id)).setText(clientDto.getId().toString());
+
+        updateOrganizationInputData(view, clientDto.getOrganizationDto());
+
+        updateContactPersonInputData(view, clientDto.getContactPersonDto());
+
+        Log.d(Utility.buildTag(getClass(), "updateClientNewView"), String.format("updated %s ", clientDto));
+    }
+
     private void updateOrganizationInputData(@NotNull View view, @NotNull OrganizationDto organizationDto) {
         // new client do not have id yet, the id is generated upon save to database
         if (organizationDto.getId() != null) {
@@ -112,12 +144,24 @@ public class ClientNewFragment extends BaseFragment implements View.OnClickListe
         }
         ((TextView) view.findViewById(R.id.client_new_org_name)).setText(organizationDto.getName());
         ((TextView) view.findViewById(R.id.client_new_org_number)).setText(organizationDto.getOrganizationNumber());
-        ((TextView) view.findViewById(R.id.client_new_org_street_name)).setText(organizationDto.getBusinessAddress().getStreetAddress());
-        ((TextView) view.findViewById(R.id.client_new_org_postal_code)).setText(organizationDto.getBusinessAddress().getPostalCode());
-        ((TextView) view.findViewById(R.id.client_new_org_city_name)).setText(organizationDto.getBusinessAddress().getCity());
-        ((TextView) view.findViewById(R.id.client_new_org_country)).setText(organizationDto.getBusinessAddress().getCountry());
+        if (organizationDto.getBusinessAddress() != null) {
+            ((TextView) view.findViewById(R.id.client_new_business_addr_id)).setText(organizationDto.getId().toString());
+            ((TextView) view.findViewById(R.id.client_new_org_street_name)).setText(organizationDto.getBusinessAddress().getStreetAddress());
+            ((TextView) view.findViewById(R.id.client_new_org_postal_code)).setText(organizationDto.getBusinessAddress().getPostalCode());
+            ((TextView) view.findViewById(R.id.client_new_org_city_name)).setText(organizationDto.getBusinessAddress().getCity());
+            ((TextView) view.findViewById(R.id.client_new_org_country)).setText(organizationDto.getBusinessAddress().getCountry());
+        }
     }
 
+    private void updateContactPersonInputData(@NotNull View view, PersonDto contactPersonDto) {
+        ((TextView) view.findViewById(R.id.client_new_contact_person_id)).setText(contactPersonDto.getContactInfo().getId().toString());
+        ((TextView) view.findViewById(R.id.client_new_contact_person_full_name)).setText(contactPersonDto.getFullName());
+        if (contactPersonDto.getContactInfo() != null) {
+            ((TextView) view.findViewById(R.id.client_new_contact_info_id)).setText(contactPersonDto.getContactInfo().getId().toString());
+            ((TextView) view.findViewById(R.id.client_new_contact_person_email)).setText(contactPersonDto.getContactInfo().getEmailAddress());
+            ((TextView) view.findViewById(R.id.client_new_contact_person_mobile)).setText(contactPersonDto.getContactInfo().getMobileNumber());
+        }
+    }
     private void clearOrganizationSearchResult() {
         OrganizationDto emptyOrg = new OrganizationDto();
         emptyOrg.setId(null);

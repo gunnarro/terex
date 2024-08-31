@@ -65,7 +65,6 @@ public class TimesheetEntryViewHolder extends RecyclerView.ViewHolder {
         } else if (timesheetEntryDto.isSickDay()) {
             timesheetEntryLine1LabelView.setTextColor(timesheetEntryLine1StatusView.getResources().getColor(R.color.timesheet_entry_type_sick, null));
         }
-
         timesheetEntryLine1ValueView.setText("");
     }
 }

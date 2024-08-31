@@ -98,8 +98,8 @@ public class InvoiceDetailsFragment extends BaseFragment {
         menu.clear();
         // set fragment specific menu items
         inflater.inflate(R.menu.invoice_attachment_menu, menu);
-        MenuItem pdfMenuItem = menu.findItem(R.id.attachment_to_pdf);
-        //  Objects.requireNonNull(m.getActionView()).setOnClickListener(v -> exportAttachment());
+        // MenuItem pdfMenuItem = menu.findItem(R.id.attachment_to_pdf);
+        // Objects.requireNonNull(m.getActionView()).setOnClickListener(v -> exportAttachment());
         MenuItem invoiceAttachmentMenuItem = menu.findItem(R.id.invoice_attachment_dropdown_menu);
         Spinner spinner = (Spinner) invoiceAttachmentMenuItem.getActionView();
         // Create an ArrayAdapter using the string array and a default spinner layout
@@ -153,7 +153,7 @@ public class InvoiceDetailsFragment extends BaseFragment {
     }
 
     private void exportAttachment(String fileName) {
-        PrintManager printManager = (PrintManager) getActivity().getSystemService(Context.PRINT_SERVICE);
+        PrintManager printManager = (PrintManager) requireActivity().getSystemService(Context.PRINT_SERVICE);
         WebView webView = requireView().findViewById(R.id.invoice_web_view);
         PrintDocumentAdapter printAdapter = webView.createPrintDocumentAdapter(fileName);
 

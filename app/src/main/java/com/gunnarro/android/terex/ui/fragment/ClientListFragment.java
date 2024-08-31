@@ -9,18 +9,21 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentResultListener;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.gunnarro.android.terex.R;
+import com.gunnarro.android.terex.domain.dto.ClientDto;
 import com.gunnarro.android.terex.domain.entity.Client;
 import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.ui.MainActivity;
 import com.gunnarro.android.terex.ui.adapter.ClientListAdapter;
 import com.gunnarro.android.terex.ui.listener.ListOnItemClickListener;
+import com.gunnarro.android.terex.ui.swipe.SwipeCallback;
 import com.gunnarro.android.terex.ui.view.ClientViewModel;
 import com.gunnarro.android.terex.utility.Utility;
 
@@ -36,12 +39,14 @@ public class ClientListFragment extends BaseFragment implements ListOnItemClickL
     public static final String CLIENT_ACTION_SAVE = "client_save";
     public static final String CLIENT_ACTION_EDIT = "client_edit";
     public static final String CLIENT_ACTION_DELETE = "client_delete";
+    public static final String CLIENT_READ_ONLY_KEY = "client_read_only";
+
     private ClientViewModel clientViewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MainActivity)requireActivity()).hideUpButton();
+        ((MainActivity) requireActivity()).hideUpButton();
         // Get a new or existing ViewModel from the ViewModelProvider.
         clientViewModel = new ViewModelProvider(this).get(ClientViewModel.class);
 
@@ -71,8 +76,12 @@ public class ClientListFragment extends BaseFragment implements ListOnItemClickL
         clientViewModel.getClientsLiveData().observe(requireActivity(), adapter::submitList);
 
         FloatingActionButton addButton = view.findViewById(R.id.client_list_add_btn);
-        addButton.setOnClickListener(v -> navigateTo(R.id.nav_from_client_list_to_client_new, null));
+        addButton.setOnClickListener(v -> {
+            navigateTo(R.id.nav_from_client_list_to_client_new, null);
+        });
 
+        enableSwipeToLeftAndDeleteItem(recyclerView);
+        enableSwipeToRightAndViewItem(recyclerView);
         Log.d(Utility.buildTag(getClass(), "onCreateView"), "");
         return view;
     }
@@ -105,13 +114,13 @@ public class ClientListFragment extends BaseFragment implements ListOnItemClickL
                 // redirect to timesheet entry list fragment
                 Bundle bundle = new Bundle();
                 bundle.putLong(CLIENT_ID_KEY, client.getId());
-                //bundle.putBoolean(CLIENT_READ_ONLY_KEY, timesheet.isBilled());
+                bundle.putBoolean(CLIENT_READ_ONLY_KEY, !client.isActive());
                 openClientProjectListView(bundle);
             } else if (CLIENT_ACTION_EDIT.equals(action)) {
                 // redirect to timesheet entry list fragment
                 Bundle bundle = new Bundle();
-                bundle.putString(CLIENT_JSON_KEY, clientJson);
-                //bundle.putBoolean(CLIENT_READ_ONLY_KEY, timesheet.isBilled());
+                bundle.putLong(CLIENT_ID_KEY, client.getId());
+                bundle.putBoolean(CLIENT_READ_ONLY_KEY, !client.isActive());
                 openClientDetailsView(bundle);
             } else {
                 Log.w(Utility.buildTag(getClass(), "handleClientActions"), "unknown action: " + action);
@@ -133,17 +142,49 @@ public class ClientListFragment extends BaseFragment implements ListOnItemClickL
     }
 
     /*
-    * catch table item click
+     * catch table item click
      */
     @Override
     public void onItemClick(Bundle bundle) {
-       navigateTo(R.id.nav_from_client_list_to_project_list, bundle);
+        navigateTo(R.id.nav_from_client_list_to_project_list, bundle);
     }
+
+    private void enableSwipeToRightAndViewItem(RecyclerView recyclerView) {
+        SwipeCallback swipeToViewCallback = new SwipeCallback(requireContext(), ItemTouchHelper.RIGHT, getResources().getColor(R.color.color_bg_swipe_right, null), R.drawable.ic_add_black_24dp) {
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+                final int selectedProjectPos = viewHolder.getAbsoluteAdapterPosition();
+                ClientDto clientDto = clientViewModel.getClientsLiveData().getValue().get(selectedProjectPos);
+                Bundle bundle = new Bundle();
+                bundle.putLong(CLIENT_ID_KEY, clientDto.getId());
+                bundle.putBoolean(CLIENT_READ_ONLY_KEY, !clientDto.isActive());
+                navigateTo(R.id.client_new_fragment, bundle);
+            }
+        };
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToViewCallback);
+        itemTouchhelper.attachToRecyclerView(recyclerView);
+        Log.i(Utility.buildTag(getClass(), "enableSwipeToRightAndAdd"), "enabled swipe handler for timesheet list item");
+    }
+
+    private void enableSwipeToLeftAndDeleteItem(RecyclerView recyclerView) {
+        SwipeCallback swipeToDeleteCallback = new SwipeCallback(requireContext(), ItemTouchHelper.LEFT, getResources().getColor(R.color.color_bg_swipe_left, null), R.drawable.ic_delete_black_24dp) {
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+                final int selectedClientPos = viewHolder.getAbsoluteAdapterPosition();
+                ClientDto clientDto = clientViewModel.getClientsLiveData().getValue().get(selectedClientPos);
+                // confirmDeleteProjectDialog(getString(R.string.msg_delete_timesheet), getString(R.string.msg_confirm_delete), clientDto.getId());
+            }
+        };
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
+        itemTouchhelper.attachToRecyclerView(recyclerView);
+        Log.i(Utility.buildTag(getClass(), "enableSwipeToLeftAndDeleteItem"), "enabled swipe handler for delete timesheet list item");
+    }
+
 
     private void deleteClient(Long clientId) {
         try {
-           // Client client = clientViewModel.getClient(clientId);
-           // clientViewModel.deleteClient(client);
+            // Client client = clientViewModel.getClient(clientId);
+            // clientViewModel.deleteClient(client);
             showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_delete_msg_format), "not implemented"), R.color.color_snackbar_text_delete);
         } catch (TerexApplicationException | InputValidationException e) {
             showInfoDialog("Info", e.getMessage());

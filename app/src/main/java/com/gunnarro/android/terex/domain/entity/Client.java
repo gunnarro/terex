@@ -100,6 +100,10 @@ public class Client extends BaseEntity {
         this.invoiceEmailAddress = invoiceEmailAddress;
     }
 
+    public boolean isActive() {
+        return ClientStatusEnum.ACTIVE.name().equals(status);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
