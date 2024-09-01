@@ -18,6 +18,7 @@ import java.util.Locale;
 
 public class TimesheetEntryViewHolder extends RecyclerView.ViewHolder {
     private final ImageView timesheetEntryDeleteIconView;
+    private final ImageView timesheetEntryStatusIconView;
     private final TextView timesheetEntryLineHeaderView;
     private final TextView timesheetEntryLine1StatusView;
     private final TextView timesheetEntryLine1LabelView;
@@ -28,6 +29,7 @@ public class TimesheetEntryViewHolder extends RecyclerView.ViewHolder {
     private TimesheetEntryViewHolder(View itemView) {
         super(itemView);
         timesheetEntryDeleteIconView = itemView.findViewById(R.id.ic_timesheet_entry_row_delete);
+        timesheetEntryStatusIconView = itemView.findViewById(R.id.ic_timesheet_entry_row_status);
         timesheetEntryLineHeaderView = itemView.findViewById(R.id.timesheet_entry_line_header);
         timesheetEntryLine1StatusView = itemView.findViewById(R.id.timesheet_entry_line_1_status);
         timesheetEntryLine1LabelView = itemView.findViewById(R.id.timesheet_entry_line_1_label);
@@ -43,8 +45,16 @@ public class TimesheetEntryViewHolder extends RecyclerView.ViewHolder {
 
     public void bindListLine(TimesheetEntryDto timesheetEntryDto) {
         if (timesheetEntryDto.isClosed()) {
-            // hide the delete icon
             timesheetEntryDeleteIconView.setVisibility(View.GONE);
+            timesheetEntryStatusIconView.setVisibility(View.VISIBLE);
+        } else {
+            timesheetEntryDeleteIconView.setVisibility(View.VISIBLE);
+            timesheetEntryStatusIconView.setVisibility(View.GONE);
+        }
+        if (timesheetEntryDto.isClosed()) {
+            // hide the delete icon
+
+            //timesheetEntryDeleteIconView.setImageIcon(timesheetEntryDeleteIconView.setImageIcon(R.drawable.ic_status_closed_24));
         }
         timesheetEntryLineHeaderView.setText(timesheetEntryDto.getProjectDto().getName());
         timesheetEntryLine1StatusView.setText(timesheetEntryDto.getWorkdayDate().format(DateTimeFormatter.ofPattern("dd", Locale.getDefault())));

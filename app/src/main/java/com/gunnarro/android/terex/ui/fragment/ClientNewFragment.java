@@ -129,6 +129,8 @@ public class ClientNewFragment extends BaseFragment implements View.OnClickListe
         Log.d("update client view", clientDto.toString());
         // set hidden id's
         ((TextView) view.findViewById(R.id.client_new_id)).setText(clientDto.getId().toString());
+        ((TextView) view.findViewById(R.id.client_new_status)).setText(clientDto.getStatus());
+        ((TextView) view.findViewById(R.id.client_new_invoice_email)).setText(clientDto.getInvoiceEmailAddress());
 
         updateOrganizationInputData(view, clientDto.getOrganizationDto());
 
@@ -145,7 +147,7 @@ public class ClientNewFragment extends BaseFragment implements View.OnClickListe
         ((TextView) view.findViewById(R.id.client_new_org_name)).setText(organizationDto.getName());
         ((TextView) view.findViewById(R.id.client_new_org_number)).setText(organizationDto.getOrganizationNumber());
         if (organizationDto.getBusinessAddress() != null) {
-            ((TextView) view.findViewById(R.id.client_new_business_addr_id)).setText(organizationDto.getId().toString());
+            ((TextView) view.findViewById(R.id.client_new_business_addr_id)).setText(organizationDto.getBusinessAddress().getId().toString());
             ((TextView) view.findViewById(R.id.client_new_org_street_name)).setText(organizationDto.getBusinessAddress().getStreetAddress());
             ((TextView) view.findViewById(R.id.client_new_org_postal_code)).setText(organizationDto.getBusinessAddress().getPostalCode());
             ((TextView) view.findViewById(R.id.client_new_org_city_name)).setText(organizationDto.getBusinessAddress().getCity());
@@ -201,6 +203,9 @@ public class ClientNewFragment extends BaseFragment implements View.OnClickListe
         if (clientIdView.getText() != null && !clientIdView.getText().toString().isBlank()) {
             clientDto.setId(Long.parseLong(clientIdView.getText().toString()));
         }
+        clientDto.setStatus(((TextView)requireView().findViewById(R.id.client_new_status)).getText().toString());
+
+
 /*
         EditText createdDateView = requireView().findViewById(R.id.client_new_created_date);
         LocalDateTime createdDateTime = Utility.toLocalDateTime(createdDateView.getText().toString());

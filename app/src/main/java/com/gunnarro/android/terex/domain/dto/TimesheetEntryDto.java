@@ -32,6 +32,8 @@ public class TimesheetEntryDto {
     private ProjectDto projectDto;
 
     public TimesheetEntryDto() {
+        workdayDate = LocalDate.now();
+        type = TimesheetEntry.TimesheetEntryTypeEnum.REGULAR.name();
     }
 
     public Long getId() {
@@ -74,11 +76,12 @@ public class TimesheetEntryDto {
         this.projectId = projectId;
     }
 
+    @NonNull
     public LocalDate getWorkdayDate() {
         return workdayDate;
     }
 
-    public void setWorkdayDate(LocalDate workdayDate) {
+    public void setWorkdayDate(@NonNull LocalDate workdayDate) {
         this.workdayDate = workdayDate;
     }
 
@@ -114,11 +117,12 @@ public class TimesheetEntryDto {
         this.comments = comments;
     }
 
+    @NonNull
     public String getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(@NonNull String type) {
         this.type = type;
     }
 
@@ -153,7 +157,7 @@ public class TimesheetEntryDto {
     }
 
     public String getWorkdayDateDayName() {
-        return workdayDate.format(DateTimeFormatter.ofPattern("EEEE", new Locale("no","NO")));
+        return workdayDate.format(DateTimeFormatter.ofPattern("EEEE", new Locale("no", "NO")));
     }
 
     public boolean isWeekend() {
@@ -161,27 +165,27 @@ public class TimesheetEntryDto {
     }
 
     public boolean isRegularWorkDay() {
-        return type.equals(TimesheetEntry.TimesheetEntryTypeEnum.REGULAR.name());
+        return TimesheetEntry.TimesheetEntryTypeEnum.REGULAR.name().equals(type);
     }
 
     public boolean isRegularWorkDayWithHours() {
-        return type.equals(TimesheetEntry.TimesheetEntryTypeEnum.REGULAR.name()) && workedSeconds > 0;
+        return TimesheetEntry.TimesheetEntryTypeEnum.REGULAR.name().equals(type) && workedSeconds > 0;
     }
 
     public boolean isVacationDay() {
-        return type.equals(TimesheetEntry.TimesheetEntryTypeEnum.VACATION.name());
+        return TimesheetEntry.TimesheetEntryTypeEnum.VACATION.name().equals(type);
     }
 
     public boolean isSickDay() {
-        return type.equals(TimesheetEntry.TimesheetEntryTypeEnum.SICK.name());
+        return TimesheetEntry.TimesheetEntryTypeEnum.SICK.name().equals(type);
     }
 
     public boolean isOpen() {
-        return status.equals(TimesheetEntry.TimesheetEntryStatusEnum.OPEN.name());
+        return TimesheetEntry.TimesheetEntryStatusEnum.OPEN.name().equals(status);
     }
 
     public boolean isClosed() {
-        return status.equals(TimesheetEntry.TimesheetEntryStatusEnum.CLOSED.name());
+        return TimesheetEntry.TimesheetEntryStatusEnum.CLOSED.name().equals(status);
     }
 
     @Override

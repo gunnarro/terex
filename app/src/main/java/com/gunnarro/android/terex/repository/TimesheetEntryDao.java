@@ -57,8 +57,8 @@ public interface TimesheetEntryDao {
     @Query("SELECT * FROM timesheet_entry WHERE timesheet_id = :timesheetId ORDER BY workday_date ASC")
     LiveData<List<TimesheetEntry>> getTimesheetEntryListLiveData(Long timesheetId);
 
-    @Query("UPDATE timesheet_entry SET status = 'BILLED' WHERE id = :timesheetEntryId")
-    int closeTimesheetEntry(Long timesheetEntryId);
+    @Query("UPDATE timesheet_entry SET status = :status WHERE id = :timesheetEntryId")
+    int updateTimesheetEntryStatus(Long timesheetEntryId, String status);
 
     /**
      *

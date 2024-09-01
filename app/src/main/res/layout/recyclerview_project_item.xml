@@ -9,6 +9,7 @@
     android:elevation="2dp"
     android:rowCount="1"
     tools:context="com.gunnarro.android.terex.ui.MainActivity">
+
     <!-- first row, icon left aligned -->
     <ImageView
         android:id="@+id/project_line_1_status"
@@ -18,7 +19,7 @@
         android:fontFamily="sans-serif-medium"
         android:gravity="center"
         android:maxLines="3"
-        android:src="@drawable/ic_status_closed_24"
+        android:src="@drawable/ic_status_active_24"
         android:textAlignment="center" />
 
     <TableLayout

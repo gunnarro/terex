@@ -15,7 +15,7 @@ import com.gunnarro.android.terex.utility.Utility;
 import java.util.Locale;
 
 public class ProjectViewHolder extends RecyclerView.ViewHolder {
-    private final ImageView LineHeaderStatusImgView;
+    private final ImageView lineHeaderStatusImgView;
     private final TextView lineHeaderView;
     private final TextView line1LabelView;
     private final TextView line1ValueView;
@@ -24,7 +24,7 @@ public class ProjectViewHolder extends RecyclerView.ViewHolder {
 
     private ProjectViewHolder(View itemView) {
         super(itemView);
-        LineHeaderStatusImgView = itemView.findViewById(R.id.project_line_1_status);
+        lineHeaderStatusImgView = itemView.findViewById(R.id.project_line_1_status);
         lineHeaderView = itemView.findViewById(R.id.project_line_header);
         line1LabelView = itemView.findViewById(R.id.project_line_1_label);
         line1ValueView = itemView.findViewById(R.id.project_line_1_value);
@@ -45,9 +45,9 @@ public class ProjectViewHolder extends RecyclerView.ViewHolder {
             line1ValueView.setEnabled(false);
         }
         if (projectDto.isActive()) {
-            LineHeaderStatusImgView.setImageResource(R.drawable.ic_status_active_24);
+            lineHeaderStatusImgView.setImageResource(R.drawable.ic_status_active_24);
         } else if (projectDto.isClosed()) {
-            LineHeaderStatusImgView.setImageResource(R.drawable.ic_status_closed_24);
+            lineHeaderStatusImgView.setImageResource(R.drawable.ic_status_closed_24);
         }
         line1LabelView.setText("Hourly rate");
         line1ValueView.setText(String.format("%s", String.format(Locale.getDefault(), "%.2f Kr", Double.valueOf(projectDto.getHourlyRate().toString()))));

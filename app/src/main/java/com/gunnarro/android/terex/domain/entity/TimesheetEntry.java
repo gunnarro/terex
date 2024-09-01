@@ -115,11 +115,12 @@ public class TimesheetEntry extends BaseEntity {
         this.timesheetId = timesheetId;
     }
 
+    @NonNull
     public Long getProjectId() {
         return projectId;
     }
 
-    public void setProjectId(Long projectId) {
+    public void setProjectId(@NonNull Long projectId) {
         this.projectId = projectId;
     }
 
@@ -171,11 +172,12 @@ public class TimesheetEntry extends BaseEntity {
         return null;
     }
 
+    @NonNull
     public Long getWorkedSeconds() {
         return workedSeconds;
     }
 
-    public void setWorkedSeconds(Long workedSeconds) {
+    public void setWorkedSeconds(@NonNull Long workedSeconds) {
         this.workedSeconds = workedSeconds;
     }
 

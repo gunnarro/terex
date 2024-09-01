@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 
 import org.junit.jupiter.api.Test;
@@ -14,6 +13,23 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 
 class TimesheetEntryDtoTest {
+
+
+   @Test
+   void isClosed() {
+       TimesheetEntryDto timesheetEntryDto = new TimesheetEntryDto();
+       timesheetEntryDto.setStatus(TimesheetEntry.TimesheetEntryStatusEnum.CLOSED.name());
+       assertTrue(timesheetEntryDto.isClosed());
+       assertFalse(timesheetEntryDto.isOpen());
+   }
+
+    @Test
+    void isOPen() {
+        TimesheetEntryDto timesheetEntryDto = new TimesheetEntryDto();
+        timesheetEntryDto.setStatus(TimesheetEntry.TimesheetEntryStatusEnum.OPEN.name());
+        assertTrue(timesheetEntryDto.isOpen());
+        assertFalse(timesheetEntryDto.isClosed());
+    }
 
     @Test
     void isWeekend() {

@@ -293,7 +293,7 @@ public class TimesheetRepository {
 
     public boolean closeTimesheetEntry(Long timesheetEntryId) {
         AppDatabase.databaseExecutor.execute(() -> {
-            timesheetEntryDao.closeTimesheetEntry(timesheetEntryId);
+            timesheetEntryDao.updateTimesheetEntryStatus(timesheetEntryId, TimesheetEntry.TimesheetEntryStatusEnum.CLOSED.name());
         });
         return true;
     }

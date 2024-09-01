@@ -338,7 +338,7 @@ public class TimesheetService {
         timesheet.setStatus(Timesheet.TimesheetStatusEnum.BILLED.name());
         saveTimesheet(timesheet);
 
-        // then close all timesheet entries by setting status to billed
+        // then close all timesheet entries by setting status to closed
         timesheetEntryList.forEach(e -> timesheetRepository.closeTimesheetEntry(e.getId()));
         return TimesheetMapper.toTimesheetSummaryDtoList(timesheetSummaryByWeek);
     }
