@@ -365,7 +365,7 @@ public class TimesheetService {
     }
 
     public String createTimesheetSummaryAttachmentHtml(@NotNull Long timesheetId, @NotNull UserAccountDto userAccountDto, @NotNull ClientDto clientDto, @NotNull String timesheetSummeryMustacheTemplate) {
-        Timesheet timesheet = getTimesheet(timesheetId);
+        Timesheet timesheetDto = getTimesheet(timesheetId);
         List<TimesheetSummary> timesheetSummaryList = getTimesheetSummary(timesheetId);
         double totalBilledAmount = timesheetSummaryList.stream().mapToDouble(TimesheetSummary::getTotalBilledAmount).sum();
         double totalBilledHours = timesheetSummaryList.stream().mapToDouble(TimesheetSummary::getTotalWorkedHours).sum();
@@ -376,8 +376,8 @@ public class TimesheetService {
         Mustache mustache = mf.compile(new StringReader(timesheetSummeryMustacheTemplate), "");
         Map<String, Object> context = new HashMap<>();
         context.put("invoiceAttachmentTitle", "Vedlegg til faktura");
-        context.put("invoiceBillingPeriod", timesheet.getFromDate().format(DateTimeFormatter.ofPattern("yyyy/MM")));
-        context.put("timesheetPeriod", String.format("%s/%s", timesheet.getMonth(), timesheet.getYear()));
+        context.put("invoiceBillingPeriod", timesheetDto.getFromDate().format(DateTimeFormatter.ofPattern("MMMM yyyy")));
+        context.put("timesheetPeriod", String.format("%s/%s", timesheetDto.getMonth(), timesheetDto.getYear()));
         context.put("invoiceIssuer", userAccountDto);
         context.put("invoiceReceiver", clientDto);
         context.put("timesheetProjectCode", String.format("%s %s", clientDto.getProjectList().get(0).getName(), clientDto.getProjectList().get(0).getDescription()));
@@ -397,7 +397,7 @@ public class TimesheetService {
      * Not in use yet, used bt TimesheetSummaryFragment
      */
     public String createTimesheetSummaryHtml(@NotNull Long timesheetId, @NotNull String timesheetSummaryMustacheTemplate) {
-        TimesheetDto timesheet = getTimesheetDto(timesheetId);
+        TimesheetDto timesheetDto = getTimesheetDto(timesheetId);
         List<TimesheetSummary> timesheetSummaryList = createTimesheetSummary(timesheetId, TimesheetSummary.TimesheetSummaryPeriodEnum.WEEK);
         double totalBilledAmount = timesheetSummaryList.stream().mapToDouble(TimesheetSummary::getTotalBilledAmount).sum();
         double totalBilledHours = timesheetSummaryList.stream().mapToDouble(TimesheetSummary::getTotalWorkedHours).sum();
@@ -407,11 +407,11 @@ public class TimesheetService {
         Mustache mustache = mf.compile(new StringReader(timesheetSummaryMustacheTemplate), "");
         Map<String, Object> context = new HashMap<>();
         context.put("invoiceAttachmentTitle", "Vedlegg til faktura");
-        context.put("invoiceBillingPeriod", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM")));
-        context.put("timesheetPeriod", String.format("%s/%s", timesheet.getMonth(), timesheet.getYear()));
-        context.put("company", timesheet.getUserAccountDto().getOrganizationDto());
+        context.put("invoiceBillingPeriod", timesheetDto.getFromDate().format(DateTimeFormatter.ofPattern("MMMM yyyy")));
+        context.put("timesheetPeriod", String.format("%s/%s", timesheetDto.getMonth(), timesheetDto.getYear()));
+        context.put("company", timesheetDto.getUserAccountDto().getOrganizationDto());
         context.put("client", null);
-        context.put("timesheetProjectCode", timesheet.toString());
+        context.put("timesheetProjectCode", timesheetDto.toString());
         context.put("timesheetSummaryList", TimesheetMapper.toTimesheetSummaryDtoList(timesheetSummaryList));
         context.put("totalBilledHours", String.format(Locale.getDefault(), "%.1f", totalBilledHours));
         context.put("totalBilledAmount", String.format(Locale.getDefault(), "%.2f", totalBilledAmount));
