@@ -376,7 +376,7 @@ public class TimesheetService {
         Mustache mustache = mf.compile(new StringReader(timesheetSummeryMustacheTemplate), "");
         Map<String, Object> context = new HashMap<>();
         context.put("invoiceAttachmentTitle", "Vedlegg til faktura");
-        context.put("invoiceBillingPeriod", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM")));
+        context.put("invoiceBillingPeriod", timesheet.getFromDate().format(DateTimeFormatter.ofPattern("yyyy/MM")));
         context.put("timesheetPeriod", String.format("%s/%s", timesheet.getMonth(), timesheet.getYear()));
         context.put("invoiceIssuer", userAccountDto);
         context.put("invoiceReceiver", clientDto);
