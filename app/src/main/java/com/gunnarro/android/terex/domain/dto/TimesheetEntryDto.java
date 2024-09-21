@@ -6,18 +6,14 @@ import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.utility.Utility;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-public class TimesheetEntryDto {
+public class TimesheetEntryDto extends BaseDto {
 
-    private Long id;
-    private LocalDateTime createdDate;
-    private LocalDateTime lastModifiedDate;
     private Long timesheetId;
     private Long projectId;
     @NonNull
@@ -34,30 +30,6 @@ public class TimesheetEntryDto {
     public TimesheetEntryDto() {
         workdayDate = LocalDate.now();
         type = TimesheetEntry.TimesheetEntryTypeEnum.REGULAR.name();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(LocalDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public LocalDateTime getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
     }
 
     public Long getTimesheetId() {
@@ -205,7 +177,7 @@ public class TimesheetEntryDto {
     @Override
     public String toString() {
         return new StringJoiner(", ", TimesheetEntryDto.class.getSimpleName() + "[", "]")
-                .add("id=" + id)
+                .add("id=" + getId())
                 .add("timesheetId=" + timesheetId)
                 .add("projectId=" + projectId)
                 .add("workdayDate=" + workdayDate)

@@ -5,14 +5,11 @@ import androidx.annotation.NonNull;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-public class TimesheetDto {
-    private Long id;
-    private LocalDateTime createdDate;
-    private LocalDateTime lastModifiedDate;
+public class TimesheetDto extends BaseDto {
+
     private UserAccountDto userAccountDto;
     private ClientDto clientDto;
     private String status;
@@ -31,31 +28,7 @@ public class TimesheetDto {
     public TimesheetDto() {}
 
     public TimesheetDto(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(LocalDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public LocalDateTime getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
+        setId(id);
     }
 
     public String getStatus() {
@@ -170,10 +143,6 @@ public class TimesheetDto {
         this.clientDto = clientDto;
     }
 
-    public boolean isNew() {
-        return this.id == null;
-    }
-
     public boolean isActive() {
         return status.equals(Timesheet.TimesheetStatusEnum.ACTIVE.name());
     }
@@ -211,7 +180,7 @@ public class TimesheetDto {
         return new StringJoiner(", ", TimesheetDto.class.getSimpleName() + "[", "]")
                 .add("workingHoursInMonth=" + workingHoursInMonth)
                 .add("registeredWorkedDays=" + registeredWorkedDays)
-                .add("id=" + id)
+                .add("id=" + getId())
                 .add("year=" + year)
                 .add("month=" + month)
                 .add("status='" + status + "'")

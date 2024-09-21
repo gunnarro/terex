@@ -2,12 +2,10 @@ package com.gunnarro.android.terex.domain.dto;
 
 import com.gunnarro.android.terex.domain.entity.UserAccount;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class UserAccountDto {
+public class UserAccountDto extends BaseDto {
 
-    private Long id;
     private String status;
     private String userName;
     private String password;
@@ -15,22 +13,12 @@ public class UserAccountDto {
     private boolean defaultUser;
     private PersonDto personDto;
     private OrganizationDto organizationDto;
-    private LocalDateTime createdDate;
-    private LocalDateTime lastModifiedDate;
 
     public UserAccountDto() {
     }
 
     public UserAccountDto(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+        setId(id);
     }
 
     public String getStatus() {
@@ -87,22 +75,6 @@ public class UserAccountDto {
 
     public void setOrganizationDto(OrganizationDto organizationDto) {
         this.organizationDto = organizationDto;
-    }
-
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(LocalDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public LocalDateTime getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
     }
 
     public boolean isBusiness() {

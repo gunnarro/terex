@@ -3,13 +3,9 @@ package com.gunnarro.android.terex.domain.dto;
 import com.gunnarro.android.terex.domain.entity.Project;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class ProjectDto {
-    private Long id;
-    private LocalDateTime createdDate;
-    private LocalDateTime lastModifiedDate;
+public class ProjectDto extends BaseDto {
     private LocalDate startDate;
     private LocalDate endDate;
     private String name;
@@ -25,30 +21,6 @@ public class ProjectDto {
     public ProjectDto(Long clientId) {
         this();
         this.clientDto = new ClientDto(clientId);
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(LocalDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public LocalDateTime getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
     }
 
     public LocalDate getStartDate() {
@@ -128,7 +100,4 @@ public class ProjectDto {
         return Project.ProjectStatusEnum.CLOSED.name().equals(status);
     }
 
-    public boolean isNew() {
-        return this.id == null;
-    }
 }

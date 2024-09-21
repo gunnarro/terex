@@ -1,15 +1,11 @@
 package com.gunnarro.android.terex.domain.dto;
 
-import com.gunnarro.android.terex.domain.entity.Timesheet;
-
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class InvoiceDto {
-
-    private Long id;
+public class InvoiceDto extends BaseDto {
 
     private TimesheetDto timesheetDto;
     /**
@@ -45,14 +41,6 @@ public class InvoiceDto {
     private String currency;
 
     private String invoiceType;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public TimesheetDto getTimesheetDto() {
         return timesheetDto;
