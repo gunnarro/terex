@@ -33,12 +33,13 @@
             app:todayLabelColor="@color/calendar_today_date"
             app:type="many_days_picker" />
 
-        <!-- project  and worked time -->
+        <!-- project and worked time input data layout -->
         <LinearLayout
             android:id="@+id/timesheet_entry_work_time_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
+            android:baselineAligned="false"
             android:orientation="horizontal">
 
             <com.google.android.material.textfield.TextInputLayout
@@ -47,7 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="1"
                 android:hint="@string/lbl_project">
 
@@ -82,6 +83,7 @@
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
+        <!-- button layout -->
         <LinearLayout
             android:id="@+id/tbl_timesheet_register_buttons"
             android:layout_width="match_parent"

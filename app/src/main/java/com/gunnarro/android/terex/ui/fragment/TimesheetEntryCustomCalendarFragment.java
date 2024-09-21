@@ -13,7 +13,6 @@ import android.widget.ListPopupWindow;
 
 import com.applandeo.materialcalendarview.CalendarDay;
 import com.applandeo.materialcalendarview.CalendarView;
-import com.applandeo.materialcalendarview.EventDay;
 import com.applandeo.materialcalendarview.exceptions.OutOfDateRangeException;
 import com.google.android.material.textfield.TextInputEditText;
 import com.gunnarro.android.terex.R;
@@ -199,18 +198,19 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
         return calendarDays;
     }
 
-    private List<EventDay> createEventDays(Long timesheetId) {
-        List<EventDay> eventDays = new ArrayList<>();
-        List<TimesheetEntry> timesheetEntryList = timesheetService.getTimesheetEntryList(timesheetId);
-        timesheetEntryList.forEach(t -> {
-            Calendar cal = Calendar.getInstance();
-            cal.set(t.getWorkdayDate().getYear(), t.getWorkdayDate().getMonth().getValue() - 1, t.getWorkdayDate().getDayOfMonth());
-            eventDays.add(new EventDay(cal, R.drawable.timesheet_day_ok_24, getResources().getColor(R.color.color_btn_bg_default, null)));
-            Log.d("TimesheetCustomCalendarFragment", "ADD SELECTED DATE: " + t.getWorkdayDate().toString());
-        });
-        return eventDays;
-    }
-
+    /*
+        private List<EventDay> createEventDays(Long timesheetId) {
+            List<EventDay> eventDays = new ArrayList<>();
+            List<TimesheetEntry> timesheetEntryList = timesheetService.getTimesheetEntryList(timesheetId);
+            timesheetEntryList.forEach(t -> {
+                Calendar cal = Calendar.getInstance();
+                cal.set(t.getWorkdayDate().getYear(), t.getWorkdayDate().getMonth().getValue() - 1, t.getWorkdayDate().getDayOfMonth());
+                eventDays.add(new EventDay(cal, R.drawable.timesheet_day_ok_24, getResources().getColor(R.color.color_btn_bg_default, null)));
+                Log.d("TimesheetCustomCalendarFragment", "ADD SELECTED DATE: " + t.getWorkdayDate().toString());
+            });
+            return eventDays;
+        }
+    */
     private List<CalendarDay> createSelectedDates(Long timesheetId) {
         List<TimesheetEntry> timesheetEntryList = timesheetService.getTimesheetEntryList(timesheetId);
         List<CalendarDay> selectedDates = new ArrayList<>();
@@ -218,6 +218,7 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
             Calendar cal = Calendar.getInstance();
             cal.set(t.getWorkdayDate().getYear(), t.getWorkdayDate().getMonth().getValue() - 1, t.getWorkdayDate().getDayOfMonth());
             CalendarDay calendarDay = new CalendarDay(cal);
+
             if (t.isRegularWorkDay()) {
                 calendarDay.setLabelColor(R.color.timesheet_entry_type_regular);
                 calendarDay.setImageResource(R.drawable.timesheet_entry_regular_24);
@@ -252,11 +253,11 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
 
     private TimesheetEntry readTimesheetEntryInputData(TimesheetEntry.TimesheetEntryTypeEnum type) {
         TimesheetEntry timesheetEntry = readTimesheetEntryFromBundle();
-        // need only update the work day date because we all other data is read from the last added timesheet.
+        // need only update the work day date because all other data is read from the last added timesheet.
         timesheetEntry.setType(type.name());
         timesheetEntry.setWorkdayDate(selectedWorkDayDate);
         AutoCompleteTextView projectSpinner = requireView().findViewById(R.id.timesheet_calendar_project_spinner);
-        // some trouble to get the project id, so this mey be to complicated
+        // FIXME some trouble to get the project id, so this mey be to complicated
         int count = projectSpinner.getAdapter().getCount();
         for (int i = 0; i < count; i++) {
             SpinnerItem item = (SpinnerItem) projectSpinner.getAdapter().getItem(i);
@@ -275,11 +276,18 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
         if (timesheetEntry.isRegularWorkDay() && timesheetEntry.getStartTime() == null) {
             timesheetEntry.setStartTime(LocalTime.of(8, 0));
         }
-
-        if (timesheetEntry.isVacationDay() || timesheetEntry.isSickDay()) {
+        // set work time equal to 0 for both sick and vacation days
+        if (!timesheetEntry.isRegularWorkDay()) {
             // set worked time to 0.
             timesheetEntry.setStartTime(null);
             timesheetEntry.setWorkedSeconds(0L);
+            if (timesheetEntry.getComments() == null || timesheetEntry.getComments().isEmpty()) {
+                if (timesheetEntry.isVacationDay()) {
+                    timesheetEntry.setComments(getString(R.string.lbl_vacation));
+                } else {
+                    timesheetEntry.setComments(getString(R.string.lbl_sick));
+                }
+            }
         }
         return timesheetEntry;
     }

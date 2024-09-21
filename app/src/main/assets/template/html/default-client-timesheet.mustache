@@ -86,7 +86,7 @@
                                     <td class="text-start {{#isWeekend}}text-primary{{/isWeekend}} {{#isSickDay}}text-muted{{/isSickDay}} {{#isVacationDay}}text-muted{{/isVacationDay}}">{{workdayDateDayName}}</td>
                                     <td class="text-center">{{#isRegularWorkDayWithHours}} {{startTime}} -  {{endTime}} {{/isRegularWorkDayWithHours}}</td>
                                     <td class="text-end">{{#isRegularWorkDayWithHours}} {{workedHours}} {{/isRegularWorkDayWithHours}}</td>
-                                    <td class="text-start ps-5">{{#isSickDay}}sick{{/isSickDay}} {{#isVacationDay}}vacation{{/isVacationDay}} {{comment}}</td>
+                                    <td class="text-start ps-5">{{comment}}</td>
                                 </tr>
                                 {{/timesheetEntryDtoList}}
                                 <tr class="line-bottom">

@@ -51,11 +51,6 @@ public class TimesheetEntryViewHolder extends RecyclerView.ViewHolder {
             timesheetEntryDeleteIconView.setVisibility(View.VISIBLE);
             timesheetEntryStatusIconView.setVisibility(View.GONE);
         }
-        if (timesheetEntryDto.isClosed()) {
-            // hide the delete icon
-
-            //timesheetEntryDeleteIconView.setImageIcon(timesheetEntryDeleteIconView.setImageIcon(R.drawable.ic_status_closed_24));
-        }
         timesheetEntryLineHeaderView.setText(timesheetEntryDto.getProjectDto().getName());
         timesheetEntryLine1StatusView.setText(timesheetEntryDto.getWorkdayDate().format(DateTimeFormatter.ofPattern("dd", Locale.getDefault())));
         // can have status OPEN or CLOSED
@@ -65,14 +60,17 @@ public class TimesheetEntryViewHolder extends RecyclerView.ViewHolder {
             timesheetEntryLine1StatusView.setTextColor(timesheetEntryLine1StatusView.getResources().getColor(R.color.timesheet_entry_status_closed, null));
             itemView.findViewById(R.id.ic_timesheet_entry_row_delete).setVisibility(View.GONE);
         }
-        timesheetEntryLine1LabelView.setText(timesheetEntryDto.getType());
+
         if (timesheetEntryDto.isRegularWorkDay()) {
+            timesheetEntryLine1LabelView.setText((R.string.lbl_regular_workday));
             timesheetEntryLine1LabelView.setTextColor(timesheetEntryLine1StatusView.getResources().getColor(R.color.timesheet_entry_type_regular, null));
             timesheetEntryLine2LabelView.setText(String.format("%s - %s", Utility.formatTime(timesheetEntryDto.getStartTime()), Utility.formatTime(timesheetEntryDto.getEndTime())));
             timesheetEntryLine2ValueView.setText(timesheetEntryDto.getWorkedHours());
         } else if (timesheetEntryDto.isVacationDay()) {
+            timesheetEntryLine1LabelView.setText((R.string.lbl_vacation));
             timesheetEntryLine1LabelView.setTextColor(timesheetEntryLine1StatusView.getResources().getColor(R.color.timesheet_entry_type_vacation, null));
         } else if (timesheetEntryDto.isSickDay()) {
+            timesheetEntryLine1LabelView.setText((R.string.lbl_sick));
             timesheetEntryLine1LabelView.setTextColor(timesheetEntryLine1StatusView.getResources().getColor(R.color.timesheet_entry_type_sick, null));
         }
         timesheetEntryLine1ValueView.setText("");
