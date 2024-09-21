@@ -58,6 +58,13 @@
             android:baselineAligned="false"
             android:orientation="vertical">
 
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/user_account_new_is_default_user"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_is_default_user">
+            </com.google.android.material.checkbox.MaterialCheckBox>
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/user_account_new_username_layout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
@@ -89,6 +96,32 @@
                     android:layout_height="wrap_content"
                     android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/user_account_new_account_status_btn_grp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                app:singleSelection="true">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/user_account_new_account_status_active"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:checked="true"
+                    android:text="Active" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/user_account_new_account_status_deactivated"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:enabled="false"
+                    android:text="Deactivated" />
+            </com.google.android.material.button.MaterialButtonToggleGroup>
 
             <com.google.android.material.button.MaterialButtonToggleGroup
                 android:id="@+id/user_account_new_account_type_btn_grp"

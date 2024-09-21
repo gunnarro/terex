@@ -14,6 +14,7 @@ import com.gunnarro.android.terex.domain.entity.InvoiceAttachment;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
+import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.integration.jira.TempoApi;
 import com.gunnarro.android.terex.repository.InvoiceRepository;
 import com.gunnarro.android.terex.repository.TimesheetRepository;
@@ -78,24 +79,26 @@ public class FunctionalTest extends IntegrationTestSetup {
         Long testProjectId = projectService.saveProject(TestData.createProjectDto(null, clientId, "Terex testing", 1240));
         assertTrue(testProjectId > 0);
 
-        // create timesheet and assign it to the project
-        Timesheet newTimesheet = Timesheet.createDefault(userAccountId, clientId, 2024, 1);
+        // create timesheet and assign it to the client
+        Timesheet newTimesheet = Timesheet.createDefault(userAccountId, clientId, 2020, 1);
         Long timesheetId = timesheetService.saveTimesheet(newTimesheet);
         assertTrue(timesheetId > 0);
+        assertEquals("2020-01-01", newTimesheet.getFromDate().toString());
+        assertEquals("2020-01-31", newTimesheet.getToDate().toString());
 
-        // add time entry to the timesheet
-        Long devTimesheetEntryId = timesheetService.saveTimesheetEntry(TimesheetEntry.createDefault(timesheetId, devProjectId, LocalDate.of(2024, 1, 5)));
+        // add time entry to the timesheet and assign the entry to a project
+        Long devTimesheetEntryId = timesheetService.saveTimesheetEntry(TimesheetEntry.createDefault(timesheetId, devProjectId, LocalDate.of(2020, 1, 1)));
         assertTrue(devTimesheetEntryId > 0);
-        Long testTimesheetEntryId = timesheetService.saveTimesheetEntry(TimesheetEntry.createDefault(timesheetId, testProjectId, LocalDate.of(2024, 1, 6)));
+        Long testTimesheetEntryId = timesheetService.saveTimesheetEntry(TimesheetEntry.createDefault(timesheetId, testProjectId, LocalDate.of(2020, 1, 2)));
         assertTrue(testTimesheetEntryId > 0);
         // sick and vacation should not be included in the invoice summary
-        Long sickTimesheetEntryId = timesheetService.saveTimesheetEntry(TimesheetEntry.createNotWorked(timesheetId, testProjectId, LocalDate.of(2024, 1, 7), TimesheetEntry.TimesheetEntryTypeEnum.SICK.name()));
+        Long sickTimesheetEntryId = timesheetService.saveTimesheetEntry(TimesheetEntry.createNotWorked(timesheetId, testProjectId, LocalDate.of(2020, 1, 6), TimesheetEntry.TimesheetEntryTypeEnum.SICK.name()));
         assertTrue(sickTimesheetEntryId > 0);
-        Long vacationTimesheetEntryId = timesheetService.saveTimesheetEntry(TimesheetEntry.createNotWorked(timesheetId, testProjectId, LocalDate.of(2024, 1, 8), TimesheetEntry.TimesheetEntryTypeEnum.VACATION.name()));
+        Long vacationTimesheetEntryId = timesheetService.saveTimesheetEntry(TimesheetEntry.createNotWorked(timesheetId, testProjectId, LocalDate.of(2020, 1, 7), TimesheetEntry.TimesheetEntryTypeEnum.VACATION.name()));
         assertTrue(vacationTimesheetEntryId > 0);
 
         // check number of timesheet entries
-        assertEquals(1, timesheetService.getTimesheetDtoList(2024).size());
+        assertEquals(1, timesheetService.getTimesheetDtoList(2020).size());
         assertEquals(2, timesheetService.getTimesheetDto(1L).getClientDto().getProjectList().size());
 
         // set timesheet ready for billing
@@ -112,7 +115,7 @@ public class FunctionalTest extends IntegrationTestSetup {
         Long timesheetSummaryAttachmentId = invoiceService.createTimesheetSummaryAttachment(invoiceId, timesheetSummaryMustacheTemplate);
         assertNotNull(timesheetSummaryAttachmentId);
         InvoiceAttachment timesheetSummaryAttachment = invoiceService.getInvoiceAttachment(invoiceId, InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY, InvoiceService.InvoiceAttachmentFileTypes.HTML);
-        assertEquals("client-company-name_fakturerte_timer_2024-01", timesheetSummaryAttachment.getFileName());
+        assertEquals("client-company-name_fakturerte_timer_2020-01", timesheetSummaryAttachment.getFileName());
         assertNotNull(timesheetSummaryAttachment.getFileContent());
 
         // create client timesheet pdf and timesheet summery pdf, used as attachment for the invoice
@@ -120,23 +123,25 @@ public class FunctionalTest extends IntegrationTestSetup {
         Long invoiceAttachmentId = invoiceService.createClientTimesheetAttachment(invoiceId, timesheetId, clientTimesheetMustacheTemplate);
         assertTrue(invoiceAttachmentId > 0);
         InvoiceAttachment clientTimesheetAttachment = invoiceService.getInvoiceAttachment(invoiceId, InvoiceService.InvoiceAttachmentTypesEnum.CLIENT_TIMESHEET, InvoiceService.InvoiceAttachmentFileTypes.HTML);
-        assertEquals("client-company-name_timeliste_2024-01", clientTimesheetAttachment.getFileName());
+        assertEquals("client-company-name_timeliste_2020-01", clientTimesheetAttachment.getFileName());
         assertNotNull(clientTimesheetAttachment.getFileContent());
 
         // check timesheet summary
         List<TimesheetSummary> timesheetSummaryList = timesheetService.getTimesheetSummary(timesheetId);
         assertEquals(2, timesheetSummaryList.size());
         assertEquals("WEEK", timesheetSummaryList.get(0).getSummedByPeriod());
+        assertEquals("2019-12-30", timesheetSummaryList.get(0).getFromDate().toString());
+        assertEquals("2020-01-05", timesheetSummaryList.get(0).getToDate().toString());
         assertEquals("17250.0", timesheetSummaryList.get(0).getTotalBilledAmount().toString());
         assertEquals("0", timesheetSummaryList.get(0).getTotalVacationDays().toString());
         assertEquals("0", timesheetSummaryList.get(0).getTotalSickLeaveDays().toString());
         assertEquals("2", timesheetSummaryList.get(0).getTotalWorkedDays().toString());
         assertEquals("15.0", timesheetSummaryList.get(0).getTotalWorkedHours().toString());
-        assertEquals("2024", timesheetSummaryList.get(0).getYear().toString());
-        assertEquals("Jan", timesheetSummaryList.get(0).getMonthInYear());
+        assertEquals("2020", timesheetSummaryList.get(0).getYear().toString());
+        assertEquals("Dec", timesheetSummaryList.get(0).getMonthInYear());
         assertEquals("1", timesheetSummaryList.get(0).getWeekInYear().toString());
-        assertEquals("01.01", timesheetSummaryList.get(0).getFromDateDDMM());
-        assertEquals("07.01", timesheetSummaryList.get(0).getToDateDDMM());
+        assertEquals("30.12", timesheetSummaryList.get(0).getFromDateDDMM());
+        assertEquals("05.01", timesheetSummaryList.get(0).getToDateDDMM());
 
         // check invoice status
         Invoice invoice = invoiceService.getInvoice(invoiceId);
@@ -149,6 +154,18 @@ public class FunctionalTest extends IntegrationTestSetup {
         assertEquals(17250.0, invoice.getAmount(), 0.0);
         assertEquals(4312.5, invoice.getVatAmount(), 0.0);
         assertEquals(InvoiceRepository.InvoiceStatusEnum.COMPLETED.name(), invoice.getStatus());
+
+        // FIXME must fix foreign key config in order to prevent project delete when the project is referenced by timesheet entries
+        // try to delete project, should not be possible when timesheet entries are assigned
+        //ProjectDto closedProjetcDto = projectService.getProject(devProjectId);
+        //closedProjetcDto.setStatus("CLOSED");
+        //projectService.saveProject(closedProjetcDto);
+        try {
+            projectService.deleteProject(devProjectId);
+            fail();
+        } catch (InputValidationException e) {
+            assertEquals("Project is active, not allowed to be delete.", e.getMessage());
+        }
 
         // try to delete timesheet after billing, not allowed
         try {

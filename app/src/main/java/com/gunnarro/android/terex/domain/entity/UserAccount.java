@@ -133,8 +133,10 @@ public class UserAccount extends BaseEntity {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("UserAccount{");
-        sb.append("userName='").append(userName).append('\'');
+        sb.append("id='").append(getId()).append('\'');
+        sb.append(", userName='").append(userName).append('\'');
         sb.append(", password='").append(password).append('\'');
+        sb.append(", status='").append(status).append('\'');
         sb.append(", userAccountType='").append(userAccountType).append('\'');
         sb.append(", organizationId='").append(organizationId).append('\'');
         sb.append(", personId='").append(personId).append('\'');

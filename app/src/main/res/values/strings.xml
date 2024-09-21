@@ -213,4 +213,5 @@
     <string name="title_accounting">Accounting</string>
     <string name="lbl_end_date">End date</string>
     <string name="lbl_start_date">Start date</string>
+    <string name="lbl_is_default_user">Er standard bruker</string>
 </resources>

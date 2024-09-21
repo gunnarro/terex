@@ -2,6 +2,7 @@ package com.gunnarro.android.terex.ui.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.print.PrintAttributes;
 import android.print.PrintDocumentAdapter;
@@ -21,6 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
 
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.dto.InvoiceDto;
@@ -43,6 +45,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class InvoiceDetailsFragment extends BaseFragment {
 
+    private static final String ACCOUNTANT_EMAIL_ADDRESS = "post@regnskapsservice1.no";
     private InvoiceService invoiceService;
     private List<InvoiceService.InvoiceAttachmentTypesEnum> invoiceAttachmentTypes;
     private InvoiceService.InvoiceAttachmentTypesEnum selectedInvoiceAttachmentType = InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY;
@@ -88,7 +91,7 @@ public class InvoiceDetailsFragment extends BaseFragment {
             String billingPeriod = invoiceDto.getBillingPeriodStartDate().format(DateTimeFormatter.ofPattern(Utility.MONTH_YEAR_DATE_PATTERN));
             String emailSubject = String.format("Fakturavedlegg %s", billingPeriod);
             String emailMessage = String.format("Hei,\nHer kommer vedlegg til faktura for %s \n\nFaktura skal sendes per epost til:\n%s\n\nHilsen\nGunnar Rønneberg\ngunnarro as", billingPeriod, invoiceDto.getInvoiceRecipient().getInvoiceEmailAddress());
-            sendInvoiceToClient("post@regnskapsservice1.no", emailSubject, emailMessage, readFile(selectedInvoiceAttachmentType.getFileName()));
+            sendInvoiceToClient(ACCOUNTANT_EMAIL_ADDRESS, emailSubject, emailMessage, readFile(selectedInvoiceAttachmentType.getFileName()));
         }
         return true;
     }
@@ -164,10 +167,11 @@ public class InvoiceDetailsFragment extends BaseFragment {
                 .build();
 
         PrintJob printJob = printManager.print(fileName, printAdapter, printAttributes);
-        Log.d("exportAttachment", "printJob status=" + printJob.isCompleted());
+        Log.d("exportAttachment", "printJob status=" + printJob.isCompleted() + ", file:" + fileName);
     }
 
     private void sendInvoiceToClient(String toEmailAddress, String subject, String message, File pdfFile) {
+        /*
         Intent email = new Intent(Intent.ACTION_SEND);
         email.putExtra(Intent.EXTRA_EMAIL, new String[]{toEmailAddress});
         email.putExtra(Intent.EXTRA_SUBJECT, subject);
@@ -176,6 +180,20 @@ public class InvoiceDetailsFragment extends BaseFragment {
         // need this to prompts email client only
         email.setType("message/rfc822");
         startActivity(Intent.createChooser(email, "Choose Email client:"));
+        */
+        //File file = new File("/Downloads/omegapoint_norge_as_timeliste_2024-01.pdf");
+       // File file = readFile("Downloads/omegapoint_norge_as_timeliste_2024-01.pdf");
+       // Uri fileUri = FileProvider.getUriForFile(requireContext(), requireContext().getApplicationContext().getPackageName() + ".provider", file);
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        emailIntent.setType("vnd.android.cursor.dir/email");
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{toEmailAddress});
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        emailIntent.putExtra(Intent.EXTRA_TEXT, message);
+      //  emailIntent.setDataAndType(fileUri, "text/*");
+      //  emailIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
+        emailIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        startActivity(Intent.createChooser(emailIntent, "Choose Email client:"));
     }
 
     private File readFile(String fileName) {

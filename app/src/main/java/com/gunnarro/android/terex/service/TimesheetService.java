@@ -283,6 +283,7 @@ public class TimesheetService {
         timesheetEntry.setWorkdayWeek(null);
         timesheetEntry.setCreatedDate(null);
         timesheetEntry.setLastModifiedDate(null);
+        timesheetEntry.setComments(null);
         Log.d("getMostRecentTimeSheetEntry", String.format("timesheetId=%s, most recent:%s ", timesheetId, timesheetEntry));
         return timesheetEntry;
     }
@@ -290,8 +291,6 @@ public class TimesheetService {
     public List<TimesheetEntry> getTimesheetEntryList(Long timesheetId) {
         return timesheetRepository.getTimesheetEntryList(timesheetId);
     }
-
-
 
     /**
      * This service return timesheet entries where holidays and free days are added, if missing.

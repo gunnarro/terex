@@ -118,7 +118,6 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
             projectSpinner.setImportantForAutofill(View.IMPORTANT_FOR_AUTOFILL_NO);
         }
 
-
         view.findViewById(R.id.btn_timesheet_calendar_save_regular).setEnabled(true);
         view.findViewById(R.id.btn_timesheet_calendar_save_regular).setOnClickListener(v -> {
             v.setEnabled(false);
@@ -284,7 +283,7 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
             if (timesheetEntry.getComments() == null || timesheetEntry.getComments().isEmpty()) {
                 if (timesheetEntry.isVacationDay()) {
                     timesheetEntry.setComments(getString(R.string.lbl_vacation));
-                } else {
+                } else if (timesheetEntry.isSickDay()) {
                     timesheetEntry.setComments(getString(R.string.lbl_sick));
                 }
             }

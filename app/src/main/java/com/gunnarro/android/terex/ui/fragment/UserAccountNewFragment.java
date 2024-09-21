@@ -7,11 +7,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CheckedTextView;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.checkbox.MaterialCheckBox;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.dto.BusinessAddressDto;
 import com.gunnarro.android.terex.domain.dto.OrganizationDto;
@@ -76,7 +79,6 @@ public class UserAccountNewFragment extends BaseFragment implements View.OnClick
             }
             view.findViewById(R.id.user_account_new_save_btn).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
             saveUserAccount();
-            navigateTo(R.id.nav_to_home, null);
         });
 
         view.findViewById(R.id.user_account_new_cancel_btn).setOnClickListener(v -> {
@@ -111,9 +113,15 @@ public class UserAccountNewFragment extends BaseFragment implements View.OnClick
     private void saveUserAccount() {
         try {
             UserAccountDto userAccountDto = readUserAccountInputData();
+            // validate input data
+            if (!userAccountDto.getUserName().matches("^\\w{4,10}$") ) {
+                showInfoDialog("Error", "Invalid user name! " + userAccountDto.getUserName());
+                return;
+            }
             // finally save user account
             userAccountService.saveUserAccount(userAccountDto);
             showSnackbar(String.format(getResources().getString(R.string.info_user_account_saved_msg_format), userAccountDto.getUserName()), R.color.color_snackbar_text_add);
+            navigateTo(R.id.nav_to_home, null);
         } catch (TerexApplicationException | InputValidationException ex) {
             showInfoDialog("Error", String.format("%s", ex.getMessage()));
         } catch (Exception e) {
@@ -172,10 +180,26 @@ public class UserAccountNewFragment extends BaseFragment implements View.OnClick
             return;
         }
 
+        if (!userAccountDto.isNew()) {
+            view.findViewById(R.id.user_account_new_username).setEnabled(false);
+        }
+
+        ((CheckBox) view.findViewById(R.id.user_account_new_is_default_user)).setChecked(userAccountDto.isDefaultUser());
+        view.findViewById(R.id.user_account_new_is_default_user).setEnabled(false);
         ((TextView) view.findViewById(R.id.user_account_new_id)).setText(String.format("%s", userAccountDto.getId()));
         ((TextView) view.findViewById(R.id.user_account_new_username)).setText(userAccountDto.getUserName());
         ((TextView) view.findViewById(R.id.user_account_new_password)).setText(userAccountDto.getPassword());
 
+        // status checkbox buttons
+        if (userAccountDto.getStatus().equals(UserAccount.UserAccountStatusEnum.ACTIVE.name())) {
+            ((MaterialButton) view.findViewById(R.id.user_account_new_account_status_active)).setChecked(true);
+            ((MaterialButton) view.findViewById(R.id.user_account_new_account_status_deactivated)).setChecked(false);
+        } else if (userAccountDto.getStatus().equals(UserAccount.UserAccountStatusEnum.DEACTIVATED.name())) {
+            ((MaterialButton) view.findViewById(R.id.user_account_new_account_status_active)).setChecked(false);
+            ((MaterialButton) view.findViewById(R.id.user_account_new_account_status_deactivated)).setChecked(true);
+        }
+
+        // account type checkbox buttons
         if (userAccountDto.isPrivate()) {
             ((MaterialButton) view.findViewById(R.id.user_account_new_account_type_private)).setChecked(true);
             ((MaterialButton) view.findViewById(R.id.user_account_new_account_type_business)).setChecked(false);
@@ -208,15 +232,21 @@ public class UserAccountNewFragment extends BaseFragment implements View.OnClick
         userAccountDto.setUserName(((TextView) requireView().findViewById(R.id.user_account_new_username)).getText().toString());
         userAccountDto.setPassword(((TextView) requireView().findViewById(R.id.user_account_new_password)).getText().toString());
 
+        if (((MaterialButton) requireView().findViewById(R.id.user_account_new_account_status_active)).isChecked()) {
+            userAccountDto.setStatus(UserAccount.UserAccountStatusEnum.ACTIVE.name());
+        } else {
+            userAccountDto.setStatus(UserAccount.UserAccountStatusEnum.DEACTIVATED.name());
+        }
+
         if (((MaterialButton) requireView().findViewById(R.id.user_account_new_account_type_private)).isChecked()) {
             userAccountDto.setUserAccountType(UserAccount.UserAccountTypeEnum.PRIVATE.name());
         } else {
             userAccountDto.setUserAccountType(UserAccount.UserAccountTypeEnum.BUSINESS.name());
         }
 
-        if (userAccountDto.getUserAccountType().equals("BUSINESS")) {
+        if (userAccountDto.getUserAccountType().equals(UserAccount.UserAccountTypeEnum.BUSINESS.name())) {
             userAccountDto.setOrganizationDto(readOrganizationInputData());
-        } else if (userAccountDto.getUserAccountType().equals("PRIVATE")) {
+        } else if (userAccountDto.getUserAccountType().equals(UserAccount.UserAccountTypeEnum.PRIVATE.name())) {
             showInfoDialog("INFO", "Private user account is not supported yet!");
         }
         return userAccountDto;
