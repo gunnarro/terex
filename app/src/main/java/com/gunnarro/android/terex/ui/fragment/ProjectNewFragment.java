@@ -64,10 +64,7 @@ public class ProjectNewFragment extends BaseFragment implements View.OnClickList
 
         view.findViewById(R.id.project_delete_btn).setOnClickListener(v -> {
             view.findViewById(R.id.project_delete_btn).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_default, view.getContext().getTheme()));
-            Bundle bundle = new Bundle();
-            bundle.putLong(ProjectListFragment.PROJECT_ID_KEY, projectDto.getId());
-            bundle.putString(ProjectListFragment.PROJECT_ACTION_KEY, ProjectListFragment.PROJECT_ACTION_DELETE);
-            getParentFragmentManager().setFragmentResult(ProjectListFragment.PROJECT_REQUEST_KEY, bundle);
+            deleteProject();
             returnToProjectList(projectDto.getClientDto().getId());
         });
 
@@ -237,11 +234,24 @@ public class ProjectNewFragment extends BaseFragment implements View.OnClickList
             projectService.saveProject(projectDto);
             showSnackbar(String.format("Added new project! %s", projectDto.getName()), R.color.color_snackbar_text_add);
         } catch (TerexApplicationException | InputValidationException ex) {
-            showInfoDialog("Error", String.format("%s", ex.getMessage()));
+            showInfoDialog("Error", String.format("Failed save project! error=%s", ex.getMessage()));
         } catch (Exception e) {
-            showInfoDialog("Error", String.format("%s", e.getCause()));
+            showInfoDialog("Error", String.format("Failed save project! error=%s", e.getCause()));
         }
     }
+
+    private void deleteProject() {
+        try {
+            ProjectDto projectDto = getProjectDtoData();
+            projectService.deleteProject(projectDto.getId());
+            showSnackbar(String.format("Deleted new project! %s", projectDto.getName()), R.color.color_snackbar_text_delete);
+        } catch (TerexApplicationException | InputValidationException ex) {
+            showInfoDialog("Error", String.format("Failed delete project! error=%s", ex.getMessage()));
+        } catch (Exception e) {
+            showInfoDialog("Error", String.format("Failed delete project! error=%s", e.getCause()));
+        }
+    }
+
 
     public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 

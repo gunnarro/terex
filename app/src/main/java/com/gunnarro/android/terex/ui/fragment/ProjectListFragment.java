@@ -106,39 +106,39 @@ public class ProjectListFragment extends BaseFragment implements ListOnItemClick
         }
     }
 
-    private void handleProjectActions(String projectJsonDto, String action) {
-        Log.d(Utility.buildTag(getClass(), "handleProjectActions"), String.format("action: %s, project: %s", action, projectJsonDto));
+    private void handleProjectActions(String projectJsonDtoJson, String action) {
+        Log.d(Utility.buildTag(getClass(), "handleProjectActions"), String.format("action: %s, project: %s", action, projectJsonDtoJson));
         try {
-            ProjectDto project = Utility.gsonMapper().fromJson(projectJsonDto, ProjectDto.class);
+            ProjectDto projectDto = Utility.gsonMapper().fromJson(projectJsonDtoJson, ProjectDto.class);
             if (PROJECT_ACTION_SAVE.equals(action)) {
-                projectViewModel.saveProject(project);
-                showSnackbar(String.format("saved %s", project.getName()), R.color.color_snackbar_text_add);
+                projectViewModel.saveProject(projectDto);
+                showSnackbar(String.format("saved %s", projectDto.getName()), R.color.color_snackbar_text_add);
             } else if (PROJECT_ACTION_DELETE.equals(action)) {
-                if (project.getStatus().equals("ACTIVE")) {
+                if (projectDto.getStatus().equals("ACTIVE")) {
                     showInfoDialog("Info", "Can not delete project with status ACTIVE");
                 } else {
-                    confirmDeleteProjectDialog(getString(R.string.msg_delete_timesheet), getString(R.string.msg_confirm_delete), project.getId());
+                    confirmDeleteProjectDialog(getString(R.string.msg_delete_timesheet), getString(R.string.msg_confirm_delete), projectDto.getId());
                 }
             } else if (PROJECT_ACTION_VIEW.equals(action)) {
                 // redirect to timesheet entry list fragment
                 Bundle bundle = new Bundle();
-                bundle.putLong(PROJECT_ID_KEY, project.getId());
-                bundle.putBoolean(PROJECT_READ_ONLY_KEY, project.isClosed());
+                bundle.putLong(PROJECT_ID_KEY, projectDto.getId());
+                bundle.putBoolean(PROJECT_READ_ONLY_KEY, projectDto.isClosed());
                 // openClientProjectListView(bundle);
             } else if (PROJECT_ACTION_EDIT.equals(action)) {
                 // redirect to timesheet entry list fragment
                 Bundle bundle = new Bundle();
-                bundle.putString(PROJECT_JSON_KEY, projectJsonDto);
-                bundle.putBoolean(PROJECT_READ_ONLY_KEY, project.isClosed());
+                bundle.putString(PROJECT_JSON_KEY, projectJsonDtoJson);
+                bundle.putBoolean(PROJECT_READ_ONLY_KEY, projectDto.isClosed());
                 //openClientDetailsView(bundle);
             } else {
                 Log.w(Utility.buildTag(getClass(), "handleProjectActions"), "unknown action: " + action);
                 showInfoDialog("Info", String.format("Application error!%s Unknown action: %s%s Please report.", action, System.lineSeparator(), System.lineSeparator()));
             }
         } catch (TerexApplicationException | InputValidationException ex) {
-            showInfoDialog("Info", String.format("%s", ex.getMessage()));
+            showInfoDialog("Info", String.format("Error handling project action! action=%s, error=%s", action, ex.getMessage()));
         } catch (Exception e) {
-            showInfoDialog("Error", String.format("%s", e.getCause()));
+            showInfoDialog("Error", String.format("Error handling project action! action=%s, error= %s", action, e.getCause()));
         }
     }
 
