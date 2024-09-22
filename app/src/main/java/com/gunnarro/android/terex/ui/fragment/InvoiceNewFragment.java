@@ -31,20 +31,15 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class InvoiceNewFragment extends BaseFragment {
 
-    private InvoiceService invoiceService;
-    private TimesheetService timesheetService;
-    private ClientService clientService;
-    private UserAccountService userAccountService;
-    private ProjectService projectService;
+    private final InvoiceService invoiceService;
+    private final TimesheetService timesheetService;
+    private final ClientService clientService;
+    private final UserAccountService userAccountService;
+    private final ProjectService projectService;
 
     @Inject
     public InvoiceNewFragment() {
         // Needed by dagger framework
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         this.invoiceService = new InvoiceService();
         this.timesheetService = new TimesheetService();
         this.clientService = new ClientService();

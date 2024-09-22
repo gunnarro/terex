@@ -46,7 +46,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class InvoiceDetailsFragment extends BaseFragment {
 
     private static final String ACCOUNTANT_EMAIL_ADDRESS = "post@regnskapsservice1.no";
-    private InvoiceService invoiceService;
+    private final InvoiceService invoiceService;
     private List<InvoiceService.InvoiceAttachmentTypesEnum> invoiceAttachmentTypes;
     private InvoiceService.InvoiceAttachmentTypesEnum selectedInvoiceAttachmentType = InvoiceService.InvoiceAttachmentTypesEnum.TIMESHEET_SUMMARY;
     private Long invoiceId;
@@ -55,11 +55,6 @@ public class InvoiceDetailsFragment extends BaseFragment {
     @Inject
     public InvoiceDetailsFragment() {
         // Needed by dagger framework
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         invoiceService = new InvoiceService();
     }
 

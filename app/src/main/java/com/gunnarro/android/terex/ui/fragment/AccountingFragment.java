@@ -25,19 +25,12 @@ import javax.inject.Inject;
 
 public class AccountingFragment extends Fragment {
 
-    private InvoiceService invoiceService;
+    private final InvoiceService invoiceService;
 
     @Inject
     public AccountingFragment() {
         // Needed by dagger framework
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
         invoiceService = new InvoiceService();
-        Log.d(Utility.buildTag(getClass(), "onCreate"), "");
     }
 
     @Override

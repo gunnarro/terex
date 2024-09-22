@@ -40,23 +40,16 @@ public class AdminFragment extends BaseFragment {
 
     private NavController navController;
 
-    private TimesheetService timesheetService;
-    private ClientService clientService;
-    private ProjectService projectService;
+    private final TimesheetService timesheetService;
+    private final ClientService clientService;
+    private final ProjectService projectService;
 
     @Inject
     public AdminFragment() {
         // Needed by dagger framework
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
         timesheetService = new TimesheetService();
         clientService = new ClientService();
         projectService = new ProjectService();
-        Log.d(Utility.buildTag(getClass(), "onCreate"), "");
     }
 
     @Override

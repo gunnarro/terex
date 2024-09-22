@@ -42,16 +42,11 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
 
     private LocalDate selectedWorkDayDate;
 
-    private TimesheetService timesheetService;
+    private final TimesheetService timesheetService;
 
     @Inject
     public TimesheetEntryCustomCalendarFragment() {
         // Needed by dagger framework
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         timesheetService = new TimesheetService();
     }
 

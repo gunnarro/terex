@@ -8,13 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CheckedTextView;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.checkbox.MaterialCheckBox;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.dto.BusinessAddressDto;
 import com.gunnarro.android.terex.domain.dto.OrganizationDto;
@@ -41,11 +39,6 @@ public class UserAccountNewFragment extends BaseFragment implements View.OnClick
     @Inject
     public UserAccountNewFragment() {
         bregService = new BregService();
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         userAccountService = new UserAccountService();
     }
 
@@ -54,7 +47,7 @@ public class UserAccountNewFragment extends BaseFragment implements View.OnClick
         super.onCreate(savedInstanceState);
         requireActivity().setTitle(R.string.title_user_account);
         // do not show the action bar
-        setHasOptionsMenu(true);
+        //setHasOptionsMenu(true);
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user_account_new, container, false);
         view.findViewById(R.id.user_account_new_search_org_number_btn).setOnClickListener(v -> {
@@ -95,12 +88,12 @@ public class UserAccountNewFragment extends BaseFragment implements View.OnClick
      * lookup org number in external register, brønnøysund register
      */
     private void lookupOrgNumber() {
-        // clear current data
-        clearOrganizationSearchResult();
         String orgNr = ((TextView) requireView().findViewById(R.id.user_account_new_search_org_number)).getText().toString();
         if (!orgNr.isBlank()) {
             OrganizationDto organizationDto = bregService.findOrganization(orgNr);
             if (organizationDto != null) {
+                // clear current data
+                clearOrganizationSearchResult();
                 updateOrganizationInputData(requireView(), organizationDto);
             } else {
                 showInfoDialog("INFO", "Nothing found for organization number: " + orgNr);
@@ -114,7 +107,7 @@ public class UserAccountNewFragment extends BaseFragment implements View.OnClick
         try {
             UserAccountDto userAccountDto = readUserAccountInputData();
             // validate input data
-            if (!userAccountDto.getUserName().matches("^\\w{4,10}$") ) {
+            if (!userAccountDto.getUserName().matches("^\\w{4,10}$")) {
                 showInfoDialog("Error", "Invalid user name! " + userAccountDto.getUserName());
                 return;
             }

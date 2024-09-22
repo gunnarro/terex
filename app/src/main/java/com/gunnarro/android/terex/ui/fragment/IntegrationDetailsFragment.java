@@ -27,17 +27,11 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class IntegrationDetailsFragment extends BaseFragment {
 
-    private IntegrationService integrationService;
-
+    private final IntegrationService integrationService;
 
     @Inject
     public IntegrationDetailsFragment() {
         // Needed by dagger framework
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         integrationService = new IntegrationService();
     }
 

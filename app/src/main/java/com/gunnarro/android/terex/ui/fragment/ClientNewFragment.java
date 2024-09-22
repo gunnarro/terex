@@ -45,7 +45,7 @@ public class ClientNewFragment extends BaseFragment implements View.OnClickListe
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         requireActivity().setTitle(R.string.title_client_new);
         // do not show the action bar
-        setHasOptionsMenu(true);
+        //setHasOptionsMenu(true);
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_client_new, container, false);
         final ClientDto clientDto = readClientFromBundle();

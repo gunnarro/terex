@@ -7,41 +7,41 @@
     tools:context=".ui.fragment.UserAccountNewFragment"
     tools:ignore="ExtraText">
 
-    <!-- hidden fields -->
+    <!-- hidden id fields -->
     <TextView
         android:id="@+id/user_account_new_id"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:enabled="false"
-        android:visibility="invisible" />
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/user_account_new_org_id"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:enabled="false"
-        android:visibility="invisible" />
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/user_account_new_business_addr_id"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:enabled="false"
-        android:visibility="invisible" />
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/user_account_new_contact_person_id"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:enabled="false"
-        android:visibility="invisible" />
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/user_account_new_contact_info_id"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:enabled="false"
-        android:visibility="invisible" />
+        android:visibility="gone" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -109,8 +109,6 @@
                     style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:checkable="true"
-                    android:checked="true"
                     android:text="Active" />
 
                 <com.google.android.material.button.MaterialButton
@@ -118,8 +116,6 @@
                     style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:checkable="true"
-                    android:enabled="false"
                     android:text="Deactivated" />
             </com.google.android.material.button.MaterialButtonToggleGroup>
 
@@ -135,8 +131,6 @@
                     style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:checkable="true"
-                    android:checked="true"
                     android:text="Business" />
 
                 <com.google.android.material.button.MaterialButton
@@ -144,7 +138,6 @@
                     style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:checkable="true"
                     android:enabled="false"
                     android:text="Private" />
             </com.google.android.material.button.MaterialButtonToggleGroup>
@@ -163,7 +156,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                tools:ignore="UselessParent">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/user_account_new_search_org_number_layout"

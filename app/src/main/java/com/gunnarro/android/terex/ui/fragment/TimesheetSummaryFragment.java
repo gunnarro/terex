@@ -31,19 +31,14 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class TimesheetSummaryFragment extends BaseFragment {
 
-    private TimesheetService timesheetService;
-    private ProjectService projectService;
+    private final TimesheetService timesheetService;
+    private final ProjectService projectService;
 
     private Long timesheetId;
 
     @Inject
     public TimesheetSummaryFragment() {
         // Needed by dagger framework
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         timesheetService = new TimesheetService();
         projectService = new ProjectService();
     }
