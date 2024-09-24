@@ -63,7 +63,6 @@ public class ClientNewFragment extends BaseFragment implements View.OnClickListe
             }
             view.findViewById(R.id.client_new_save_btn).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_default, view.getContext().getTheme()));
             saveClient();
-            navigateTo(R.id.nav_from_client_new_to_client_list, null);
         });
 
         view.findViewById(R.id.client_new_cancel_btn).setOnClickListener(v -> {
@@ -112,6 +111,7 @@ public class ClientNewFragment extends BaseFragment implements View.OnClickListe
             // finally save client
             clientService.saveClient(clientDto);
             showSnackbar(String.format(getResources().getString(R.string.info_client_saved_msg_format), clientDto.getOrganizationDto().getOrganizationNumber(), clientDto.getOrganizationDto().getName()), R.color.color_snackbar_text_add);
+            navigateTo(R.id.nav_from_client_new_to_client_list, null);
         } catch (TerexApplicationException | InputValidationException ex) {
             showInfoDialog("Error", String.format("%s", ex.getMessage()));
         } catch (Exception e) {

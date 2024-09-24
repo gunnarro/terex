@@ -59,13 +59,11 @@ public class ProjectNewFragment extends BaseFragment implements View.OnClickList
         view.findViewById(R.id.project_save_btn).setOnClickListener(v -> {
             view.findViewById(R.id.project_save_btn).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_cancel, view.getContext().getTheme()));
             saveProject();
-            returnToProjectList(projectDto.getClientDto().getId());
         });
 
         view.findViewById(R.id.project_delete_btn).setOnClickListener(v -> {
             view.findViewById(R.id.project_delete_btn).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_default, view.getContext().getTheme()));
             deleteProject();
-            returnToProjectList(projectDto.getClientDto().getId());
         });
 
         view.findViewById(R.id.project_cancel_btn).setOnClickListener(v -> {
@@ -233,6 +231,7 @@ public class ProjectNewFragment extends BaseFragment implements View.OnClickList
             ProjectDto projectDto = getProjectDtoData();
             projectService.saveProject(projectDto);
             showSnackbar(String.format("Added new project! %s", projectDto.getName()), R.color.color_snackbar_text_add);
+            returnToProjectList(projectDto.getClientDto().getId());
         } catch (TerexApplicationException | InputValidationException ex) {
             showInfoDialog("Error", String.format("Failed save project! error=%s", ex.getMessage()));
         } catch (Exception e) {
@@ -245,6 +244,7 @@ public class ProjectNewFragment extends BaseFragment implements View.OnClickList
             ProjectDto projectDto = getProjectDtoData();
             projectService.deleteProject(projectDto.getId());
             showSnackbar(String.format("Deleted new project! %s", projectDto.getName()), R.color.color_snackbar_text_delete);
+            returnToProjectList(projectDto.getClientDto().getId());
         } catch (TerexApplicationException | InputValidationException ex) {
             showInfoDialog("Error", String.format("Failed delete project! error=%s", ex.getMessage()));
         } catch (Exception e) {

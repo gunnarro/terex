@@ -26,7 +26,7 @@
     <fragment
         android:id="@+id/home_fragment"
         android:name="com.gunnarro.android.terex.ui.fragment.HomeFragment"
-        android:label="@string/title_home"
+        android:label="@string/title_brand"
         tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/nav_from_home_to_timesheet_list"
@@ -89,7 +89,7 @@
         android:id="@+id/client_details_fragment"
         android:name="com.gunnarro.android.terex.ui.fragment.ClientNewFragment"
         android:label="@string/title_client_details"
-        tools:layout="@layout/fragment_client_new"></fragment>
+        tools:layout="@layout/fragment_client_new"/>
 
     <fragment
         android:id="@+id/client_new_fragment"
@@ -258,7 +258,7 @@
         android:id="@+id/invoice_new_fragment"
         android:name="com.gunnarro.android.terex.ui.fragment.InvoiceNewFragment"
         android:label="@string/title_invoice_new"
-        tools:layout="@layout/fragment_invoice_new"></fragment>
+        tools:layout="@layout/fragment_invoice_new"/>
 
     <fragment
         android:id="@+id/invoice_details_fragment"

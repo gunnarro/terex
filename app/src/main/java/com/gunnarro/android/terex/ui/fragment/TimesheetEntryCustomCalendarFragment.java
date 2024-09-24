@@ -150,23 +150,6 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
     private TimesheetEntry readTimesheetEntryFromBundle() {
         Long timesheetId = getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY);
         return timesheetService.getMostRecentTimeSheetEntry(timesheetId);
-        /*
-        String timesheetEntryJson = getArguments() != null ? getArguments().getString(TimesheetEntryListFragment.TIMESHEET_ENTRY_JSON_KEY) : null;
-        Log.d("readTimesheetEntryFromBundle", String.format("received default timesheet entry json, %s", timesheetEntryJson));
-        if (timesheetEntryJson != null && !timesheetEntryJson.isEmpty()) {
-            try {
-                TimesheetEntry timesheetEntry = Utility.gsonMapper().fromJson(timesheetEntryJson, TimesheetEntry.class);
-                Log.d(Utility.buildTag(getClass(), "readTimesheetEntryFromBundle"), String.format("last added timesheetEntry: %s", timesheetEntry));
-                return timesheetEntry;
-            } catch (Exception e) {
-                Log.e("", e.toString());
-                throw new TerexApplicationException("Application Error!", "5000", e);
-            }
-        } else {
-            // no recent timesheet entry found, should not happen
-            throw new TerexApplicationException("Timesheet entry not found!", "55023", null);
-        }
-         */
     }
 
     private List<CalendarDay> createCalendarDays(Long timesheetId) {
@@ -192,19 +175,6 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
         return calendarDays;
     }
 
-    /*
-        private List<EventDay> createEventDays(Long timesheetId) {
-            List<EventDay> eventDays = new ArrayList<>();
-            List<TimesheetEntry> timesheetEntryList = timesheetService.getTimesheetEntryList(timesheetId);
-            timesheetEntryList.forEach(t -> {
-                Calendar cal = Calendar.getInstance();
-                cal.set(t.getWorkdayDate().getYear(), t.getWorkdayDate().getMonth().getValue() - 1, t.getWorkdayDate().getDayOfMonth());
-                eventDays.add(new EventDay(cal, R.drawable.timesheet_day_ok_24, getResources().getColor(R.color.color_btn_bg_default, null)));
-                Log.d("TimesheetCustomCalendarFragment", "ADD SELECTED DATE: " + t.getWorkdayDate().toString());
-            });
-            return eventDays;
-        }
-    */
     private List<CalendarDay> createSelectedDates(Long timesheetId) {
         List<TimesheetEntry> timesheetEntryList = timesheetService.getTimesheetEntryList(timesheetId);
         List<CalendarDay> selectedDates = new ArrayList<>();
@@ -303,10 +273,10 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
                 showInfoDialog("info", "You must select a project!");
             }
             timesheetService.saveTimesheetEntry(timesheetEntry);
-            showSnackbar(String.format("Added %s %s %s %s", timesheetEntry.getProjectId(), timesheetEntry.getWorkdayDate(), timesheetEntry.getType(), timesheetEntry.getWorkedHours()), R.color.color_snackbar_text_add);
+            showSnackbar(String.format("Added %s, %s, %s, %s", timesheetEntry.getProjectId(), timesheetEntry.getWorkdayDate(), timesheetEntry.getType(), timesheetEntry.getWorkedHours()), R.color.color_snackbar_text_add);
         } catch (TerexApplicationException | InputValidationException e) {
-            Log.e("handleButtonSaveClick", e.getMessage());
-            showInfoDialog("Error", e.getMessage());
+            Log.e("addTimesheetEntry", e.getMessage());
+            showInfoDialog("Error", "Failed adding timesheet entry! error: " + e.getMessage());
         }
     }
 }

@@ -34,7 +34,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class UserAccountNewFragment extends BaseFragment implements View.OnClickListener {
 
     private final BregService bregService;
-    private UserAccountService userAccountService;
+    private final UserAccountService userAccountService;
 
     @Inject
     public UserAccountNewFragment() {
@@ -44,7 +44,6 @@ public class UserAccountNewFragment extends BaseFragment implements View.OnClick
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         requireActivity().setTitle(R.string.title_user_account);
         // do not show the action bar
         //setHasOptionsMenu(true);

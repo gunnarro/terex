@@ -146,6 +146,9 @@ public class MainActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().show();
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeActionContentDescription(R.string.title_home);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.outline_home_24);
+            getSupportActionBar().setHomeActionContentDescription("Home");
         }
     }
 

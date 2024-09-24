@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">TeRex</string>
     <!-- titles -->
-    <string name="title_home">TeRex Time Tracing</string>
+    <string name="title_brand">TeRex Time Tracing</string>
+    <string name="title_home">Home</string>
     <string name="title_admin">Administration</string>
     <string name="title_timesheets">Timesheets</string>
     <string name="title_timesheet">Timesheet</string>

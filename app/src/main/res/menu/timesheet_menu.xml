@@ -5,6 +5,7 @@
         <item
             android:id="@+id/year_dropdown_menu"
             android:title="@string/lbl_year"
+            android:contentDescription="@string/lbl_year"
             app:actionViewClass="android.widget.Spinner"
             app:showAsAction="always" />
     </group>
@@ -12,10 +13,12 @@
         android:id="@+id/attachment_to_pdf"
         android:icon="@drawable/ic_action_pdf_24dp"
         android:title="@string/lbl_export_to_pdf"
+        android:contentDescription="@string/lbl_export_to_pdf"
         app:showAsAction="always" />
     <item
         android:id="@+id/send_email"
         android:icon="@drawable/ic_action_settings_24dp"
         android:title="@string/lbl_send_email"
+        android:contentDescription="@string/lbl_send_email"
         app:showAsAction="always" />
 </menu>

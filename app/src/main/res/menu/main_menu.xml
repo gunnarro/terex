@@ -3,14 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/app_bar_home"
-        android:title="Home"
+        android:title="@string/title_home"
+        android:contentDescription="@string/title_home"
         android:icon="@drawable/outline_home_24"
         app:showAsAction="always"/>
-    <!--
-    <item
-        android:id="@+id/app_bar_import_btn"
-        android:title="@string/btn_import"
-        android:icon="@drawable/ic_action_timesheet_24dp"
-        app:showAsAction="always" />
-        -->
 </menu>

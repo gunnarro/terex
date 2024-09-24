@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <group android:id="@+id/mobile_numbers_group">
+    <group android:id="@+id/invoice_attachment_menu_group">
         <item
             android:id="@+id/invoice_attachment_dropdown_menu"
             android:title="@string/lbl_invoice_attachment"
+            android:contentDescription="@string/lbl_invoice_attachment"
             app:actionViewClass="android.widget.Spinner"
-            app:showAsAction="always" />
+            app:showAsAction="ifRoom" />
     </group>
     <item
         android:id="@+id/attachment_to_pdf"
         android:icon="@drawable/baseline_picture_as_pdf_24"
         android:title="@string/lbl_export_to_pdf"
+        android:contentDescription="@string/lbl_export_to_pdf"
         app:showAsAction="always" />
     <item
         android:id="@+id/send_email"
         android:icon="@drawable/baseline_outgoing_mail_24"
         android:title="@string/lbl_send_email"
+        android:contentDescription="@string/lbl_send_email"
         app:showAsAction="always" />
 </menu>

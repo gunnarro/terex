@@ -25,6 +25,7 @@ import com.gunnarro.android.terex.domain.dto.TimesheetDto;
 import com.gunnarro.android.terex.domain.entity.Timesheet;
 import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
+import com.gunnarro.android.terex.ui.MainActivity;
 import com.gunnarro.android.terex.ui.adapter.TimesheetListAdapter;
 import com.gunnarro.android.terex.ui.dialog.DialogActionListener;
 import com.gunnarro.android.terex.ui.listener.ListOnItemClickListener;
@@ -56,6 +57,8 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // displays the back button on toolbar
+        ((MainActivity)requireActivity()).showUpButton();
         // Get a new or existing ViewModel from the ViewModelProvider.
         try {
             timesheetViewModel = new TimesheetViewModel(requireActivity().getApplication(), selectedYear);
@@ -169,8 +172,16 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        Log.d(Utility.buildTag(getClass(), "onOptionsItemSelected"), "selected: " + item.getTitle());
-        handleOptionsMenuSelection(selectedYear);
+        Log.d(Utility.buildTag(getClass(), "onOptionsItemSelected"), "selected: title=" + item.getTitle() + ", description=" + item.getContentDescription() + ", id=" + item.toString());
+        if (item.getTitle() != null && item.getTitle().equals(getResources().getString(R.string.lbl_year))) {
+            handleOptionsMenuSelection(selectedYear);
+        } else if (item.getTitle() != null && item.getTitle().equals(getResources().getString(R.string.lbl_export_to_pdf))) {
+
+        } else if (item.getTitle() != null && item.getTitle().equals(getResources().getString(R.string.lbl_send_email))) {
+
+        } else {
+            navigateTo(R.id.nav_to_home, null);
+        }
         return true;
     }
 

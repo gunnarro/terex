@@ -122,7 +122,6 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
         view.findViewById(R.id.timesheet_entry_save_btn).setOnClickListener(v -> {
             view.findViewById(R.id.timesheet_entry_save_btn).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_default, view.getContext().getTheme()));
             saveTimesheetEntry();
-            returnToTimesheetEntryList(getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY));
         });
 
         view.findViewById(R.id.timesheet_entry_delete_btn).setOnClickListener(v -> {
@@ -333,6 +332,7 @@ public class TimesheetEntryAddFragment extends BaseFragment implements View.OnCl
             TimesheetEntryDto timesheetEntry = getTimesheetEntry();
             timesheetService.saveTimesheetEntryDto(timesheetEntry);
             showSnackbar(String.format("Added new timesheet entry! %s", timesheetEntry.getWorkdayDate()), R.color.color_snackbar_text_add);
+            returnToTimesheetEntryList(getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY));
         } catch (TerexApplicationException | InputValidationException ex) {
             showInfoDialog("Validation error", String.format("%s", ex.getMessage()));
         } catch (Exception e) {
