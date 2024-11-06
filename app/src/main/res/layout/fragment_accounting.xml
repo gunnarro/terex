@@ -4,267 +4,267 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.fragment.AccountingFragment">
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <TableLayout
-        android:id="@+id/accounting_info_layout"
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:stretchColumns="1">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/accounting_table_header"
+        <TableLayout
+            android:id="@+id/accounting_info_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:textSize="18sp"
-            android:fontFamily="sans-serif-condensed-medium"
-            android:background="@color/calendar_header"
-            android:textColor="#ffffff"
-            android:gravity="start"
-            android:text="Accounting period januar - desember 2024"
-            android:textStyle="bold" />
-
-        <TableRow>
+            android:layout_margin="10dp"
+            android:stretchColumns="1">
 
             <TextView
-                android:id="@+id/accounting_total_billed_amount_lbl"
+                android:id="@+id/accounting_table_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:layout_span="1"
+                android:background="@color/calendar_header"
+                android:fontFamily="sans-serif-condensed-medium"
                 android:gravity="start"
-                android:text="Total billed amount"
-                android:textStyle="normal" />
+                android:text="Accounting period januar - desember 2024"
+                android:textColor="#ffffff"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/accounting_total_billed_amount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_span="1"
-                android:enabled="false"
-                android:gravity="end"
-                android:text="234 440,00"
-                android:textStyle="normal" />
-        </TableRow>
+            <TableRow>
 
-        <TableRow>
+                <TextView
+                    android:id="@+id/accounting_total_billed_amount_lbl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_span="1"
+                    android:gravity="start"
+                    android:text="Total billed amount"
+                    android:textStyle="normal" />
 
-            <TextView
-                android:id="@+id/accounting_total_billed_amount_vat_lbl"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_span="1"
-                android:gravity="start"
-                android:text="Total billed amount VAT"
-                android:textStyle="normal" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/accounting_total_billed_amount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_span="1"
+                    android:enabled="false"
+                    android:gravity="end"
+                    android:text="234 440,00"
+                    android:textStyle="normal" />
+            </TableRow>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/accounting_total_billed_amount_vat"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_span="1"
-                android:enabled="false"
-                android:gravity="end"
-                android:text="23 440,00"
-                android:textStyle="normal" />
-        </TableRow>
+            <TableRow>
 
-        <TableRow>
+                <TextView
+                    android:id="@+id/accounting_total_billed_amount_vat_lbl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_span="1"
+                    android:gravity="start"
+                    android:text="Total billed amount VAT"
+                    android:textStyle="normal" />
 
-            <TextView
-                android:id="@+id/accounting_total_employees_salary_lbl"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_span="1"
-                android:gravity="start"
-                android:text="Total employees salary"
-                android:textStyle="normal" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/accounting_total_billed_amount_vat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_span="1"
+                    android:enabled="false"
+                    android:gravity="end"
+                    android:text="23 440,00"
+                    android:textStyle="normal" />
+            </TableRow>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/accounting_total_employees_salary"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_span="1"
-                android:enabled="false"
-                android:gravity="end"
-                android:text="100 440,00"
-                android:textStyle="normal" />
-        </TableRow>
+            <TableRow>
 
-        <TableRow>
+                <TextView
+                    android:id="@+id/accounting_total_employees_salary_lbl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_span="1"
+                    android:gravity="start"
+                    android:text="Total employees salary"
+                    android:textStyle="normal" />
 
-            <TextView
-                android:id="@+id/accounting_total_employees_salary_tax_lbl"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_span="1"
-                android:gravity="start"
-                android:text="Total employer's salary tax"
-                android:textStyle="normal" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/accounting_total_employees_salary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_span="1"
+                    android:enabled="false"
+                    android:gravity="end"
+                    android:text="100 440,00"
+                    android:textStyle="normal" />
+            </TableRow>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/accounting_total_employees_salary_tax"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_span="1"
-                android:enabled="false"
-                android:gravity="end"
-                android:text="33 440,00"
-                android:textStyle="normal" />
-        </TableRow>
+            <TableRow>
 
-        <TableRow>
+                <TextView
+                    android:id="@+id/accounting_total_employees_salary_tax_lbl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_span="1"
+                    android:gravity="start"
+                    android:text="Total employer's salary tax"
+                    android:textStyle="normal" />
 
-            <TextView
-                android:id="@+id/accounting_total_employers_salary_tax_lbl"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_span="1"
-                android:gravity="start"
-                android:text="Total employer's tax"
-                android:textStyle="normal" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/accounting_total_employees_salary_tax"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_span="1"
+                    android:enabled="false"
+                    android:gravity="end"
+                    android:text="33 440,00"
+                    android:textStyle="normal" />
+            </TableRow>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/accounting_total_employers_salary_tax"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_span="1"
-                android:enabled="false"
-                android:gravity="end"
-                android:text="23 440,00"
-                android:textStyle="normal" />
-        </TableRow>
+            <TableRow>
 
-        <TableRow>
+                <TextView
+                    android:id="@+id/accounting_total_employers_salary_tax_lbl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_span="1"
+                    android:gravity="start"
+                    android:text="Total employer's tax"
+                    android:textStyle="normal" />
 
-            <TextView
-                android:id="@+id/accounting_total_employers_company_tax_lbl"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_span="1"
-                android:gravity="start"
-                android:text="Total employer's company tax"
-                android:textStyle="normal" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/accounting_total_employers_salary_tax"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_span="1"
+                    android:enabled="false"
+                    android:gravity="end"
+                    android:text="23 440,00"
+                    android:textStyle="normal" />
+            </TableRow>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/accounting_total_employers_company_tax"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_span="1"
-                android:enabled="false"
-                android:gravity="end"
-                android:text="23 440,00"
-                android:textStyle="normal" />
-        </TableRow>
+            <TableRow>
 
-        <TableRow>
+                <TextView
+                    android:id="@+id/accounting_total_employers_company_tax_lbl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_span="1"
+                    android:gravity="start"
+                    android:text="Total employer's company tax"
+                    android:textStyle="normal" />
 
-            <TextView
-                android:id="@+id/accounting_result_before_taxes_lbl"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_span="1"
-                android:gravity="start"
-                android:text="Result before taxes"
-                android:textStyle="normal" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/accounting_total_employers_company_tax"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_span="1"
+                    android:enabled="false"
+                    android:gravity="end"
+                    android:text="23 440,00"
+                    android:textStyle="normal" />
+            </TableRow>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/accounting_result_before_taxes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_span="1"
-                android:enabled="false"
-                android:gravity="end"
-                android:text="1000"
-                android:textStyle="normal" />
-        </TableRow>
+            <TableRow>
 
-        <TableRow>
+                <TextView
+                    android:id="@+id/accounting_result_before_taxes_lbl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_span="1"
+                    android:gravity="start"
+                    android:text="Result before taxes"
+                    android:textStyle="normal" />
 
-            <TextView
-                android:id="@+id/accounting_empty_row_lbl"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_span="1"
-                android:gravity="start"
-                android:text=""
-                android:textStyle="normal"
-                android:visibility="invisible" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/accounting_result_before_taxes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_span="1"
+                    android:enabled="false"
+                    android:gravity="end"
+                    android:text="1000"
+                    android:textStyle="normal" />
+            </TableRow>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/accounting_empty_row"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_span="1"
-                android:enabled="false"
-                android:gravity="end"
-                android:text=""
-                android:textStyle="normal"
-                android:visibility="invisible" />
-        </TableRow>
+            <TableRow>
 
-        <TableRow>
+                <TextView
+                    android:id="@+id/accounting_empty_row_lbl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_span="1"
+                    android:gravity="start"
+                    android:text=""
+                    android:textStyle="normal"
+                    android:visibility="invisible" />
 
-            <TextView
-                android:id="@+id/accounting_employees_max_salary_lbl"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_span="1"
-                android:gravity="start"
-                android:text="Employees max salary"
-                android:textStyle="normal" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/accounting_empty_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_span="1"
+                    android:enabled="false"
+                    android:gravity="end"
+                    android:text=""
+                    android:textStyle="normal"
+                    android:visibility="invisible" />
+            </TableRow>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/accounting_employees_max_salary"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_span="1"
-                android:enabled="false"
-                android:gravity="end"
-                android:text="999999"
-                android:textStyle="normal" />
-        </TableRow>
-    </TableLayout>
+            <TableRow>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_below="@+id/accounting_info_layout"
-        android:orientation="vertical">
+                <TextView
+                    android:id="@+id/accounting_employees_max_salary_lbl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_span="1"
+                    android:gravity="start"
+                    android:text="Employees max salary"
+                    android:textStyle="normal" />
 
-        <TextView
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/accounting_employees_max_salary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_span="1"
+                    android:enabled="false"
+                    android:gravity="end"
+                    android:text="999999"
+                    android:textStyle="normal" />
+            </TableRow>
+        </TableLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:lines="3"
-            android:text="Første frist for betaling av arbeidsgiveravgift i kalenderåret er den 15. mars og deretter den 15. hver annen måned."
-            />
+            android:layout_below="@+id/accounting_info_layout"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:lines="3"
-            android:text="MVA-melding annenhver måned – 6 ganger i året, hvor første frist for januar/februar er 10. april."
-            />
-    </LinearLayout>
-</RelativeLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lines="3"
+                android:text="@string/abeidsgiver_avgift_info" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lines="3"
+                android:text="@string/mva_info" />
+        </LinearLayout>
+    </RelativeLayout>
 </FrameLayout>

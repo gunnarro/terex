@@ -1,13 +1,17 @@
 package com.gunnarro.android.terex.ui.fragment;
 
+import android.app.Activity;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.print.PrintAttributes;
 import android.print.PrintDocumentAdapter;
 import android.print.PrintJob;
 import android.print.PrintManager;
+import android.provider.DocumentsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,8 +25,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import androidx.activity.result.contract.ActivityResultContract;
 import androidx.annotation.NonNull;
-import androidx.core.content.FileProvider;
 
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.dto.InvoiceDto;
@@ -36,6 +40,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -166,26 +172,35 @@ public class InvoiceDetailsFragment extends BaseFragment {
     }
 
     private void sendInvoiceToClient(String toEmailAddress, String subject, String message, File pdfFile) {
-        /*
-        Intent email = new Intent(Intent.ACTION_SEND);
-        email.putExtra(Intent.EXTRA_EMAIL, new String[]{toEmailAddress});
-        email.putExtra(Intent.EXTRA_SUBJECT, subject);
-        email.putExtra(Intent.EXTRA_TEXT, message);
-        email.putExtra(Intent.EXTRA_STREAM, pdfFile);
-        // need this to prompts email client only
-        email.setType("message/rfc822");
-        startActivity(Intent.createChooser(email, "Choose Email client:"));
-        */
-        //File file = new File("/Downloads/omegapoint_norge_as_timeliste_2024-01.pdf");
+
+        File root = Environment.getExternalStorageDirectory();
+/*        Log.d("sendInvoiceToClient", "external storage path: " + root.getPath());
+        Log.d("sendInvoiceToClient", "pdf file path: " + pdfFile.getPath());
+        File file = new File("Downloads/omegapoint_norge_as_timeliste_2024-01.pdf");
+    //    openFile(Uri.fromFile(pdfFile));
+        if (!file.exists() || !file.canRead()) {
+            showInfoDialog("ERROR", "Attachment not found! " + file.getPath());
+            return;
+        }
+*/
+
        // File file = readFile("Downloads/omegapoint_norge_as_timeliste_2024-01.pdf");
        // Uri fileUri = FileProvider.getUriForFile(requireContext(), requireContext().getApplicationContext().getPackageName() + ".provider", file);
-        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        Intent emailIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
         emailIntent.setType("vnd.android.cursor.dir/email");
         emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{toEmailAddress});
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
-        emailIntent.putExtra(Intent.EXTRA_TEXT, message);
-      //  emailIntent.setDataAndType(fileUri, "text/*");
-      //  emailIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
+        emailIntent.putExtra(Intent.EXTRA_TEXT, new ArrayList<>(List.of((message))));
+        // A Uri pointing to the attachment. If using the ACTION_SEND_MULTIPLE action, this instead is an ArrayList containing multiple Uri objects.
+        //Uri attachment = Uri.fromFile(file);
+
+        //ContentUris.withAppendedId()
+        content://com.android.providers.downloads.documents/document/92
+        Log.d("sendInvoiceToClient", "pdffile uri: " + Uri.fromParts("content","com.android.providers.downloads.documents",null).toString());
+        Log.d("sendInvoiceToClient", "root: " + root.toURI());
+
+        //Log.d("sendInvoiceToClient", "attachment uri:" + attachment.getPath());
+        // emailIntent.putExtra(Intent.EXTRA_STREAM, new ArrayList<>(List.of(Uri.fromParts("content", "com.android.providers.downloads.documents", null))));
         emailIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         startActivity(Intent.createChooser(emailIntent, "Choose Email client:"));
@@ -198,4 +213,49 @@ public class InvoiceDetailsFragment extends BaseFragment {
             throw new TerexApplicationException(e.getMessage(), "50500", e);
         }
     }
+/*
+    // read and write file to , open a file picker dialog
+    private static final int CREATE_FILE = 1;
+    private static final int READ_REQUEST_PDF_FILE_CODE = 200;
+
+    private void createFile(Uri pickerInitialUri) {
+        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("application/pdf");
+        intent.putExtra(Intent.EXTRA_TITLE, "invoice.pdf");
+
+        // Optionally, specify a URI for the directory that should be opened in
+        // the system file picker when your app creates the document.
+        intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, pickerInitialUri);
+        //ActivityResultContract.
+        startActivityForResult(intent, CREATE_FILE);
+    }
+
+    private void openFile(Uri pickerInitialUri) {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("application/pdf");
+        // Optionally, specify a URI for the file that should appear in the
+        // system file picker when it loads.
+        intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, pickerInitialUri);
+        startActivityForResult(intent, READ_REQUEST_PDF_FILE_CODE);
+    }
+
+ */
+/*
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
+        if (requestCode == READ_REQUEST_PDF_FILE_CODE && resultCode == Activity.RESULT_OK) {
+            // The result data contains a URI for the document or directory that
+            // the user selected.
+            Uri uri = null;
+            if (resultData != null) {
+                uri = resultData.getData();
+                // Perform operations on the document using its URI.
+            }
+            Log.d("onActivityResult", "read file path: " + uri);
+        }
+    }
+
+ */
 }

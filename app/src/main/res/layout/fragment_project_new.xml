@@ -207,8 +207,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/project_input_layout"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
             android:gravity="center"
             android:orientation="horizontal">
 

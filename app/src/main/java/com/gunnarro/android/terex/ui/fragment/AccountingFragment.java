@@ -19,7 +19,6 @@ import com.gunnarro.android.terex.utility.Utility;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -40,14 +39,14 @@ public class AccountingFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_accounting, container, false);
         AccountingDto accountingDto = calculate();
         ((TextView) view.findViewById(R.id.accounting_table_header)).setText(accountingDto.getAccountingPeriod());
-        ((TextInputEditText) view.findViewById(R.id.accounting_total_billed_amount)).setText(formatAmount(accountingDto.getTotalBilledAmount()));
-        ((TextInputEditText) view.findViewById(R.id.accounting_total_billed_amount_vat)).setText(formatAmount(accountingDto.getTotalBilledAmountVat()));
-        ((TextInputEditText) view.findViewById(R.id.accounting_total_employees_salary)).setText(formatAmount(accountingDto.getTotalEmployeeSalary()));
-        ((TextInputEditText) view.findViewById(R.id.accounting_total_employees_salary_tax)).setText(formatAmount(accountingDto.getTotalEmployeeSalaryTax()));
-        ((TextInputEditText) view.findViewById(R.id.accounting_total_employers_salary_tax)).setText(formatAmount(accountingDto.getTotalEmployersSalaryTax()));
-        ((TextInputEditText) view.findViewById(R.id.accounting_total_employers_company_tax)).setText(formatAmount(accountingDto.getTotalEmployersCompanyTax()));
-        ((TextInputEditText) view.findViewById(R.id.accounting_result_before_taxes)).setText(formatAmount(accountingDto.getResultBeforeTaxes()));
-        ((TextInputEditText) view.findViewById(R.id.accounting_employees_max_salary)).setText(formatAmount(accountingDto.getEmployeesMaxSalary()));
+        ((TextInputEditText) view.findViewById(R.id.accounting_total_billed_amount)).setText(Utility.formatAmountToNOK(accountingDto.getTotalBilledAmount()));
+        ((TextInputEditText) view.findViewById(R.id.accounting_total_billed_amount_vat)).setText(Utility.formatAmountToNOK(accountingDto.getTotalBilledAmountVat()));
+        ((TextInputEditText) view.findViewById(R.id.accounting_total_employees_salary)).setText(Utility.formatAmountToNOK(accountingDto.getTotalEmployeeSalary()));
+        ((TextInputEditText) view.findViewById(R.id.accounting_total_employees_salary_tax)).setText(Utility.formatAmountToNOK(accountingDto.getTotalEmployeeSalaryTax()));
+        ((TextInputEditText) view.findViewById(R.id.accounting_total_employers_salary_tax)).setText(Utility.formatAmountToNOK(accountingDto.getTotalEmployersSalaryTax()));
+        ((TextInputEditText) view.findViewById(R.id.accounting_total_employers_company_tax)).setText(Utility.formatAmountToNOK(accountingDto.getTotalEmployersCompanyTax()));
+        ((TextInputEditText) view.findViewById(R.id.accounting_result_before_taxes)).setText(Utility.formatAmountToNOK(accountingDto.getResultBeforeTaxes()));
+        ((TextInputEditText) view.findViewById(R.id.accounting_employees_max_salary)).setText(Utility.formatAmountToNOK(accountingDto.getEmployeesMaxSalary()));
 
         Log.d(Utility.buildTag(getClass(), "onCreateView"), "");
         return view;
@@ -70,7 +69,6 @@ public class AccountingFragment extends Fragment {
             accountingDto.setEmployeesMaxSalary(invoiceList.get(invoiceList.size() - 1).getAmount() * 0.80);
             accountingDto.setEmployeesMaxSalaryPeriod(invoiceList.get(invoiceList.size() - 1).getBillingPeriodStartDate().format(DateTimeFormatter.ofPattern("MMMM yyyy")));
 
-
             LocalDate startDate = invoiceList.get(0).getBillingPeriodStartDate();
             LocalDate endDate = invoiceList.get(invoiceList.size() - 1).getBillingPeriodStartDate();
             accountingDto.setAccountingPeriod(
@@ -81,9 +79,5 @@ public class AccountingFragment extends Fragment {
             );
         }
         return accountingDto;
-    }
-
-    private String formatAmount(double amount) {
-        return String.format(Locale.getDefault(), "%.2f", amount);
     }
 }

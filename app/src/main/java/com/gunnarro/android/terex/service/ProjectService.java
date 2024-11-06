@@ -71,8 +71,6 @@ public class ProjectService {
                 if (projectRepository.getProject(project.getId()).isClosed()) {
                     throw new InputValidationException(String.format("Project is closed, no changes is allowed. %s", project), "40040", null);
                 }
-                //project.setId(projectExisting.getId());
-                //project.setCreatedDate(projectExisting.getCreatedDate());
                 project.setLastModifiedDate(LocalDateTime.now());
                 projectRepository.update(project);
                 id = project.getId();

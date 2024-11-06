@@ -7,6 +7,16 @@ import java.util.Objects;
 
 public class InvoiceDto extends BaseDto {
 
+    // den 10.
+    public enum MvaDates {
+        APRIL, JUNE, AUGUST, OCTOBER, DECEMBER, FEBRUARY
+    }
+
+    // den 15.
+    public enum EmployeeTaxDates {
+        MARCH, MAI, JULY, SEPTEMBER, NOVEMBER, JANUARY
+    }
+
     private TimesheetDto timesheetDto;
     /**
      * invoice recipient : fakturamottaker

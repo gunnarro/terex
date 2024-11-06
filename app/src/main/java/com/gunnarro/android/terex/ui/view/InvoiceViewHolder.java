@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.dto.InvoiceDto;
 import com.gunnarro.android.terex.repository.InvoiceRepository;
+import com.gunnarro.android.terex.utility.Utility;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -51,6 +52,6 @@ public class InvoiceViewHolder extends RecyclerView.ViewHolder {
         invoiceLine1LabelView.setText(R.string.lbl_billing_date);
         invoiceLine1ValueView.setText(String.format("%s", invoiceDto.getBillingDate()));
         invoiceLine2LabelView.setText(R.string.lbl_billed_amount);
-        invoiceLine2ValueView.setText(String.format("%s", invoiceDto.getAmount()));
+        invoiceLine2ValueView.setText(String.format("%s", Utility.formatAmountToNOK(invoiceDto.getAmount() + invoiceDto.getVatAmount())));
     }
 }
