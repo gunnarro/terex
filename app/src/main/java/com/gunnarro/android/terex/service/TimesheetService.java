@@ -34,6 +34,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -110,7 +111,7 @@ public class TimesheetService {
         List<Long> timesheetIdsList = timesheetRepository.getTimesheetIds(Timesheet.TimesheetStatusEnum.COMPLETED.name());
         List<TimesheetDto> timesheetDtoList = new ArrayList<>();
         timesheetIdsList.forEach(id -> timesheetDtoList.add(getTimesheetDto(id)));
-        timesheetDtoList.sort(Comparator.comparing(TimesheetDto::getFromDate));
+        timesheetDtoList.sort(Comparator.comparing(TimesheetDto::getFromDate).reversed());
         return timesheetDtoList;
     }
 
@@ -137,7 +138,8 @@ public class TimesheetService {
         List<TimesheetDto> timesheetDtoList = new ArrayList<>();
         List<Long> timesheetIdList = timesheetRepository.getTimesheetIds(year);
         timesheetIdList.forEach(id -> timesheetDtoList.add(getTimesheetDto(id)));
-        timesheetDtoList.sort(Comparator.comparing(TimesheetDto::getFromDate));
+        // sort with descending, i.e, the most recent at top of the list
+        timesheetDtoList.sort(Comparator.comparing(TimesheetDto::getFromDate).reversed());
         return timesheetDtoList;
     }
 
@@ -204,7 +206,8 @@ public class TimesheetService {
         List<TimesheetEntryDto> timesheetEntryDtoList = new ArrayList<>();
         List<Long> timesheetEntryIdList = timesheetRepository.getTimesheetEntryIds(timesheetId);
         timesheetEntryIdList.forEach(id -> timesheetEntryDtoList.add(getTimesheetEntryDto(id)));
-        timesheetEntryDtoList.sort(Comparator.comparing(TimesheetEntryDto::getWorkdayDate));
+        // sort with descending, i.e, the most recent at top of the list
+        timesheetEntryDtoList.sort(Comparator.comparing(TimesheetEntryDto::getWorkdayDate).reversed());
         return timesheetEntryDtoList;
     }
 

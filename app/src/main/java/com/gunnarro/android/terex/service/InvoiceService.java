@@ -21,6 +21,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -88,7 +89,9 @@ public class InvoiceService {
 
     public List<InvoiceDto> getInvoiceDtoList() {
         List<Long> invoceIdList = invoiceRepository.getAllInvoiceIds();
-        return invoceIdList.stream().map(this::getInvoiceDto).collect(Collectors.toList());
+        List<InvoiceDto> list = invoceIdList.stream().map(this::getInvoiceDto).collect(Collectors.toList());
+        list.sort(Comparator.comparing(InvoiceDto::getBillingDate).reversed());
+        return list;
     }
 
     public InvoiceDto getInvoiceDto(Long invoiceId) {

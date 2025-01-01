@@ -32,7 +32,7 @@ public interface TimesheetDao {
             + " WHERE t.id = :timesheetId")
     String getTimesheetTitle(Long timesheetId);
 
-    @Query("SELECT DISTINCT year FROM timesheet")
+    @Query("SELECT DISTINCT year FROM timesheet ORDER BY year DESC")
     List<Integer> getAllTimesheetYear();
 
     /**
