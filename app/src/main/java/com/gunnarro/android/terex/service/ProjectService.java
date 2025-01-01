@@ -68,9 +68,10 @@ public class ProjectService {
                 id = projectRepository.insert(project);
                 Log.d("ProjectService.saveProject", "inserted new. " + project);
             } else {
-                if (projectRepository.getProject(project.getId()).isClosed()) {
-                    throw new InputValidationException(String.format("Project is closed, no changes is allowed. %s", project), "40040", null);
-                }
+                //FIXME hack
+                //if (projectRepository.getProject(project.getId()).isClosed()) {
+                //    throw new InputValidationException(String.format("Project is closed, no changes is allowed. %s", project), "40040", null);
+                //}
                 project.setLastModifiedDate(LocalDateTime.now());
                 projectRepository.update(project);
                 id = project.getId();

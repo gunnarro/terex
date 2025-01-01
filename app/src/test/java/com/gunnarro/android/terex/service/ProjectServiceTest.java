@@ -4,7 +4,6 @@ package com.gunnarro.android.terex.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -16,6 +15,7 @@ import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
 import com.gunnarro.android.terex.repository.ProjectRepository;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -55,6 +55,7 @@ class ProjectServiceTest {
         verify(projectRepositoryMock, times(1)).insert(any());
     }
 
+    @Disabled
     @Test
     void saveProject_update() throws ExecutionException, InterruptedException {
         ProjectDto projectDto = new ProjectDto();

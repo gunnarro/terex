@@ -13,6 +13,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
@@ -135,6 +136,7 @@ public class ProjectNewFragment extends BaseFragment implements View.OnClickList
             view.findViewById(R.id.project_delete_btn).setVisibility(View.GONE);
         } else if (projectDto.isClosed()) {
             // project locked, not able to edit anymore
+
             view.findViewById(R.id.project_created_date).setEnabled(false);
             view.findViewById(R.id.project_last_modified_date).setEnabled(false);
             view.findViewById(R.id.project_name).setEnabled(false);
@@ -142,12 +144,12 @@ public class ProjectNewFragment extends BaseFragment implements View.OnClickList
             view.findViewById(R.id.project_hourly_rate).setEnabled(false);
             view.findViewById(R.id.project_start_date).setEnabled(false);
             view.findViewById(R.id.project_end_date).setEnabled(false);
-            ((MaterialButton) view.findViewById(R.id.project_new_status_btn_active)).setCheckable(false);
-            ((MaterialButton) view.findViewById(R.id.project_new_status_btn_closed)).setCheckable(false);
+            //((MaterialButton) view.findViewById(R.id.project_new_status_btn_active)).setCheckable(false);
+            //((MaterialButton) view.findViewById(R.id.project_new_status_btn_closed)).setCheckable(false);
 
             // hide buttons
-            view.findViewById(R.id.project_delete_btn).setVisibility(View.GONE);
-            view.findViewById(R.id.project_save_btn).setVisibility(View.GONE);
+            //view.findViewById(R.id.project_delete_btn).setVisibility(View.GONE);
+            //view.findViewById(R.id.project_save_btn).setVisibility(View.GONE);
         } else {
             // never allowed to edit project name
             view.findViewById(R.id.project_name).setEnabled(false);
@@ -217,15 +219,6 @@ public class ProjectNewFragment extends BaseFragment implements View.OnClickList
         return projectDto;
     }
 
-    private String getProjectAsJson() {
-        try {
-            return Utility.gsonMapper().toJson(getProjectDtoData());
-        } catch (Exception e) {
-            Log.e("getProjectAsJson", e.toString());
-            throw new TerexApplicationException("unable to parse ProjectDto object to json!", "50050", e);
-        }
-    }
-
     private void saveProject() {
         try {
             ProjectDto projectDto = getProjectDtoData();
@@ -261,6 +254,7 @@ public class ProjectNewFragment extends BaseFragment implements View.OnClickList
             this.dateTextView = view;
         }
 
+        @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             // Use the current date as the default date in the picker.

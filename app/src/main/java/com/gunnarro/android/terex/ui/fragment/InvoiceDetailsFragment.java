@@ -1,7 +1,5 @@
 package com.gunnarro.android.terex.ui.fragment;
 
-import android.app.Activity;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -11,7 +9,6 @@ import android.print.PrintAttributes;
 import android.print.PrintDocumentAdapter;
 import android.print.PrintJob;
 import android.print.PrintManager;
-import android.provider.DocumentsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,7 +22,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-import androidx.activity.result.contract.ActivityResultContract;
 import androidx.annotation.NonNull;
 
 import com.gunnarro.android.terex.R;
@@ -41,7 +37,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -190,7 +185,7 @@ public class InvoiceDetailsFragment extends BaseFragment {
         emailIntent.setType("vnd.android.cursor.dir/email");
         emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{toEmailAddress});
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
-        emailIntent.putExtra(Intent.EXTRA_TEXT, new ArrayList<>(List.of((message))));
+        emailIntent.putExtra(Intent.EXTRA_TEXT, message);
         // A Uri pointing to the attachment. If using the ACTION_SEND_MULTIPLE action, this instead is an ArrayList containing multiple Uri objects.
         //Uri attachment = Uri.fromFile(file);
 
