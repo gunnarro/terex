@@ -7,7 +7,6 @@ import androidx.room.TypeConverters;
 
 import com.gunnarro.android.terex.domain.converter.LocalDateConverter;
 import com.gunnarro.android.terex.domain.converter.LocalDateTimeConverter;
-import com.gunnarro.android.terex.repository.InvoiceRepository;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -37,8 +36,14 @@ public class Invoice extends BaseEntity {
         INVOICE
     }
 
+    /**
+     * OPEN: not added any billing information or assigned to a timesheet
+     * CREATED: fulfilled and assigned to a timesheet. Possible to edit and delete.
+     * SENT: sent to customer, tha invoice is then closed and assigned timesheet is set to status CLOSED. Not possible to edit or delete. Can only be viewed.
+     * CANCELLED: the invoice have been cancelled.
+     */
     public enum InvoiceStatusEnum {
-        CREATED, REJECTED, PENDING, EXPIRED, APPROVED, DELETED, REVOKED
+        NEW, COMPLETED, SENT
     }
 
     /**
@@ -239,7 +244,11 @@ public class Invoice extends BaseEntity {
     }
 
     public boolean isCompleted() {
-        return status.equals(InvoiceRepository.InvoiceStatusEnum.COMPLETED.name());
+        return status.equals(InvoiceStatusEnum.COMPLETED.name());
+    }
+
+    public boolean isSent() {
+        return status.equals(InvoiceStatusEnum.SENT.name());
     }
 
     @Override

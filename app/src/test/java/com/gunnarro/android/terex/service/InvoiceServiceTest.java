@@ -3,6 +3,7 @@ package com.gunnarro.android.terex.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
@@ -15,6 +16,7 @@ import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
 import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
+import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.repository.InvoiceRepository;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -82,11 +84,27 @@ class InvoiceServiceTest {
         Invoice invoice = new Invoice();
         invoice.setId(22L);
         invoice.setTimesheetId(1006L);
+        invoice.setStatus(Invoice.InvoiceStatusEnum.COMPLETED.name());
         when(invoiceRepositoryMock.getInvoice(any())).thenReturn(invoice);
         invoiceService.deleteInvoice(invoice.getId());
         verify(timesheetServiceMock).deleteTimesheetSummaryForBilling(invoice.getTimesheetId());
         verify(invoiceRepositoryMock).deleteInvoiceAttachments(invoice.getId());
         verify(invoiceRepositoryMock).deleteInvoice(invoice);
+    }
+
+    @Test
+    void deleteInvoice_not_allowed() {
+        Invoice invoice = new Invoice();
+        invoice.setId(22L);
+        invoice.setTimesheetId(1006L);
+        invoice.setStatus(Invoice.InvoiceStatusEnum.SENT.name());
+        when(invoiceRepositoryMock.getInvoice(any())).thenReturn(invoice);
+
+        InputValidationException ex = assertThrows(InputValidationException.class, () -> {
+            invoiceService.deleteInvoice(invoice.getId());
+        });
+
+        assertEquals("Not allowed to delete invoice with status SENT", ex.getMessage());
     }
 
     /**

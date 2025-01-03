@@ -12,6 +12,7 @@ import com.gunnarro.android.terex.domain.dto.UserAccountDto;
 import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.InvoiceAttachment;
 import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
+import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.repository.InvoiceRepository;
 
@@ -130,7 +131,7 @@ public class InvoiceService {
         invoice.setRecipientId(clientId);
         invoice.setIssuerId(invoiceIssuerId);
         // ensure that a timesheet is only billed once.
-        invoice.setStatus(InvoiceRepository.InvoiceStatusEnum.NEW.name());
+        invoice.setStatus(Invoice.InvoiceStatusEnum.NEW.name());
         // The date when the customer is billed
         invoice.setBillingDate(LocalDate.now());
         invoice.setInvoicePeriod(Invoice.InvoicePeriodEnum.MONTH.name());
@@ -145,12 +146,19 @@ public class InvoiceService {
         invoice.setAmount(sumAmount);
         invoice.setVatAmount(sumVat);
         invoice.setCurrency(CURRENCY);
-        invoice.setStatus(InvoiceRepository.InvoiceStatusEnum.COMPLETED.name());
+        invoice.setStatus(Invoice.InvoiceStatusEnum.COMPLETED.name());
         return invoiceRepository.saveInvoice(invoice);
+    }
+
+    public void updateInvoiceStatus(Long invoiceId, Invoice.InvoiceStatusEnum status) {
+        invoiceRepository.updateInvoiceStatus(invoiceId, status.name());
     }
 
     public void deleteInvoice(Long invoiceId) {
         Invoice invoice = invoiceRepository.getInvoice(invoiceId);
+        if (invoice.isSent()) {
+            throw new InputValidationException("Not allowed to delete invoice with status SENT", null, null);
+        }
         // first, cleanup all invoice relations
         timesheetService.deleteTimesheetSummaryForBilling(invoice.getTimesheetId());
         invoiceRepository.deleteInvoiceAttachments(invoiceId);

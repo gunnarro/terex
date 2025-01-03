@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.dto.InvoiceDto;
-import com.gunnarro.android.terex.repository.InvoiceRepository;
+import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.utility.Utility;
 
 import java.time.format.DateTimeFormatter;
@@ -42,11 +42,11 @@ public class InvoiceViewHolder extends RecyclerView.ViewHolder {
         invoiceLineHeaderView.setText(String.format("%s", invoiceDto.getInvoiceRecipient().getName()));
         invoiceLine1StatusView.setText(invoiceDto.getBillingPeriodStartDate().format(DateTimeFormatter.ofPattern("MMM", Locale.getDefault())));
 
-        if (invoiceDto.getStatus().equals(InvoiceRepository.InvoiceStatusEnum.NEW.name())) {
+        if (invoiceDto.getStatus().equals(Invoice.InvoiceStatusEnum.NEW.name())) {
             invoiceLine1StatusView.setTextColor(invoiceLine1StatusView.getResources().getColor(R.color.invoice_status_open, null));
-        } else if (invoiceDto.getStatus().equals(InvoiceRepository.InvoiceStatusEnum.COMPLETED.name())) {
+        } else if (invoiceDto.getStatus().equals(Invoice.InvoiceStatusEnum.COMPLETED.name())) {
             invoiceLine1StatusView.setTextColor(invoiceLine1StatusView.getResources().getColor(R.color.invoice_status_completed, null));
-        } else if (invoiceDto.getStatus().equals(InvoiceRepository.InvoiceStatusEnum.SENT.name())) {
+        } else if (invoiceDto.getStatus().equals(Invoice.InvoiceStatusEnum.SENT.name())) {
             invoiceLine1StatusView.setTextColor(invoiceLine1StatusView.getResources().getColor(R.color.invoice_status_sent, null));
         }
         invoiceLine1LabelView.setText(R.string.lbl_billing_date);

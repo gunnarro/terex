@@ -27,6 +27,7 @@ import androidx.annotation.NonNull;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.dto.InvoiceDto;
+import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.InvoiceAttachment;
 import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
@@ -89,8 +90,8 @@ public class InvoiceDetailsFragment extends BaseFragment {
             String emailSubject = String.format("Fakturavedlegg %s", billingPeriod);
             String emailMessage = String.format("Hei,%nHer kommer vedlegg til faktura for %s %n%nFaktura skal sendes per epost til:%n%s%n%nHilsen%nGunnar Rønneberg%ngunnarro as", billingPeriod, invoiceDto.getInvoiceRecipient().getInvoiceEmailAddress());
             sendInvoiceToClient(ACCOUNTANT_EMAIL_ADDRESS, emailSubject, emailMessage, readFile(selectedInvoiceAttachmentType.getFileName()));
-        } else if (item.getItemId() == R.id.invoice_delete) {
-            confirmDeleteTimesheetDialog(getString(R.string.msg_confirm_delete), getString(R.string.msg_delete_invoice), invoiceId);
+        } else if (item.getItemId() == R.id.invoice_status_sent) {
+            confirmChangeInvoiceStatusDialog("Confirm status change", "Set invoice status to SENT", invoiceId);
         }
         return true;
     }
@@ -218,13 +219,12 @@ public class InvoiceDetailsFragment extends BaseFragment {
         }
     }
 
-    private void confirmDeleteTimesheetDialog(final String title, final String message, final Long timesheetId) {
+    private void confirmChangeInvoiceStatusDialog(final String title, final String message, final Long invoiceId) {
         new MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
                 .setTitle(title)
                 .setMessage(message)
                 .setPositiveButton(R.string.btn_ok, (dialogInterface, i) -> {
-                    deleteInvoice(timesheetId);
-                    removeFromNavigation(R.id.nav_from_invoice_list_to_invoice_details);
+                    changeInvoiceStatus(invoiceId);
                     navigateTo(R.id.nav_from_invoice_details_to_invoice_list, null);
                 })
                 .setNeutralButton(R.string.btn_cancel, (dialogInterface, i) -> {
@@ -233,9 +233,11 @@ public class InvoiceDetailsFragment extends BaseFragment {
                 .show();
     }
 
-    private void deleteInvoice(Long invoiceId) {
+    private void changeInvoiceStatus(Long invoiceId) {
         try {
-            invoiceService.deleteInvoice(invoiceId);
+            InvoiceDto invoiceDto = invoiceService.getInvoiceDto(invoiceId);
+            invoiceDto.setStatus(Invoice.InvoiceStatusEnum.SENT.name());
+            invoiceService.updateInvoiceStatus(invoiceId, Invoice.InvoiceStatusEnum.SENT);
         } catch (TerexApplicationException | InputValidationException e) {
             showInfoDialog("Error", e.getMessage());
         }

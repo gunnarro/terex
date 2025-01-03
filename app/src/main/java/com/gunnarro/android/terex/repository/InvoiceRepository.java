@@ -21,16 +21,6 @@ import javax.inject.Singleton;
 @Singleton
 public class InvoiceRepository {
 
-    /**
-     * OPEN: not added any billing information or assigned to a timesheet
-     * CREATED: fulfilled and assigned to a timesheet. Possible to edit and delete.
-     * SENT: sent to customer, tha invoice is then closed and assigned timesheet is set to status CLOSED. Not possible to edit or delete. Can only be viewed.
-     * CANCELLED: the invoice have been cancelled.
-     */
-    public enum InvoiceStatusEnum {
-        NEW, COMPLETED, SENT
-    }
-
     private final InvoiceDao invoiceDao;
 
     private final InvoiceAttachmentDao invoiceAttachmentDao;
@@ -151,6 +141,13 @@ public class InvoiceRepository {
         service.submit(() -> invoiceDao.update(invoice));
         Future<Integer> future = service.take();
         return future != null ? future.get() : null;
+    }
+
+    public void updateInvoiceStatus(Long invoiceId, String status) {
+        AppDatabase.databaseExecutor.execute(() -> {
+            invoiceDao.updateInvoiceStatus(invoiceId, status);
+            Log.d("InvoiceRepository.updateInvoiceStatus", "invoiceId=" + invoiceId + ", status=" + status);
+        });
     }
 
     public void deleteInvoice(Invoice invoice) {

@@ -454,7 +454,7 @@ class TimesheetMapperTest {
         invoice.setAmount(12200.50);
         invoice.setTimesheetId(1111L);
         invoice.setInvoiceNumber(123456789);
-        invoice.setStatus(Invoice.InvoiceStatusEnum.APPROVED.name());
+        invoice.setStatus(Invoice.InvoiceStatusEnum.COMPLETED.name());
         invoice.setInvoiceType(Invoice.InvoiceTypeEnum.INVOICE.name());
         invoice.setInvoicePeriod("2024/06");
         invoice.setBillingPeriodStartDate(LocalDate.now());

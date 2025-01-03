@@ -42,17 +42,6 @@
                 android:text=""
                 android:textStyle="bold" />
 
-            <ImageView
-                android:id="@+id/ic_invoice_row_view"
-                android:layout_width="14dp"
-                android:layout_height="14dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginEnd="7dp"
-                android:contentDescription="@string/btn_view"
-                android:elevation="1dp"
-                android:layout_gravity="end"
-                android:src="@drawable/ic_more_horiz_24px" />
-
         </TableRow>
 
         <TableRow>

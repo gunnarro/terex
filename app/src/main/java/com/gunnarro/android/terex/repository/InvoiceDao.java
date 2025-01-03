@@ -1,6 +1,5 @@
 package com.gunnarro.android.terex.repository;
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -15,7 +14,8 @@ import java.util.List;
 @Dao
 public interface InvoiceDao {
 
-    @Query("SELECT * FROM invoice i where i.id = :invoiceId")//" JOIN TimesheetSummary s ON i.id = s.invoice_id WHERE i.id = :invoiceId")
+    @Query("SELECT * FROM invoice i where i.id = :invoiceId")
+//" JOIN TimesheetSummary s ON i.id = s.invoice_id WHERE i.id = :invoiceId")
     Invoice getInvoiceById(long invoiceId);
 
     @Query("SELECT * FROM invoice ORDER BY billing_date ASC")
@@ -26,6 +26,9 @@ public interface InvoiceDao {
 
     @Query("SELECT id FROM invoice ORDER BY billing_period_start_date ASC")
     List<Long> getAllInvoiceIds();
+
+    @Query("UPDATE invoice SET invoice_status = :status WHERE id = :invoiceId")
+    void updateInvoiceStatus(Long invoiceId, String status);
 
     /**
      * @param invoice timesheet to be inserted. Abort if conflict, i.e. silently drop the insert

@@ -60,7 +60,7 @@ public class InvoiceListFragment extends BaseFragment implements ListOnItemClick
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_recycler_invoice_list, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.invoice_list_recyclerview);
-        final InvoiceListAdapter adapter = new InvoiceListAdapter(this, new InvoiceListAdapter.InvoiceDtoDiff());
+        final InvoiceListAdapter adapter = new InvoiceListAdapter(new InvoiceListAdapter.InvoiceDtoDiff());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         // Add an observer on the LiveData returned by getAlphabetizedWords.
@@ -133,6 +133,7 @@ public class InvoiceListFragment extends BaseFragment implements ListOnItemClick
             showSnackbar(String.format(getResources().getString(R.string.info_list_delete_msg_format), "Invoice"), R.color.color_snackbar_text_delete);
         } catch (TerexApplicationException | InputValidationException e) {
             showInfoDialog("Info", e.getMessage());
+            navigateTo(R.id.nav_to_invoice_list, null);
         }
     }
 
