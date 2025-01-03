@@ -43,7 +43,7 @@ public class TimesheetEntryListFragment extends BaseFragment implements ListOnIt
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // displays the back button on toolbar
-        ((MainActivity)requireActivity()).showUpButton();
+        ((MainActivity) requireActivity()).showUpButton();
         //super.setHasOptionsMenu(false);
         // save the timesheet id, needed for view and delete timesheet entry actions.
         timesheetId = getArguments().getLong(TimesheetListFragment.TIMESHEET_ID_KEY);
@@ -181,7 +181,7 @@ public class TimesheetEntryListFragment extends BaseFragment implements ListOnIt
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
                 final int selectedTimesheetEntryPos = viewHolder.getAbsoluteAdapterPosition();
                 TimesheetEntryDto timesheetEntryDto = timesheetEntryViewModel.getTimesheetEntryLiveData(timesheetId).getValue().get(selectedTimesheetEntryPos);
-                confirmDeleteTimesheetEntryDialog(getString(R.string.msg_delete_timesheet_entry), getString(R.string.msg_confirm_delete), timesheetEntryDto.getId());
+                confirmDeleteTimesheetEntryDialog(getString(R.string.msg_confirm_delete), getString(R.string.msg_delete_timesheet_entry), timesheetEntryDto.getId());
             }
         };
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);

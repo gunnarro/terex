@@ -145,8 +145,6 @@ public class InvoiceListFragment extends BaseFragment implements ListOnItemClick
                 .setNeutralButton(R.string.btn_cancel, (dialogInterface, i) -> {
                     // in order to wipe out the swipe item color, must be a better way to do this.
                     navigateTo(R.id.nav_to_invoice_list, null);
-                    this.requireView().requestLayout();
-                    Log.d("confirmDeleteInvoiceDialog", "cancelled delete invoice");
                 })
                 .show();
     }

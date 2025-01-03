@@ -58,7 +58,7 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // displays the back button on toolbar
-        ((MainActivity)requireActivity()).showUpButton();
+        ((MainActivity) requireActivity()).showUpButton();
         // Get a new or existing ViewModel from the ViewModelProvider.
         try {
             timesheetViewModel = new TimesheetViewModel(requireActivity().getApplication(), selectedYear);
@@ -244,6 +244,8 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
         try {
             Timesheet timesheet = timesheetViewModel.getTimesheet(timesheetId);
             timesheetViewModel.deleteTimesheet(timesheet);
+            // in order to wipe out the swipe item color, must be a better way to do this.
+            navigateTo(R.id.nav_to_timesheet_list, null);
             showSnackbar(String.format(getResources().getString(R.string.info_list_delete_msg_format), timesheet), R.color.color_snackbar_text_delete);
         } catch (TerexApplicationException | InputValidationException e) {
             showInfoDialog("Info", e.getMessage());
@@ -273,7 +275,7 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
                 final int selectedTimesheetPos = viewHolder.getAbsoluteAdapterPosition();
                 TimesheetDto timesheetDto = timesheetViewModel.getTimesheetLiveData(selectedYear).getValue().get(selectedTimesheetPos);
-                confirmDeleteTimesheetDialog(getString(R.string.msg_delete_timesheet), getString(R.string.msg_confirm_delete), timesheetDto.getId());
+                confirmDeleteTimesheetDialog(getString(R.string.msg_confirm_delete), getString(R.string.msg_delete_timesheet), timesheetDto.getId());
                 // reloadTimesheetData(selectedYear);
                 Log.d("enableSwipeToLeftAndDeleteItem", "testing: " + timesheetDto);
             }
@@ -300,7 +302,8 @@ public class TimesheetListFragment extends BaseFragment implements ListOnItemCli
                 .setMessage(message)
                 .setPositiveButton(R.string.btn_ok, (dialogInterface, i) -> deleteTimesheet(timesheetId))
                 .setNeutralButton(R.string.btn_cancel, (dialogInterface, i) -> {
-                    // nothing to do
+                    // in order to wipe out the swipe item color, must be a better way to do this.
+                    navigateTo(R.id.nav_to_timesheet_list, null);
                 })
                 .show();
     }
