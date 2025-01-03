@@ -55,10 +55,13 @@
 
     <!-- dialog messages -->
     <string name="msg_delete_timesheet">Delete timesheet. Note that all registered hours will also be deleted. It is not possible to revert the deletion.</string>
-    <string name="msg_confirm_delete">Bekreft sletting av timeliste.</string>
+    <string name="msg_confirm_delete">Bekreft sletting.</string>
 
     <string name="msg_delete_timesheet_entry">Delete timesheet entry. It is not possible to revert the deletion.</string>
-    <string name="msg_confirm_delete_timesheet_entry">Bekreft sletting av timeliste oppføring.</string>
+
+    <string name="msg_delete_invoice">Delete invoice. Note! the timesheet will be ready to fulfill again.</string>
+
+    <string name="msg_delete_project">Delete project.</string>
 
 
     <!-- invoice -->
@@ -107,10 +110,10 @@
     <string name="info_timesheet_list_updated_entry" formatted="false">Oppdatert timeliste oppføring</string>
     <string name="info_timesheet_list_deleted_entry" formatted="false">Slettet oppføring fra timeliste</string>
 
-    <string name="info_timesheet_list_add_msg_format" formatted="false">Added %s, %s</string>
-    <string name="info_timesheet_list_saved_msg_format" formatted="false">Saved %s, %s</string>
-    <string name="info_timesheet_list_update_msg_format" formatted="false">Updated %s, %s</string>
-    <string name="info_timesheet_list_delete_msg_format" formatted="false">Deleted %s</string>
+    <string name="info_list_add_msg_format" formatted="false">Added %s, %s</string>
+    <string name="info_list_saved_msg_format" formatted="false">Saved %s, %s</string>
+    <string name="info_list_update_msg_format" formatted="false">Updated %s, %s</string>
+    <string name="info_list_delete_msg_format" formatted="false">Deleted %s</string>
 
     <!-- CalendarView values -->
     <string name="material_calendar_monday">Man</string>
@@ -120,7 +123,7 @@
     <string name="material_calendar_friday">Fre</string>
     <string name="material_calendar_saturday">Lør</string>
     <string name="material_calendar_sunday">Søn</string>
-    <string name="lbl_invoice_attachment">Faktura vedlegg</string>
+    <string name="lbl_invoice_attachment">Vedlegg</string>
     <string name="prompt_description">Beskrivelse</string>
 
     <array name="material_calendar_months_array">

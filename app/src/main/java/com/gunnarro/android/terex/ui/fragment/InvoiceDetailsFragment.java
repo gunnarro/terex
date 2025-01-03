@@ -24,9 +24,11 @@ import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.gunnarro.android.terex.R;
 import com.gunnarro.android.terex.domain.dto.InvoiceDto;
 import com.gunnarro.android.terex.domain.entity.InvoiceAttachment;
+import com.gunnarro.android.terex.exception.InputValidationException;
 import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.service.InvoiceService;
 import com.gunnarro.android.terex.ui.MainActivity;
@@ -36,7 +38,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -86,8 +87,10 @@ public class InvoiceDetailsFragment extends BaseFragment {
             InvoiceDto invoiceDto = invoiceService.getInvoiceDto(invoiceId);
             String billingPeriod = invoiceDto.getBillingPeriodStartDate().format(DateTimeFormatter.ofPattern(Utility.MONTH_YEAR_DATE_PATTERN));
             String emailSubject = String.format("Fakturavedlegg %s", billingPeriod);
-            String emailMessage = String.format("Hei,\nHer kommer vedlegg til faktura for %s \n\nFaktura skal sendes per epost til:\n%s\n\nHilsen\nGunnar Rønneberg\ngunnarro as", billingPeriod, invoiceDto.getInvoiceRecipient().getInvoiceEmailAddress());
+            String emailMessage = String.format("Hei,%nHer kommer vedlegg til faktura for %s %n%nFaktura skal sendes per epost til:%n%s%n%nHilsen%nGunnar Rønneberg%ngunnarro as", billingPeriod, invoiceDto.getInvoiceRecipient().getInvoiceEmailAddress());
             sendInvoiceToClient(ACCOUNTANT_EMAIL_ADDRESS, emailSubject, emailMessage, readFile(selectedInvoiceAttachmentType.getFileName()));
+        } else if (item.getItemId() == R.id.invoice_delete) {
+            confirmDeleteTimesheetDialog(getString(R.string.msg_confirm_delete), getString(R.string.msg_delete_invoice), invoiceId);
         }
         return true;
     }
@@ -137,18 +140,23 @@ public class InvoiceDetailsFragment extends BaseFragment {
             return;
         }
         invoiceAttachmentTypes = invoiceService.getInvoiceAttachmentTypes();
-        byte[] invoiceAttachmentHtml = null;
+        byte[] invoiceAttachmentHtmlArray = null;
         try {
             selectedInvoiceAttachment = invoiceService.getInvoiceAttachment(invoiceId, invoiceAttachmentType, InvoiceService.InvoiceAttachmentFileTypes.HTML);
-            invoiceAttachmentHtml = selectedInvoiceAttachment.getFileContent();
+            invoiceAttachmentHtmlArray = selectedInvoiceAttachment.getFileContent();
         } catch (Exception e) {
             showInfoDialog("Error", String.format("Application error!%sError: %s%s Please report.", e.getMessage(), System.lineSeparator(), System.lineSeparator()));
         }
 
+        if (invoiceAttachmentHtmlArray == null || invoiceAttachmentHtmlArray.length == 0) {
+            showInfoDialog("Info", String.format("Invoice not found! A deleted invoice and use of back button may cause this! invoiceId=%s", invoiceId));
+            navigateTo(R.id.nav_from_invoice_details_to_invoice_list, null);
+        }
+        Log.d("", "nvoiceAttachmentHtmlArray = " + invoiceAttachmentHtmlArray);
         webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
         webView.getSettings().setJavaScriptEnabled(false);
         webView.getSettings().setLoadsImagesAutomatically(true);
-        webView.loadDataWithBaseURL("file:///android_asset/", new String(invoiceAttachmentHtml), "text/html", "UTF-8", null);
+        webView.loadDataWithBaseURL("file:///android_asset/", new String(invoiceAttachmentHtmlArray), "text/html", "UTF-8", null);
     }
 
     private void exportAttachment(String fileName) {
@@ -179,8 +187,8 @@ public class InvoiceDetailsFragment extends BaseFragment {
         }
 */
 
-       // File file = readFile("Downloads/omegapoint_norge_as_timeliste_2024-01.pdf");
-       // Uri fileUri = FileProvider.getUriForFile(requireContext(), requireContext().getApplicationContext().getPackageName() + ".provider", file);
+        // File file = readFile("Downloads/omegapoint_norge_as_timeliste_2024-01.pdf");
+        // Uri fileUri = FileProvider.getUriForFile(requireContext(), requireContext().getApplicationContext().getPackageName() + ".provider", file);
         Intent emailIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
         emailIntent.setType("vnd.android.cursor.dir/email");
         emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{toEmailAddress});
@@ -190,8 +198,9 @@ public class InvoiceDetailsFragment extends BaseFragment {
         //Uri attachment = Uri.fromFile(file);
 
         //ContentUris.withAppendedId()
-        content://com.android.providers.downloads.documents/document/92
-        Log.d("sendInvoiceToClient", "pdffile uri: " + Uri.fromParts("content","com.android.providers.downloads.documents",null).toString());
+        content:
+//com.android.providers.downloads.documents/document/92
+        Log.d("sendInvoiceToClient", "pdffile uri: " + Uri.fromParts("content", "com.android.providers.downloads.documents", null).toString());
         Log.d("sendInvoiceToClient", "root: " + root.toURI());
 
         //Log.d("sendInvoiceToClient", "attachment uri:" + attachment.getPath());
@@ -206,6 +215,29 @@ public class InvoiceDetailsFragment extends BaseFragment {
             return new File(MainActivity.getInternalAppDir(), fileName);
         } catch (Exception e) {
             throw new TerexApplicationException(e.getMessage(), "50500", e);
+        }
+    }
+
+    private void confirmDeleteTimesheetDialog(final String title, final String message, final Long timesheetId) {
+        new MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(R.string.btn_ok, (dialogInterface, i) -> {
+                    deleteInvoice(timesheetId);
+                    removeFromNavigation(R.id.nav_from_invoice_list_to_invoice_details);
+                    navigateTo(R.id.nav_from_invoice_details_to_invoice_list, null);
+                })
+                .setNeutralButton(R.string.btn_cancel, (dialogInterface, i) -> {
+                    // nothing to do
+                })
+                .show();
+    }
+
+    private void deleteInvoice(Long invoiceId) {
+        try {
+            invoiceService.deleteInvoice(invoiceId);
+        } catch (TerexApplicationException | InputValidationException e) {
+            showInfoDialog("Error", e.getMessage());
         }
     }
 /*

@@ -204,7 +204,7 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
         try {
             Timesheet timesheet = readTimesheetInputData();
             timesheetService.saveTimesheet(timesheet);
-            showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_saved_msg_format), timesheet, timesheet.getYear() + "-" + timesheet.getMonth()), R.color.color_snackbar_text_add);
+            showSnackbar(String.format(getResources().getString(R.string.info_list_saved_msg_format), timesheet, timesheet.getYear() + "-" + timesheet.getMonth()), R.color.color_snackbar_text_add);
             navigateTo(R.id.nav_from_timesheet_details_to_timesheet_list, null);
         } catch (TerexApplicationException | InputValidationException ex) {
             showInfoDialog("Error", String.format("%s", ex.getMessage()));
@@ -216,12 +216,15 @@ public class TimesheetNewFragment extends BaseFragment implements View.OnClickLi
     private void deleteTimesheet() {
         Timesheet timesheet = readTimesheetInputData();
         timesheetService.deleteTimesheet(timesheet.getId());
-        showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_delete_msg_format), timesheet), R.color.color_snackbar_text_delete);
+        showSnackbar(String.format(getResources().getString(R.string.info_list_delete_msg_format), timesheet), R.color.color_snackbar_text_delete);
         navigateTo(R.id.nav_from_timesheet_details_to_timesheet_list, null);
     }
 
     private void confirmDeleteTimesheetDialog(final String title, final String message) {
-        new MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme).setTitle(title).setMessage(message).setPositiveButton(R.string.btn_ok, (dialogInterface, i) -> deleteTimesheet()).setNeutralButton(R.string.btn_cancel, (dialogInterface, i) -> {
+        new MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme).setTitle(title).setMessage(message).
+                setPositiveButton(R.string.btn_ok, (dialogInterface, i) -> deleteTimesheet())
+                .setNeutralButton(R.string.btn_cancel, (dialogInterface, i) -> {
+
             // nothing to do
         }).show();
     }

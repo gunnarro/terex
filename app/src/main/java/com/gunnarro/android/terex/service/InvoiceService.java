@@ -89,9 +89,7 @@ public class InvoiceService {
 
     public List<InvoiceDto> getInvoiceDtoList() {
         List<Long> invoceIdList = invoiceRepository.getAllInvoiceIds();
-        List<InvoiceDto> list = invoceIdList.stream().map(this::getInvoiceDto).collect(Collectors.toList());
-        list.sort(Comparator.comparing(InvoiceDto::getBillingDate).reversed());
-        return list;
+        return invoceIdList.stream().map(this::getInvoiceDto).sorted(Comparator.comparing(InvoiceDto::getBillingDate).reversed()).collect(Collectors.toList());
     }
 
     public InvoiceDto getInvoiceDto(Long invoiceId) {
@@ -149,6 +147,16 @@ public class InvoiceService {
         invoice.setCurrency(CURRENCY);
         invoice.setStatus(InvoiceRepository.InvoiceStatusEnum.COMPLETED.name());
         return invoiceRepository.saveInvoice(invoice);
+    }
+
+    public void deleteInvoice(Long invoiceId) {
+        Invoice invoice = invoiceRepository.getInvoice(invoiceId);
+        // first, cleanup all invoice relations
+        timesheetService.deleteTimesheetSummaryForBilling(invoice.getTimesheetId());
+        invoiceRepository.deleteInvoiceAttachments(invoiceId);
+        // finally, the invoice can be deleted
+        invoiceRepository.deleteInvoice(invoice);
+        Log.d("deleteInvoice", "deleted invoice, invoiceId=" + invoiceId);
     }
 
     public List<InvoiceAttachmentTypesEnum> getInvoiceAttachmentTypes() {

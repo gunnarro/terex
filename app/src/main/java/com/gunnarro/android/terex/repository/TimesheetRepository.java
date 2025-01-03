@@ -77,6 +77,14 @@ public class TimesheetRepository {
         }
     }
 
+    public void deleteTimesheetSummary(Long timesheetId) {
+        AppDatabase.databaseExecutor.execute(() -> {
+            timesheetSummaryDao.delete(timesheetId);
+            Log.d("TimesheetRepository.delete", "deleted all timesheet summary, timesheetId=" + timesheetId);
+        });
+    }
+
+
     @Transaction
     public TimesheetWithEntries getTimesheetWithEntries(Long timesheetId) {
         try {

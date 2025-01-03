@@ -17,6 +17,9 @@ public interface TimesheetSummaryDao {
     @Query("select * from timesheet_summary t where t.timesheet_id = :timesheetId")
     List<TimesheetSummary> getTimesheetSummaries(Long timesheetId);
 
+    @Query("DELETE FROM timesheet_summary where timesheet_id = :timesheetId")
+    void delete(Long timesheetId);
+
     /**
      * @param timesheetSummary timesheet to be inserted. Abort if conflict, i.e. silently drop the insert
      * @return the id of the inserted invoice summary row

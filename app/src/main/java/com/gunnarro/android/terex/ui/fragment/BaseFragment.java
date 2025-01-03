@@ -72,6 +72,10 @@ abstract class BaseFragment extends Fragment {
                 .show();
     }
 
+    protected void removeFromNavigation(Integer destinationId) {
+        navController.popBackStack(destinationId, false);
+    }
+
     /*
      * The navigate() pushes the given toFragmentId to the top of the stack.
      * Which cause that that will be the destination fragment when clicking th back button.

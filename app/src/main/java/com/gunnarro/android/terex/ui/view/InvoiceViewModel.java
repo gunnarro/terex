@@ -41,4 +41,7 @@ public class InvoiceViewModel extends AndroidViewModel {
         return invoiceListLiveData;
     }
 
+    public void deleteInvoice(Long invoiceId) {
+        invoiceService.deleteInvoice(invoiceId);
+    }
 }

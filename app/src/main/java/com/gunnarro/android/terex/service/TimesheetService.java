@@ -34,7 +34,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -365,6 +364,30 @@ public class TimesheetService {
         timesheetSummaryByWeek.sort(Comparator.comparing(TimesheetSummary::getWeekInYear));
         return timesheetSummaryByWeek;
     }
+
+    public void deleteTimesheetSummaryForBilling(@NotNull Long timesheetId) {
+        try {
+            // reset status for all timesheet entries from BILLED to ACTIVE
+            timesheetRepository.getTimesheetEntryList(timesheetId).forEach(entry -> {
+                entry.setStatus(TimesheetEntry.TimesheetEntryStatusEnum.OPEN.name());
+                try {
+                    timesheetRepository.updateTimesheetEntry(entry);
+                } catch (Exception ex) {
+                    throw new TerexApplicationException(String.format("Application error, Failed delete timesheet summary, failed set timesheet entry status to ACTIVE, timesheetId=%s, timesheetEntryId=%s", timesheetId, entry.getId()), "50023", ex.getCause());
+                }
+            });
+            // reset timesheet status from BILLED to ACTIVE
+            Timesheet timesheet = getTimesheet(timesheetId);
+            timesheet.setStatus(Timesheet.TimesheetStatusEnum.ACTIVE.name());
+            timesheetRepository.updateTimesheet(timesheet);
+            // finally, delete timesheet summary
+            timesheetRepository.deleteTimesheetSummary(timesheetId);
+
+        } catch (Exception ex) {
+            throw new TerexApplicationException(String.format("Application error, Failed delete timesheet summary, timesheetId=%s", timesheetId), "50023", ex.getCause());
+        }
+    }
+
 
     public String createTimesheetSummaryAttachmentHtml(@NotNull Long timesheetId, @NotNull UserAccountDto userAccountDto, @NotNull ClientDto clientDto, @NotNull String timesheetSummeryMustacheTemplate) {
         Timesheet timesheetDto = getTimesheet(timesheetId);

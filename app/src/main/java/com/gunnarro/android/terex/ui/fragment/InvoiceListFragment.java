@@ -9,14 +9,20 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentResultListener;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.gunnarro.android.terex.R;
+import com.gunnarro.android.terex.domain.dto.InvoiceDto;
+import com.gunnarro.android.terex.exception.InputValidationException;
+import com.gunnarro.android.terex.exception.TerexApplicationException;
 import com.gunnarro.android.terex.ui.MainActivity;
 import com.gunnarro.android.terex.ui.adapter.InvoiceListAdapter;
 import com.gunnarro.android.terex.ui.listener.ListOnItemClickListener;
+import com.gunnarro.android.terex.ui.swipe.SwipeCallback;
 import com.gunnarro.android.terex.ui.view.InvoiceViewModel;
 import com.gunnarro.android.terex.utility.Utility;
 
@@ -34,7 +40,7 @@ public class InvoiceListFragment extends BaseFragment implements ListOnItemClick
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // displays the back button on toolbar
-        ((MainActivity)requireActivity()).showUpButton();
+        ((MainActivity) requireActivity()).showUpButton();
         // Get a new or existing ViewModel from the ViewModelProvider.
         invoiceViewModel = new ViewModelProvider(this).get(InvoiceViewModel.class);
 
@@ -66,6 +72,8 @@ public class InvoiceListFragment extends BaseFragment implements ListOnItemClick
         FloatingActionButton addButton = view.findViewById(R.id.invoice_list_add_btn);
         addButton.setOnClickListener(v -> navigateTo(R.id.nav_from_invoice_list_to_invoice_new, null));
 
+        enableSwipeToLeftAndDeleteItem(recyclerView);
+        enableSwipeToRightAndViewItem(recyclerView);
         Log.d(Utility.buildTag(getClass(), "onCreateView"), "");
         return view;
     }
@@ -86,4 +94,60 @@ public class InvoiceListFragment extends BaseFragment implements ListOnItemClick
     public void onItemClick(Bundle bundle) {
         navigateTo(R.id.nav_from_invoice_list_to_invoice_details, bundle);
     }
+
+    private void enableSwipeToRightAndViewItem(RecyclerView recyclerView) {
+        SwipeCallback swipeToViewCallback = new SwipeCallback(requireContext(), ItemTouchHelper.RIGHT, getResources().getColor(R.color.color_bg_swipe_right, null), R.drawable.ic_add_black_24dp) {
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+                final int selectedProjectPos = viewHolder.getAbsoluteAdapterPosition();
+                InvoiceDto invoiceDto = invoiceViewModel.getAllInvoices().getValue().get(selectedProjectPos);
+                Bundle bundle = new Bundle();
+                bundle.putLong(INVOICE_ID_KEY, invoiceDto.getId());
+                navigateTo(R.id.invoice_details_fragment, bundle);
+            }
+        };
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToViewCallback);
+        itemTouchhelper.attachToRecyclerView(recyclerView);
+        Log.i(Utility.buildTag(getClass(), "enableSwipeToRightAndAdd"), "enabled swipe handler for invoice list item");
+    }
+
+    private void enableSwipeToLeftAndDeleteItem(RecyclerView recyclerView) {
+        SwipeCallback swipeToDeleteCallback = new SwipeCallback(requireContext(), ItemTouchHelper.LEFT, getResources().getColor(R.color.color_bg_swipe_left, null), R.drawable.ic_delete_black_24dp) {
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+                final int selectedInvoicePos = viewHolder.getAbsoluteAdapterPosition();
+                InvoiceDto invoiceDto = invoiceViewModel.getAllInvoices().getValue().get(selectedInvoicePos);
+                confirmDeleteInvoiceDialog(getString(R.string.msg_delete_invoice), getString(R.string.msg_confirm_delete), invoiceDto.getId());
+            }
+        };
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
+        itemTouchhelper.attachToRecyclerView(recyclerView);
+        Log.i(Utility.buildTag(getClass(), "enableSwipeToLeftAndDeleteItem"), "enabled swipe handler for delete invoice list item");
+    }
+
+    private void deleteInvoice(Long invoiceId) {
+        try {
+            invoiceViewModel.deleteInvoice(invoiceId);
+            // in order to wipe out the swipe item color, must be a better way to do this.
+            navigateTo(R.id.nav_to_invoice_list, null);
+            showSnackbar(String.format(getResources().getString(R.string.info_list_delete_msg_format), "Invoice"), R.color.color_snackbar_text_delete);
+        } catch (TerexApplicationException | InputValidationException e) {
+            showInfoDialog("Info", e.getMessage());
+        }
+    }
+
+    private void confirmDeleteInvoiceDialog(final String title, final String message, final Long invoiceId) {
+        new MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(R.string.btn_ok, (dialogInterface, i) -> deleteInvoice(invoiceId))
+                .setNeutralButton(R.string.btn_cancel, (dialogInterface, i) -> {
+                    // in order to wipe out the swipe item color, must be a better way to do this.
+                    navigateTo(R.id.nav_to_invoice_list, null);
+                    this.requireView().requestLayout();
+                    Log.d("confirmDeleteInvoiceDialog", "cancelled delete invoice");
+                })
+                .show();
+    }
+
 }

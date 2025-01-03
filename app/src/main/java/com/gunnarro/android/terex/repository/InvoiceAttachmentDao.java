@@ -18,6 +18,9 @@ public interface InvoiceAttachmentDao {
     @Query("SELECT * FROM invoice_attachment a WHERE a.invoice_id = :invoiceId AND a.type = :attachmentType AND a.file_type = :attachmentFileType")
     InvoiceAttachment getInvoiceAttachment(Long invoiceId, String attachmentType, String attachmentFileType);
 
+    @Query("DELETE FROM invoice_attachment WHERE invoice_id = :invoiceId")
+    void deleteAttachments(Long invoiceId);
+
     /**
      * @param invoiceAttachment invoice file to be inserted. Abort if conflict, i.e. silently drop the insert
      * @return the id of the inserted invoice row

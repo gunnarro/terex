@@ -116,7 +116,7 @@
     <string name="material_calendar_friday">Fri</string>
     <string name="material_calendar_saturday">Sat</string>
     <string name="material_calendar_sunday">Sun</string>
-    <string name="lbl_invoice_attachment">Invoice attachment</string>
+    <string name="lbl_invoice_attachment">Attachment</string>
     <string name="prompt_description">Description</string>
 
     <array name="material_calendar_months_array">

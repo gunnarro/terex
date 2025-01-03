@@ -185,7 +185,7 @@ public class ClientListFragment extends BaseFragment implements ListOnItemClickL
         try {
             // Client client = clientViewModel.getClient(clientId);
             // clientViewModel.deleteClient(client);
-            showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_delete_msg_format), "not implemented"), R.color.color_snackbar_text_delete);
+            showSnackbar(String.format(getResources().getString(R.string.info_list_delete_msg_format), "not implemented"), R.color.color_snackbar_text_delete);
         } catch (TerexApplicationException | InputValidationException e) {
             showInfoDialog("Info", e.getMessage());
         }

@@ -117,16 +117,16 @@ public class ProjectListFragment extends BaseFragment implements ListOnItemClick
                 if (projectDto.getStatus().equals("ACTIVE")) {
                     showInfoDialog("Info", "Can not delete project with status ACTIVE");
                 } else {
-                    confirmDeleteProjectDialog(getString(R.string.msg_delete_timesheet), getString(R.string.msg_confirm_delete), projectDto.getId());
+                    confirmDeleteProjectDialog(getString(R.string.msg_delete_project), getString(R.string.msg_confirm_delete), projectDto.getId());
                 }
             } else if (PROJECT_ACTION_VIEW.equals(action)) {
-                // redirect to timesheet entry list fragment
+                // redirect to project list fragment
                 Bundle bundle = new Bundle();
                 bundle.putLong(PROJECT_ID_KEY, projectDto.getId());
                 bundle.putBoolean(PROJECT_READ_ONLY_KEY, projectDto.isClosed());
                 // openClientProjectListView(bundle);
             } else if (PROJECT_ACTION_EDIT.equals(action)) {
-                // redirect to timesheet entry list fragment
+                // redirect to project list fragment
                 Bundle bundle = new Bundle();
                 bundle.putString(PROJECT_JSON_KEY, projectJsonDtoJson);
                 bundle.putBoolean(PROJECT_READ_ONLY_KEY, projectDto.isClosed());
@@ -157,7 +157,7 @@ public class ProjectListFragment extends BaseFragment implements ListOnItemClick
         };
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToViewCallback);
         itemTouchhelper.attachToRecyclerView(recyclerView);
-        Log.i(Utility.buildTag(getClass(), "enableSwipeToRightAndAdd"), "enabled swipe handler for timesheet list item");
+        Log.i(Utility.buildTag(getClass(), "enableSwipeToRightAndAdd"), "enabled swipe handler for project list item");
     }
 
     private void enableSwipeToLeftAndDeleteItem(RecyclerView recyclerView) {
@@ -166,20 +166,20 @@ public class ProjectListFragment extends BaseFragment implements ListOnItemClick
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
                 final int selectedProjectPos = viewHolder.getAbsoluteAdapterPosition();
                 ProjectDto projectDto = projectViewModel.getProjectsLiveData(clientId).getValue().get(selectedProjectPos);
-                confirmDeleteProjectDialog(getString(R.string.msg_delete_timesheet), getString(R.string.msg_confirm_delete), projectDto.getId());
+                confirmDeleteProjectDialog(getString(R.string.msg_delete_project), getString(R.string.msg_confirm_delete), projectDto.getId());
             }
         };
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
         itemTouchhelper.attachToRecyclerView(recyclerView);
-        Log.i(Utility.buildTag(getClass(), "enableSwipeToLeftAndDeleteItem"), "enabled swipe handler for delete timesheet list item");
+        Log.i(Utility.buildTag(getClass(), "enableSwipeToLeftAndDeleteItem"), "enabled swipe handler for delete project list item");
     }
 
     private void deleteProject(Long projectId) {
         try {
             projectViewModel.deleteProject(projectId);
-            RecyclerView recyclerView = requireView().findViewById(R.id.timesheet_entry_list_recyclerview);
+            RecyclerView recyclerView = requireView().findViewById(R.id.project_list_recyclerview);
             recyclerView.getAdapter().notifyDataSetChanged();
-            showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_delete_msg_format), "project"), R.color.color_snackbar_text_delete);
+            showSnackbar(String.format(getResources().getString(R.string.info_list_delete_msg_format), "project"), R.color.color_snackbar_text_delete);
         } catch (TerexApplicationException | InputValidationException e) {
             showInfoDialog("Info", e.getMessage());
         }

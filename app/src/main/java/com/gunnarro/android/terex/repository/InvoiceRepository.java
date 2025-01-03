@@ -234,4 +234,10 @@ public class InvoiceRepository {
         return future != null ? future.get() : null;
     }
 
+    public void deleteInvoiceAttachments(Long invoiceId) {
+        AppDatabase.databaseExecutor.execute(() -> {
+            invoiceAttachmentDao.deleteAttachments(invoiceId);
+            Log.d("InvoiceRepository.delete", "deleted all attachments, invoiceId=" + invoiceId);
+        });
+    }
 }

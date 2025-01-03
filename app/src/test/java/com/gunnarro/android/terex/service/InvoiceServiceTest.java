@@ -4,13 +4,14 @@ package com.gunnarro.android.terex.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.gunnarro.android.terex.TestData;
 import com.gunnarro.android.terex.domain.dto.ClientDto;
 import com.gunnarro.android.terex.domain.dto.TimesheetDto;
+import com.gunnarro.android.terex.domain.entity.Invoice;
 import com.gunnarro.android.terex.domain.entity.TimesheetEntry;
 import com.gunnarro.android.terex.domain.entity.TimesheetSummary;
 import com.gunnarro.android.terex.domain.mapper.TimesheetMapper;
@@ -76,6 +77,18 @@ class InvoiceServiceTest {
         assertEquals(23, invoiceId);
     }
 
+    @Test
+    void deleteInvoice() {
+        Invoice invoice = new Invoice();
+        invoice.setId(22L);
+        invoice.setTimesheetId(1006L);
+        when(invoiceRepositoryMock.getInvoice(any())).thenReturn(invoice);
+        invoiceService.deleteInvoice(invoice.getId());
+        verify(timesheetServiceMock).deleteTimesheetSummaryForBilling(invoice.getTimesheetId());
+        verify(invoiceRepositoryMock).deleteInvoiceAttachments(invoice.getId());
+        verify(invoiceRepositoryMock).deleteInvoice(invoice);
+    }
+
     /**
      * Just for generate test data
      */
@@ -100,7 +113,7 @@ class InvoiceServiceTest {
     @Test
     void buildInvoiceSummary() {
         TimesheetService timesheetService = new TimesheetService();
-        List<TimesheetSummary> timesheetSummaries = TestData.buildTimesheetSummaryByWeek(23L, 200L,2023, 2, 1250);
+        List<TimesheetSummary> timesheetSummaries = TestData.buildTimesheetSummaryByWeek(23L, 200L, 2023, 2, 1250);
         assertEquals(5, timesheetSummaries.size());
         assertEquals(0, timesheetSummaries.get(0).getTimesheetId());
         assertEquals(24187.5, timesheetSummaries.get(0).getTotalBilledAmount());

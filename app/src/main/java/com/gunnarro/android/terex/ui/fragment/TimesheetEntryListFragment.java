@@ -137,13 +137,13 @@ public class TimesheetEntryListFragment extends BaseFragment implements ListOnIt
             if (TIMESHEET_ENTRY_ACTION_SAVE.equals(action)) {
                 timesheetEntryViewModel.saveTimesheetEntryDto(timesheetEntryDto);
                 if (timesheetEntryDto.getId() == null) {
-                    showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_add_msg_format), timesheetEntryDto.getWorkdayDate(), timesheetEntryDto.getWorkedHours()), R.color.color_snackbar_text_add);
+                    showSnackbar(String.format(getResources().getString(R.string.info_list_add_msg_format), timesheetEntryDto.getWorkdayDate(), timesheetEntryDto.getWorkedHours()), R.color.color_snackbar_text_add);
                 } else {
-                    showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_update_msg_format), timesheetEntryDto.getWorkdayDate(), timesheetEntryDto.getWorkedHours()), R.color.color_snackbar_text_update);
+                    showSnackbar(String.format(getResources().getString(R.string.info_list_update_msg_format), timesheetEntryDto.getWorkdayDate(), timesheetEntryDto.getWorkedHours()), R.color.color_snackbar_text_update);
                 }
             } else if (TIMESHEET_ENTRY_ACTION_DELETE.equals(action)) {
                 deleteTimesheetEntry(timesheetEntryDto.getId());
-                showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_delete_msg_format), "timesheet entry, workday=" + timesheetEntryDto.getWorkdayDate()), R.color.color_snackbar_text_delete);
+                showSnackbar(String.format(getResources().getString(R.string.info_list_delete_msg_format), "timesheet entry, workday=" + timesheetEntryDto.getWorkdayDate()), R.color.color_snackbar_text_delete);
             } else {
                 Log.w(Utility.buildTag(getClass(), "handleTimesheetEntryActions"), "unknown action: " + action);
                 showInfoDialog("Error", String.format("Application error!%s Unknown action: %s%s Please report.", action, System.lineSeparator(), System.lineSeparator()));
@@ -181,7 +181,7 @@ public class TimesheetEntryListFragment extends BaseFragment implements ListOnIt
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
                 final int selectedTimesheetEntryPos = viewHolder.getAbsoluteAdapterPosition();
                 TimesheetEntryDto timesheetEntryDto = timesheetEntryViewModel.getTimesheetEntryLiveData(timesheetId).getValue().get(selectedTimesheetEntryPos);
-                confirmDeleteTimesheetEntryDialog(getString(R.string.msg_delete_timesheet_entry), getString(R.string.msg_confirm_delete_timesheet_entry), timesheetEntryDto.getId());
+                confirmDeleteTimesheetEntryDialog(getString(R.string.msg_delete_timesheet_entry), getString(R.string.msg_confirm_delete), timesheetEntryDto.getId());
             }
         };
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
@@ -205,7 +205,7 @@ public class TimesheetEntryListFragment extends BaseFragment implements ListOnIt
             timesheetEntryViewModel.deleteTimesheetEntryDto(timesheetEntryDto);
             RecyclerView recyclerView = requireView().findViewById(R.id.timesheet_entry_list_recyclerview);
             recyclerView.getAdapter().notifyDataSetChanged();
-            showSnackbar(String.format(getResources().getString(R.string.info_timesheet_list_delete_msg_format), "timesheet entry, workday=" + timesheetEntryDto.getWorkdayDate()), R.color.color_snackbar_text_delete);
+            showSnackbar(String.format(getResources().getString(R.string.info_list_delete_msg_format), "timesheet entry, workday=" + timesheetEntryDto.getWorkdayDate()), R.color.color_snackbar_text_delete);
         } catch (TerexApplicationException | InputValidationException e) {
             showInfoDialog("Info", e.getMessage());
         }
