@@ -134,6 +134,13 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
             v.setEnabled(true);
         });
 
+        view.findViewById(R.id.btn_timesheet_calendar_save_public_holiday).setEnabled(true);
+        view.findViewById(R.id.btn_timesheet_calendar_save_public_holiday).setOnClickListener(v -> {
+            v.setEnabled(false);
+            addTimesheetEntry(TimesheetEntry.TimesheetEntryTypeEnum.PUBLIC_HOLIDAY);
+            v.setEnabled(true);
+        });
+
         view.findViewById(R.id.btn_timesheet_calendar_cancel).setOnClickListener(v -> {
             view.findViewById(R.id.btn_timesheet_calendar_cancel).setBackgroundColor(getResources().getColor(R.color.color_btn_bg_default, view.getContext().getTheme()));
             // Simply return back to the timesheet list
@@ -189,7 +196,7 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
             } else if (t.isSickDay()) {
                 calendarDay.setLabelColor(R.color.timesheet_entry_type_sick);
                 calendarDay.setImageResource(R.drawable.timesheet_entry_sick_24);
-            } else if (t.isVacationDay()) {
+            } else if (t.isVacationDay() || t.isPublicHoliday()) {
                 calendarDay.setLabelColor(R.color.timesheet_entry_type_vacation);
                 calendarDay.setImageResource(R.drawable.timesheet_entry_vacation_24);
             }
@@ -250,6 +257,8 @@ public class TimesheetEntryCustomCalendarFragment extends BaseFragment {
                     timesheetEntry.setComments(getString(R.string.lbl_vacation));
                 } else if (timesheetEntry.isSickDay()) {
                     timesheetEntry.setComments(getString(R.string.lbl_sick));
+                }  else if (timesheetEntry.isPublicHoliday()) {
+                    timesheetEntry.setComments(getString(R.string.lbl_public_holiday));
                 }
             }
         }

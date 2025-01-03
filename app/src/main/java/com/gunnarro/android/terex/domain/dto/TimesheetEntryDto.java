@@ -152,6 +152,10 @@ public class TimesheetEntryDto extends BaseDto {
         return TimesheetEntry.TimesheetEntryTypeEnum.SICK.name().equals(type);
     }
 
+    public boolean isPublicHoliday() {
+        return TimesheetEntry.TimesheetEntryTypeEnum.PUBLIC_HOLIDAY.name().equals(type);
+    }
+
     public boolean isOpen() {
         return TimesheetEntry.TimesheetEntryStatusEnum.OPEN.name().equals(status);
     }

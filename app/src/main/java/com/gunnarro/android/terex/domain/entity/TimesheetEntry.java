@@ -41,7 +41,7 @@ import lombok.Setter;
 public class TimesheetEntry extends BaseEntity {
 
     public enum TimesheetEntryTypeEnum {
-        REGULAR, VACATION, SICK
+        REGULAR, VACATION, SICK, PUBLIC_HOLIDAY
     }
 
     /**
@@ -227,6 +227,10 @@ public class TimesheetEntry extends BaseEntity {
 
     public boolean isSickDay() {
         return TimesheetEntryTypeEnum.SICK.name().equals(type);
+    }
+
+    public boolean isPublicHoliday() {
+        return TimesheetEntryTypeEnum.PUBLIC_HOLIDAY.name().equals(type);
     }
 
     public boolean isOpen() {

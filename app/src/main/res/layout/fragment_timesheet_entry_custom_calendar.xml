@@ -99,8 +99,18 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
                 android:layout_weight="1"
+                android:visibility="gone"
                 android:text="@string/btn_cancel"
                 app:iconTint="@color/color_btn_bg_cancel" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_timesheet_calendar_save_public_holiday"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/btn_add_public_holiday"
+                app:iconTint="@color/color_btn_bg_add" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_timesheet_calendar_save_sick"

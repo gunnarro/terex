@@ -72,6 +72,9 @@ public class TimesheetEntryViewHolder extends RecyclerView.ViewHolder {
         } else if (timesheetEntryDto.isSickDay()) {
             timesheetEntryLine1LabelView.setText((R.string.lbl_sick));
             timesheetEntryLine1LabelView.setTextColor(timesheetEntryLine1StatusView.getResources().getColor(R.color.timesheet_entry_type_sick, null));
+        } else if (timesheetEntryDto.isPublicHoliday()) {
+            timesheetEntryLine1LabelView.setText((R.string.lbl_public_holiday));
+            timesheetEntryLine1LabelView.setTextColor(timesheetEntryLine1StatusView.getResources().getColor(R.color.timesheet_entry_type_vacation, null));
         }
         timesheetEntryLine1ValueView.setText("");
     }

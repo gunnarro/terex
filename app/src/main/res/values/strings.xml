@@ -191,8 +191,10 @@
     <string name="btn_add_regular">Regular</string>
     <string name="btn_add_vacation">Ferie</string>
     <string name="btn_add_sick">Syk</string>
+    <string name="btn_add_public_holiday">Fridag</string>
     <string name="lbl_vacation">Ferie</string>
     <string name="lbl_sick">Fravær</string>
+    <string name="lbl_public_holiday">Offentlig fridag</string>
     <string name="lbl_regular_workday">Arbeidsdag</string>
     <string name="lbl_integrations">Integrations</string>
     <string name="btn_import">Import</string>

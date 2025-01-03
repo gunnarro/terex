@@ -82,6 +82,7 @@ class TimesheetEntryTest {
         assertTrue(timeSheetEntry.isRegularWorkDay());
         assertFalse(timeSheetEntry.isSickDay());
         assertFalse(timeSheetEntry.isVacationDay());
+        assertFalse(timeSheetEntry.isPublicHoliday());
     }
 
     @Test
@@ -91,6 +92,7 @@ class TimesheetEntryTest {
         assertTrue(timeSheetEntry.isVacationDay());
         assertFalse(timeSheetEntry.isRegularWorkDay());
         assertFalse(timeSheetEntry.isSickDay());
+        assertFalse(timeSheetEntry.isPublicHoliday());
     }
 
     @Test
@@ -98,6 +100,17 @@ class TimesheetEntryTest {
         TimesheetEntry timeSheetEntry = TimesheetEntry.createDefault(23L, 11L, LocalDate.of(2023, 12, 2));
         timeSheetEntry.setType(TimesheetEntry.TimesheetEntryTypeEnum.SICK.name());
         assertTrue(timeSheetEntry.isSickDay());
+        assertFalse(timeSheetEntry.isVacationDay());
+        assertFalse(timeSheetEntry.isRegularWorkDay());
+        assertFalse(timeSheetEntry.isPublicHoliday());
+    }
+
+    @Test
+    void typePublicHoliday() {
+        TimesheetEntry timeSheetEntry = TimesheetEntry.createDefault(23L, 11L, LocalDate.of(2023, 12, 2));
+        timeSheetEntry.setType(TimesheetEntry.TimesheetEntryTypeEnum.PUBLIC_HOLIDAY.name());
+        assertTrue(timeSheetEntry.isPublicHoliday());
+        assertFalse(timeSheetEntry.isSickDay());
         assertFalse(timeSheetEntry.isVacationDay());
         assertFalse(timeSheetEntry.isRegularWorkDay());
     }
